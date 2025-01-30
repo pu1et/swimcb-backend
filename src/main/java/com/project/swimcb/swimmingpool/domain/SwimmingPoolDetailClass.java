@@ -6,11 +6,11 @@ import lombok.NonNull;
 @Builder
 public record SwimmingPoolDetailClass(
     @NonNull String name,
-    @NonNull String classType,
-    @NonNull String classDay,
-    @NonNull String classTime,
+    @NonNull String type,
+    @NonNull String day,
+    @NonNull String time,
     int price,
-    boolean isClassClosed
+    boolean isClosed
 ) {
 
 }
