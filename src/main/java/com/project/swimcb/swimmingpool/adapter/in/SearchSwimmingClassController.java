@@ -17,7 +17,7 @@ public class SearchSwimmingClassController {
   @Operation(summary = "수영 클래스 내 검색")
   @GetMapping
   public List<SwimmingClass> searchSwimmingClasses(
-      @Parameter(description = "검색어") String keyword
+      @Parameter(description = "검색어", example = "올림픽") String keyword
   ) {
     return List.of(
         SwimmingClass.builder()
