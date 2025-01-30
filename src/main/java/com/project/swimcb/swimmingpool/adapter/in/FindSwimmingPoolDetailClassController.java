@@ -23,9 +23,9 @@ public class FindSwimmingPoolDetailClassController {
   @GetMapping
   public List<SwimmingPoolDetailClass> findSwimmingPoolDetailFacility(
       @PathVariable(value = "swimmingPoolId") long swimmingPoolId,
-      @Parameter(description = "시간대", example = "2025-01-01T01:01:01") @RequestParam("class-time") LocalDateTime classTime,
-      @Parameter(description = "강습 요일", example = "MONDAY") @RequestParam("class-day") DayOfWeek classDay,
-      @Parameter(description = "강습형태", example = "GROUP_BEGINNER") @RequestParam("class-type") ClassType classType
+      @Parameter(description = "시간대", example = "2025-01-01T01:01:01") @RequestParam(value = "class-time", required = false) LocalDateTime classTime,
+      @Parameter(description = "강습 요일", example = "MONDAY") @RequestParam(value = "class-day", required = false) DayOfWeek classDay,
+      @Parameter(description = "강습형태", example = "GROUP_BEGINNER") @RequestParam(value = "class-type", required = false) ClassType classType
   ) {
     return List.of(
         SwimmingPoolDetailClass.builder()
