@@ -22,9 +22,9 @@ public class FindSwimmingClassController {
   @Operation(summary = "수영 클래스 조회")
   @GetMapping
   public List<SwimmingClass> findSwimmingClasses(
-      @Parameter(description = "시간대", example = "2025-01-01T01:01:01") @RequestParam("class-time") LocalDateTime classTime,
-      @Parameter(description = "강습 요일", example = "MONDAY") @RequestParam("class-day") DayOfWeek classDay,
-      @Parameter(description = "강습형태", example = "GROUP_BEGINNER") @RequestParam("class-type") ClassType classType,
+      @Parameter(description = "시간대", example = "2025-01-01T01:01:01") @RequestParam(value = "class-time", required = false) LocalDateTime classTime,
+      @Parameter(description = "강습 요일", example = "MONDAY") @RequestParam(value = "class-day", required = false) DayOfWeek classDay,
+      @Parameter(description = "강습형태", example = "GROUP_BEGINNER") @RequestParam(value = "class-type", required = false) ClassType classType,
       @Parameter(description = "마감 클래스 제외 여부", example = "true") @RequestParam("exclude-closed-class") boolean excludeClosedClass,
       @RequestParam("sort") Sort sort
   ) {
