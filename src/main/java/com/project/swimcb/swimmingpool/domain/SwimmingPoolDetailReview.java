@@ -6,6 +6,7 @@ import lombok.NonNull;
 
 @Builder
 public record SwimmingPoolDetailReview(
+    long reviewId,
     @NonNull String star,
     @NonNull LocalDate writeDate,
     @NonNull String memberId,

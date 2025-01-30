@@ -5,6 +5,7 @@ import lombok.NonNull;
 
 @Builder
 public record RecommendationSwimmingPool(
+    long swimmingPoolId,
     @NonNull String imageUrl,
     boolean isFavorite,
     @NonNull String distance,

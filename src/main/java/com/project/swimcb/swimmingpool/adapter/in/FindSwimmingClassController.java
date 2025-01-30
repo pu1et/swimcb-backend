@@ -31,6 +31,7 @@ public class FindSwimmingClassController {
 
     return List.of(
         SwimmingClass.builder()
+            .swimmingPoolId(1L)
             .imageUrl("https://ibb.co/bjGKF8WV")
             .isFavorite(false)
             .distance("400m")
@@ -41,6 +42,7 @@ public class FindSwimmingClassController {
             .reviewCount(35)
             .build(),
         SwimmingClass.builder()
+            .swimmingPoolId(2L)
             .imageUrl("https://ibb.co/67BwJXjC")
             .isFavorite(false)
             .distance("820m")
@@ -51,6 +53,7 @@ public class FindSwimmingClassController {
             .reviewCount(28)
             .build(),
         SwimmingClass.builder()
+            .swimmingPoolId(3L)
             .imageUrl("https://ibb.co/zWdrk20p")
             .isFavorite(true)
             .distance("970m")

@@ -18,6 +18,7 @@ public class FindRecommendationSwimmingPoolController {
   public List<RecommendationSwimmingPool> findRecommendationSwimmingPool() {
     return List.of(
         RecommendationSwimmingPool.builder()
+            .swimmingPoolId(1L)
             .imageUrl("https://ibb.co/bjGKF8WV")
             .isFavorite(false)
             .distance("400m")
@@ -27,6 +28,7 @@ public class FindRecommendationSwimmingPoolController {
             .reviewCount(35)
             .build(),
         RecommendationSwimmingPool.builder()
+            .swimmingPoolId(2L)
             .imageUrl("https://ibb.co/67BwJXjC")
             .isFavorite(false)
             .distance("820m")
@@ -36,6 +38,7 @@ public class FindRecommendationSwimmingPoolController {
             .reviewCount(28)
             .build(),
         RecommendationSwimmingPool.builder()
+            .swimmingPoolId(3L)
             .imageUrl("https://ibb.co/zWdrk20p")
             .isFavorite(true)
             .distance("970m")

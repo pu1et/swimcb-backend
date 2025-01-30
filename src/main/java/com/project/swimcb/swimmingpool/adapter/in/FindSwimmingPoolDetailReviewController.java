@@ -21,6 +21,7 @@ public class FindSwimmingPoolDetailReviewController {
       @PathVariable(value = "swimmingPoolId") long swimmingPoolId
   ) {
     return List.of(SwimmingPoolDetailReview.builder()
+        .reviewId(1L)
         .star("4.5")
         .writeDate(LocalDate.of(2024, 7, 28))
         .memberId("swimlover")

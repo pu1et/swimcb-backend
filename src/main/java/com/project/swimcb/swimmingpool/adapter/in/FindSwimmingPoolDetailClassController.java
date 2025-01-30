@@ -29,6 +29,7 @@ public class FindSwimmingPoolDetailClassController {
   ) {
     return List.of(
         SwimmingPoolDetailClass.builder()
+            .swimmingClassId(1L)
             .name("일반수영")
             .type("초급")
             .day("주 3일|월,수,금")
@@ -37,6 +38,7 @@ public class FindSwimmingPoolDetailClassController {
             .isClosed(false)
             .build(),
         SwimmingPoolDetailClass.builder()
+            .swimmingClassId(2L)
             .name("일반수영")
             .type("초급")
             .day("주 3일|월,수,금")
@@ -45,6 +47,7 @@ public class FindSwimmingPoolDetailClassController {
             .isClosed(false)
             .build(),
         SwimmingPoolDetailClass.builder()
+            .swimmingClassId(3L)
             .name("일반수영")
             .type("초급")
             .day("주 2일|화,목")
