@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "즐겨찾기")
 @RestController
-@RequestMapping("/favorite")
+@RequestMapping("/api/favorite")
 public class RegisterFavoriteController {
 
   @Operation(summary = "즐겨찾기 등록")

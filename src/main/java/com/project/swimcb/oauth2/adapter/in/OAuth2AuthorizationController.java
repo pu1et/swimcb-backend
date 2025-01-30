@@ -9,7 +9,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 @Tag(name = "회원")
 @RestController
-@RequestMapping("/oauth2/authorization/kakao")
+@RequestMapping("/api/oauth2/authorization/kakao")
 public class OAuth2AuthorizationController {
 
   @Operation(summary = "카카오 회원가입/로그인")

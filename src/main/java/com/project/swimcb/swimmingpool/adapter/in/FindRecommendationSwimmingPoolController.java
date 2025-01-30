@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "추천")
 @RestController
-@RequestMapping("/swimming-pool/recommendation")
+@RequestMapping("/api/swimming-pool/recommendation")
 public class FindRecommendationSwimmingPoolController {
 
   @Operation(summary = "추천 수영장 조회")
