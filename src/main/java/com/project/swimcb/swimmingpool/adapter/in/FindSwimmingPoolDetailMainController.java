@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "수영장")
 @RestController
-@RequestMapping("/api/swimming-pool/{swimmingPoolId}/main")
+@RequestMapping("/api/swimming-pools/{swimmingPoolId}/main")
 public class FindSwimmingPoolDetailMainController {
 
   @Operation(summary = "수영장 상세 조회 - 메인정보")
