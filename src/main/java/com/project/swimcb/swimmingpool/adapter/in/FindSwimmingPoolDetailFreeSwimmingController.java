@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDateTime;
 import java.util.List;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +22,7 @@ public class FindSwimmingPoolDetailFreeSwimmingController {
   @GetMapping
   public SwimmingPoolDetailFreeSwimming findSwimmingPoolDetailFreeSwimming(
       @PathVariable(value = "swimmingPoolId") long swimmingPoolId,
-      @Parameter(description = "날짜", example = "2025-01-01 06:00") @RequestParam(value = "date-time") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") LocalDateTime dateTime
+      @Parameter(description = "날짜", example = "2025-01-01T01:01:01") @RequestParam(value = "date-time") LocalDateTime dateTime
   ) {
 
     return SwimmingPoolDetailFreeSwimming.builder()
