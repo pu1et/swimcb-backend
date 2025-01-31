@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "클래스")
+@Tag(name = "자유수영")
 @RestController
 @RequestMapping("/api/free-swimming/{freeSwimmingId}/reservations")
 public class FindFreeSwimmingReservationInfoController {
