@@ -35,7 +35,7 @@ public class FindSwimmingPoolDetailClassController {
             .day("주 3일|월,수,금")
             .time("06:00 ~ 06:50")
             .price(90000)
-            .isClosed(false)
+            .isReservable(false)
             .build(),
         SwimmingPoolDetailClass.builder()
             .swimmingClassId(2L)
@@ -44,7 +44,7 @@ public class FindSwimmingPoolDetailClassController {
             .day("주 3일|월,수,금")
             .time("06:00 ~ 06:50")
             .price(90000)
-            .isClosed(false)
+            .isReservable(false)
             .build(),
         SwimmingPoolDetailClass.builder()
             .swimmingClassId(3L)
@@ -53,7 +53,7 @@ public class FindSwimmingPoolDetailClassController {
             .day("주 2일|화,목")
             .time("09:00 ~ 09:50")
             .price(90000)
-            .isClosed(true)
+            .isReservable(true)
             .build()
     );
   }

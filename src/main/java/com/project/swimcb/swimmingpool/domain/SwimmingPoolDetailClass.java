@@ -11,7 +11,7 @@ public record SwimmingPoolDetailClass(
     @NonNull String day,
     @NonNull String time,
     int price,
-    boolean isClosed
+    boolean isReservable
 ) {
 
 }
