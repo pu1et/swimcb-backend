@@ -2,6 +2,7 @@ package com.project.swimcb.swimmingpool.adapter.in;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +14,8 @@ public class ReserveSwimmingClassController {
 
   @Operation(summary = "수영 클래스 예약")
   @PostMapping
-  public void reserveSwimmingClass() {
+  public void reserveSwimmingClass(
+      @PathVariable(value = "swimmingClassId") long swimmingClassId
+  ) {
   }
 }
