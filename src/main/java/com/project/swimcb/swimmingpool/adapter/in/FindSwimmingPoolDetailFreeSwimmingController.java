@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDateTime;
-import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,20 +27,12 @@ public class FindSwimmingPoolDetailFreeSwimmingController {
     return SwimmingPoolDetailFreeSwimming.builder()
         .imageUrl("https://ibb.co/bjGKF8WV")
         .freeSwimming(
-            List.of(
-                FreeSwimming.builder()
-                    .freeSwimmingId(1L)
-                    .name("일일권")
-                    .price(5000)
-                    .isReservable(true)
-                    .build(),
-                FreeSwimming.builder()
-                    .freeSwimmingId(1L)
-                    .name("정기권")
-                    .price(5000)
-                    .isReservable(false)
-                    .build()
-            )
+            FreeSwimming.builder()
+                .freeSwimmingId(1L)
+                .name("일일권")
+                .price(5000)
+                .isReservable(true)
+                .build()
         )
         .build();
   }

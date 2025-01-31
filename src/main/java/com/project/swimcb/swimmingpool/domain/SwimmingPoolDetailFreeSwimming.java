@@ -1,13 +1,12 @@
 package com.project.swimcb.swimmingpool.domain;
 
-import java.util.List;
 import lombok.Builder;
 import lombok.NonNull;
 
 @Builder
 public record SwimmingPoolDetailFreeSwimming(
     @NonNull String imageUrl,
-    @NonNull List<FreeSwimming> freeSwimming
+    @NonNull FreeSwimming freeSwimming
 ) {
 
   @Builder
