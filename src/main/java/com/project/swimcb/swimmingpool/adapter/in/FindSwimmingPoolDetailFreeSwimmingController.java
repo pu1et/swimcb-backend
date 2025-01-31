@@ -1,6 +1,7 @@
 package com.project.swimcb.swimmingpool.adapter.in;
 
-import com.project.swimcb.swimmingpool.adapter.in.SwimmingPoolDetailFreeSwimming.FreeSwimming;
+import com.project.swimcb.swimmingpool.domain.SwimmingPoolDetailFreeSwimming;
+import com.project.swimcb.swimmingpool.domain.SwimmingPoolDetailFreeSwimming.FreeSwimming;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

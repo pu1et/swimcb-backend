@@ -1,4 +1,4 @@
-package com.project.swimcb.swimmingpool.adapter.in;
+package com.project.swimcb.swimmingpool.domain;
 
 import java.util.List;
 import lombok.Builder;
