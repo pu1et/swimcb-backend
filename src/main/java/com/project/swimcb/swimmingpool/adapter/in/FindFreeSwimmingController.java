@@ -27,8 +27,6 @@ public class FindFreeSwimmingController {
       @Parameter(description = "희망 일자", example = "2025-01-01") @RequestParam(value = "date") LocalDate date,
       @Parameter(description = "희망 시간대 시작", example = "06:00") @RequestParam(value = "start-time") @DateTimeFormat(pattern = "HH:mm") String startTime,
       @Parameter(description = "희망 시간대 종료", example = "10:00") @RequestParam(value = "end-time") @DateTimeFormat(pattern = "HH:mm") String endTime,
-      @Parameter(description = "가격대 최소", example = "5000") @RequestParam(value = "min-price") int minPrice,
-      @Parameter(description = "가격대 최대", example = "10000") @RequestParam(value = "max-price") int maxPrice,
       @Parameter(description = "평점 최소", example = "4.0") @RequestParam(value = "min-star") double minStar,
       @Parameter(description = "평점 최대", example = "5.0") @RequestParam(value = "max-star") double maxStar
   ) {
