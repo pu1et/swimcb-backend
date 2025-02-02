@@ -21,11 +21,25 @@ public class FindSwimmingPoolDetailReviewController {
       @PathVariable(value = "swimmingPoolId") long swimmingPoolId
   ) {
     return List.of(SwimmingPoolDetailReview.builder()
-        .reviewId(1L)
-        .star("4.5")
-        .writeDate(LocalDate.of(2024, 7, 28))
-        .memberId("swimlover")
-        .content("방문해봤는데 깨끗하고 청결해서 좋았습니다.")
-        .build());
+            .reviewId(1L)
+            .star("4.5")
+            .writeDate(LocalDate.of(2024, 7, 28))
+            .memberId("swimlover")
+            .content("방문해봤는데 깨끗하고 청결해서 좋았습니다.")
+            .build(),
+        SwimmingPoolDetailReview.builder()
+            .reviewId(2L)
+            .star("4.5")
+            .writeDate(LocalDate.of(2024, 7, 28))
+            .memberId("swimlover")
+            .content("방문해봤는데 깨끗하고 청결해서 좋았습니다.")
+            .build(),
+        SwimmingPoolDetailReview.builder()
+            .reviewId(3L)
+            .star("4.5")
+            .writeDate(LocalDate.of(2024, 7, 28))
+            .memberId("swimlover")
+            .content("방문해봤는데 깨끗하고 청결해서 좋았습니다.")
+            .build());
   }
 }
