@@ -1,6 +1,6 @@
 package com.project.swimcb.notice.adapter.in;
 
-import com.project.swimcb.notice.domain.Notice;
+import com.project.swimcb.notice.domain.NoticeSummary;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,24 +18,24 @@ public class SearchNoticeController {
 
   @Operation(summary = "공지사항 리스트 검색")
   @GetMapping
-  public List<Notice> searchNotices(
+  public List<NoticeSummary> searchNotices(
       @Parameter(description = "검색어") @RequestParam(value = "keyword") String keyword
   ) {
-    return List.of(Notice.builder()
+    return List.of(NoticeSummary.builder()
             .noticeId(1L)
             .title("공지사항 제목1")
             .createdBy("운영자")
             .createdAt(LocalDate.of(2025, 1, 3))
             .isVisible(true)
             .build(),
-        Notice.builder()
+        NoticeSummary.builder()
             .noticeId(2L)
             .title("공지사항 제목2")
             .createdBy("운영자")
             .createdAt(LocalDate.of(2025, 1, 2))
             .isVisible(false)
             .build(),
-        Notice.builder()
+        NoticeSummary.builder()
             .noticeId(3L)
             .title("공지사항 제목3")
             .createdBy("운영자")

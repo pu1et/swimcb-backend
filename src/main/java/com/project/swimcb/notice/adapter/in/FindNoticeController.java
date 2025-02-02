@@ -1,6 +1,6 @@
 package com.project.swimcb.notice.adapter.in;
 
-import com.project.swimcb.notice.domain.Notice;
+import com.project.swimcb.notice.domain.NoticeSummary;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;
@@ -16,22 +16,22 @@ public class FindNoticeController {
 
   @Operation(summary = "공지사항 리스트 조회")
   @GetMapping
-  public List<Notice> findNotices() {
-    return List.of(Notice.builder()
+  public List<NoticeSummary> findNotices() {
+    return List.of(NoticeSummary.builder()
             .noticeId(1L)
             .title("공지사항 제목1")
             .createdBy("운영자")
             .createdAt(LocalDate.of(2025, 1, 3))
             .isVisible(true)
             .build(),
-        Notice.builder()
+        NoticeSummary.builder()
             .noticeId(2L)
             .title("공지사항 제목2")
             .createdBy("운영자")
             .createdAt(LocalDate.of(2025, 1, 2))
             .isVisible(false)
             .build(),
-        Notice.builder()
+        NoticeSummary.builder()
             .noticeId(3L)
             .title("공지사항 제목3")
             .createdBy("운영자")

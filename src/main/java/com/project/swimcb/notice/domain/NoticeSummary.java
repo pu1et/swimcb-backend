@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.NonNull;
 
 @Builder
-public record Notice(
+public record NoticeSummary(
     long noticeId,
     @NonNull String title,
     @NonNull String createdBy,
