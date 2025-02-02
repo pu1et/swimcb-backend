@@ -1,5 +1,6 @@
 package com.project.swimcb.notice.adapter.in;
 
+import com.project.swimcb.notice.domain.NoticeDetail;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;

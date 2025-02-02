@@ -1,4 +1,4 @@
-package com.project.swimcb.notice.adapter.in;
+package com.project.swimcb.notice.domain;
 
 import java.time.LocalDate;
 import java.util.List;
