@@ -15,10 +15,10 @@ public class UploadFileController {
 
   @Operation(summary = "공지사항 파일 첨부 처리")
   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  public UploadInquiryFileResponse uploadFile(
-      @ModelAttribute UploadInquiryFileRequest request
+  public UploadNoticeFileResponse uploadFile(
+      @ModelAttribute UploadNoticeFileRequest request
   ) {
-    return UploadInquiryFileResponse.builder()
+    return UploadNoticeFileResponse.builder()
         .name("첨부파일1")
         .path("/content/notices/1")
         .size(1024)
