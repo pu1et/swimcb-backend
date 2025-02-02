@@ -20,11 +20,8 @@ public class FindSwimmingPoolDetailFacilityController {
   ) {
     return SwimmingPoolDetailFacility.builder()
         .openingHours("연중무휴 06:00 - 23:30")
-        .location("스포츠센터 지하 1층")
         .size("성인 수영장(25m * 13m, 6레인)")
         .depth("성인 수영장 120 - 140cm")
-        .program("주부수영 A, B | 일일 자유수영")
-        .maintenance("여과 시스템 1일 4회 | 구청 보건소")
         .build();
   }
 }
