@@ -34,6 +34,8 @@ public class SecurityConfig {
     corsConfiguration.addAllowedOrigin("http://localhost:4001");
     corsConfiguration.addAllowedOrigin("https://cbe-center.pages.dev");
 
+    corsConfiguration.addAllowedOrigin("http://localhost:4010");
+
     corsConfiguration.addAllowedMethod("*");
     corsConfiguration.addAllowedHeader("*");
     corsConfiguration.setAllowCredentials(true);
