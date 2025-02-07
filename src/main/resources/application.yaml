@@ -29,3 +29,9 @@ spring:
     properties:
       hibernate:
         show_sql: false
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://swim-cb.cho0w026wkjq.ap-northeast-2.rds.amazonaws.com:5432/swim_cb
+    username: swim_cb
+    password: Yws6ADPvs2!ibdYs!6jP
