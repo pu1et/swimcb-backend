@@ -1,6 +1,5 @@
 package com.project.swimcb.faq.adapter.in;
 
-import com.project.swimcb.faq.domain.FaqSummary;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,24 +17,24 @@ public class SearchFaqsController {
 
   @Operation(summary = "FAQ 리스트 검색")
   @GetMapping
-  public List<FaqSummary> searchFaqs(
+  public List<FindFaqsResponse> searchFaqs(
       @Parameter(description = "검색어") @RequestParam(value = "keyword") String keyword
   ) {
-    return List.of(FaqSummary.builder()
+    return List.of(FindFaqsResponse.builder()
             .faqId(1L)
             .title("FAQ 제목1")
             .createdBy("운영자")
             .createdAt(LocalDate.of(2025, 1, 3))
             .isVisible(true)
             .build(),
-        FaqSummary.builder()
+        FindFaqsResponse.builder()
             .faqId(2L)
             .title("FAQ 제목2")
             .createdBy("운영자")
             .createdAt(LocalDate.of(2025, 1, 2))
             .isVisible(false)
             .build(),
-        FaqSummary.builder()
+        FindFaqsResponse.builder()
             .faqId(3L)
             .title("FAQ 제목3")
             .createdBy("운영자")
