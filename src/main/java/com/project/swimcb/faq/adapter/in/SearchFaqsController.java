@@ -1,10 +1,13 @@
 package com.project.swimcb.faq.adapter.in;
 
+import com.project.swimcb.faq.application.in.SearchFaqsUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.time.LocalDate;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,33 +16,18 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "FAQ")
 @RestController
 @RequestMapping("/api/faqs/search")
+@RequiredArgsConstructor
 public class SearchFaqsController {
 
-  @Operation(summary = "FAQ 리스트 검색")
+  private final SearchFaqsUseCase useCase;
+
+  @Operation(summary = "FAQ 리스트 제목 검색")
   @GetMapping
-  public List<FindFaqsResponse> searchFaqs(
-      @Parameter(description = "검색어") @RequestParam(value = "keyword") String keyword
+  public Page<FindFaqsResponse> searchFaqs(
+      @Parameter(description = "검색어") @RequestParam(value = "keyword") String keyword,
+      @Parameter(description = "페이지 번호") @RequestParam(value = "page", defaultValue = "1") int page,
+      @Parameter(description = "페이지 크기") @RequestParam(value = "size", defaultValue = "10") int size
   ) {
-    return List.of(FindFaqsResponse.builder()
-            .faqId(1L)
-            .title("FAQ 제목1")
-            .createdBy("운영자")
-            .createdAt(LocalDate.of(2025, 1, 3))
-            .isVisible(true)
-            .build(),
-        FindFaqsResponse.builder()
-            .faqId(2L)
-            .title("FAQ 제목2")
-            .createdBy("운영자")
-            .createdAt(LocalDate.of(2025, 1, 2))
-            .isVisible(false)
-            .build(),
-        FindFaqsResponse.builder()
-            .faqId(3L)
-            .title("FAQ 제목3")
-            .createdBy("운영자")
-            .createdAt(LocalDate.of(2025, 1, 1))
-            .isVisible(true)
-            .build());
+    return useCase.searchFaqs(keyword, PageRequest.of(page - 1, size));
   }
 }
