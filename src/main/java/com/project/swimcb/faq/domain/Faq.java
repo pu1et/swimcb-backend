@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.ToString;
 
 @ToString
@@ -53,5 +54,11 @@ public class Faq extends BaseEntity {
     this.title = title;
     this.content = content;
     this.isVisible = isVisible;
+  }
+
+  public void update(@NonNull String title, @NonNull String content, boolean visible) {
+    this.title = title;
+    this.content = content;
+    this.isVisible = visible;
   }
 }
