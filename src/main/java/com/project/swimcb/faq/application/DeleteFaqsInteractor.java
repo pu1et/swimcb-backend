@@ -17,6 +17,9 @@ public class DeleteFaqsInteractor implements DeleteFaqsUseCase {
 
   @Override
   public void deleteAll(@NonNull List<Long> faqIds) {
+    if (faqIds.isEmpty()) {
+      return;
+    }
     faqRepository.deleteAllById(faqIds);
   }
 }

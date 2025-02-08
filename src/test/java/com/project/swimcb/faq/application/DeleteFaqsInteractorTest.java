@@ -1,5 +1,7 @@
 package com.project.swimcb.faq.application;
 
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import com.project.swimcb.faq.domain.FaqRepository;
@@ -30,5 +32,16 @@ class DeleteFaqsInteractorTest {
     interactor.deleteAll(faqIds);
     // then
     verify(faqRepository).deleteAllById(faqIds);
+  }
+
+  @Test
+  @DisplayName("빈 리스트가 전달되면 삭제하지 않는다.")
+  void shouldNotDeleteWhenFaqIdsListIsEmpty() {
+    // given
+    final List<Long> emptyFaqIds = List.of();
+    // when
+    interactor.deleteAll(emptyFaqIds);
+    // then
+    verify(faqRepository, never()).deleteAllById(anyList());
   }
 }
