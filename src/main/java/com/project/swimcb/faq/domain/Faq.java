@@ -61,4 +61,8 @@ public class Faq extends BaseEntity {
     this.content = content;
     this.isVisible = visible;
   }
+
+  public void updateIsVisible(boolean isVisible) {
+    this.isVisible = isVisible;
+  }
 }
