@@ -8,6 +8,7 @@ create table faq
     id         bigserial primary key not null,
     title      varchar(255)          not null,
     content    text                  not null,
+    is_visible boolean               not null,
     created_at timestamp             not null default now(),
     created_by varchar(255)          not null,
     updated_at timestamp             not null default now(),
