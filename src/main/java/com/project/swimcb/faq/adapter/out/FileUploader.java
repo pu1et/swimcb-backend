@@ -1,6 +1,7 @@
 package com.project.swimcb.faq.adapter.out;
 
 import com.project.swimcb.config.s3.S3Config;
+import com.project.swimcb.faq.application.out.FileUploadPort;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.UUID;
@@ -14,12 +15,11 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @Service
 @RequiredArgsConstructor
-public class FileUploader {
+public class FileUploader implements FileUploadPort {
 
   private final S3Config s3Config;
 
-  public String uploadFile(@NonNull String path, @NonNull MultipartFile file) throws IOException {
-
+  public UploadedFile uploadFile(@NonNull String path, @NonNull MultipartFile file) throws IOException {
 
     val s3Client = s3Config.getS3Client();
 
@@ -36,7 +36,11 @@ public class FileUploader {
         RequestBody.fromByteBuffer(ByteBuffer.wrap(file.getBytes())));
 
     if (response.sdkHttpResponse().isSuccessful()) {
-      return filePath;
+      return UploadedFile.builder()
+          .name(fileName)
+          .path(filePath)
+          .size(file.getSize())
+          .build();
     }
     throw new IOException("파일 업로드에 실패하였습니다.");
   }

@@ -11,7 +11,6 @@ import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 
 import com.project.swimcb.config.s3.S3Config;
 import java.io.IOException;
-import java.util.UUID;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -60,17 +59,17 @@ class FileUploaderTest {
     // when
     val result = fileUploader.uploadFile(path, file);
     // then
-    assertThat(result)
-        .isNotNull()
-        .contains(expectedFilePath)
-        .contains(fileNameExceptUUID);
+    assertThat(result).isNotNull();
+    assertThat(result.name()).contains(fileNameExceptUUID);
+    assertThat(result.path()).contains(expectedFilePath, fileNameExceptUUID);
+    assertThat(result.size()).isEqualTo(file.getSize());
 
     verify(s3Client, only()).putObject((PutObjectRequest) assertArg(i -> {
       val req = (PutObjectRequest) i;
       assertThat(req.bucket()).isEqualTo(bucketName);
       assertThat(req.key()).contains(path);
       assertThat(req.key()).contains(fileNameExceptUUID);
-      assertThat(req.contentType()).isEqualTo(IMAGE_JPEG_VALUE);
+      assertThat(req.contentType()).isEqualTo(file.getContentType());
     }), any(RequestBody.class));
   }
 
@@ -102,7 +101,7 @@ class FileUploaderTest {
       assertThat(req.bucket()).isEqualTo(bucketName);
       assertThat(req.key()).contains(path);
       assertThat(req.key()).contains(fileNameExceptUUID);
-      assertThat(req.contentType()).isEqualTo(IMAGE_JPEG_VALUE);
+      assertThat(req.contentType()).isEqualTo(file.getContentType());
     }), any(RequestBody.class));
   }
 }
