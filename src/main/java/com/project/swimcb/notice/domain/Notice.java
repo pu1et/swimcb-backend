@@ -48,6 +48,10 @@ public class Notice extends BaseEntity {
     this.isVisible = visible;
   }
 
+  public void updateIsVisible(boolean isVisible) {
+    this.isVisible = isVisible;
+  }
+
   @Builder(access = PACKAGE, builderMethodName = "test", builderClassName = "test")
   private Notice(long id, String title, String content, boolean isVisible, LocalDateTime createdAt,
       String createdBy, LocalDateTime updatedAt, String updatedBy) {

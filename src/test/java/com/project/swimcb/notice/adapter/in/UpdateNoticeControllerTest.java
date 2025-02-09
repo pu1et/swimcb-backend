@@ -58,8 +58,8 @@ class UpdateNoticeControllerTest {
   }
 
   @Test
-  @DisplayName("존재하지 않는 FAQ 수정 시 404 반환")
-  void shouldReturn400WhenFaqNotFound() throws Exception {
+  @DisplayName("존재하지 않는 공지사항 수정 시 404 반환")
+  void shouldReturn400WhenNoticeNotFound() throws Exception {
     // given
     val noticeId = 1L;
     val request = UpdateNoticeRequestFactory.create();
