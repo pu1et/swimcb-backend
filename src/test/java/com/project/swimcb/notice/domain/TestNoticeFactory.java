@@ -18,4 +18,13 @@ public class TestNoticeFactory {
         .updatedBy(updatedBy)
         .build();
   }
+
+  public static Notice create(long id, String title, String content, boolean isVisible) {
+    return Notice.test()
+        .id(id)
+        .title(title)
+        .content(content)
+        .isVisible(isVisible)
+        .build();
+  }
 }

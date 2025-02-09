@@ -20,7 +20,7 @@ public class RegisterFaqController {
 
   @Operation(summary = "FAQ 등록")
   @PostMapping
-  public void registerFaq(@RequestBody RegisterNoticeRequest request) {
+  public void registerFaq(@RequestBody RegisterFaqRequest request) {
     useCase.registerFaq(request.toDomain());
   }
 }

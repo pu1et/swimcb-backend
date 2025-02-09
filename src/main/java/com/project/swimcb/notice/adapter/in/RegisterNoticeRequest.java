@@ -1,22 +1,24 @@
 package com.project.swimcb.notice.adapter.in;
 
-import com.project.swimcb.faq.domain.Faq;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
-import lombok.NonNull;
+import lombok.Builder;
 
+@Builder
 public record RegisterNoticeRequest(
-    @NonNull String createdBy,
-    @NonNull String title,
-    @NonNull String content,
-    @NonNull List<String> imageUrls,
+    @NotNull(message = "createdBy는 null일 수 없습니다.")
+    String createdBy,
+
+    @NotNull(message = "title은 null일 수 없습니다.")
+    String title,
+
+    @NotNull(message = "content는 null일 수 없습니다.")
+    String content,
+
+    @NotNull(message = "imageUrls는 null일 수 없습니다.")
+    List<String> imageUrls,
+
     boolean isVisible
 ) {
 
-  public Faq toDomain() {
-    return Faq.builder()
-        .title(this.title)
-        .content(this.content)
-        .isVisible(this.isVisible)
-        .build();
-  }
 }

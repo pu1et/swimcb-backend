@@ -37,11 +37,21 @@ public class Notice extends BaseEntity {
   @Column(name = "is_visible", nullable = false)
   private boolean isVisible;
 
+  public static Notice create(String title, String content, boolean isVisible) {
+    return new Notice(title, content, isVisible);
+  }
+
   @Builder(access = PACKAGE, builderMethodName = "test", builderClassName = "test")
   private Notice(long id, String title, String content, boolean isVisible, LocalDateTime createdAt,
       String createdBy, LocalDateTime updatedAt, String updatedBy) {
     super(createdAt, createdBy, updatedAt, updatedBy);
     this.id = id;
+    this.title = title;
+    this.content = content;
+    this.isVisible = isVisible;
+  }
+
+  private Notice(String title, String content, boolean isVisible) {
     this.title = title;
     this.content = content;
     this.isVisible = isVisible;

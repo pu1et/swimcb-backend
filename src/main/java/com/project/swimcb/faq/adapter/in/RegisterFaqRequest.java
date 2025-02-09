@@ -1,5 +1,6 @@
 package com.project.swimcb.faq.adapter.in;
 
+import com.project.swimcb.faq.domain.Faq;
 import java.util.List;
 import lombok.NonNull;
 
@@ -11,4 +12,11 @@ public record RegisterFaqRequest(
     boolean isVisible
 ) {
 
+  public Faq toDomain() {
+    return Faq.builder()
+        .title(this.title)
+        .content(this.content)
+        .isVisible(this.isVisible)
+        .build();
+  }
 }

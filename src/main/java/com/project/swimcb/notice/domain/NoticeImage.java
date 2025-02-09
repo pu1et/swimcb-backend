@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Getter
 @Table(name = "notice_image")
@@ -36,12 +37,21 @@ public class NoticeImage extends BaseEntity {
   @Column(name = "path", nullable = false)
   private String path;
 
+  public static NoticeImage create(@NonNull Notice notice, @NonNull String path) {
+    return new NoticeImage(notice, path);
+  }
+
   @Builder(access = PACKAGE, builderMethodName = "test", builderClassName = "test")
   private NoticeImage(long id, long noticeId, String path, LocalDateTime createdAt,
       String createdBy, LocalDateTime updatedAt, String updatedBy) {
     super(createdAt, createdBy, updatedAt, updatedBy);
     this.id = id;
     this.notice = Notice.test().id(noticeId).build();
+    this.path = path;
+  }
+
+  private NoticeImage(@NonNull Notice notice, @NonNull String path) {
+    this.notice = notice;
     this.path = path;
   }
 }
