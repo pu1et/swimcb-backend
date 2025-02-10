@@ -55,7 +55,7 @@ class UpdateNoticeIsVisibleInteractorTest {
     // then
     assertThatThrownBy(() -> interactor.updateNoticeIsVisible(noticeId, isVisible))
         .isInstanceOf(NoSuchElementException.class)
-        .hasMessage("FAQ를 찾을 수 없습니다.");
+        .hasMessage("공지사항을 찾을 수 없습니다.");
 
     verify(noticeRepository, only()).findById(noticeId);
   }
