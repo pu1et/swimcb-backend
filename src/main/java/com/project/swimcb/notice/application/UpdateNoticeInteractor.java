@@ -1,7 +1,6 @@
 package com.project.swimcb.notice.application;
 
 import com.project.swimcb.notice.application.in.UpdateNoticeUseCase;
-import com.project.swimcb.notice.application.out.ImageUrlPrefixProvider;
 import com.project.swimcb.notice.domain.NoticeImage;
 import com.project.swimcb.notice.domain.NoticeImageRepository;
 import com.project.swimcb.notice.domain.NoticeRepository;
@@ -20,7 +19,6 @@ public class UpdateNoticeInteractor implements UpdateNoticeUseCase {
 
   private final NoticeRepository noticeRepository;
   private final NoticeImageRepository noticeImageRepository;
-  private final ImageUrlPrefixProvider imageUrlPrefixProvider;
 
   @Override
   public void updateNotice(@NonNull UpdateNoticeCommand command) {
@@ -36,10 +34,7 @@ public class UpdateNoticeInteractor implements UpdateNoticeUseCase {
 
     val noticeImages = command.imageUrls()
         .stream()
-        .map(i -> {
-          val imagePath = imageUrlPrefixProvider.provide() + i;
-          return NoticeImage.create(notice, imagePath);
-        })
+        .map(i -> NoticeImage.create(notice, i))
         .toList();
 
     noticeImageRepository.saveAll(noticeImages);

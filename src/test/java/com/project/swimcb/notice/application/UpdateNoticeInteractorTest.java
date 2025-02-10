@@ -11,7 +11,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.project.swimcb.notice.application.out.ImageUrlPrefixProvider;
 import com.project.swimcb.notice.domain.Notice;
 import com.project.swimcb.notice.domain.NoticeImage;
 import com.project.swimcb.notice.domain.NoticeImageRepository;
@@ -40,9 +39,6 @@ class UpdateNoticeInteractorTest {
   @Mock
   private NoticeImageRepository noticeImageRepository;
 
-  @Mock
-  private ImageUrlPrefixProvider imageUrlPrefixProvider;
-
   @Test
   @DisplayName("공지사항이 존재하면 제목, 내용, 공개여부를 수정하고 이미지를 업데이트한다.")
   void shouldUpdateNoticeAndUpdateImages() {
@@ -50,11 +46,9 @@ class UpdateNoticeInteractorTest {
     val existingNotice = mock(Notice.class);
     val existingNoticeId = 1L;
     val command = UpdateNoticeCommandFactory.create();
-    val imageUrlPrefix = "prefix";
 
     when(noticeRepository.findById(any())).thenReturn(Optional.of(existingNotice));
     when(existingNotice.getId()).thenReturn(existingNoticeId);
-    when(imageUrlPrefixProvider.provide()).thenReturn(imageUrlPrefix);
     // when
     interactor.updateNotice(command);
     // then
@@ -66,7 +60,7 @@ class UpdateNoticeInteractorTest {
       assertThat(i).hasSize(2);
       assertThat(i).extracting(j -> j.getNotice().getId()).containsOnly(existingNoticeId);
       assertThat(i).extracting(NoticeImage::getPath)
-          .containsExactly(imageUrlPrefix + "image1", imageUrlPrefix + "image2");
+          .containsExactly("image1", "image2");
     }));
   }
 
@@ -98,7 +92,6 @@ class UpdateNoticeInteractorTest {
     // then
     verify(noticeRepository, only()).findById(existingNoticeId);
     verify(existingNotice).update(command.title(), command.content(), command.isVisible());
-    verify(imageUrlPrefixProvider, never()).provide();
     verify(noticeImageRepository, only()).deleteByNoticeId(existingNoticeId);
     verify(noticeImageRepository, never()).saveAll(any());
   }
