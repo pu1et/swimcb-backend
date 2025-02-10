@@ -44,30 +44,32 @@ class FileUploaderTest {
     val file = new MockMultipartFile("file", "test.jpg", IMAGE_JPEG_VALUE,
         "test".getBytes());
 
+    val host = "http://host.com";
     val bucketName = "bucket";
-    val path = "path";
+    val directory = "directory";
     val fileNameExceptUUID = "-" + file.getOriginalFilename();
-    val expectedFilePath = "path" + "/";
+    val expectedFilePathExceptFileName = host + "/" + bucketName + "/" + directory + "/";
 
     val response = PutObjectResponse.builder()
         .sdkHttpResponse(SdkHttpResponse.builder().statusCode(200).build()).build();
 
     when(s3Config.getS3Client()).thenReturn(s3Client);
+    when(s3Config.getHost()).thenReturn(host);
     when(s3Config.getBucketName()).thenReturn(bucketName);
     when(s3Client.putObject(any(PutObjectRequest.class), any(RequestBody.class)))
         .thenReturn((PutObjectResponse) response);
     // when
-    val result = fileUploader.uploadFile(path, file);
+    val result = fileUploader.uploadFile(directory, file);
     // then
     assertThat(result).isNotNull();
     assertThat(result.name()).contains(fileNameExceptUUID);
-    assertThat(result.path()).contains(expectedFilePath, fileNameExceptUUID);
+    assertThat(result.url()).contains(expectedFilePathExceptFileName, fileNameExceptUUID);
     assertThat(result.size()).isEqualTo(file.getSize());
 
     verify(s3Client, only()).putObject((PutObjectRequest) assertArg(i -> {
       val req = (PutObjectRequest) i;
       assertThat(req.bucket()).isEqualTo(bucketName);
-      assertThat(req.key()).contains(path);
+      assertThat(req.key()).contains(directory);
       assertThat(req.key()).contains(fileNameExceptUUID);
       assertThat(req.contentType()).isEqualTo(file.getContentType());
     }), any(RequestBody.class));

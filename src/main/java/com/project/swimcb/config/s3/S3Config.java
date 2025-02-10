@@ -13,6 +13,10 @@ import software.amazon.awssdk.services.s3.S3Client;
 @Component
 public class S3Config {
 
+  @Getter
+  @Value("${aws.s3.host}")
+  private String host;
+
   @Value("${aws.credentials.access-key}")
   private String accessKey;
 

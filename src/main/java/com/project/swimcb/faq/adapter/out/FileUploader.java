@@ -19,15 +19,16 @@ public class FileUploader implements FileUploadPort {
 
   private final S3Config s3Config;
 
-  public UploadedFile uploadFile(@NonNull String path, @NonNull MultipartFile file) throws IOException {
+  public UploadedFile uploadFile(@NonNull String directory, @NonNull MultipartFile file) throws IOException {
 
     val s3Client = s3Config.getS3Client();
 
     val fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();
-    val filePath = path + "/" + fileName;
+    val bucketName = s3Config.getBucketName();
+    val filePath = directory + "/" + fileName;
 
     val putObjectRequest = PutObjectRequest.builder()
-        .bucket(s3Config.getBucketName())
+        .bucket(bucketName)
         .key(filePath)
         .contentType(file.getContentType())
         .build();
@@ -35,10 +36,12 @@ public class FileUploader implements FileUploadPort {
     val response = s3Client.putObject(putObjectRequest,
         RequestBody.fromByteBuffer(ByteBuffer.wrap(file.getBytes())));
 
+    val url = s3Config.getHost() + "/" + bucketName + "/" + filePath;
+
     if (response.sdkHttpResponse().isSuccessful()) {
       return UploadedFile.builder()
           .name(fileName)
-          .path(filePath)
+          .url(url)
           .size(file.getSize())
           .build();
     }

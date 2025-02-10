@@ -44,7 +44,7 @@ class UploadNoticeFileInteractorTest {
     // then
     assertThat(response).isNotNull();
     assertThat(response.name()).isEqualTo(uploadedFile.name());
-    assertThat(response.path()).isEqualTo(uploadedFile.path());
+    assertThat(response.url()).isEqualTo(uploadedFile.url());
     assertThat(response.size()).isEqualTo(uploadedFile.size());
 
     verify(fileUploadPort, only()).uploadFile("notice", file);
@@ -75,7 +75,7 @@ class UploadNoticeFileInteractorTest {
   private static class UploadedFileFactory {
 
     public static UploadedFile create() {
-      return UploadedFile.builder().name("test.jpg").path("faq/test.jpg").size(4L).build();
+      return UploadedFile.builder().name("test.jpg").url("http://host.com/notice/test.jpg").size(4L).build();
     }
   }
 }
