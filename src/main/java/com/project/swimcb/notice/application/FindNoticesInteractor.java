@@ -1,4 +1,4 @@
-package com.project.swimcb.notice.application.out;
+package com.project.swimcb.notice.application;
 
 import com.project.swimcb.notice.adapter.in.FindNoticesResponse;
 import com.project.swimcb.notice.application.in.FindNoticesUseCase;

@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.project.swimcb.notice.adapter.in.FindNoticesResponse;
+import com.project.swimcb.notice.application.FindNoticesInteractor;
 import com.project.swimcb.notice.domain.Notice;
 import com.project.swimcb.notice.domain.NoticeRepository;
 import com.project.swimcb.notice.domain.TestNoticeFactory;
