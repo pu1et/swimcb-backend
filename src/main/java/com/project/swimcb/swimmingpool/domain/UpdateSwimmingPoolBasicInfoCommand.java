@@ -9,6 +9,10 @@ public record UpdateSwimmingPoolBasicInfoCommand(
     String name,
     String phone,
     String address,
+    Integer newEnrollmentStartDate,
+    Integer newEnrollmentEndDate,
+    Integer reEnrollmentStartDate,
+    Integer reEnrollmentEndDate,
     @NonNull List<String> images,
     String usageAgreementUrl
 ) {
