@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "수영장")
+@Tag(name = "BO")
 @RestController
-@RequestMapping("/api/swimming-pools/{swimmingPoolId}/basic-info")
+@RequestMapping("/api/bo/swimming-pools/{swimmingPoolId}/basic-info")
 @RequiredArgsConstructor
 public class UpdateSwimmingPoolBasicInfoController {
 

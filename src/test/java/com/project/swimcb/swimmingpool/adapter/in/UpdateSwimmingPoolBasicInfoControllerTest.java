@@ -40,7 +40,7 @@ class UpdateSwimmingPoolBasicInfoControllerTest {
   @Autowired
   private ObjectMapper objectMapper;
 
-  private static final String path = "/api/swimming-pools/{swimmingPoolId}/basic-info";
+  private static final String path = "/api/bo/swimming-pools/{swimmingPoolId}/basic-info";
 
   @Test
   @DisplayName("수영장 기본 정보 수정 성공")
