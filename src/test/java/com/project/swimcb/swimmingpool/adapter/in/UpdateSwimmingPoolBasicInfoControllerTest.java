@@ -77,57 +77,6 @@ class UpdateSwimmingPoolBasicInfoControllerTest {
   }
 
   @Test
-  @DisplayName("수영장 기본 정보 수정 시 name이 null이면 400 반환")
-  void shouldReturn400WhenNameIsNull() throws Exception {
-    // given
-    val swimmingPoolId = 1L;
-    val request = UpdateSwimmingPoolBasicInfoRequestFactory.nameIsNull();
-    // when
-    // then
-    mockMvc.perform(put(path, swimmingPoolId)
-            .contentType(APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
-        .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("name은 null일 수 없습니다.")));
-
-    verify(useCase, never()).updateBasicInfo(anyLong(), any());
-  }
-
-  @Test
-  @DisplayName("수영장 기본 정보 수정 시 phone이 null이면 400 반환")
-  void shouldReturn400WhenPhoneIsNull() throws Exception {
-    // given
-    val swimmingPoolId = 1L;
-    val request = UpdateSwimmingPoolBasicInfoRequestFactory.phoneIsNull();
-    // when
-    // then
-    mockMvc.perform(put(path, swimmingPoolId)
-            .contentType(APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
-        .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("phone은 null일 수 없습니다.")));
-
-    verify(useCase, never()).updateBasicInfo(anyLong(), any());
-  }
-
-  @Test
-  @DisplayName("수영장 기본 정보 수정 시 address가 null이면 400 반환")
-  void shouldReturn400WhenAddressIsNull() throws Exception {
-    // given
-    val swimmingPoolId = 1L;
-    val request = UpdateSwimmingPoolBasicInfoRequestFactory.addressIsNull();
-    // when
-    // then
-    mockMvc.perform(put(path, swimmingPoolId)
-            .contentType(APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
-        .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("address은 null일 수 없습니다.")));
-
-    verify(useCase, never()).updateBasicInfo(anyLong(), any());
-  }
-
-  @Test
   @DisplayName("수영장 기본 정보 수정 시 images가 null이면 400 반환")
   void shouldReturn400WhenImagesIsNull() throws Exception {
     // given
@@ -161,23 +110,6 @@ class UpdateSwimmingPoolBasicInfoControllerTest {
     verify(useCase, never()).updateBasicInfo(anyLong(), any());
   }
 
-  @Test
-  @DisplayName("수영장 기본 정보 수정 시 usageAgreementUrl이 null이면 400 반환")
-  void shouldReturn400WhenUsageAgreementUrlIsNull() throws Exception {
-    // given
-    val swimmingPoolId = 1L;
-    val request = UpdateSwimmingPoolBasicInfoRequestFactory.usageAgreementUrlIsNull();
-    // when
-    // then
-    mockMvc.perform(put(path, swimmingPoolId)
-            .contentType(APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
-        .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("usageAgreementUrl은 null일 수 없습니다.")));
-
-    verify(useCase, never()).updateBasicInfo(anyLong(), any());
-  }
-
   private static class UpdateSwimmingPoolBasicInfoRequestFactory {
 
     public static UpdateSwimmingPoolBasicInfoRequest create() {
@@ -185,33 +117,6 @@ class UpdateSwimmingPoolBasicInfoControllerTest {
           .name("name")
           .phone("phone")
           .address("address")
-          .images(List.of("image"))
-          .usageAgreementUrl("usageAgreementUrl")
-          .build();
-    }
-
-    public static UpdateSwimmingPoolBasicInfoRequest nameIsNull() {
-      return UpdateSwimmingPoolBasicInfoRequest.builder()
-          .phone("phone")
-          .address("address")
-          .images(List.of("image"))
-          .usageAgreementUrl("usageAgreementUrl")
-          .build();
-    }
-
-    public static UpdateSwimmingPoolBasicInfoRequest phoneIsNull() {
-      return UpdateSwimmingPoolBasicInfoRequest.builder()
-          .name("name")
-          .address("address")
-          .images(List.of("image"))
-          .usageAgreementUrl("usageAgreementUrl")
-          .build();
-    }
-
-    public static UpdateSwimmingPoolBasicInfoRequest addressIsNull() {
-      return UpdateSwimmingPoolBasicInfoRequest.builder()
-          .name("name")
-          .phone("phone")
           .images(List.of("image"))
           .usageAgreementUrl("usageAgreementUrl")
           .build();
@@ -233,15 +138,6 @@ class UpdateSwimmingPoolBasicInfoControllerTest {
           .address("address")
           .images(IntStream.range(0, 7).mapToObj(i -> "image").toList())
           .usageAgreementUrl("usageAgreementUrl")
-          .build();
-    }
-
-    public static UpdateSwimmingPoolBasicInfoRequest usageAgreementUrlIsNull() {
-      return UpdateSwimmingPoolBasicInfoRequest.builder()
-          .name("name")
-          .phone("phone")
-          .address("address")
-          .images(List.of("image"))
           .build();
     }
   }

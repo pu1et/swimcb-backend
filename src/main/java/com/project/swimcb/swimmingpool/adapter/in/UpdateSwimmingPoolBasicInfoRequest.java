@@ -8,21 +8,12 @@ import lombok.Builder;
 
 @Builder
 public record UpdateSwimmingPoolBasicInfoRequest(
-
-    @NotNull(message = "name은 null일 수 없습니다.")
     String name,
-
-    @NotNull(message = "phone은 null일 수 없습니다.")
     String phone,
-
-    @NotNull(message = "address은 null일 수 없습니다.")
     String address,
-
     @NotNull(message = "images은 null일 수 없습니다.")
     @Size(max = 6, message = "images는 6개 이하여야 합니다.")
     List<String> images,
-
-    @NotNull(message = "usageAgreementUrl은 null일 수 없습니다.")
     String usageAgreementUrl
 ) {
 
