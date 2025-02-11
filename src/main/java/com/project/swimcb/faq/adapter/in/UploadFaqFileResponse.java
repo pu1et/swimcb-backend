@@ -7,6 +7,7 @@ import lombok.NonNull;
 @Builder
 public record UploadFaqFileResponse(
     @NonNull String name,
+    @NonNull String path,
     @NonNull String url,
     long size
 ) {
@@ -14,6 +15,7 @@ public record UploadFaqFileResponse(
   public static UploadFaqFileResponse from(@NonNull UploadedFile uploadedFile) {
     return UploadFaqFileResponse.builder()
         .name(uploadedFile.name())
+        .path(uploadedFile.path())
         .url(uploadedFile.url())
         .size(uploadedFile.size())
         .build();

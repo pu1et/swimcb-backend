@@ -41,6 +41,7 @@ public class FileUploader implements FileUploadPort {
     if (response.sdkHttpResponse().isSuccessful()) {
       return UploadedFile.builder()
           .name(fileName)
+          .path(filePath)
           .url(url)
           .size(file.getSize())
           .build();

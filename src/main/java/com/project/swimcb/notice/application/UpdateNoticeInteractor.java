@@ -28,11 +28,11 @@ public class UpdateNoticeInteractor implements UpdateNoticeUseCase {
 
     noticeImageRepository.deleteByNoticeId(notice.getId());
 
-    if (command.imageUrls().isEmpty()) {
+    if (command.imagePaths().isEmpty()) {
       return;
     }
 
-    val noticeImages = command.imageUrls()
+    val noticeImages = command.imagePaths()
         .stream()
         .map(i -> NoticeImage.create(notice, i))
         .toList();

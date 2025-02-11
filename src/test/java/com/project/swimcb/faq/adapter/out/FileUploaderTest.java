@@ -63,7 +63,8 @@ class FileUploaderTest {
     // then
     assertThat(result).isNotNull();
     assertThat(result.name()).contains(fileNameExceptUUID);
-    assertThat(result.url()).contains(expectedFilePathExceptFileName, fileNameExceptUUID);
+    assertThat(result.path()).contains(directory, fileNameExceptUUID);
+    assertThat(result.url()).contains(host, expectedFilePathExceptFileName, fileNameExceptUUID);
     assertThat(result.size()).isEqualTo(file.getSize());
 
     verify(s3Client, only()).putObject((PutObjectRequest) assertArg(i -> {

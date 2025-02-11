@@ -77,6 +77,7 @@ class UploadNoticeFileControllerTest {
     private static UploadNoticeFileResponse create() {
       return UploadNoticeFileResponse.builder()
           .name("test.jpg")
+          .path("notice/test.jpg")
           .url("http://host.com/notice/test.jpg")
           .size(4)
           .build();

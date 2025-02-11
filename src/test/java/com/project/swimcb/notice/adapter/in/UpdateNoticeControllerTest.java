@@ -121,7 +121,7 @@ class UpdateNoticeControllerTest {
             .contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("imageUrls는 null이 아니어야 합니다.")));
+        .andExpect(content().string(containsString("imagePaths는 null이 아니어야 합니다.")));
 
     verify(useCase, never()).updateNotice(any());
   }

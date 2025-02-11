@@ -10,8 +10,8 @@ public record UpdateNoticeRequest(
     @NotNull(message = "content는 null이 아니어야 합니다.")
     String content,
 
-    @NotNull(message = "imageUrls는 null이 아니어야 합니다.")
-    List<String> imageUrls,
+    @NotNull(message = "imagePaths는 null이 아니어야 합니다.")
+    List<String> imagePaths,
 
     boolean isVisible
 ) {

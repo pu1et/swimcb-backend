@@ -89,7 +89,7 @@ class RegisterNoticeInteractorTest {
           .createdBy("createdBy")
           .title("title")
           .content("content")
-          .imageUrls(List.of("http://image.com/1", "http://image.com/2"))
+          .imagePaths(List.of("/notice/1", "/notice/2"))
           .isVisible(true)
           .build();
     }
@@ -99,7 +99,7 @@ class RegisterNoticeInteractorTest {
           .createdBy("createdBy")
           .title("title")
           .content("content")
-          .imageUrls(List.of())
+          .imagePaths(List.of())
           .isVisible(true)
           .build();
     }

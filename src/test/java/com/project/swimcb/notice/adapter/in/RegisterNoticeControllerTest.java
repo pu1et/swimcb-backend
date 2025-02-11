@@ -112,7 +112,7 @@ class RegisterNoticeControllerTest {
             .contentType(APPLICATION_JSON_VALUE)
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("imageUrls는 null일 수 없습니다.")));
+        .andExpect(content().string(containsString("imagePaths는 null일 수 없습니다.")));
 
     verify(useCase, never()).registerNotice(any());
   }
@@ -124,7 +124,7 @@ class RegisterNoticeControllerTest {
           .createdBy("createdBy")
           .title("title")
           .content("content")
-          .imageUrls(List.of("image1", "image2"))
+          .imagePaths(List.of("image1", "image2"))
           .isVisible(true)
           .build();
     }
@@ -133,7 +133,7 @@ class RegisterNoticeControllerTest {
       return RegisterNoticeRequest.builder()
           .title("title")
           .content("content")
-          .imageUrls(List.of("image1", "image2"))
+          .imagePaths(List.of("image1", "image2"))
           .isVisible(true)
           .build();
     }
@@ -142,7 +142,7 @@ class RegisterNoticeControllerTest {
       return RegisterNoticeRequest.builder()
           .createdBy("createdBy")
           .content("content")
-          .imageUrls(List.of("image1", "image2"))
+          .imagePaths(List.of("image1", "image2"))
           .isVisible(true)
           .build();
     }
@@ -151,7 +151,7 @@ class RegisterNoticeControllerTest {
       return RegisterNoticeRequest.builder()
           .createdBy("createdBy")
           .title("title")
-          .imageUrls(List.of("image1", "image2"))
+          .imagePaths(List.of("image1", "image2"))
           .isVisible(true)
           .build();
     }

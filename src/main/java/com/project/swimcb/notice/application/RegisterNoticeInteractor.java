@@ -25,7 +25,7 @@ public class RegisterNoticeInteractor implements RegisterNoticeUseCase {
     val notice = Notice.create(command.title(), command.content(), command.isVisible());
     val savedNotice = noticeRepository.save(notice);
 
-    val noticeImages = command.imageUrls()
+    val noticeImages = command.imagePaths()
         .stream()
         .map(i -> NoticeImage.create(savedNotice, i))
         .toList();

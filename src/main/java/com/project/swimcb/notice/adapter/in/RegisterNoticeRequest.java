@@ -15,8 +15,8 @@ public record RegisterNoticeRequest(
     @NotNull(message = "content는 null일 수 없습니다.")
     String content,
 
-    @NotNull(message = "imageUrls는 null일 수 없습니다.")
-    List<String> imageUrls,
+    @NotNull(message = "imagePaths는 null일 수 없습니다.")
+    List<String> imagePaths,
 
     boolean isVisible
 ) {

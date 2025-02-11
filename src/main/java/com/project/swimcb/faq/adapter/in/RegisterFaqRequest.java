@@ -8,7 +8,7 @@ public record RegisterFaqRequest(
     @NonNull String createdBy,
     @NonNull String title,
     @NonNull String content,
-    @NonNull List<String> imageUrls,
+    @NonNull List<String> imagePaths,
     boolean isVisible
 ) {
 

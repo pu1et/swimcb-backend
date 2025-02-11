@@ -11,7 +11,7 @@ public record UpdateFaqRequest(
     String content,
 
     @NotNull(message = "FAQ 이미지 URL 리스트는 null이 아니어야 합니다.")
-    List<String> imageUrls,
+    List<String> imagePaths,
 
     boolean isVisible
 ) {

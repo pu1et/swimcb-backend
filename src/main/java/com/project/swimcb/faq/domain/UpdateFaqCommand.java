@@ -10,7 +10,7 @@ public record UpdateFaqCommand(
     long faqId,
     @NonNull String title,
     @NonNull String content,
-    @NonNull List<String> imageUrls,
+    @NonNull List<String> imagePaths,
     boolean isVisible
 ) {
 
@@ -19,7 +19,7 @@ public record UpdateFaqCommand(
         .faqId(faqId)
         .title(request.title())
         .content(request.content())
-        .imageUrls(request.imageUrls())
+        .imagePaths(request.imagePaths())
         .isVisible(request.isVisible())
         .build();
   }
