@@ -1,4 +1,4 @@
-package com.project.swimcb.bo.reservation.domain;
+package com.project.swimcb.bo.reservation.domain.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

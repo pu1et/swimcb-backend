@@ -1,21 +1,20 @@
 package com.project.swimcb.bo.reservation.adapter.in;
 
-import static com.project.swimcb.bo.reservation.domain.PaymentMethod.BANK_TRANSFER;
-import static com.project.swimcb.bo.reservation.domain.PaymentMethod.CASH_ON_SITE;
-import static com.project.swimcb.bo.reservation.domain.ReservationPaymentStatus.PAYMENT_COMPLETED;
-import static com.project.swimcb.bo.reservation.domain.ReservationPaymentStatus.RESERVATION_REQUESTED;
+import static com.project.swimcb.bo.reservation.domain.enums.PaymentMethod.BANK_TRANSFER;
+import static com.project.swimcb.bo.reservation.domain.enums.PaymentMethod.CASH_ON_SITE;
+import static com.project.swimcb.bo.reservation.domain.enums.ReservationPaymentStatus.PAYMENT_COMPLETED;
+import static com.project.swimcb.bo.reservation.domain.enums.ReservationPaymentStatus.RESERVATION_REQUESTED;
 import static com.project.swimcb.swimmingpool.domain.enums.SwimmingClassType.AQUA_AEROBICS;
 import static com.project.swimcb.swimmingpool.domain.enums.SwimmingClassType.GROUP;
 
-import com.project.swimcb.bo.reservation.domain.ReservationPaymentStatus;
-import com.project.swimcb.bo.reservation.domain.SwimmingType;
+import com.project.swimcb.bo.reservation.domain.enums.ReservationPaymentStatus;
+import com.project.swimcb.bo.reservation.domain.enums.SwimmingType;
 import com.project.swimcb.bo.reservation.adapter.in.FindBoReservationsWithPaymentsResponse.Payment;
 import com.project.swimcb.bo.reservation.adapter.in.FindBoReservationsWithPaymentsResponse.SwimmingClass;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
