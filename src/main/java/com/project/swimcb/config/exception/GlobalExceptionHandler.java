@@ -3,6 +3,7 @@ package com.project.swimcb.config.exception;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
+import jakarta.validation.ConstraintViolationException;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import lombok.val;
@@ -24,6 +25,13 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
     val errorResponse = new ErrorResponse(BAD_REQUEST.value(),
         Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage());
+    return ResponseEntity.status(BAD_REQUEST).body(errorResponse);
+  }
+
+  @ExceptionHandler(ConstraintViolationException.class)
+  public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException e) {
+    val errorResponse = new ErrorResponse(BAD_REQUEST.value(),
+        Objects.requireNonNull(e.getMessage()));
     return ResponseEntity.status(BAD_REQUEST).body(errorResponse);
   }
 }

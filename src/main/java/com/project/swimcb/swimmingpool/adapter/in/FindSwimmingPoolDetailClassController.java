@@ -1,7 +1,7 @@
 package com.project.swimcb.swimmingpool.adapter.in;
 
 import com.project.swimcb.swimmingpool.domain.SwimmingPoolDetailClass;
-import com.project.swimcb.swimmingpool.domain.enums.ClassType;
+import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,7 +25,7 @@ public class FindSwimmingPoolDetailClassController {
       @PathVariable(value = "swimmingPoolId") long swimmingPoolId,
       @Parameter(description = "시간대", example = "2025-01-01T01:01:01") @RequestParam(value = "class-time", required = false) LocalDateTime classTime,
       @Parameter(description = "강습 요일", example = "MONDAY") @RequestParam(value = "class-day", required = false) DayOfWeek classDay,
-      @Parameter(description = "강습형태", example = "GROUP_BEGINNER") @RequestParam(value = "class-type", required = false) ClassType classType
+      @Parameter(description = "강습형태", example = "GROUP_BEGINNER") @RequestParam(value = "swimmingClassType", required = false) SwimmingClassType swimmingClassType
   ) {
     return List.of(
         SwimmingPoolDetailClass.builder()
