@@ -1,7 +1,7 @@
-package com.project.swimcb.bo.main.adapter.in;
+package com.project.swimcb.bo.dashboard.adapter.in;
 
-import com.project.swimcb.bo.main.adapter.in.FindBoDashboardResponse.DailyReservationStatus;
-import com.project.swimcb.bo.main.adapter.in.FindBoDashboardResponse.MonthlyReservationStatus;
+import com.project.swimcb.bo.dashboard.adapter.in.FindBoDashboardResponse.DailyReservationStatus;
+import com.project.swimcb.bo.dashboard.adapter.in.FindBoDashboardResponse.MonthlyReservationStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;

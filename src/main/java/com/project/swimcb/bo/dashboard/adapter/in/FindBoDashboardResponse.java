@@ -1,4 +1,4 @@
-package com.project.swimcb.bo.main.adapter.in;
+package com.project.swimcb.bo.dashboard.adapter.in;
 
 import java.time.LocalDate;
 import java.util.List;
