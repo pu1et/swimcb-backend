@@ -1,7 +1,7 @@
-package com.project.swimcb.swimmingpool.application;
+package com.project.swimcb.bo.swimmingpool.application;
 
-import com.project.swimcb.swimmingpool.application.in.UpdateSwimmingPoolBasicInfoUseCase;
-import com.project.swimcb.swimmingpool.domain.UpdateSwimmingPoolBasicInfoCommand;
+import com.project.swimcb.bo.swimmingpool.application.in.UpdateSwimmingPoolBasicInfoUseCase;
+import com.project.swimcb.bo.swimmingpool.domain.UpdateSwimmingPoolBasicInfoCommand;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

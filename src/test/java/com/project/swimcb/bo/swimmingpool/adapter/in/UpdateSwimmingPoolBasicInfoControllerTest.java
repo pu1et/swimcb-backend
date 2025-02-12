@@ -1,4 +1,4 @@
-package com.project.swimcb.swimmingpool.adapter.in;
+package com.project.swimcb.bo.swimmingpool.adapter.in;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
@@ -13,8 +13,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.swimcb.bo.swimmingpool.adapter.in.UpdateSwimmingPoolBasicInfoController;
+import com.project.swimcb.bo.swimmingpool.adapter.in.UpdateSwimmingPoolBasicInfoRequest;
 import com.project.swimcb.config.security.SecurityConfig;
-import com.project.swimcb.swimmingpool.application.in.UpdateSwimmingPoolBasicInfoUseCase;
+import com.project.swimcb.bo.swimmingpool.application.in.UpdateSwimmingPoolBasicInfoUseCase;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.IntStream;

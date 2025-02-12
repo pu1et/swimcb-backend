@@ -1,6 +1,6 @@
-package com.project.swimcb.swimmingpool.application.in;
+package com.project.swimcb.bo.swimmingpool.application.in;
 
-import com.project.swimcb.swimmingpool.domain.UpdateSwimmingPoolBasicInfoCommand;
+import com.project.swimcb.bo.swimmingpool.domain.UpdateSwimmingPoolBasicInfoCommand;
 import lombok.NonNull;
 
 public interface UpdateSwimmingPoolBasicInfoUseCase {

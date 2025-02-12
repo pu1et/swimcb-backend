@@ -1,6 +1,6 @@
-package com.project.swimcb.swimmingpool.adapter.in;
+package com.project.swimcb.bo.swimmingpool.adapter.in;
 
-import com.project.swimcb.swimmingpool.application.in.UpdateSwimmingPoolBasicInfoUseCase;
+import com.project.swimcb.bo.swimmingpool.application.in.UpdateSwimmingPoolBasicInfoUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

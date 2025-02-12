@@ -1,6 +1,6 @@
-package com.project.swimcb.swimmingpool.adapter.in;
+package com.project.swimcb.bo.swimmingpool.adapter.in;
 
-import com.project.swimcb.swimmingpool.domain.UpdateSwimmingPoolBasicInfoCommand;
+import com.project.swimcb.bo.swimmingpool.domain.UpdateSwimmingPoolBasicInfoCommand;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
