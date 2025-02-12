@@ -13,8 +13,8 @@ public record UpdateSwimmingPoolBasicInfoCommand(
     Integer newEnrollmentEndDate,
     Integer reEnrollmentStartDate,
     Integer reEnrollmentEndDate,
-    @NonNull List<String> images,
-    String usageAgreementUrl
+    @NonNull List<String> imagePaths,
+    String usageAgreementPath
 ) {
 
 }

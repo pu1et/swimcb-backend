@@ -35,7 +35,7 @@ public record UpdateSwimmingPoolBasicInfoRequest(
     @NotNull(message = "images은 null일 수 없습니다.")
     @Size(max = 6, message = "images는 6개 이하여야 합니다.")
     @Schema(description = "대표 이미지")
-    List<String> images,
+    List<String> imagePaths,
 
     @Schema(description = "이용약관 Path", example = "/swimming-pool/image/1")
     String usageAgreementPath
@@ -50,8 +50,8 @@ public record UpdateSwimmingPoolBasicInfoRequest(
         .newEnrollmentEndDate(this.newEnrollmentEndDay)
         .reEnrollmentStartDate(this.reEnrollmentStartDate)
         .reEnrollmentEndDate(this.reEnrollmentEndDate)
-        .images(this.images)
-        .usageAgreementUrl(this.usageAgreementPath)
+        .imagePaths(this.imagePaths)
+        .usageAgreementPath(this.usageAgreementPath)
         .build();
   }
 }

@@ -119,8 +119,8 @@ class UpdateSwimmingPoolBasicInfoControllerTest {
           .name("name")
           .phone("phone")
           .address("address")
-          .images(List.of("image"))
-          .usageAgreementUrl("usageAgreementUrl")
+          .imagePaths(List.of("image"))
+          .usageAgreementPath("usageAgreementPath")
           .build();
     }
 
@@ -129,7 +129,7 @@ class UpdateSwimmingPoolBasicInfoControllerTest {
           .name("name")
           .phone("phone")
           .address("address")
-          .usageAgreementUrl("usageAgreementUrl")
+          .usageAgreementPath("usageAgreementPath")
           .build();
     }
 
@@ -138,8 +138,8 @@ class UpdateSwimmingPoolBasicInfoControllerTest {
           .name("name")
           .phone("phone")
           .address("address")
-          .images(IntStream.range(0, 7).mapToObj(i -> "image").toList())
-          .usageAgreementUrl("usageAgreementUrl")
+          .imagePaths(IntStream.range(0, 7).mapToObj(i -> "image").toList())
+          .usageAgreementPath("usageAgreementPath")
           .build();
     }
   }
