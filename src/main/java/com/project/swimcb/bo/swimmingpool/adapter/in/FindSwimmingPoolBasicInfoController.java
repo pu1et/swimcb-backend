@@ -28,8 +28,8 @@ public class FindSwimmingPoolBasicInfoController {
         .newEnrollmentEndDay(10)
         .reEnrollmentStartDate(15)
         .reEnrollmentEndDate(20)
-        .imageUrls(List.of("/swimming-pool/1", "/swimming-pool/2"))
-        .usageAgreementPath("/swimming-pool/usage-agreement/1")
+        .imageUrls(List.of("/swimming-pool/image1.jpg", "/swimming-pool/image2.jpg"))
+        .usageAgreementUrl("/swimming-pool/usage-agreement/usage-agreement.txt")
         .build();
   }
 }

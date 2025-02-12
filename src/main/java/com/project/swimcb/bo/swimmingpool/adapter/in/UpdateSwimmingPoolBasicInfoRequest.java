@@ -37,7 +37,7 @@ public record UpdateSwimmingPoolBasicInfoRequest(
     @Schema(description = "대표 이미지")
     List<String> imagePaths,
 
-    @Schema(description = "이용약관 Path", example = "/swimming-pool/image/1")
+    @Schema(description = "이용약관 Path", example = "/swimming-pool/usage-agreement.txt")
     String usageAgreementPath
 ) {
 

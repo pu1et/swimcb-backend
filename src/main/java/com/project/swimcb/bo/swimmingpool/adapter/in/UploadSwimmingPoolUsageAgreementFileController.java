@@ -23,8 +23,8 @@ public class UploadSwimmingPoolUsageAgreementFileController {
   ) {
     return UploadSwimmingPoolUsageAgreementResponse.builder()
         .name("usage-agreement.txt")
-        .path("/swimming-pool/usage-agreement/1")
-        .url("http://host.com/swimming-pool/usage-agreement/1")
+        .path("/swimming-pool/usage-agreement/usage-agreement.txt")
+        .url("http://host.com/swimming-pool/usage-agreement/usage-agreement.txt")
         .size(1024)
         .build();
   }

@@ -23,8 +23,8 @@ public class UploadSwimmingPoolImageController {
   ) {
     return UploadSwimmingPoolImageResponse.builder()
         .name("image.jpg")
-        .path("/swimming-pool/1")
-        .url("http://host.com/swimming-pool/1")
+        .path("/swimming-pool/image.jpg")
+        .url("http://host.com/swimming-pool/image.jpg")
         .size(1024)
         .build();
   }
