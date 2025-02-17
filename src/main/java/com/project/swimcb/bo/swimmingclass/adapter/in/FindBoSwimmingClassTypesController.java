@@ -1,7 +1,7 @@
 package com.project.swimcb.bo.swimmingclass.adapter.in;
 
-import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassTypesResponse.SubType;
-import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassTypesResponse.Type;
+import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassTypesResponse.ClassSubType;
+import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassTypesResponse.ClassType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "BO")
 @RestController
-@RequestMapping("/api/bo/swimming-classes/types")
+@RequestMapping("/api/bo/swimming-classes/class-types")
 @RequiredArgsConstructor
 public class FindBoSwimmingClassTypesController {
 
@@ -20,40 +20,40 @@ public class FindBoSwimmingClassTypesController {
   @GetMapping
   public FindBoSwimmingClassTypesResponse findBoSwimmingClassSubType() {
     return FindBoSwimmingClassTypesResponse.builder()
-        .types(
+        .classTypes(
             List.of(
-                Type.builder()
-                    .typeId(1L)
+                ClassType.builder()
+                    .classTypeId(1L)
                     .name("단체강습")
-                    .subTypes(
+                    .classSubTypes(
                         List.of(
-                            SubType.builder().subTypeId(1L).name("기초").build(),
-                            SubType.builder().subTypeId(2L).name("초급").build(),
-                            SubType.builder().subTypeId(3L).name("중급").build(),
-                            SubType.builder().subTypeId(4L).name("상급").build(),
-                            SubType.builder().subTypeId(5L).name("연수").build(),
-                            SubType.builder().subTypeId(6L).name("마스터즈").build()
+                            ClassSubType.builder().classSubTypeId(1L).name("기초").build(),
+                            ClassSubType.builder().classSubTypeId(2L).name("초급").build(),
+                            ClassSubType.builder().classSubTypeId(3L).name("중급").build(),
+                            ClassSubType.builder().classSubTypeId(4L).name("상급").build(),
+                            ClassSubType.builder().classSubTypeId(5L).name("연수").build(),
+                            ClassSubType.builder().classSubTypeId(6L).name("마스터즈").build()
                         )
                     ).build(),
-                Type.builder()
-                    .typeId(2L)
+                ClassType.builder()
+                    .classTypeId(2L)
                     .name("키즈")
-                    .subTypes(
+                    .classSubTypes(
                         List.of(
-                            SubType.builder().subTypeId(7L).name("병아리반").build(),
-                            SubType.builder().subTypeId(8L).name("유아 5세").build()
+                            ClassSubType.builder().classSubTypeId(7L).name("병아리반").build(),
+                            ClassSubType.builder().classSubTypeId(8L).name("유아 5세").build()
                         )
                     ).build(),
-                Type.builder()
-                    .typeId(3L)
+                ClassType.builder()
+                    .classTypeId(3L)
                     .name("레슨")
-                    .subTypes(List.of(
-                        SubType.builder().subTypeId(9L).name("1:1 레슨").build()
+                    .classSubTypes(List.of(
+                        ClassSubType.builder().classSubTypeId(9L).name("1:1 레슨").build()
                     )).build(),
-                Type.builder()
-                    .typeId(4L)
+                ClassType.builder()
+                    .classTypeId(4L)
                     .name("아쿠아로빅")
-                    .subTypes(List.of()).build()
+                    .classSubTypes(List.of()).build()
             )
         )
         .build();

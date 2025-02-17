@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "BO")
 @RestController
-@RequestMapping("/api/bo/swimming-classes/types")
+@RequestMapping("/api/bo/swimming-classes/class-types")
 @RequiredArgsConstructor
 public class UpdateBoSwimmingClassTypesController {
 

@@ -6,21 +6,21 @@ import lombok.NonNull;
 
 @Builder
 public record FindBoSwimmingClassTypesResponse(
-    @NonNull List<Type> types
+    @NonNull List<ClassType> classTypes
 ) {
 
   @Builder
-  record Type(
-      long typeId,
+  record ClassType(
+      long classTypeId,
       @NonNull String name,
-      @NonNull List<SubType> subTypes
+      @NonNull List<ClassSubType> classSubTypes
   ) {
 
   }
 
   @Builder
-  record SubType(
-      long subTypeId,
+  record ClassSubType(
+      long classSubTypeId,
       @NonNull String name
   ) {
 

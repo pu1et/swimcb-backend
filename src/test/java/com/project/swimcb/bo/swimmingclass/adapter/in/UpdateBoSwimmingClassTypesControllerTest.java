@@ -7,8 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.swimcb.bo.swimmingclass.adapter.in.UpdateBoSwimmingClassTypesRequest.SubType;
-import com.project.swimcb.bo.swimmingclass.adapter.in.UpdateBoSwimmingClassTypesRequest.Type;
+import com.project.swimcb.bo.swimmingclass.adapter.in.UpdateBoSwimmingClassTypesRequest.ClassSubType;
+import com.project.swimcb.bo.swimmingclass.adapter.in.UpdateBoSwimmingClassTypesRequest.ClassType;
 import com.project.swimcb.config.security.SecurityConfig;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -31,7 +31,7 @@ class UpdateBoSwimmingClassTypesControllerTest {
   @Autowired
   private ObjectMapper objectMapper;
 
-  private static final String PATH = "/api/bo/swimming-classes/types";
+  private static final String PATH = "/api/bo/swimming-classes/class-types";
 
   @Test
   @DisplayName("강습형태/구분 리스트 일괄 업데이트 성공")
@@ -137,12 +137,12 @@ class UpdateBoSwimmingClassTypesControllerTest {
     }
 
     private static UpdateBoSwimmingClassTypesRequest create(int count,
-        Stream<Type> additionalTypes) {
+        Stream<ClassType> additionalTypes) {
       val types = Stream.concat(
           IntStream.range(0, count).mapToObj(i -> typeWithNoSub(i + 1L)),
           additionalTypes
       ).toList();
-      return UpdateBoSwimmingClassTypesRequest.builder().types(types).build();
+      return UpdateBoSwimmingClassTypesRequest.builder().classTypes(types).build();
     }
 
     private static UpdateBoSwimmingClassTypesRequest create(int count) {
@@ -150,7 +150,8 @@ class UpdateBoSwimmingClassTypesControllerTest {
     }
 
     private static UpdateBoSwimmingClassTypesRequest typeNameIsNull() {
-      return create(5, Stream.of(Type.builder().typeId(6L).subTypes(List.of()).build()));
+      return create(5,
+          Stream.of(ClassType.builder().classTypeId(6L).classSubTypes(List.of()).build()));
     }
 
     private static UpdateBoSwimmingClassTypesRequest subTypesIsNull() {
@@ -164,24 +165,23 @@ class UpdateBoSwimmingClassTypesControllerTest {
 
     private static UpdateBoSwimmingClassTypesRequest subTypeNameIsNull() {
       return create(5,
-          Stream.of(typeWithSubType(6L, List.of(SubType.builder().subTypeId(1L).build()))));
+          Stream.of(
+              typeWithSubType(6L, List.of(ClassSubType.builder().classSubTypeId(1L).build()))));
     }
 
-    private static Type typeWithSubType(long typeId, List<SubType> subTypes) {
-      return Type.builder().typeId(typeId).name("MOCK_NAME").subTypes(subTypes).build();
+    private static ClassType typeWithSubType(long typeId, List<ClassSubType> classSubTypes) {
+      return ClassType.builder().classTypeId(typeId).name("MOCK_NAME").classSubTypes(classSubTypes)
+          .build();
     }
 
-    private static Type typeWithNoSub(long typeId) {
-      return Type.builder().typeId(typeId).name("MOCK_NAME").subTypes(List.of()).build();
+    private static ClassType typeWithNoSub(long typeId) {
+      return ClassType.builder().classTypeId(typeId).name("MOCK_NAME").classSubTypes(List.of())
+          .build();
     }
 
-    private static SubType subType(long subTypeId) {
-      return SubType.builder().subTypeId(subTypeId).name("MOCK_NAME").build();
-    }
-
-    private static List<SubType> subTypes(int count) {
+    private static List<ClassSubType> subTypes(int count) {
       return IntStream.range(0, count)
-          .mapToObj(i -> SubType.builder().subTypeId(i + 1L).name("MOCK_NAME").build())
+          .mapToObj(i -> ClassSubType.builder().classSubTypeId(i + 1L).name("MOCK_NAME").build())
           .toList();
     }
   }
