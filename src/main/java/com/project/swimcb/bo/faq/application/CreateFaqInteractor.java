@@ -1,6 +1,6 @@
 package com.project.swimcb.bo.faq.application;
 
-import com.project.swimcb.bo.faq.application.in.RegisterFaqUseCase;
+import com.project.swimcb.bo.faq.application.in.CreateFaqUseCase;
 import com.project.swimcb.bo.faq.domain.FaqRepository;
 import com.project.swimcb.bo.faq.domain.Faq;
 import lombok.NonNull;
@@ -11,12 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class RegisterFaqInteractor implements RegisterFaqUseCase {
+public class CreateFaqInteractor implements CreateFaqUseCase {
 
   private final FaqRepository faqRepository;
 
   @Override
-  public void registerFaq(@NonNull Faq faq) {
+  public void createFaq(@NonNull Faq faq) {
     faqRepository.save(faq);
   }
 }

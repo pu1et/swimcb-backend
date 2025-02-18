@@ -1,6 +1,6 @@
 package com.project.swimcb.bo.swimmingclass.adapter.in;
 
-import com.project.swimcb.bo.swimmingclass.domain.enums.RegisterBoSwimmingClassSwimmingClassType;
+import com.project.swimcb.bo.swimmingclass.domain.enums.CreateBoSwimmingClassSwimmingClassType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -10,7 +10,7 @@ import lombok.Builder;
 
 @Builder
 @Schema(description = "BO 클래스 데이터 관리 - 클래스 추가 response")
-public record RegisterBoSwimmingClassRequest(
+public record CreateBoSwimmingClassRequest(
 
     @NotNull(message = "강습 요일은 null이 될 수 없습니다.")
     @Schema(description = "강습 요일")
@@ -63,7 +63,7 @@ public record RegisterBoSwimmingClassRequest(
   record Type(
       @NotNull(message = "강습 형태는 null이 될 수 없습니다.")
       @Schema(description = "강습 형태", example = "GROUP")
-      RegisterBoSwimmingClassSwimmingClassType type,
+      CreateBoSwimmingClassSwimmingClassType type,
 
       @NotNull(message = "강습 구분은 null이 될 수 없습니다.")
       @Schema(description = "강습 구분", example = "마스터즈")

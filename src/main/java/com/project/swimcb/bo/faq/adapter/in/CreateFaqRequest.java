@@ -4,7 +4,7 @@ import com.project.swimcb.bo.faq.domain.Faq;
 import java.util.List;
 import lombok.NonNull;
 
-public record RegisterFaqRequest(
+public record CreateFaqRequest(
     @NonNull String createdBy,
     @NonNull String title,
     @NonNull String content,

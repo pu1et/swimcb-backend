@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "즐겨찾기")
 @RestController
 @RequestMapping("/api/favorites")
-public class RegisterFavoriteController {
+public class CreateFavoriteController {
 
   @Operation(summary = "즐겨찾기 등록")
   @PostMapping
-  public void registerFavorite(@RequestBody RegisterFavoriteRequest request) {
+  public void createFavorite(@RequestBody CreateFavoriteRequest request) {
 
   }
 }

@@ -1,7 +1,7 @@
 package com.project.swimcb.bo.notice.application;
 
-import com.project.swimcb.bo.notice.application.in.RegisterNoticeUseCase;
-import com.project.swimcb.bo.notice.domain.RegisterNoticeCommand;
+import com.project.swimcb.bo.notice.application.in.CreateNoticeUseCase;
+import com.project.swimcb.bo.notice.domain.CreateNoticeCommand;
 import com.project.swimcb.bo.notice.domain.Notice;
 import com.project.swimcb.bo.notice.domain.NoticeImage;
 import com.project.swimcb.bo.notice.domain.NoticeImageRepository;
@@ -15,13 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class RegisterNoticeInteractor implements RegisterNoticeUseCase {
+public class CreateNoticeInteractor implements CreateNoticeUseCase {
 
   private final NoticeRepository noticeRepository;
   private final NoticeImageRepository noticeImageRepository;
 
   @Override
-  public void registerNotice(@NonNull RegisterNoticeCommand command) {
+  public void createNotice(@NonNull CreateNoticeCommand command) {
     val notice = Notice.create(command.title(), command.content(), command.isVisible());
     val savedNotice = noticeRepository.save(notice);
 

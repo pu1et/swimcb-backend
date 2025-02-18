@@ -1,6 +1,6 @@
 package com.project.swimcb.bo.faq.adapter.in;
 
-import com.project.swimcb.bo.faq.application.in.RegisterFaqUseCase;
+import com.project.swimcb.bo.faq.application.in.CreateFaqUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/bo/faqs")
 @RequiredArgsConstructor
-public class RegisterFaqController {
+public class CreateFaqController {
 
-  private final RegisterFaqUseCase useCase;
+  private final CreateFaqUseCase useCase;
 
   @Operation(summary = "FAQ 등록")
   @PostMapping
-  public void registerFaq(@RequestBody RegisterFaqRequest request) {
-    useCase.registerFaq(request.toDomain());
+  public void createFaq(@RequestBody CreateFaqRequest request) {
+    useCase.createFaq(request.toDomain());
   }
 }

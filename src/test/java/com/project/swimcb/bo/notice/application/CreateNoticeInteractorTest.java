@@ -11,7 +11,7 @@ import static org.mockito.Mockito.when;
 import com.project.swimcb.bo.notice.domain.Notice;
 import com.project.swimcb.bo.notice.domain.NoticeImageRepository;
 import com.project.swimcb.bo.notice.domain.NoticeRepository;
-import com.project.swimcb.bo.notice.domain.RegisterNoticeCommand;
+import com.project.swimcb.bo.notice.domain.CreateNoticeCommand;
 import com.project.swimcb.bo.notice.domain.TestNoticeFactory;
 import java.util.List;
 import lombok.val;
@@ -23,10 +23,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class RegisterNoticeInteractorTest {
+class CreateNoticeInteractorTest {
 
   @InjectMocks
-  private RegisterNoticeInteractor interactor;
+  private CreateNoticeInteractor interactor;
 
   @Mock
   private NoticeRepository noticeRepository;
@@ -38,14 +38,14 @@ class RegisterNoticeInteractorTest {
   @DisplayName("공지사항을 저장하면, 공지사항과 이미지가 저장된다.")
   void shouldCreateNooticeAndSaveIamges() {
     // given
-    val command = RegisterNoticeCommandFactory.createWithImages();
+    val command = CreateNoticeCommandFactory.createWithImages();
     val notice = Notice.create(command.title(), command.content(), command.isVisible());
     val savedNotice = TestNoticeFactory.create(1L, notice.getTitle(), notice.getContent(),
         notice.isVisible());
 
     when(noticeRepository.save(any())).thenReturn(savedNotice);
     // when
-    interactor.registerNotice(command);
+    interactor.createNotice(command);
     // then
     verify(noticeRepository, only()).save(assertArg(i -> {
       assertThat(i.getTitle()).isEqualTo(notice.getTitle());
@@ -63,14 +63,14 @@ class RegisterNoticeInteractorTest {
   @DisplayName("공지사항을 저장할 때, 이미지가 없으면 이미지 저장은 호출되지 않는다.")
   void shouldCreateNoticeWithoutSavingImagesIfNoImages() {
     // given
-    val command = RegisterNoticeCommandFactory.createWithNoImage();
+    val command = CreateNoticeCommandFactory.createWithNoImage();
     val notice = Notice.create(command.title(), command.content(), command.isVisible());
     val savedNotice = TestNoticeFactory.create(1L, notice.getTitle(), notice.getContent(),
         notice.isVisible());
 
     when(noticeRepository.save(any())).thenReturn(savedNotice);
     // when
-    interactor.registerNotice(command);
+    interactor.createNotice(command);
     // then
     verify(noticeRepository, only()).save(assertArg(i -> {
       assertThat(i.getTitle()).isEqualTo(notice.getTitle());
@@ -81,10 +81,10 @@ class RegisterNoticeInteractorTest {
     verify(noticeImageRepository, never()).saveAll(any());
   }
 
-  private static class RegisterNoticeCommandFactory {
+  private static class CreateNoticeCommandFactory {
 
-    private static RegisterNoticeCommand createWithImages() {
-      return RegisterNoticeCommand.builder()
+    private static CreateNoticeCommand createWithImages() {
+      return CreateNoticeCommand.builder()
           .createdBy("createdBy")
           .title("title")
           .content("content")
@@ -93,8 +93,8 @@ class RegisterNoticeInteractorTest {
           .build();
     }
 
-    private static RegisterNoticeCommand createWithNoImage() {
-      return RegisterNoticeCommand.builder()
+    private static CreateNoticeCommand createWithNoImage() {
+      return CreateNoticeCommand.builder()
           .createdBy("createdBy")
           .title("title")
           .content("content")

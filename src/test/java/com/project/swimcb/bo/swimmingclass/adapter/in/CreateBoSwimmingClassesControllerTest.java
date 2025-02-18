@@ -1,6 +1,6 @@
 package com.project.swimcb.bo.swimmingclass.adapter.in;
 
-import static com.project.swimcb.bo.swimmingclass.domain.enums.RegisterBoSwimmingClassSwimmingClassType.GROUP;
+import static com.project.swimcb.bo.swimmingclass.domain.enums.CreateBoSwimmingClassSwimmingClassType.GROUP;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -8,11 +8,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.swimcb.bo.swimmingclass.adapter.in.RegisterBoSwimmingClassRequest.Days;
-import com.project.swimcb.bo.swimmingclass.adapter.in.RegisterBoSwimmingClassRequest.RegistrationCapacity;
-import com.project.swimcb.bo.swimmingclass.adapter.in.RegisterBoSwimmingClassRequest.Ticket;
-import com.project.swimcb.bo.swimmingclass.adapter.in.RegisterBoSwimmingClassRequest.Time;
-import com.project.swimcb.bo.swimmingclass.adapter.in.RegisterBoSwimmingClassRequest.Type;
+import com.project.swimcb.bo.swimmingclass.adapter.in.CreateBoSwimmingClassRequest.Days;
+import com.project.swimcb.bo.swimmingclass.adapter.in.CreateBoSwimmingClassRequest.RegistrationCapacity;
+import com.project.swimcb.bo.swimmingclass.adapter.in.CreateBoSwimmingClassRequest.Ticket;
+import com.project.swimcb.bo.swimmingclass.adapter.in.CreateBoSwimmingClassRequest.Time;
+import com.project.swimcb.bo.swimmingclass.adapter.in.CreateBoSwimmingClassRequest.Type;
 import com.project.swimcb.config.security.SecurityConfig;
 import java.time.LocalTime;
 import java.util.List;
@@ -24,9 +24,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(RegisterBoSwimmingClassesController.class)
+@WebMvcTest(CreateBoSwimmingClassesController.class)
 @Import(SecurityConfig.class)
-class RegisterBoSwimmingClassesControllerTest {
+class CreateBoSwimmingClassesControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
@@ -38,9 +38,9 @@ class RegisterBoSwimmingClassesControllerTest {
 
   @Test
   @DisplayName("클래스 데이터 관리 - 클래스 추가 성공")
-  void shouldRegisterSuccessfully() throws Exception {
+  void shouldCreateSuccessfully() throws Exception {
     // given
-    val request = RegisterBoSwimmingClassRequestFactory.create();
+    val request = CreateBoSwimmingClassRequestFactory.create();
     // when
     // then
     mockMvc.perform(post(PATH)
@@ -53,12 +53,12 @@ class RegisterBoSwimmingClassesControllerTest {
   @DisplayName("강습 요일이 null인 경우 400 반환")
   void shouldReturn400WhenDayIsNull() throws Exception {
     // given
-    val request = RegisterBoSwimmingClassRequest.builder()
-        .time(RegisterBoSwimmingClassRequestFactory.time())
-        .type(RegisterBoSwimmingClassRequestFactory.type())
+    val request = CreateBoSwimmingClassRequest.builder()
+        .time(CreateBoSwimmingClassRequestFactory.time())
+        .type(CreateBoSwimmingClassRequestFactory.type())
         .instructorName("손지혜")
-        .tickets(RegisterBoSwimmingClassRequestFactory.tickets())
-        .registrationCapacity(RegisterBoSwimmingClassRequestFactory.registrationCapacity())
+        .tickets(CreateBoSwimmingClassRequestFactory.tickets())
+        .registrationCapacity(CreateBoSwimmingClassRequestFactory.registrationCapacity())
         .build();
     // when
     // then
@@ -73,12 +73,12 @@ class RegisterBoSwimmingClassesControllerTest {
   @DisplayName("강습 시간이 null인 경우 400 반환")
   void shouldReturn400WhenTimeIsNull() throws Exception {
     // given
-    val request = RegisterBoSwimmingClassRequest.builder()
-        .days(RegisterBoSwimmingClassRequestFactory.days())
-        .type(RegisterBoSwimmingClassRequestFactory.type())
+    val request = CreateBoSwimmingClassRequest.builder()
+        .days(CreateBoSwimmingClassRequestFactory.days())
+        .type(CreateBoSwimmingClassRequestFactory.type())
         .instructorName("손지혜")
-        .tickets(RegisterBoSwimmingClassRequestFactory.tickets())
-        .registrationCapacity(RegisterBoSwimmingClassRequestFactory.registrationCapacity())
+        .tickets(CreateBoSwimmingClassRequestFactory.tickets())
+        .registrationCapacity(CreateBoSwimmingClassRequestFactory.registrationCapacity())
         .build();
     // when
     // then
@@ -93,13 +93,13 @@ class RegisterBoSwimmingClassesControllerTest {
   @DisplayName("강습 시작 시간이 null인 경우 400 반환")
   void shouldReturn400WhenStartTimeIsNull() throws Exception {
     // given
-    val request = RegisterBoSwimmingClassRequest.builder()
-        .days(RegisterBoSwimmingClassRequestFactory.days())
+    val request = CreateBoSwimmingClassRequest.builder()
+        .days(CreateBoSwimmingClassRequestFactory.days())
         .time(Time.builder().endTime(LocalTime.of(6, 50)).build())
-        .type(RegisterBoSwimmingClassRequestFactory.type())
+        .type(CreateBoSwimmingClassRequestFactory.type())
         .instructorName("손지혜")
-        .tickets(RegisterBoSwimmingClassRequestFactory.tickets())
-        .registrationCapacity(RegisterBoSwimmingClassRequestFactory.registrationCapacity())
+        .tickets(CreateBoSwimmingClassRequestFactory.tickets())
+        .registrationCapacity(CreateBoSwimmingClassRequestFactory.registrationCapacity())
         .build();
     // when
     // then
@@ -114,13 +114,13 @@ class RegisterBoSwimmingClassesControllerTest {
   @DisplayName("강습 종료 시간이 null인 경우 400 반환")
   void shouldReturn400WhenEndTimeIsNull() throws Exception {
     // given
-    val request = RegisterBoSwimmingClassRequest.builder()
-        .days(RegisterBoSwimmingClassRequestFactory.days())
+    val request = CreateBoSwimmingClassRequest.builder()
+        .days(CreateBoSwimmingClassRequestFactory.days())
         .time(Time.builder().startTime(LocalTime.of(6, 0)).build())
-        .type(RegisterBoSwimmingClassRequestFactory.type())
+        .type(CreateBoSwimmingClassRequestFactory.type())
         .instructorName("손지혜")
-        .tickets(RegisterBoSwimmingClassRequestFactory.tickets())
-        .registrationCapacity(RegisterBoSwimmingClassRequestFactory.registrationCapacity())
+        .tickets(CreateBoSwimmingClassRequestFactory.tickets())
+        .registrationCapacity(CreateBoSwimmingClassRequestFactory.registrationCapacity())
         .build();
     // when
     // then
@@ -135,12 +135,12 @@ class RegisterBoSwimmingClassesControllerTest {
   @DisplayName("강습 형태/구분이 null인 경우 400 반환")
   void shouldReturn400WhenClassTypeIsNull() throws Exception {
     // given
-    val request = RegisterBoSwimmingClassRequest.builder()
-        .days(RegisterBoSwimmingClassRequestFactory.days())
-        .time(RegisterBoSwimmingClassRequestFactory.time())
+    val request = CreateBoSwimmingClassRequest.builder()
+        .days(CreateBoSwimmingClassRequestFactory.days())
+        .time(CreateBoSwimmingClassRequestFactory.time())
         .instructorName("손지혜")
-        .tickets(RegisterBoSwimmingClassRequestFactory.tickets())
-        .registrationCapacity(RegisterBoSwimmingClassRequestFactory.registrationCapacity())
+        .tickets(CreateBoSwimmingClassRequestFactory.tickets())
+        .registrationCapacity(CreateBoSwimmingClassRequestFactory.registrationCapacity())
         .build();
     // when
     // then
@@ -155,13 +155,13 @@ class RegisterBoSwimmingClassesControllerTest {
   @DisplayName("강습 형태가 null인 경우 400 반환")
   void shouldReturn400WhenTypeIsNull() throws Exception {
     // given
-    val request = RegisterBoSwimmingClassRequest.builder()
-        .days(RegisterBoSwimmingClassRequestFactory.days())
-        .time(RegisterBoSwimmingClassRequestFactory.time())
+    val request = CreateBoSwimmingClassRequest.builder()
+        .days(CreateBoSwimmingClassRequestFactory.days())
+        .time(CreateBoSwimmingClassRequestFactory.time())
         .type(Type.builder().subType("초급").build())
         .instructorName("손지혜")
-        .tickets(RegisterBoSwimmingClassRequestFactory.tickets())
-        .registrationCapacity(RegisterBoSwimmingClassRequestFactory.registrationCapacity())
+        .tickets(CreateBoSwimmingClassRequestFactory.tickets())
+        .registrationCapacity(CreateBoSwimmingClassRequestFactory.registrationCapacity())
         .build();
     // when
     // then
@@ -176,13 +176,13 @@ class RegisterBoSwimmingClassesControllerTest {
   @DisplayName("강습 구분이 null인 경우 400 반환")
   void shouldReturn400WhenSubTypeIsNull() throws Exception {
     // given
-    val request = RegisterBoSwimmingClassRequest.builder()
-        .days(RegisterBoSwimmingClassRequestFactory.days())
-        .time(RegisterBoSwimmingClassRequestFactory.time())
+    val request = CreateBoSwimmingClassRequest.builder()
+        .days(CreateBoSwimmingClassRequestFactory.days())
+        .time(CreateBoSwimmingClassRequestFactory.time())
         .type(Type.builder().type(GROUP).build())
         .instructorName("손지혜")
-        .tickets(RegisterBoSwimmingClassRequestFactory.tickets())
-        .registrationCapacity(RegisterBoSwimmingClassRequestFactory.registrationCapacity())
+        .tickets(CreateBoSwimmingClassRequestFactory.tickets())
+        .registrationCapacity(CreateBoSwimmingClassRequestFactory.registrationCapacity())
         .build();
     // when
     // then
@@ -197,12 +197,12 @@ class RegisterBoSwimmingClassesControllerTest {
   @DisplayName("담당강사가 null인 경우 400 반환")
   void shouldReturn400WhenInstructorIsNull() throws Exception {
     // given
-    val request = RegisterBoSwimmingClassRequest.builder()
-        .days(RegisterBoSwimmingClassRequestFactory.days())
-        .time(RegisterBoSwimmingClassRequestFactory.time())
-        .type(RegisterBoSwimmingClassRequestFactory.type())
-        .tickets(RegisterBoSwimmingClassRequestFactory.tickets())
-        .registrationCapacity(RegisterBoSwimmingClassRequestFactory.registrationCapacity())
+    val request = CreateBoSwimmingClassRequest.builder()
+        .days(CreateBoSwimmingClassRequestFactory.days())
+        .time(CreateBoSwimmingClassRequestFactory.time())
+        .type(CreateBoSwimmingClassRequestFactory.type())
+        .tickets(CreateBoSwimmingClassRequestFactory.tickets())
+        .registrationCapacity(CreateBoSwimmingClassRequestFactory.registrationCapacity())
         .build();
     // when
     // then
@@ -217,12 +217,12 @@ class RegisterBoSwimmingClassesControllerTest {
   @DisplayName("강습 티켓 리스트가 null인 경우 400 반환")
   void shouldReturn400WhenTicketsIsNull() throws Exception {
     // given
-    val request = RegisterBoSwimmingClassRequest.builder()
-        .days(RegisterBoSwimmingClassRequestFactory.days())
-        .time(RegisterBoSwimmingClassRequestFactory.time())
-        .type(RegisterBoSwimmingClassRequestFactory.type())
+    val request = CreateBoSwimmingClassRequest.builder()
+        .days(CreateBoSwimmingClassRequestFactory.days())
+        .time(CreateBoSwimmingClassRequestFactory.time())
+        .type(CreateBoSwimmingClassRequestFactory.type())
         .instructorName("손지혜")
-        .registrationCapacity(RegisterBoSwimmingClassRequestFactory.registrationCapacity())
+        .registrationCapacity(CreateBoSwimmingClassRequestFactory.registrationCapacity())
         .build();
     // when
     // then
@@ -237,13 +237,13 @@ class RegisterBoSwimmingClassesControllerTest {
   @DisplayName("강습 티켓 이름이 null인 경우 400 반환")
   void shouldReturn400WhenTicketNameIsNull() throws Exception {
     // given
-    val request = RegisterBoSwimmingClassRequest.builder()
-        .days(RegisterBoSwimmingClassRequestFactory.days())
-        .time(RegisterBoSwimmingClassRequestFactory.time())
-        .type(RegisterBoSwimmingClassRequestFactory.type())
+    val request = CreateBoSwimmingClassRequest.builder()
+        .days(CreateBoSwimmingClassRequestFactory.days())
+        .time(CreateBoSwimmingClassRequestFactory.time())
+        .type(CreateBoSwimmingClassRequestFactory.type())
         .instructorName("손지혜")
         .tickets(List.of(Ticket.builder().price(100000).build()))
-        .registrationCapacity(RegisterBoSwimmingClassRequestFactory.registrationCapacity())
+        .registrationCapacity(CreateBoSwimmingClassRequestFactory.registrationCapacity())
         .build();
     // when
     // then
@@ -258,12 +258,12 @@ class RegisterBoSwimmingClassesControllerTest {
   @DisplayName("정원 정보가 null인 경우 400 반환")
   void shouldReturn400WhenRegistrationCapacityIsNull() throws Exception {
     // given
-    val request = RegisterBoSwimmingClassRequest.builder()
-        .days(RegisterBoSwimmingClassRequestFactory.days())
-        .time(RegisterBoSwimmingClassRequestFactory.time())
-        .type(RegisterBoSwimmingClassRequestFactory.type())
+    val request = CreateBoSwimmingClassRequest.builder()
+        .days(CreateBoSwimmingClassRequestFactory.days())
+        .time(CreateBoSwimmingClassRequestFactory.time())
+        .type(CreateBoSwimmingClassRequestFactory.type())
         .instructorName("손지혜")
-        .tickets(RegisterBoSwimmingClassRequestFactory.tickets())
+        .tickets(CreateBoSwimmingClassRequestFactory.tickets())
         .build();
     // when
     // then
@@ -274,10 +274,10 @@ class RegisterBoSwimmingClassesControllerTest {
         .andExpect(content().string(containsString("정원 정보는 null이 될 수 없습니다.")));
   }
 
-  private static class RegisterBoSwimmingClassRequestFactory {
+  private static class CreateBoSwimmingClassRequestFactory {
 
-    private static RegisterBoSwimmingClassRequest create() {
-      return RegisterBoSwimmingClassRequest.builder()
+    private static CreateBoSwimmingClassRequest create() {
+      return CreateBoSwimmingClassRequest.builder()
           .days(days())
           .time(time())
           .type(type())

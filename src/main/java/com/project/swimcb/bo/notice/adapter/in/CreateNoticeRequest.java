@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.Builder;
 
 @Builder
-public record RegisterNoticeRequest(
+public record CreateNoticeRequest(
     @NotNull(message = "createdBy는 null일 수 없습니다.")
     String createdBy,
 

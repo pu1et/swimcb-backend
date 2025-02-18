@@ -1,7 +1,7 @@
 package com.project.swimcb.bo.notice.adapter.in;
 
-import com.project.swimcb.bo.notice.application.in.RegisterNoticeUseCase;
-import com.project.swimcb.bo.notice.domain.RegisterNoticeCommand;
+import com.project.swimcb.bo.notice.application.in.CreateNoticeUseCase;
+import com.project.swimcb.bo.notice.domain.CreateNoticeCommand;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/bo/notices")
 @RequiredArgsConstructor
-public class RegisterNoticeController {
+public class CreateNoticeController {
 
-  private final RegisterNoticeUseCase useCase;
+  private final CreateNoticeUseCase useCase;
 
   @Operation(summary = "공지사항 등록")
   @PostMapping
-  public void registerNotice(@Valid @RequestBody RegisterNoticeRequest request) {
-    useCase.registerNotice(RegisterNoticeCommand.from(request));
+  public void createNotice(@Valid @RequestBody CreateNoticeRequest request) {
+    useCase.createNotice(CreateNoticeCommand.from(request));
   }
 }
