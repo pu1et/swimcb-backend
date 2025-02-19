@@ -51,7 +51,7 @@ class UpdateBoSwimmingClassesControllerTest {
   }
 
   @Test
-  @DisplayName("클래스 리스트가 null인 경우 400 반환")
+  @DisplayName("클래스가 null인 경우 400 반환")
   void shouldReturn400WhenClassesIsNull() throws Exception {
     // given
     val request = UpdateBoSwimmingClassesRequest.builder().build();
@@ -61,7 +61,7 @@ class UpdateBoSwimmingClassesControllerTest {
             .contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("클래스 리스트는 null이 될 수 없습니다.")));
+        .andExpect(content().string(containsString("클래스는 null이 될 수 없습니다.")));
   }
 
   @Test
@@ -69,7 +69,7 @@ class UpdateBoSwimmingClassesControllerTest {
   void shouldReturn400WhenDayIsNull() throws Exception {
     // given
     val request = UpdateBoSwimmingClassesRequest.builder()
-        .swimmingClasses(List.of(
+        .swimmingClass(
             SwimmingClass.builder()
                 .id(1L)
                 .time(UpdateBoSwimmingClassRequestFactory.time())
@@ -79,7 +79,7 @@ class UpdateBoSwimmingClassesControllerTest {
                 .registrationCapacity(
                     UpdateBoSwimmingClassRequestFactory.registrationCapacity())
                 .isExposed(true)
-                .build())).build();
+                .build()).build();
     // when
     // then
     mockMvc.perform(put(PATH)
@@ -94,7 +94,7 @@ class UpdateBoSwimmingClassesControllerTest {
   void shouldReturn400WhenTimeIsNull() throws Exception {
     // given
     val request = UpdateBoSwimmingClassesRequest.builder()
-        .swimmingClasses(List.of(
+        .swimmingClass(
             SwimmingClass.builder()
                 .id(1L)
                 .days(UpdateBoSwimmingClassRequestFactory.days())
@@ -104,7 +104,7 @@ class UpdateBoSwimmingClassesControllerTest {
                 .registrationCapacity(
                     UpdateBoSwimmingClassRequestFactory.registrationCapacity())
                 .isExposed(true)
-                .build())).build();
+                .build()).build();
     // when
     // then
     mockMvc.perform(put(PATH)
@@ -119,7 +119,7 @@ class UpdateBoSwimmingClassesControllerTest {
   void shouldReturn400WhenStartTimeIsNull() throws Exception {
     // given
     val request = UpdateBoSwimmingClassesRequest.builder()
-        .swimmingClasses(List.of(
+        .swimmingClass(
             SwimmingClass.builder()
                 .id(1L)
                 .days(UpdateBoSwimmingClassRequestFactory.days())
@@ -130,7 +130,7 @@ class UpdateBoSwimmingClassesControllerTest {
                 .registrationCapacity(
                     UpdateBoSwimmingClassRequestFactory.registrationCapacity())
                 .isExposed(true)
-                .build())).build();
+                .build()).build();
     // when
     // then
     mockMvc.perform(put(PATH)
@@ -145,7 +145,7 @@ class UpdateBoSwimmingClassesControllerTest {
   void shouldReturn400WhenEndTimeIsNull() throws Exception {
     // given
     val request = UpdateBoSwimmingClassesRequest.builder()
-        .swimmingClasses(List.of(
+        .swimmingClass(
             SwimmingClass.builder()
                 .id(1L)
                 .days(UpdateBoSwimmingClassRequestFactory.days())
@@ -156,7 +156,7 @@ class UpdateBoSwimmingClassesControllerTest {
                 .registrationCapacity(
                     UpdateBoSwimmingClassRequestFactory.registrationCapacity())
                 .isExposed(true)
-                .build())).build();
+                .build()).build();
     // when
     // then
     mockMvc.perform(put(PATH)
@@ -171,7 +171,7 @@ class UpdateBoSwimmingClassesControllerTest {
   void shouldReturn400WhenClassTypeIsNull() throws Exception {
     // given
     val request = UpdateBoSwimmingClassesRequest.builder()
-        .swimmingClasses(List.of(
+        .swimmingClass(
             SwimmingClass.builder()
                 .id(1L)
                 .days(UpdateBoSwimmingClassRequestFactory.days())
@@ -181,7 +181,7 @@ class UpdateBoSwimmingClassesControllerTest {
                 .registrationCapacity(
                     UpdateBoSwimmingClassRequestFactory.registrationCapacity())
                 .isExposed(true)
-                .build())).build();
+                .build()).build();
     // when
     // then
     mockMvc.perform(put(PATH)
@@ -196,7 +196,7 @@ class UpdateBoSwimmingClassesControllerTest {
   void shouldReturn400WhenTypeIsNull() throws Exception {
     // given
     val request = UpdateBoSwimmingClassesRequest.builder()
-        .swimmingClasses(List.of(
+        .swimmingClass(
             SwimmingClass.builder()
                 .id(1L)
                 .days(UpdateBoSwimmingClassRequestFactory.days())
@@ -207,7 +207,7 @@ class UpdateBoSwimmingClassesControllerTest {
                 .registrationCapacity(
                     UpdateBoSwimmingClassRequestFactory.registrationCapacity())
                 .isExposed(true)
-                .build())).build();
+                .build()).build();
     // when
     // then
     mockMvc.perform(put(PATH)
@@ -222,7 +222,7 @@ class UpdateBoSwimmingClassesControllerTest {
   void shouldReturn400WhenSubTypeIsNull() throws Exception {
     // given
     val request = UpdateBoSwimmingClassesRequest.builder()
-        .swimmingClasses(List.of(
+        .swimmingClass(
             SwimmingClass.builder()
                 .id(1L)
                 .days(UpdateBoSwimmingClassRequestFactory.days())
@@ -233,7 +233,7 @@ class UpdateBoSwimmingClassesControllerTest {
                 .registrationCapacity(
                     UpdateBoSwimmingClassRequestFactory.registrationCapacity())
                 .isExposed(true)
-                .build())).build();
+                .build()).build();
     // when
     // then
     mockMvc.perform(put(PATH)
@@ -248,7 +248,7 @@ class UpdateBoSwimmingClassesControllerTest {
   void shouldReturn400WhenInstructorIsNull() throws Exception {
     // given
     val request = UpdateBoSwimmingClassesRequest.builder()
-        .swimmingClasses(List.of(
+        .swimmingClass(
             SwimmingClass.builder()
                 .id(1L)
                 .days(UpdateBoSwimmingClassRequestFactory.days())
@@ -258,7 +258,7 @@ class UpdateBoSwimmingClassesControllerTest {
                 .registrationCapacity(
                     UpdateBoSwimmingClassRequestFactory.registrationCapacity())
                 .isExposed(true)
-                .build())).build();
+                .build()).build();
     // when
     // then
     mockMvc.perform(put(PATH)
@@ -273,7 +273,7 @@ class UpdateBoSwimmingClassesControllerTest {
   void shouldReturn400WhenTicketsIsNull() throws Exception {
     // given
     val request = UpdateBoSwimmingClassesRequest.builder()
-        .swimmingClasses(List.of(
+        .swimmingClass(
             SwimmingClass.builder()
                 .id(1L)
                 .days(UpdateBoSwimmingClassRequestFactory.days())
@@ -283,7 +283,7 @@ class UpdateBoSwimmingClassesControllerTest {
                 .registrationCapacity(
                     UpdateBoSwimmingClassRequestFactory.registrationCapacity())
                 .isExposed(true)
-                .build())).build();
+                .build()).build();
     // when
     // then
     mockMvc.perform(put(PATH)
@@ -298,7 +298,7 @@ class UpdateBoSwimmingClassesControllerTest {
   void shouldReturn400WhenTicketNameIsNull() throws Exception {
     // given
     val request = UpdateBoSwimmingClassesRequest.builder()
-        .swimmingClasses(List.of(
+        .swimmingClass(
             SwimmingClass.builder()
                 .id(1L)
                 .days(UpdateBoSwimmingClassRequestFactory.days())
@@ -309,7 +309,7 @@ class UpdateBoSwimmingClassesControllerTest {
                 .registrationCapacity(
                     UpdateBoSwimmingClassRequestFactory.registrationCapacity())
                 .isExposed(true)
-                .build())).build();
+                .build()).build();
     // when
     // then
     mockMvc.perform(put(PATH)
@@ -324,7 +324,7 @@ class UpdateBoSwimmingClassesControllerTest {
   void shouldReturn400WhenRegistrationCapacityIsNull() throws Exception {
     // given
     val request = UpdateBoSwimmingClassesRequest.builder()
-        .swimmingClasses(List.of(
+        .swimmingClass(
             SwimmingClass.builder()
                 .id(1L)
                 .days(UpdateBoSwimmingClassRequestFactory.days())
@@ -333,7 +333,7 @@ class UpdateBoSwimmingClassesControllerTest {
                 .instructorName("손지혜")
                 .tickets(UpdateBoSwimmingClassRequestFactory.tickets())
                 .isExposed(true)
-                .build())).build();
+                .build()).build();
     // when
     // then
     mockMvc.perform(put(PATH)
@@ -347,7 +347,7 @@ class UpdateBoSwimmingClassesControllerTest {
 
     private static UpdateBoSwimmingClassesRequest create() {
       return UpdateBoSwimmingClassesRequest.builder()
-          .swimmingClasses(List.of(swimmingClass()))
+          .swimmingClass(swimmingClass())
           .build();
     }
 

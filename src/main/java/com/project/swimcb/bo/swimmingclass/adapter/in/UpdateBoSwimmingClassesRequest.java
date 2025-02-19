@@ -12,9 +12,9 @@ import lombok.Builder;
 @Schema(description = "BO 클래스 데이터 관리 - 클래스 일괄 수정 response")
 public record UpdateBoSwimmingClassesRequest(
     @Valid
-    @NotNull(message = "클래스 리스트는 null이 될 수 없습니다.")
-    @Schema(description = "수정할 클래스 리스트")
-    List<SwimmingClass> swimmingClasses
+    @NotNull(message = "클래스는 null이 될 수 없습니다.")
+    @Schema(description = "수정할 클래스")
+    SwimmingClass swimmingClass
 ) {
 
   @Builder
