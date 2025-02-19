@@ -3,6 +3,8 @@ package com.project.swimcb.bo.swimmingclass.adapter.in;
 import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesResponse.Days;
 import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesResponse.RegistrationCapacity;
 import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesResponse.SwimmingClass;
+import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesResponse.Ticket;
+import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesResponse.TicketPriceRange;
 import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesResponse.Time;
 import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesResponse.Type;
 import io.swagger.v3.oas.annotations.Operation;
@@ -65,7 +67,22 @@ public class FindBoSwimmingClassesController {
                 .build()
         )
         .instructorName("신우진")
-        .price(1200000)
+        .ticketPriceRange(
+            TicketPriceRange.builder()
+                .minimumPrice(10000)
+                .maximumPrice(50000)
+                .build()
+        )
+        .tickets(List.of(
+            Ticket.builder()
+                .name("성인일반")
+                .price(10000)
+                .build(),
+            Ticket.builder()
+                .name("청소년")
+                .price(8000)
+                .build()
+        ))
         .registrationCapacity(RegistrationCapacity.builder()
             .totalReservable(20)
             .completedReservations(17)

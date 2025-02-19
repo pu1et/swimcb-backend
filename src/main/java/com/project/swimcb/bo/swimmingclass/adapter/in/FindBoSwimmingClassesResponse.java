@@ -17,8 +17,10 @@ public record FindBoSwimmingClassesResponse(
       @NonNull Days days,
       @NonNull Time time,
       @NonNull String instructorName,
-      int price,
-      @NonNull RegistrationCapacity registrationCapacity
+      @NonNull TicketPriceRange ticketPriceRange,
+      @NonNull List<Ticket> tickets,
+      @NonNull RegistrationCapacity registrationCapacity,
+      boolean isExposed
   ) {
 
   }
@@ -37,7 +39,9 @@ public record FindBoSwimmingClassesResponse(
       boolean tuesday,
       boolean wednesday,
       boolean thursday,
-      boolean friday
+      boolean friday,
+      boolean saturday,
+      boolean sunday
   ) {
 
   }
@@ -51,8 +55,25 @@ public record FindBoSwimmingClassesResponse(
   }
 
   @Builder
+  record TicketPriceRange(
+      int minimumPrice,
+      int maximumPrice
+  ) {
+
+  }
+
+  @Builder
+  record Ticket(
+      @NonNull String name,
+      int price
+  ) {
+
+  }
+
+  @Builder
   record RegistrationCapacity(
       int totalReservable,
+      int availableReservations,
       int completedReservations,
       int remainingReservations
   ) {

@@ -54,7 +54,11 @@ public record CreateBoSwimmingClassRequest(
       @Schema(description = "목요일 수업 여부", example = "false")
       boolean thursday,
       @Schema(description = "금요일 수업 여부", example = "false")
-      boolean friday
+      boolean friday,
+      @Schema(description = "토요일 수업 여부", example = "false")
+      boolean saturday,
+      @Schema(description = "일요일 수업 여부", example = "false")
+      boolean sunday
   ) {
 
   }
