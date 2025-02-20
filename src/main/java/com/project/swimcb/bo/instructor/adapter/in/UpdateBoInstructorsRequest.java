@@ -1,4 +1,4 @@
-package com.project.swimcb.bo.swimmingclass.adapter.in;
+package com.project.swimcb.bo.instructor.adapter.in;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -6,7 +6,7 @@ import java.util.List;
 import lombok.Builder;
 
 @Builder
-public record UpdateBoSwimmingClassInstructorsRequest(
+public record UpdateBoInstructorsRequest(
     @Valid
     @NotNull(message = "강사 리스트는 null이 될 수 없습니다.")
     List<Instructor> instructors

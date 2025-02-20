@@ -1,14 +1,12 @@
-package com.project.swimcb.bo.swimmingclass.adapter.in;
+package com.project.swimcb.bo.instructor.adapter.in;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.swimcb.bo.swimmingclass.adapter.in.UpdateBoSwimmingClassInstructorsRequest.Instructor;
+import com.project.swimcb.bo.instructor.adapter.in.UpdateBoInstructorsRequest.Instructor;
 import com.project.swimcb.config.security.SecurityConfig;
 import java.util.List;
 import lombok.val;
@@ -20,9 +18,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(UpdateBoSwimmingClassInstructorsController.class)
+@WebMvcTest(UpdateBoInstructorsController.class)
 @Import(SecurityConfig.class)
-class UpdateBoSwimmingClassInstructorsControllerTest {
+class UpdateBoInstructorsControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
@@ -75,8 +73,8 @@ class UpdateBoSwimmingClassInstructorsControllerTest {
 
   private static class UpdateBoSwimmingClassInstructorsRequestFactory {
 
-    private static UpdateBoSwimmingClassInstructorsRequest create() {
-      return UpdateBoSwimmingClassInstructorsRequest.builder()
+    private static UpdateBoInstructorsRequest create() {
+      return UpdateBoInstructorsRequest.builder()
           .instructors(List.of(
               Instructor.builder()
                   .instructorId(1L)
@@ -89,12 +87,12 @@ class UpdateBoSwimmingClassInstructorsControllerTest {
           .build();
     }
 
-    private static UpdateBoSwimmingClassInstructorsRequest instructorsIsNull() {
-      return UpdateBoSwimmingClassInstructorsRequest.builder().build();
+    private static UpdateBoInstructorsRequest instructorsIsNull() {
+      return UpdateBoInstructorsRequest.builder().build();
     }
 
-    private static UpdateBoSwimmingClassInstructorsRequest instructorNameIsNull() {
-      return UpdateBoSwimmingClassInstructorsRequest.builder()
+    private static UpdateBoInstructorsRequest instructorNameIsNull() {
+      return UpdateBoInstructorsRequest.builder()
           .instructors(List.of(
               Instructor.builder()
                   .instructorId(1L)

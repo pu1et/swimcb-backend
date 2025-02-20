@@ -1,4 +1,4 @@
-package com.project.swimcb.bo.swimmingclass.adapter.in;
+package com.project.swimcb.bo.instructor.adapter.in;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/bo/instructors")
 @RequiredArgsConstructor
-public class UpdateBoSwimmingClassInstructorsController {
+public class UpdateBoInstructorsController {
 
   @Operation(summary = "클래스 데이터 관리 - 강사 리스트 일괄 업데이트")
   @PutMapping
   public void updateBoSwimmingClassInstructors(
-      @Valid @RequestBody UpdateBoSwimmingClassInstructorsRequest request
+      @Valid @RequestBody UpdateBoInstructorsRequest request
   ) {
   }
 }
