@@ -85,8 +85,9 @@ public class FindBoSwimmingClassesController {
         ))
         .registrationCapacity(RegistrationCapacity.builder()
             .totalReservable(20)
+            .availableReservations(29)
             .completedReservations(17)
-            .remainingReservations(3)
+            .remainingReservations(2)
             .build())
         .build();
   }
