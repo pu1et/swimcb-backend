@@ -2,7 +2,6 @@ package com.project.swimcb.bo.freeswimming.adapter.in;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -10,7 +9,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.swimcb.config.security.SecurityConfig;
 import lombok.val;
@@ -21,9 +19,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(UpdateFreeSwimmingImageController.class)
+@WebMvcTest(UpdateBoFreeSwimmingImageController.class)
 @Import(SecurityConfig.class)
-class UpdateFreeSwimmingImageControllerTest {
+class UpdateBoFreeSwimmingImageControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
@@ -62,12 +60,12 @@ class UpdateFreeSwimmingImageControllerTest {
 
   private static class UpdateFreeSwimmingImageRequestFactory {
 
-    private static UpdateFreeSwimmingImageRequest create() {
-      return new UpdateFreeSwimmingImageRequest("/free-swimming/image.jpg");
+    private static UpdateBoFreeSwimmingImageRequest create() {
+      return new UpdateBoFreeSwimmingImageRequest("/free-swimming/image.jpg");
     }
 
-    private static UpdateFreeSwimmingImageRequest imageIsNull() {
-      return new UpdateFreeSwimmingImageRequest(null);
+    private static UpdateBoFreeSwimmingImageRequest imageIsNull() {
+      return new UpdateBoFreeSwimmingImageRequest(null);
     }
   }
 }

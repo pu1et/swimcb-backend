@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/bo/free-swimming/images")
 @RequiredArgsConstructor
-public class UpdateFreeSwimmingImageController {
+public class UpdateBoFreeSwimmingImageController {
 
   @Operation(summary = "자유수영 데이터 관리 - 자유수영 이미지 업데이트")
   @PutMapping
-  public void updateFreeSwimmingImage(@Valid @RequestBody UpdateFreeSwimmingImageRequest request) {
+  public void updateFreeSwimmingImage(@Valid @RequestBody UpdateBoFreeSwimmingImageRequest request) {
   }
 }
