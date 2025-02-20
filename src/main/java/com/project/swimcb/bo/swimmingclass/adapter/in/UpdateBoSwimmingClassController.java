@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UpdateBoSwimmingClassController {
 
-  @Operation(summary = "클래스 데이터 관리 - 클래스 일괄 수정")
+  @Operation(summary = "클래스 데이터 관리 - 클래스 수정")
   @PutMapping
   public void updateBoSwimmingClasses(
       @Valid @RequestBody UpdateBoSwimmingClassRequest request

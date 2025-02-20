@@ -38,7 +38,7 @@ class UpdateBoSwimmingClassControllerTest {
   private static final String PATH = "/api/bo/swimming-classes";
 
   @Test
-  @DisplayName("클래스 데이터 관리 - 클래스 일괄 수정 성공")
+  @DisplayName("클래스 데이터 관리 - 클래스 수정 성공")
   void shouldUpdateSuccessfully() throws Exception {
     // given
     val request = UpdateBoSwimmingClassRequestFactory.create();
