@@ -39,19 +39,19 @@ public record CreateBoFreeSwimmingRequest(
   @Builder
   record Days(
       @Schema(description = "월요일 수업 여부", example = "true")
-      boolean monday,
+      boolean isMonday,
       @Schema(description = "화요일 수업 여부", example = "false")
-      boolean tuesday,
+      boolean isTuesday,
       @Schema(description = "수요일 수업 여부", example = "true")
-      boolean wednesday,
+      boolean isWednesday,
       @Schema(description = "목요일 수업 여부", example = "false")
-      boolean thursday,
+      boolean isThursday,
       @Schema(description = "금요일 수업 여부", example = "false")
-      boolean friday,
+      boolean isFriday,
       @Schema(description = "토요일 수업 여부", example = "false")
-      boolean saturday,
+      boolean isSaturday,
       @Schema(description = "일요일 수업 여부", example = "false")
-      boolean sunday
+      boolean isSunday
   ) {
 
   }

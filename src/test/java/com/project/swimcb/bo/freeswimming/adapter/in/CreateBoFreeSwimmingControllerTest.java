@@ -223,13 +223,13 @@ class CreateBoFreeSwimmingControllerTest {
 
     private static Days days() {
       return Days.builder()
-          .monday(true)
-          .tuesday(false)
-          .wednesday(true)
-          .tuesday(false)
-          .friday(false)
-          .saturday(false)
-          .sunday(false)
+          .isMonday(true)
+          .isTuesday(false)
+          .isWednesday(true)
+          .isThursday(false)
+          .isFriday(false)
+          .isSaturday(false)
+          .isSunday(false)
           .build();
     }
 

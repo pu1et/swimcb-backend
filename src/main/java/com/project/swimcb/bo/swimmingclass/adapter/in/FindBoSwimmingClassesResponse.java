@@ -1,5 +1,6 @@
 package com.project.swimcb.bo.swimmingclass.adapter.in;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalTime;
 import java.util.List;
 import lombok.Builder;
@@ -35,13 +36,13 @@ public record FindBoSwimmingClassesResponse(
 
   @Builder
   record Days(
-      boolean monday,
-      boolean tuesday,
-      boolean wednesday,
-      boolean thursday,
-      boolean friday,
-      boolean saturday,
-      boolean sunday
+      boolean isMonday,
+      boolean isTuesday,
+      boolean isWednesday,
+      boolean isThursday,
+      boolean isFriday,
+      boolean isSaturday,
+      boolean isSunday
   ) {
 
   }
