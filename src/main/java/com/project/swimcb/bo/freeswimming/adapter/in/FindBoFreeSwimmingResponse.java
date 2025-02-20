@@ -63,10 +63,10 @@ public record FindBoFreeSwimmingResponse(
 
   @Builder
   record RegistrationCapacity(
-      int totalReservable,
-      int availableReservations,
-      int completedReservations,
-      int remainingReservations
+      int totalCapacity,
+      int reservationLimitCount,
+      int completedReservationCount,
+      int remainingReservationCount
   ) {
 
   }

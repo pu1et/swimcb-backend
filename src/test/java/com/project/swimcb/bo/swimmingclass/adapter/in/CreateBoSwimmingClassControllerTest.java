@@ -322,8 +322,8 @@ class CreateBoSwimmingClassControllerTest {
 
     private static RegistrationCapacity registrationCapacity() {
       return RegistrationCapacity.builder()
-          .totalReservable(20)
-          .availableReservations(11)
+          .totalCapacity(20)
+          .reservationLimitCount(11)
           .build();
     }
   }

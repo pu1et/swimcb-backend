@@ -71,10 +71,10 @@ public class FindBoFreeSwimmingController {
                 .build()
         ))
         .registrationCapacity(RegistrationCapacity.builder()
-            .totalReservable(20)
-            .availableReservations(19)
-            .completedReservations(17)
-            .remainingReservations(2)
+            .totalCapacity(20)
+            .reservationLimitCount(19)
+            .completedReservationCount(17)
+            .remainingReservationCount(2)
             .build())
         .build();
   }

@@ -103,9 +103,9 @@ public record CreateBoSwimmingClassRequest(
   @Builder
   record RegistrationCapacity(
       @Schema(description = "총 정원", example = "20")
-      int totalReservable,
+      int totalCapacity,
       @Schema(description = "예약 허용 인원", example = "11")
-      int availableReservations
+      int reservationLimitCount
   ) {
 
   }
