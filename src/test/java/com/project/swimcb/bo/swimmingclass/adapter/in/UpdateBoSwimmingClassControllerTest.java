@@ -8,12 +8,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.swimcb.bo.swimmingclass.adapter.in.UpdateBoSwimmingClassesRequest.Days;
-import com.project.swimcb.bo.swimmingclass.adapter.in.UpdateBoSwimmingClassesRequest.RegistrationCapacity;
-import com.project.swimcb.bo.swimmingclass.adapter.in.UpdateBoSwimmingClassesRequest.SwimmingClass;
-import com.project.swimcb.bo.swimmingclass.adapter.in.UpdateBoSwimmingClassesRequest.Ticket;
-import com.project.swimcb.bo.swimmingclass.adapter.in.UpdateBoSwimmingClassesRequest.Time;
-import com.project.swimcb.bo.swimmingclass.adapter.in.UpdateBoSwimmingClassesRequest.Type;
+import com.project.swimcb.bo.swimmingclass.adapter.in.UpdateBoSwimmingClassRequest.Days;
+import com.project.swimcb.bo.swimmingclass.adapter.in.UpdateBoSwimmingClassRequest.RegistrationCapacity;
+import com.project.swimcb.bo.swimmingclass.adapter.in.UpdateBoSwimmingClassRequest.SwimmingClass;
+import com.project.swimcb.bo.swimmingclass.adapter.in.UpdateBoSwimmingClassRequest.Ticket;
+import com.project.swimcb.bo.swimmingclass.adapter.in.UpdateBoSwimmingClassRequest.Time;
+import com.project.swimcb.bo.swimmingclass.adapter.in.UpdateBoSwimmingClassRequest.Type;
 import com.project.swimcb.config.security.SecurityConfig;
 import java.time.LocalTime;
 import java.util.List;
@@ -25,9 +25,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(UpdateBoSwimmingClassesController.class)
+@WebMvcTest(UpdateBoSwimmingClassController.class)
 @Import(SecurityConfig.class)
-class UpdateBoSwimmingClassesControllerTest {
+class UpdateBoSwimmingClassControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
@@ -54,7 +54,7 @@ class UpdateBoSwimmingClassesControllerTest {
   @DisplayName("클래스가 null인 경우 400 반환")
   void shouldReturn400WhenClassesIsNull() throws Exception {
     // given
-    val request = UpdateBoSwimmingClassesRequest.builder().build();
+    val request = UpdateBoSwimmingClassRequest.builder().build();
     // when
     // then
     mockMvc.perform(put(PATH)
@@ -68,7 +68,7 @@ class UpdateBoSwimmingClassesControllerTest {
   @DisplayName("강습 요일이 null인 경우 400 반환")
   void shouldReturn400WhenDayIsNull() throws Exception {
     // given
-    val request = UpdateBoSwimmingClassesRequest.builder()
+    val request = UpdateBoSwimmingClassRequest.builder()
         .swimmingClass(
             SwimmingClass.builder()
                 .id(1L)
@@ -93,7 +93,7 @@ class UpdateBoSwimmingClassesControllerTest {
   @DisplayName("강습 시간이 null인 경우 400 반환")
   void shouldReturn400WhenTimeIsNull() throws Exception {
     // given
-    val request = UpdateBoSwimmingClassesRequest.builder()
+    val request = UpdateBoSwimmingClassRequest.builder()
         .swimmingClass(
             SwimmingClass.builder()
                 .id(1L)
@@ -118,7 +118,7 @@ class UpdateBoSwimmingClassesControllerTest {
   @DisplayName("강습 시작 시간이 null인 경우 400 반환")
   void shouldReturn400WhenStartTimeIsNull() throws Exception {
     // given
-    val request = UpdateBoSwimmingClassesRequest.builder()
+    val request = UpdateBoSwimmingClassRequest.builder()
         .swimmingClass(
             SwimmingClass.builder()
                 .id(1L)
@@ -144,7 +144,7 @@ class UpdateBoSwimmingClassesControllerTest {
   @DisplayName("강습 종료 시간이 null인 경우 400 반환")
   void shouldReturn400WhenEndTimeIsNull() throws Exception {
     // given
-    val request = UpdateBoSwimmingClassesRequest.builder()
+    val request = UpdateBoSwimmingClassRequest.builder()
         .swimmingClass(
             SwimmingClass.builder()
                 .id(1L)
@@ -170,7 +170,7 @@ class UpdateBoSwimmingClassesControllerTest {
   @DisplayName("강습 형태/구분이 null인 경우 400 반환")
   void shouldReturn400WhenClassTypeIsNull() throws Exception {
     // given
-    val request = UpdateBoSwimmingClassesRequest.builder()
+    val request = UpdateBoSwimmingClassRequest.builder()
         .swimmingClass(
             SwimmingClass.builder()
                 .id(1L)
@@ -195,7 +195,7 @@ class UpdateBoSwimmingClassesControllerTest {
   @DisplayName("강습 형태가 null인 경우 400 반환")
   void shouldReturn400WhenTypeIsNull() throws Exception {
     // given
-    val request = UpdateBoSwimmingClassesRequest.builder()
+    val request = UpdateBoSwimmingClassRequest.builder()
         .swimmingClass(
             SwimmingClass.builder()
                 .id(1L)
@@ -221,7 +221,7 @@ class UpdateBoSwimmingClassesControllerTest {
   @DisplayName("강습 구분이 null인 경우 400 반환")
   void shouldReturn400WhenSubTypeIsNull() throws Exception {
     // given
-    val request = UpdateBoSwimmingClassesRequest.builder()
+    val request = UpdateBoSwimmingClassRequest.builder()
         .swimmingClass(
             SwimmingClass.builder()
                 .id(1L)
@@ -247,7 +247,7 @@ class UpdateBoSwimmingClassesControllerTest {
   @DisplayName("담당강사가 null인 경우 400 반환")
   void shouldReturn400WhenInstructorIsNull() throws Exception {
     // given
-    val request = UpdateBoSwimmingClassesRequest.builder()
+    val request = UpdateBoSwimmingClassRequest.builder()
         .swimmingClass(
             SwimmingClass.builder()
                 .id(1L)
@@ -272,7 +272,7 @@ class UpdateBoSwimmingClassesControllerTest {
   @DisplayName("강습 티켓 리스트가 null인 경우 400 반환")
   void shouldReturn400WhenTicketsIsNull() throws Exception {
     // given
-    val request = UpdateBoSwimmingClassesRequest.builder()
+    val request = UpdateBoSwimmingClassRequest.builder()
         .swimmingClass(
             SwimmingClass.builder()
                 .id(1L)
@@ -297,7 +297,7 @@ class UpdateBoSwimmingClassesControllerTest {
   @DisplayName("강습 티켓 이름이 null인 경우 400 반환")
   void shouldReturn400WhenTicketNameIsNull() throws Exception {
     // given
-    val request = UpdateBoSwimmingClassesRequest.builder()
+    val request = UpdateBoSwimmingClassRequest.builder()
         .swimmingClass(
             SwimmingClass.builder()
                 .id(1L)
@@ -323,7 +323,7 @@ class UpdateBoSwimmingClassesControllerTest {
   @DisplayName("정원 정보가 null인 경우 400 반환")
   void shouldReturn400WhenRegistrationCapacityIsNull() throws Exception {
     // given
-    val request = UpdateBoSwimmingClassesRequest.builder()
+    val request = UpdateBoSwimmingClassRequest.builder()
         .swimmingClass(
             SwimmingClass.builder()
                 .id(1L)
@@ -345,8 +345,8 @@ class UpdateBoSwimmingClassesControllerTest {
 
   private static class UpdateBoSwimmingClassRequestFactory {
 
-    private static UpdateBoSwimmingClassesRequest create() {
-      return UpdateBoSwimmingClassesRequest.builder()
+    private static UpdateBoSwimmingClassRequest create() {
+      return UpdateBoSwimmingClassRequest.builder()
           .swimmingClass(swimmingClass())
           .build();
     }

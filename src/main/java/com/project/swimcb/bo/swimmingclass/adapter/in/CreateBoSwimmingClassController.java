@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/bo/swimming-classes")
 @RequiredArgsConstructor
-public class CreateBoSwimmingClassesController {
+public class CreateBoSwimmingClassController {
 
   @Operation(summary = "클래스 데이터 관리 - 클래스 추가")
   @PostMapping

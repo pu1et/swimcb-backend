@@ -24,9 +24,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(CreateBoSwimmingClassesController.class)
+@WebMvcTest(CreateBoSwimmingClassController.class)
 @Import(SecurityConfig.class)
-class CreateBoSwimmingClassesControllerTest {
+class CreateBoSwimmingClassControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
