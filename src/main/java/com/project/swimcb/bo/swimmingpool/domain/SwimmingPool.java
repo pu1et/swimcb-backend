@@ -1,0 +1,64 @@
+package com.project.swimcb.bo.swimmingpool.domain;
+
+import static jakarta.persistence.FetchType.LAZY;
+import static lombok.AccessLevel.PROTECTED;
+
+import com.project.swimcb.common.entity.BaseEntity;
+import com.project.swimcb.member.domain.Member;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.NoArgsConstructor;
+
+@Table(name = "swimming_pool")
+@Entity
+@NoArgsConstructor(access = PROTECTED)
+public class SwimmingPool extends BaseEntity {
+
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @Column(name = "id", nullable = false)
+  private long id;
+
+  @ManyToOne(fetch = LAZY)
+  @JoinColumn(name = "member_id", nullable = false)
+  private Member member;
+
+  @Column(name = "name", length = 100)
+  private String name;
+
+  @Column(name = "phone", length = 20)
+  private String phone;
+
+  @Column(name = "address", length = 255)
+  private String address;
+
+  @Column(name = "new_registration_period_start_day")
+  private Integer newRegistrationPeriodStartDay;
+
+  @Column(name = "new_registration_period_end_day")
+  private Integer newRegistrationPeriodEndDay;
+
+  @Column(name = "re_registration_period_start_day")
+  private Integer reRegistrationPeriodStartDay;
+
+  @Column(name = "re_registration_period_end_day")
+  private Integer reRegistrationPeriodEndDay;
+
+  @Column(name = "is_new_registration_extended", nullable = false)
+  boolean isNewRegistrationExtended;
+
+  @Column(name = "operating_day", length = 255)
+  private String operatingDay;
+
+  @Column(name = "representative_image_path", length = 255)
+  private String representativeImagePath;
+
+  @Column(name = "usage_agreement_path", length = 255)
+  private String usageAgreementPath;
+}
