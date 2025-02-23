@@ -11,18 +11,15 @@ public record FindNoticeDetailResponse(
     @NonNull String createdBy,
     @NonNull String title,
     @NonNull String content,
-    @NonNull List<String> imageUrls,
     boolean isVisible,
     @NonNull LocalDate createdAt
 ) {
 
-  public static FindNoticeDetailResponse from(@NonNull Notice notice,
-      @NonNull List<String> imageUrls) {
+  public static FindNoticeDetailResponse from(@NonNull Notice notice) {
     return FindNoticeDetailResponse.builder()
         .createdBy(notice.getCreatedBy())
         .title(notice.getTitle())
         .content(notice.getContent())
-        .imageUrls(imageUrls)
         .isVisible(notice.isVisible())
         .createdAt(notice.getCreatedAt().toLocalDate())
         .build();

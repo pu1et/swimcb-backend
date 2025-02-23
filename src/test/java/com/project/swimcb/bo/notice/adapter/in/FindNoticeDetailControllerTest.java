@@ -77,7 +77,6 @@ class FindNoticeDetailControllerTest {
           .createdBy("createdBy")
           .title("title")
           .content("content")
-          .imageUrls(List.of("image1", "image2"))
           .isVisible(true)
           .createdAt(MIN.toLocalDate())
           .build();
