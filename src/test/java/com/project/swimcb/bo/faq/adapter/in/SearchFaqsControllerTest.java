@@ -11,25 +11,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.swimcb.bo.faq.adapter.in.FindFaqsResponse;
-import com.project.swimcb.bo.faq.adapter.in.SearchFaqsController;
-import com.project.swimcb.config.security.SecurityConfig;
 import com.project.swimcb.bo.faq.application.in.SearchFaqsUseCase;
+import com.project.swimcb.common.WebMvcTestWithoutSecurity;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(SearchFaqsController.class)
-@Import(SecurityConfig.class)
+@WebMvcTestWithoutSecurity(controllers = SearchFaqsController.class)
 class SearchFaqsControllerTest {
 
   @Autowired

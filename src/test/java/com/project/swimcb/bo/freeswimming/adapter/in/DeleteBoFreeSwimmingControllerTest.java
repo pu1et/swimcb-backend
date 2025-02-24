@@ -5,17 +5,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.swimcb.config.security.SecurityConfig;
+import com.project.swimcb.common.WebMvcTestWithoutSecurity;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(DeleteBoFreeSwimmingController.class)
-@Import(SecurityConfig.class)
+@WebMvcTestWithoutSecurity(controllers = DeleteBoFreeSwimmingController.class)
 class DeleteBoFreeSwimmingControllerTest {
 
   @Autowired

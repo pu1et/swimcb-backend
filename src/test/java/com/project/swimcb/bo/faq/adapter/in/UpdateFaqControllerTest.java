@@ -12,24 +12,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.swimcb.bo.faq.adapter.in.UpdateFaqController;
-import com.project.swimcb.bo.faq.adapter.in.UpdateFaqRequest;
-import com.project.swimcb.config.security.SecurityConfig;
 import com.project.swimcb.bo.faq.application.in.UpdateFaqUseCase;
 import com.project.swimcb.bo.faq.domain.UpdateFaqCommand;
+import com.project.swimcb.common.WebMvcTestWithoutSecurity;
+import com.project.swimcb.config.security.JwtAuthenticationFilter;
+import com.project.swimcb.config.security.SecurityConfig;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(UpdateFaqController.class)
-@Import(SecurityConfig.class)
+@WebMvcTestWithoutSecurity(controllers = UpdateFaqController.class)
 class UpdateFaqControllerTest {
 
   @Autowired

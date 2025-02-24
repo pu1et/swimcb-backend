@@ -13,10 +13,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.swimcb.bo.swimmingpool.adapter.in.UpdateSwimmingPoolBasicInfoController;
-import com.project.swimcb.bo.swimmingpool.adapter.in.UpdateSwimmingPoolBasicInfoRequest;
-import com.project.swimcb.config.security.SecurityConfig;
 import com.project.swimcb.bo.swimmingpool.application.in.UpdateSwimmingPoolBasicInfoUseCase;
+import com.project.swimcb.common.WebMvcTestWithoutSecurity;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.IntStream;
@@ -24,13 +22,10 @@ import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(UpdateSwimmingPoolBasicInfoController.class)
-@Import(SecurityConfig.class)
+@WebMvcTestWithoutSecurity(controllers = UpdateSwimmingPoolBasicInfoController.class)
 class UpdateSwimmingPoolBasicInfoControllerTest {
 
   @Autowired

@@ -10,19 +10,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.swimcb.bo.faq.application.in.FindFaqDetailUseCase;
+import com.project.swimcb.config.security.JwtAuthenticationFilter;
 import com.project.swimcb.config.security.SecurityConfig;
 import java.util.NoSuchElementException;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(FindFaqDetailController.class)
-@Import(SecurityConfig.class)
+@WebMvcTest(value = FindFaqDetailController.class,
+    excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
+        SecurityConfig.class, JwtAuthenticationFilter.class}))
+@AutoConfigureMockMvc(addFilters = false)
 class FindFaqDetailControllerTest {
 
   @Autowired

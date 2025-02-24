@@ -12,22 +12,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.swimcb.config.security.SecurityConfig;
 import com.project.swimcb.bo.notice.application.in.UpdateNoticeUseCase;
 import com.project.swimcb.bo.notice.domain.UpdateNoticeCommand;
+import com.project.swimcb.common.WebMvcTestWithoutSecurity;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(UpdateNoticeController.class)
-@Import(SecurityConfig.class)
+@WebMvcTestWithoutSecurity(controllers = UpdateNoticeController.class)
 class UpdateNoticeControllerTest {
 
   @Autowired

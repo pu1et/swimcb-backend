@@ -7,19 +7,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.swimcb.bo.instructor.adapter.in.UpdateBoInstructorsRequest.Instructor;
-import com.project.swimcb.config.security.SecurityConfig;
+import com.project.swimcb.common.WebMvcTestWithoutSecurity;
 import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(UpdateBoInstructorsController.class)
-@Import(SecurityConfig.class)
+@WebMvcTestWithoutSecurity(controllers = UpdateBoInstructorsController.class)
 class UpdateBoInstructorsControllerTest {
 
   @Autowired
@@ -38,8 +35,8 @@ class UpdateBoInstructorsControllerTest {
     // when
     // then
     mockMvc.perform(put(PATH)
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(objectMapper.writeValueAsString(request)))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isOk());
   }
 

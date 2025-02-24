@@ -11,19 +11,16 @@ import com.project.swimcb.bo.freeswimming.adapter.in.CreateBoFreeSwimmingRequest
 import com.project.swimcb.bo.freeswimming.adapter.in.CreateBoFreeSwimmingRequest.RegistrationCapacity;
 import com.project.swimcb.bo.freeswimming.adapter.in.CreateBoFreeSwimmingRequest.Ticket;
 import com.project.swimcb.bo.freeswimming.adapter.in.CreateBoFreeSwimmingRequest.Time;
-import com.project.swimcb.config.security.SecurityConfig;
+import com.project.swimcb.common.WebMvcTestWithoutSecurity;
 import java.time.LocalTime;
 import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(CreateBoFreeSwimmingController.class)
-@Import(SecurityConfig.class)
+@WebMvcTestWithoutSecurity(controllers = CreateBoFreeSwimmingController.class)
 class CreateBoFreeSwimmingControllerTest {
 
   @Autowired

@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.swimcb.bo.faq.adapter.in.UpdateFaqIsVisibleController;
 import com.project.swimcb.bo.faq.adapter.in.UpdateFaqIsVisibleRequest;
+import com.project.swimcb.common.WebMvcTestWithoutSecurity;
 import com.project.swimcb.config.security.SecurityConfig;
 import com.project.swimcb.bo.faq.application.in.UpdateFaqIsVisibleUseCase;
 import java.util.NoSuchElementException;
@@ -24,8 +25,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(UpdateFaqIsVisibleController.class)
-@Import(SecurityConfig.class)
+@WebMvcTestWithoutSecurity(controllers = UpdateFaqIsVisibleController.class)
 class UpdateFaqIsVisibleControllerTest {
 
   @Autowired
