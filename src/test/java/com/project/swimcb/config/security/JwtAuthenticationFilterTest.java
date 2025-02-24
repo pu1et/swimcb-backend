@@ -2,7 +2,6 @@ package com.project.swimcb.config.security;
 
 import static com.project.swimcb.token.domain.enums.MemberRole.ADMIN;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -67,7 +66,6 @@ class JwtAuthenticationFilterTest {
   void shouldSetSecurityContextHolderWhenValidTokenProvided() throws ServletException, IOException {
     // given
     val memberId = 1L;
-    val isGuest = false;
     val role = ADMIN;
     val token = "valid_token";
 
@@ -75,10 +73,6 @@ class JwtAuthenticationFilterTest {
 
     val decodedJWT = mock(DecodedJWT.class);
     when(decodedJWT.getSubject()).thenReturn(String.valueOf(memberId));
-
-    val isGuestClaim = mock(Claim.class);
-    when(isGuestClaim.asBoolean()).thenReturn(isGuest);
-    when(decodedJWT.getClaim("isGuest")).thenReturn(isGuestClaim);
 
     val roleClaim = mock(Claim.class);
     when(roleClaim.asString()).thenReturn(role.name());
@@ -101,30 +95,29 @@ class JwtAuthenticationFilterTest {
   }
 
   @Test
-  @DisplayName("Authorization 헤더가 null인 경우 MissingAuthorizationHeaderException이 발생하고 SecurityContextHolder에 인증정보가 설정되지 않아야 한다.")
-  void shouldNotCallJwtPortAndProceedWhenAuthorizationHeaderIsNull() {
+  @DisplayName("Authorization 헤더가 null인 경우 SecurityContextHolder에 인증정보를 설정하지 않는다.")
+  void shouldNotCallJwtPortAndProceedWhenAuthorizationHeaderIsNull()
+      throws ServletException, IOException {
+
     // given
     // when
+    filter.doFilterInternal(request, response, chain);
     // then
-    assertThrowsExactly(MissingAuthorizationHeaderException.class,
-        () -> filter.doFilterInternal(request, response, chain));
-
     verify(jwtPort, never()).parseToken(anyString());
     assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
   }
 
   @Test
-  @DisplayName("Authorization 헤더가 Bearer로 시작하지 않는 경우 MissingAuthorizationHeaderException이 발생하고 SecurityContextHolder에 인증정보가 설정되지 않아야 한다.")
-  void shouldNotCallJwtPortAndProceedWhenAuthorizationHeaderDoesNotContainTokenPrefix() {
+  @DisplayName("Authorization 헤더가 Bearer로 시작하지 않는 경우 SecurityContextHolder에 인증정보가 설정하지 않는다.")
+  void shouldNotCallJwtPortAndProceedWhenAuthorizationHeaderDoesNotContainTokenPrefix()
+      throws ServletException, IOException {
 
     // given
     val invalidHeader = "invalid_header";
     request.addHeader("Authorization", invalidHeader);
     // when
+    filter.doFilterInternal(request, response, chain);
     // then
-    assertThrowsExactly(MissingAuthorizationHeaderException.class,
-        () -> filter.doFilterInternal(request, response, chain));
-
     verify(jwtPort, never()).parseToken(anyString());
     assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
   }

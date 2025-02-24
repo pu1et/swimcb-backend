@@ -35,7 +35,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     val header = request.getHeader("Authorization");
     if (header == null || !header.startsWith(TOKEN_PREFIX)) {
-      throw new MissingAuthorizationHeaderException("Authorization header is null or invalid.");
+      filterChain.doFilter(request, response);
+      return;
     }
 
     val token = header.substring(TOKEN_PREFIX.length());
