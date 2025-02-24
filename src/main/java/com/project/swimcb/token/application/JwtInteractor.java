@@ -19,14 +19,15 @@ public class JwtInteractor implements JwtPort {
 
   private final JwtSecretGateway jwtSecretGateway;
 
+  private static final String ISSUER = "swimcb";
+
   @Override
   public String generateToken(@NonNull TokenInfo tokenInfo) {
     return JWT.create()
-        .withIssuer("swimcb")
+        .withIssuer(ISSUER)
         .withIssuedAt(Instant.now())
         .withExpiresAt(Instant.now().plus(30, DAYS))
         .withSubject(String.valueOf(tokenInfo.memberId()))
-        .withClaim("isGuest", tokenInfo.isGuest())
         .withClaim("role", tokenInfo.role().name())
         .sign(Algorithm.HMAC256(secret()));
   }
@@ -34,7 +35,7 @@ public class JwtInteractor implements JwtPort {
   @Override
   public DecodedJWT parseToken(@NonNull String token) {
     return JWT.require(Algorithm.HMAC256(secret()))
-        .withIssuer("swimcb")
+        .withIssuer(ISSUER)
         .build()
         .verify(token);
   }

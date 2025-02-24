@@ -35,10 +35,9 @@ class JwtUtilTest {
   void shouldContainCorrectClaimsWhenGeneratedWithValidTokenInfo() {
     // given
     val memberId = 1L;
-    val isGuest = false;
     val role = ADMIN;
 
-    val tokenInfo = new TokenInfo(memberId, isGuest, role);
+    val tokenInfo = TokenInfo.admin(memberId);
 
     when(jwtSecretGateway.getSecret()).thenReturn("valid_secret");
     // when
@@ -49,7 +48,6 @@ class JwtUtilTest {
 
     assertThat(decodedToken.getIssuer()).isEqualTo("swimcb");
     assertThat(decodedToken.getSubject()).isEqualTo("1");
-    assertThat(decodedToken.getClaim("isGuest").asBoolean()).isEqualTo(isGuest);
     assertThat(decodedToken.getClaim("role").asString()).isEqualTo(role.name());
 
     val issuedAt = decodedToken.getIssuedAt().toInstant();
@@ -61,7 +59,7 @@ class JwtUtilTest {
   @DisplayName("잘못된 secret으로 토큰 파싱시 SignatureVerificationException이 발생한다.")
   void shouldThrowExceptionWhenParsingTokenWithWrongSecret() {
     // given
-    val tokenInfo = new TokenInfo(1L, false, ADMIN);
+    val tokenInfo = TokenInfo.admin(1L);
 
     when(jwtSecretGateway.getSecret()).thenReturn("valid_secret", "wrong_secret");
     // when

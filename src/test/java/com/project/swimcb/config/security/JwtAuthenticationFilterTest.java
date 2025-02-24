@@ -97,7 +97,6 @@ class JwtAuthenticationFilterTest {
     assertThat(authentication.getPrincipal()).isInstanceOf(TokenInfo.class);
     val tokenInfo = (TokenInfo) authentication.getPrincipal();
     assertThat(tokenInfo.memberId()).isEqualTo(memberId);
-    assertThat(tokenInfo.isGuest()).isFalse();
     assertThat(tokenInfo.role()).isEqualTo(role);
   }
 

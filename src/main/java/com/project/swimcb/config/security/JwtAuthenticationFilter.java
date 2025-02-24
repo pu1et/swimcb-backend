@@ -42,10 +42,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     try {
       val decodedJWT = jwtPort.parseToken(token);
       val memberId = Long.parseLong(decodedJWT.getSubject());
-      val isGuest = decodedJWT.getClaim("isGuest").asBoolean();
       val role = MemberRole.valueOf(decodedJWT.getClaim("role").asString());
 
-      val tokenInfo = new TokenInfo(memberId, isGuest, role);
+      val tokenInfo = new TokenInfo(memberId, role);
       val authority = List.of(new SimpleGrantedAuthority(role.name()));
       val authentication = new UsernamePasswordAuthenticationToken(tokenInfo, null, authority);
 
