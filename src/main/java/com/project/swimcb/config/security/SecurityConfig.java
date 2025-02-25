@@ -27,7 +27,8 @@ public class SecurityConfig {
         .authorizeHttpRequests(auth -> auth
             .requestMatchers(
                 "/swagger-ui/**",
-                "/v3/api-docs/**"
+                "/v3/api-docs/**",
+                "/api/token/**"
             ).permitAll()
             .anyRequest().authenticated())
         .headers(i -> i.frameOptions(FrameOptionsConfig::disable))
