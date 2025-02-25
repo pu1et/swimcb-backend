@@ -42,11 +42,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     val token = header.substring(TOKEN_PREFIX.length());
     try {
       val decodedJWT = jwtPort.parseToken(token);
-      val memberId = Long.parseLong(decodedJWT.getSubject());
-      val role = MemberRole.valueOf(decodedJWT.getClaim("role").asString());
-
-      val tokenInfo = new TokenInfo(memberId, role);
-      val authority = List.of(new SimpleGrantedAuthority(role.name()));
+      val tokenInfo = TokenInfo.fromToken(decodedJWT);
+      val authority = List.of(new SimpleGrantedAuthority(tokenInfo.role().name()));
       val authentication = new UsernamePasswordAuthenticationToken(tokenInfo, null, authority);
 
       SecurityContextHolder.getContext().setAuthentication(authentication);
