@@ -3,6 +3,7 @@ package com.project.swimcb.bo.notice.adapter.in;
 import com.project.swimcb.bo.notice.application.in.SearchNoticesUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "공지사항")
+@SecurityRequirement(name = "Bearer Authentication")
 @RestController
 @RequestMapping("/api/bo/notices/search")
 @RequiredArgsConstructor

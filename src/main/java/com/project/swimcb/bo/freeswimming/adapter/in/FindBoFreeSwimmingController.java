@@ -7,6 +7,7 @@ import com.project.swimcb.bo.freeswimming.adapter.in.FindBoFreeSwimmingResponse.
 import com.project.swimcb.bo.freeswimming.adapter.in.FindBoFreeSwimmingResponse.TicketPriceRange;
 import com.project.swimcb.bo.freeswimming.adapter.in.FindBoFreeSwimmingResponse.Time;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalTime;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "BO")
+@SecurityRequirement(name = "Bearer Authentication")
 @RestController
 @RequestMapping("/api/bo/free-swimming")
 @RequiredArgsConstructor

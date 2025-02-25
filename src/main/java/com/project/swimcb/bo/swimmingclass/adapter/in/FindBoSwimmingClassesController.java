@@ -9,6 +9,7 @@ import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesRespo
 import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesResponse.Type;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "BO")
+@SecurityRequirement(name = "Bearer Authentication")
 @RestController
 @RequestMapping("/api/bo/swimming-classes")
 @RequiredArgsConstructor

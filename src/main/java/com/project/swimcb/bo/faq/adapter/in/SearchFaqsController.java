@@ -3,6 +3,7 @@ package com.project.swimcb.bo.faq.adapter.in;
 import com.project.swimcb.bo.faq.application.in.SearchFaqsUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "FAQ")
+@SecurityRequirement(name = "Bearer Authentication")
 @RestController
 @RequestMapping("/api/bo/faqs/search")
 @RequiredArgsConstructor

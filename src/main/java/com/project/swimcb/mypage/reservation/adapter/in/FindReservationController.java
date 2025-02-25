@@ -4,6 +4,7 @@ import com.project.swimcb.mypage.reservation.domain.Reservation;
 import com.project.swimcb.mypage.reservation.domain.Reservation.Swimming;
 import com.project.swimcb.mypage.reservation.domain.Reservation.SwimmingPool;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "마이페이지")
+@SecurityRequirement(name = "Bearer Authentication")
 @RestController
 @RequestMapping("/api/my-page/reservations")
 public class FindReservationController {

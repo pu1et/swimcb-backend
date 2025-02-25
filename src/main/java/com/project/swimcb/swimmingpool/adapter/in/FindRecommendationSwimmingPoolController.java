@@ -2,6 +2,7 @@ package com.project.swimcb.swimmingpool.adapter.in;
 
 import com.project.swimcb.swimmingpool.domain.RecommendationSwimmingPool;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "추천")
+@SecurityRequirement(name = "Bearer Authentication")
 @RestController
 @RequestMapping("/api/swimming-pools/recommendation")
 public class FindRecommendationSwimmingPoolController {

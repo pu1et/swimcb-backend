@@ -13,6 +13,7 @@ import com.project.swimcb.bo.reservation.adapter.in.FindBoReservationsWithPaymen
 import com.project.swimcb.bo.reservation.adapter.in.FindBoReservationsWithPaymentsResponse.SwimmingClass;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
 import java.time.LocalDate;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Validated
 @Tag(name = "BO")
+@SecurityRequirement(name = "Bearer Authentication")
 @RestController
 @RequestMapping("/api/bo/reservations-with-payments")
 public class FindBoReservationsWithPaymentsController {
