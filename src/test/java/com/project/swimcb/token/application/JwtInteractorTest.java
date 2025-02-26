@@ -40,7 +40,7 @@ class JwtInteractorTest {
   }
 
   @Test
-  @DisplayName("게스트 토큰은 subject가 null이어야 한다.")
+  @DisplayName("게스트 토큰은 role은 GUEST이고, subject, swimmingPoolId가 null이어야 한다.")
   void shouldHaveNullSubjectWhenGuestToken() {
     // given
     // when
@@ -51,11 +51,12 @@ class JwtInteractorTest {
     val decoded = jwtInteractor.parseToken(guestToken);
     assertThat(decoded.getSubject()).isNull();
     assertThat(decoded.getClaim("role").asString()).isEqualTo(GUEST.name());
+    assertThat(decoded.getClaim("swimmingPoolId").asLong()).isNull();
   }
 
   @Test
-  @DisplayName("회원-고객 토큰은 subject는 memberId, role은 CUSTOMER이어야 한다.")
-  void shouldHaveNullSubjectWhenCustomerToken() {
+  @DisplayName("회원-고객 토큰은 role은 CUSTOMER이고, subject만 존재해야 한다.")
+  void shouldHaveSubjectAndMemberIdAndSwimmingPoolIdWhenCustomer() {
     // given
     val memberId = 1L;
     // when
@@ -66,21 +67,24 @@ class JwtInteractorTest {
     val decoded = jwtInteractor.parseToken(customerToken);
     assertThat(decoded.getSubject()).isEqualTo(String.valueOf(memberId));
     assertThat(decoded.getClaim("role").asString()).isEqualTo(CUSTOMER.name());
+    assertThat(decoded.getClaim("swimmingPoolId").asLong()).isNull();
   }
 
   @Test
-  @DisplayName("회원-관리자 토큰은 subject는 memberId, role은 ADMIN이어야 한다.")
-  void shouldHaveNullSubjectWhenAdminToken() {
+  @DisplayName("회원-관리자 토큰은 role은 ADMIN이고, subject, swimmingPoolId가 존재해야 한다.")
+  void shouldHaveSubjectAndMemberIdAndSwimmingPoolIdWhenAdmin() {
     // given
     val memberId = 1L;
+    val swimmingPoolId = 1L;
     // when
-    val customerToken = jwtInteractor.generateToken(TokenInfo.admin(memberId));
+    val customerToken = jwtInteractor.generateToken(TokenInfo.admin(memberId, swimmingPoolId));
     // then
     assertThat(customerToken).isNotNull();
 
     val decoded = jwtInteractor.parseToken(customerToken);
     assertThat(decoded.getSubject()).isEqualTo(String.valueOf(memberId));
     assertThat(decoded.getClaim("role").asString()).isEqualTo(ADMIN.name());
+    assertThat(decoded.getClaim("swimmingPoolId").asLong()).isEqualTo(swimmingPoolId);
   }
 
   @Test

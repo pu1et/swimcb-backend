@@ -29,6 +29,7 @@ public class JwtInteractor implements JwtPort {
         .withExpiresAt(Instant.now().plus(30, DAYS))
         .withSubject(tokenInfo.memberId() == null ? null : tokenInfo.memberId().toString())
         .withClaim("role", tokenInfo.role().name())
+        .withClaim("swimmingPoolId", tokenInfo.swimmingPoolId())
         .sign(Algorithm.HMAC256(secret()));
   }
 

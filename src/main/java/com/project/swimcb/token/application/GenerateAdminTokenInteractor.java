@@ -14,6 +14,6 @@ public class GenerateAdminTokenInteractor implements GenerateAdminTokenUseCase {
 
   @Override
   public String generateAdminToken() {
-    return jwtPort.generateToken(TokenInfo.admin(1L));
+    return jwtPort.generateToken(TokenInfo.admin(1L, 1L));
   }
 }

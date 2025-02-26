@@ -67,6 +67,7 @@ class JwtAuthenticationFilterTest {
     // given
     val memberId = 1L;
     val role = ADMIN;
+    val swimmingPoolId = 1L;
     val token = "valid_token";
 
     request.addHeader("Authorization", TOKEN_PREFIX + token);
@@ -77,6 +78,10 @@ class JwtAuthenticationFilterTest {
     val roleClaim = mock(Claim.class);
     when(roleClaim.asString()).thenReturn(role.name());
     when(decodedJWT.getClaim("role")).thenReturn(roleClaim);
+
+    val swimmingPoolIdClaim = mock(Claim.class);
+    when(swimmingPoolIdClaim.asLong()).thenReturn(swimmingPoolId);
+    when(decodedJWT.getClaim("swimmingPoolId")).thenReturn(swimmingPoolIdClaim);
 
     when(jwtPort.parseToken(token)).thenReturn(decodedJWT);
 
@@ -92,6 +97,7 @@ class JwtAuthenticationFilterTest {
     val tokenInfo = (TokenInfo) authentication.getPrincipal();
     assertThat(tokenInfo.memberId()).isEqualTo(memberId);
     assertThat(tokenInfo.role()).isEqualTo(role);
+    assertThat(tokenInfo.swimmingPoolId()).isEqualTo(swimmingPoolId);
   }
 
   @Test
