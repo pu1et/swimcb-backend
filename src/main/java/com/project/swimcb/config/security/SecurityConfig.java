@@ -41,11 +41,11 @@ public class SecurityConfig {
     val corsConfiguration = new CorsConfiguration();
     // 사용자앱
     corsConfiguration.addAllowedOrigin("http://localhost:4000");
-    corsConfiguration.addAllowedOrigin("https://cbe-user.pages.dev");
+    corsConfiguration.addAllowedOrigin("https://cb-user.vercel.app");
 
     // 판매자앱
     corsConfiguration.addAllowedOrigin("http://localhost:4001");
-    corsConfiguration.addAllowedOrigin("https://cbe-center.pages.dev");
+    corsConfiguration.addAllowedOrigin("https://cb-center.vercel.app");
 
     corsConfiguration.addAllowedOrigin("http://localhost:4010");
 
