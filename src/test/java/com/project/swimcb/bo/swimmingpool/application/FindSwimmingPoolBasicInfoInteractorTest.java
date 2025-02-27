@@ -121,7 +121,6 @@ class FindSwimmingPoolBasicInfoInteractorTest {
       when(swimmingPool.getNewRegistrationPeriodEndDay()).thenReturn(2);
       when(swimmingPool.getReRegistrationPeriodStartDay()).thenReturn(3);
       when(swimmingPool.getReRegistrationPeriodEndDay()).thenReturn(4);
-      when(swimmingPool.getUsageAgreementPath()).thenReturn("DUMMY_PATH");
       return swimmingPool;
     }
   }

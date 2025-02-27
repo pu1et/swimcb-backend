@@ -5,7 +5,6 @@ import com.project.swimcb.bo.swimmingpool.application.in.FindSwimmingPoolBasicIn
 import com.project.swimcb.bo.swimmingpool.application.out.ImageUrlPort;
 import com.project.swimcb.bo.swimmingpool.domain.SwimmingPoolImageRepository;
 import com.project.swimcb.bo.swimmingpool.domain.SwimmingPoolRepository;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -41,7 +40,7 @@ public class FindSwimmingPoolBasicInfoInteractor implements FindSwimmingPoolBasi
         .build();
   }
 
-  private String getImageUrl(@NonNull String imagePath) {
+  private String getImageUrl(String imagePath) {
     return imageUrlPort.getImageUrl(imagePath);
   }
 }
