@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "BO")
+@Tag(name = "BO - 완료")
 @SecurityRequirement(name = "Bearer Authentication")
 @RestController
 @RequestMapping("/api/bo/swimming-pools/basic-info")
