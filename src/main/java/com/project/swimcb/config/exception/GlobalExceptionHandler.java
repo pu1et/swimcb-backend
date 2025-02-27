@@ -22,16 +22,26 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+  public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
+      MethodArgumentNotValidException e) {
+
     val errorResponse = new ErrorResponse(BAD_REQUEST.value(),
         Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage());
     return ResponseEntity.status(BAD_REQUEST).body(errorResponse);
   }
 
   @ExceptionHandler(ConstraintViolationException.class)
-  public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException e) {
+  public ResponseEntity<ErrorResponse> handleConstraintViolationException(
+      ConstraintViolationException e) {
+
     val errorResponse = new ErrorResponse(BAD_REQUEST.value(),
         Objects.requireNonNull(e.getMessage()));
+    return ResponseEntity.status(BAD_REQUEST).body(errorResponse);
+  }
+
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException e) {
+    val errorResponse = new ErrorResponse(BAD_REQUEST.value(), e.getMessage());
     return ResponseEntity.status(BAD_REQUEST).body(errorResponse);
   }
 }
