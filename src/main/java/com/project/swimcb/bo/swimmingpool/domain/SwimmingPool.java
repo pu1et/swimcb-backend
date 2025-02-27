@@ -13,8 +13,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Table(name = "swimming_pool")
 @Entity
 @NoArgsConstructor(access = PROTECTED)
@@ -55,9 +57,6 @@ public class SwimmingPool extends BaseEntity {
 
   @Column(name = "operating_day", length = 255)
   private String operatingDay;
-
-  @Column(name = "representative_image_path", length = 255)
-  private String representativeImagePath;
 
   @Column(name = "usage_agreement_path", length = 255)
   private String usageAgreementPath;
