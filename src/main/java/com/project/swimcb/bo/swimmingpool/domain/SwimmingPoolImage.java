@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Table(name = "swimming_pool_image")
@@ -28,6 +29,7 @@ public class SwimmingPoolImage extends BaseEntity {
   @JoinColumn(name = "swimming_pool_id", nullable = false)
   private SwimmingPool swimmingPool;
 
+  @Getter
   @Column(name = "path", length = 255)
   private String path;
 }
