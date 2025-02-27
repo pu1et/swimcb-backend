@@ -71,12 +71,12 @@ class FindSwimmingPoolBasicInfoInteractorTest {
         // then
         assertThat(response).isNotNull();
         assertThat(response.name()).isEqualTo(pool.getName());
-        assertThat(response.newEnrollmentStartDay()).isEqualTo(
+        assertThat(response.newRegistrationPeriodStartDay()).isEqualTo(
             pool.getNewRegistrationPeriodStartDay());
         assertThat(response.usageAgreementUrl()).isEqualTo(usageAgreementUrl);
 
-        assertThat(response.imageUrls()).hasSize(2);
-        assertThat(response.imageUrls()).containsExactly(swimmingPoolImageUrl1,
+        assertThat(response.representativeImageUrls()).hasSize(2);
+        assertThat(response.representativeImageUrls()).containsExactly(swimmingPoolImageUrl1,
             swimmingPoolImageUrl2);
 
         verify(swimmingPoolRepository, only()).findById(swimmingPoolId);

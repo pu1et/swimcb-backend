@@ -19,19 +19,19 @@ public record FindSwimmingPoolBasicInfoResponse(
     String address,
 
     @Schema(description = "신규모집기간 시작일", example = "1")
-    Integer newEnrollmentStartDay,
+    Integer newRegistrationPeriodStartDay,
 
     @Schema(description = "신규모집기간 종료일", example = "10")
-    Integer newEnrollmentEndDay,
+    Integer newRegistrationPeriodEndDay,
 
     @Schema(description = "재등록기간 시작일", example = "15")
-    Integer reEnrollmentStartDate,
+    Integer reRegistrationPeriodStartDay,
 
     @Schema(description = "재등록기간 종료일", example = "20")
-    Integer reEnrollmentEndDate,
+    Integer reRegistrationPeriodEndDay,
 
     @Schema(description = "대표 이미지 URL 목록")
-    @NonNull List<String> imageUrls,
+    @NonNull List<String> representativeImageUrls,
 
     @Schema(description = "이용약관 URL", example = "http://host.com/usage-agreement.txt")
     String usageAgreementUrl

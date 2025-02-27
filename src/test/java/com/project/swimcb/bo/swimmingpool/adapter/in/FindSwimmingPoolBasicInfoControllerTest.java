@@ -75,11 +75,11 @@ class FindSwimmingPoolBasicInfoControllerTest {
           .name("DUMMY_NAME")
           .phone("DUMMY_PHONE")
           .address("DUMMY_ADDRESS")
-          .newEnrollmentStartDay(1)
-          .newEnrollmentEndDay(10)
-          .reEnrollmentStartDate(15)
-          .reEnrollmentEndDate(20)
-          .imageUrls(List.of("DUMMY_IMAGE_URL"))
+          .newRegistrationPeriodStartDay(1)
+          .newRegistrationPeriodEndDay(10)
+          .reRegistrationPeriodStartDay(15)
+          .reRegistrationPeriodEndDay(20)
+          .representativeImageUrls(List.of("DUMMY_IMAGE_URL"))
           .usageAgreementUrl("DUMMY_USAGE_AGREEMENT_URL")
           .build();
     }

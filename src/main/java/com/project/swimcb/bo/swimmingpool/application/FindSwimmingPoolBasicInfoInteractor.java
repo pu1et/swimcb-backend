@@ -32,11 +32,11 @@ public class FindSwimmingPoolBasicInfoInteractor implements FindSwimmingPoolBasi
         .name(swimmingPool.getName())
         .phone(swimmingPool.getPhone())
         .address(swimmingPool.getAddress())
-        .newEnrollmentStartDay(swimmingPool.getNewRegistrationPeriodStartDay())
-        .newEnrollmentEndDay(swimmingPool.getNewRegistrationPeriodEndDay())
-        .reEnrollmentStartDate(swimmingPool.getReRegistrationPeriodStartDay())
-        .reEnrollmentEndDate(swimmingPool.getReRegistrationPeriodEndDay())
-        .imageUrls(swimmingPoolImageUrls)
+        .newRegistrationPeriodStartDay(swimmingPool.getNewRegistrationPeriodStartDay())
+        .newRegistrationPeriodEndDay(swimmingPool.getNewRegistrationPeriodEndDay())
+        .reRegistrationPeriodStartDay(swimmingPool.getReRegistrationPeriodStartDay())
+        .reRegistrationPeriodEndDay(swimmingPool.getReRegistrationPeriodEndDay())
+        .representativeImageUrls(swimmingPoolImageUrls)
         .usageAgreementUrl(getImageUrl(swimmingPool.getUsageAgreementPath()))
         .build();
   }
