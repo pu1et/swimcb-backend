@@ -30,6 +30,12 @@ public record FindSwimmingPoolBasicInfoResponse(
     @Schema(description = "재등록기간 종료일", example = "20")
     Integer reRegistrationPeriodEndDay,
 
+    @Schema(description = "운영일", example = "월, 화, 수, 목, 금")
+    String operatingDays,
+
+    @Schema(description = "휴무일", example = "격주 토요일")
+    String closedDays,
+
     @Schema(description = "대표 이미지 URL 목록")
     @NonNull List<String> representativeImageUrls,
 

@@ -35,6 +35,8 @@ public class FindSwimmingPoolBasicInfoInteractor implements FindSwimmingPoolBasi
         .newRegistrationPeriodEndDay(swimmingPool.getNewRegistrationPeriodEndDay())
         .reRegistrationPeriodStartDay(swimmingPool.getReRegistrationPeriodStartDay())
         .reRegistrationPeriodEndDay(swimmingPool.getReRegistrationPeriodEndDay())
+        .operatingDays(swimmingPool.getOperatingDays())
+        .closedDays(swimmingPool.getClosedDays())
         .representativeImageUrls(swimmingPoolImageUrls)
         .usageAgreementUrl(getImageUrl(swimmingPool.getUsageAgreementPath()))
         .build();
