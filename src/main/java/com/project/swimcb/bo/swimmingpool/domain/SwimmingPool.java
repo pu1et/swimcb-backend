@@ -55,8 +55,8 @@ public class SwimmingPool extends BaseEntity {
   @Column(name = "is_new_registration_extended", nullable = false)
   boolean isNewRegistrationExtended;
 
-  @Column(name = "operating_day", length = 255)
-  private String operatingDay;
+  @Column(name = "operating_days", length = 255)
+  private String operatingDays;
 
   @Column(name = "usage_agreement_path", length = 255)
   private String usageAgreementPath;
