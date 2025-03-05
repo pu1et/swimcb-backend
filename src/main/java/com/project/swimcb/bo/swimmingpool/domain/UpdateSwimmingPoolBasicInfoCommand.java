@@ -9,10 +9,12 @@ public record UpdateSwimmingPoolBasicInfoCommand(
     String name,
     String phone,
     String address,
-    Integer newEnrollmentStartDate,
-    Integer newEnrollmentEndDate,
-    Integer reEnrollmentStartDate,
-    Integer reEnrollmentEndDate,
+    Integer newRegistrationPeriodStartDay,
+    Integer newRegistrationPeriodEndDay,
+    Integer reRegistrationPeriodStartDay,
+    Integer reRegistrationPeriodEndDay,
+    String operatingDays,
+    String closedDays,
     @NonNull List<String> imagePaths,
     String usageAgreementPath
 ) {

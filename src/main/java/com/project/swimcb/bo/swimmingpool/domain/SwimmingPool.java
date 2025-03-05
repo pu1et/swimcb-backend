@@ -15,6 +15,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Getter
 @Table(name = "swimming_pool")
@@ -63,4 +64,17 @@ public class SwimmingPool extends BaseEntity {
 
   @Column(name = "usage_agreement_path", length = 255)
   private String usageAgreementPath;
+
+  public void updateBasicInfo(@NonNull UpdateSwimmingPoolBasicInfoCommand request) {
+    this.name = request.name();
+    this.phone = request.phone();
+    this.address = request.address();
+    this.newRegistrationPeriodStartDay = request.newRegistrationPeriodStartDay();
+    this.newRegistrationPeriodEndDay = request.newRegistrationPeriodEndDay();
+    this.reRegistrationPeriodStartDay = request.reRegistrationPeriodStartDay();
+    this.reRegistrationPeriodEndDay = request.reRegistrationPeriodEndDay();
+    this.operatingDays = request.operatingDays();
+    this.closedDays = request.closedDays();
+    this.usageAgreementPath = request.usageAgreementPath();
+  }
 }

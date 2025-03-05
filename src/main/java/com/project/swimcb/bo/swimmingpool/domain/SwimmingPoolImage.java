@@ -14,7 +14,10 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.val;
 
+@Getter
 @Table(name = "swimming_pool_image")
 @Entity
 @NoArgsConstructor(access = PROTECTED)
@@ -32,4 +35,11 @@ public class SwimmingPoolImage extends BaseEntity {
   @Getter
   @Column(name = "path", length = 255)
   private String path;
+
+  public static SwimmingPoolImage create(@NonNull SwimmingPool swimmingPool, @NonNull String path) {
+    val image = new SwimmingPoolImage();
+    image.swimmingPool = swimmingPool;
+    image.path = path;
+    return image;
+  }
 }

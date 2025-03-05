@@ -1,5 +1,6 @@
 package com.project.swimcb.bo.swimmingpool.adapter.in;
 
+import static com.project.swimcb.bo.swimmingpool.adapter.in.FindSwimmingPoolBasicInfoControllerTest.SWIMMING_POOL_ID;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -15,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.swimcb.bo.swimmingpool.application.in.UpdateSwimmingPoolBasicInfoUseCase;
 import com.project.swimcb.common.WebMvcTestWithoutSecurity;
+import com.project.swimcb.common.WithMockTokenInfo;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.IntStream;
@@ -26,6 +28,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTestWithoutSecurity(controllers = UpdateSwimmingPoolBasicInfoController.class)
+@WithMockTokenInfo(swimmingPoolId = SWIMMING_POOL_ID)
 class UpdateSwimmingPoolBasicInfoControllerTest {
 
   @Autowired
@@ -37,7 +40,7 @@ class UpdateSwimmingPoolBasicInfoControllerTest {
   @Autowired
   private ObjectMapper objectMapper;
 
-  private static final String path = "/api/bo/swimming-pools/{swimmingPoolId}/basic-info";
+  private static final String PATH = "/api/bo/swimming-pools/basic-info";
 
   @Test
   @DisplayName("수영장 기본 정보 수정 성공")
@@ -47,7 +50,7 @@ class UpdateSwimmingPoolBasicInfoControllerTest {
     val request = UpdateSwimmingPoolBasicInfoRequestFactory.create();
     // when
     // then
-    mockMvc.perform(put(path, swimmingPoolId)
+    mockMvc.perform(put(PATH, swimmingPoolId)
             .contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isOk());
@@ -65,7 +68,7 @@ class UpdateSwimmingPoolBasicInfoControllerTest {
     doThrow(NoSuchElementException.class).when(useCase).updateBasicInfo(anyLong(), any());
     // when
     // then
-    mockMvc.perform(put(path, swimmingPoolId)
+    mockMvc.perform(put(PATH, swimmingPoolId)
             .contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isNotFound());
@@ -81,7 +84,7 @@ class UpdateSwimmingPoolBasicInfoControllerTest {
     val request = UpdateSwimmingPoolBasicInfoRequestFactory.imagesIsNull();
     // when
     // then
-    mockMvc.perform(put(path, swimmingPoolId)
+    mockMvc.perform(put(PATH, swimmingPoolId)
             .contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isBadRequest())
@@ -98,7 +101,7 @@ class UpdateSwimmingPoolBasicInfoControllerTest {
     val request = UpdateSwimmingPoolBasicInfoRequestFactory.imagesIsOver6();
     // when
     // then
-    mockMvc.perform(put(path, swimmingPoolId)
+    mockMvc.perform(put(PATH, swimmingPoolId)
             .contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isBadRequest())

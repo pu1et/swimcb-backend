@@ -21,16 +21,22 @@ public record UpdateSwimmingPoolBasicInfoRequest(
     String address,
 
     @Schema(description = "신규모집기간 시작일", example = "1")
-    Integer newEnrollmentStartDay,
+    Integer newRegistrationPeriodStartDay,
 
     @Schema(description = "신규모집기간 종료일", example = "10")
-    Integer newEnrollmentEndDay,
+    Integer newRegistrationPeriodEndDay,
 
     @Schema(description = "재등록기간 시작일", example = "15")
-    Integer reEnrollmentStartDate,
+    Integer reRegistrationPeriodStartDay,
 
     @Schema(description = "재등록기간 종료일", example = "20")
-    Integer reEnrollmentEndDate,
+    Integer reRegistrationPeriodEndDay,
+
+    @Schema(description = "운영일", example = "월, 화, 수, 목, 금")
+    String operatingDays,
+
+    @Schema(description = "휴무일", example = "격주 토요일")
+    String closedDays,
 
     @NotNull(message = "images은 null일 수 없습니다.")
     @Size(max = 6, message = "images는 6개 이하여야 합니다.")
@@ -46,10 +52,12 @@ public record UpdateSwimmingPoolBasicInfoRequest(
         .name(this.name)
         .phone(this.phone)
         .address(this.address)
-        .newEnrollmentStartDate(this.newEnrollmentStartDay)
-        .newEnrollmentEndDate(this.newEnrollmentEndDay)
-        .reEnrollmentStartDate(this.reEnrollmentStartDate)
-        .reEnrollmentEndDate(this.reEnrollmentEndDate)
+        .newRegistrationPeriodStartDay(this.newRegistrationPeriodStartDay)
+        .newRegistrationPeriodEndDay(this.newRegistrationPeriodEndDay)
+        .reRegistrationPeriodStartDay(this.reRegistrationPeriodStartDay)
+        .reRegistrationPeriodEndDay(this.reRegistrationPeriodEndDay)
+        .operatingDays(this.operatingDays)
+        .closedDays(this.closedDays)
         .imagePaths(this.imagePaths)
         .usageAgreementPath(this.usageAgreementPath)
         .build();
