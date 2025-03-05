@@ -58,6 +58,9 @@ public class SwimmingPool extends BaseEntity {
   @Column(name = "operating_days", length = 255)
   private String operatingDays;
 
+  @Column(name = "closed_days", length = 255)
+  private String closedDays;
+
   @Column(name = "usage_agreement_path", length = 255)
   private String usageAgreementPath;
 }
