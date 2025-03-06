@@ -1,6 +1,7 @@
 package com.project.swimcb.bo.swimmingclass.domain;
 
 import static jakarta.persistence.FetchType.LAZY;
+import static lombok.AccessLevel.PRIVATE;
 import static lombok.AccessLevel.PROTECTED;
 
 import com.project.swimcb.bo.instructor.domain.SwimmingInstructor;
@@ -16,10 +17,16 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.LocalTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Table(name = "swimming_class")
 @Entity
+@Builder
+@AllArgsConstructor(access = PRIVATE)
 @NoArgsConstructor(access = PROTECTED)
 public class SwimmingClass extends BaseEntity {
 

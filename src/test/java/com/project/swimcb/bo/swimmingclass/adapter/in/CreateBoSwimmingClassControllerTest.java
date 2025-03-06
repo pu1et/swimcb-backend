@@ -1,7 +1,9 @@
 package com.project.swimcb.bo.swimmingclass.adapter.in;
 
-import static com.project.swimcb.bo.swimmingclass.domain.enums.CreateBoSwimmingClassSwimmingClassType.GROUP;
+import static com.project.swimcb.bo.swimmingclass.adapter.in.CreateBoSwimmingClassControllerTest.SWIMMING_POOL_ID;
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.verify;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -13,25 +15,34 @@ import com.project.swimcb.bo.swimmingclass.adapter.in.CreateBoSwimmingClassReque
 import com.project.swimcb.bo.swimmingclass.adapter.in.CreateBoSwimmingClassRequest.Ticket;
 import com.project.swimcb.bo.swimmingclass.adapter.in.CreateBoSwimmingClassRequest.Time;
 import com.project.swimcb.bo.swimmingclass.adapter.in.CreateBoSwimmingClassRequest.Type;
+import com.project.swimcb.bo.swimmingclass.application.in.CreateBoSwimmingClassUseCase;
 import com.project.swimcb.common.WebMvcTestWithoutSecurity;
+import com.project.swimcb.common.WithMockTokenInfo;
 import java.time.LocalTime;
 import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTestWithoutSecurity(controllers = CreateBoSwimmingClassController.class)
+@WithMockTokenInfo(swimmingPoolId = SWIMMING_POOL_ID)
 class CreateBoSwimmingClassControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
 
+  @MockitoBean
+  private CreateBoSwimmingClassUseCase useCase;
+
   @Autowired
   private ObjectMapper objectMapper;
 
   private static final String PATH = "/api/bo/swimming-classes";
+
+  static final String SWIMMING_POOL_ID = "1";
 
   @Test
   @DisplayName("클래스 데이터 관리 - 클래스 추가 성공")
@@ -44,6 +55,53 @@ class CreateBoSwimmingClassControllerTest {
             .contentType(APPLICATION_JSON_VALUE)
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isOk());
+
+    verify(useCase, only()).createBoSwimmingClass(
+        request.toCommand(Long.parseLong(SWIMMING_POOL_ID)));
+  }
+
+  @Test
+  @DisplayName("강습 월이 1 미만인 경우 400 반환")
+  void shouldReturn400WhenMonthIsLessThan1() throws Exception {
+    // given
+    val request = CreateBoSwimmingClassRequest.builder()
+        .month(0)
+        .days(CreateBoSwimmingClassRequestFactory.days())
+        .time(CreateBoSwimmingClassRequestFactory.time())
+        .type(CreateBoSwimmingClassRequestFactory.type())
+        .instructorId(1L)
+        .tickets(CreateBoSwimmingClassRequestFactory.tickets())
+        .registrationCapacity(CreateBoSwimmingClassRequestFactory.registrationCapacity())
+        .build();
+    // when
+    // then
+    mockMvc.perform(post(PATH)
+            .contentType(APPLICATION_JSON_VALUE)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().string(containsString("강습 월은 1 이상이어야 합니다.")));
+  }
+
+  @Test
+  @DisplayName("강습 월이 12 초과인 경우 400 반환")
+  void shouldReturn400WhenMonthIsGreaterThan12() throws Exception {
+    // given
+    val request = CreateBoSwimmingClassRequest.builder()
+        .month(13)
+        .days(CreateBoSwimmingClassRequestFactory.days())
+        .time(CreateBoSwimmingClassRequestFactory.time())
+        .type(CreateBoSwimmingClassRequestFactory.type())
+        .instructorId(1L)
+        .tickets(CreateBoSwimmingClassRequestFactory.tickets())
+        .registrationCapacity(CreateBoSwimmingClassRequestFactory.registrationCapacity())
+        .build();
+    // when
+    // then
+    mockMvc.perform(post(PATH)
+            .contentType(APPLICATION_JSON_VALUE)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().isBadRequest())
+        .andExpect(content().string(containsString("강습 월은 12 이하여야 합니다.")));
   }
 
   @Test
@@ -51,9 +109,10 @@ class CreateBoSwimmingClassControllerTest {
   void shouldReturn400WhenDayIsNull() throws Exception {
     // given
     val request = CreateBoSwimmingClassRequest.builder()
+        .month(1)
         .time(CreateBoSwimmingClassRequestFactory.time())
         .type(CreateBoSwimmingClassRequestFactory.type())
-        .instructorName("손지혜")
+        .instructorId(1L)
         .tickets(CreateBoSwimmingClassRequestFactory.tickets())
         .registrationCapacity(CreateBoSwimmingClassRequestFactory.registrationCapacity())
         .build();
@@ -71,9 +130,10 @@ class CreateBoSwimmingClassControllerTest {
   void shouldReturn400WhenTimeIsNull() throws Exception {
     // given
     val request = CreateBoSwimmingClassRequest.builder()
+        .month(1)
         .days(CreateBoSwimmingClassRequestFactory.days())
         .type(CreateBoSwimmingClassRequestFactory.type())
-        .instructorName("손지혜")
+        .instructorId(1L)
         .tickets(CreateBoSwimmingClassRequestFactory.tickets())
         .registrationCapacity(CreateBoSwimmingClassRequestFactory.registrationCapacity())
         .build();
@@ -91,10 +151,11 @@ class CreateBoSwimmingClassControllerTest {
   void shouldReturn400WhenStartTimeIsNull() throws Exception {
     // given
     val request = CreateBoSwimmingClassRequest.builder()
+        .month(1)
         .days(CreateBoSwimmingClassRequestFactory.days())
         .time(Time.builder().endTime(LocalTime.of(6, 50)).build())
         .type(CreateBoSwimmingClassRequestFactory.type())
-        .instructorName("손지혜")
+        .instructorId(1L)
         .tickets(CreateBoSwimmingClassRequestFactory.tickets())
         .registrationCapacity(CreateBoSwimmingClassRequestFactory.registrationCapacity())
         .build();
@@ -112,10 +173,11 @@ class CreateBoSwimmingClassControllerTest {
   void shouldReturn400WhenEndTimeIsNull() throws Exception {
     // given
     val request = CreateBoSwimmingClassRequest.builder()
+        .month(1)
         .days(CreateBoSwimmingClassRequestFactory.days())
         .time(Time.builder().startTime(LocalTime.of(6, 0)).build())
         .type(CreateBoSwimmingClassRequestFactory.type())
-        .instructorName("손지혜")
+        .instructorId(1L)
         .tickets(CreateBoSwimmingClassRequestFactory.tickets())
         .registrationCapacity(CreateBoSwimmingClassRequestFactory.registrationCapacity())
         .build();
@@ -129,13 +191,14 @@ class CreateBoSwimmingClassControllerTest {
   }
 
   @Test
-  @DisplayName("강습 형태/구분이 null인 경우 400 반환")
+  @DisplayName("강습형태ID/강습구분ID가 null인 경우 400 반환")
   void shouldReturn400WhenClassTypeIsNull() throws Exception {
     // given
     val request = CreateBoSwimmingClassRequest.builder()
+        .month(1)
         .days(CreateBoSwimmingClassRequestFactory.days())
         .time(CreateBoSwimmingClassRequestFactory.time())
-        .instructorName("손지혜")
+        .instructorId(1L)
         .tickets(CreateBoSwimmingClassRequestFactory.tickets())
         .registrationCapacity(CreateBoSwimmingClassRequestFactory.registrationCapacity())
         .build();
@@ -145,18 +208,19 @@ class CreateBoSwimmingClassControllerTest {
             .contentType(APPLICATION_JSON_VALUE)
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("강습 형태/구분은 null이 될 수 없습니다.")));
+        .andExpect(content().string(containsString("강습형태ID/강습구분ID는 null이 될 수 없습니다.")));
   }
 
   @Test
-  @DisplayName("강습 형태가 null인 경우 400 반환")
-  void shouldReturn400WhenTypeIsNull() throws Exception {
+  @DisplayName("강습형태ID가 0 미만인 400 반환")
+  void shouldReturn400WhenClassTypeIdIsLessThan0() throws Exception {
     // given
     val request = CreateBoSwimmingClassRequest.builder()
+        .month(1)
         .days(CreateBoSwimmingClassRequestFactory.days())
         .time(CreateBoSwimmingClassRequestFactory.time())
-        .type(Type.builder().subType("초급").build())
-        .instructorName("손지혜")
+        .type(Type.builder().classTypeId(-1L).build())
+        .instructorId(1L)
         .tickets(CreateBoSwimmingClassRequestFactory.tickets())
         .registrationCapacity(CreateBoSwimmingClassRequestFactory.registrationCapacity())
         .build();
@@ -166,18 +230,19 @@ class CreateBoSwimmingClassControllerTest {
             .contentType(APPLICATION_JSON_VALUE)
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("강습 형태는 null이 될 수 없습니다.")));
+        .andExpect(content().string(containsString("강습형태ID는 0 이상이어야 합니다.")));
   }
 
   @Test
-  @DisplayName("강습 구분이 null인 경우 400 반환")
-  void shouldReturn400WhenSubTypeIsNull() throws Exception {
+  @DisplayName("강습구분ID가 0 미만인 경우 400 반환")
+  void shouldReturn400WhenClassSubTypeIdIsLessThan0() throws Exception {
     // given
     val request = CreateBoSwimmingClassRequest.builder()
+        .month(1)
         .days(CreateBoSwimmingClassRequestFactory.days())
         .time(CreateBoSwimmingClassRequestFactory.time())
-        .type(Type.builder().type(GROUP).build())
-        .instructorName("손지혜")
+        .type(Type.builder().classSubTypeId(-1L).build())
+        .instructorId(1L)
         .tickets(CreateBoSwimmingClassRequestFactory.tickets())
         .registrationCapacity(CreateBoSwimmingClassRequestFactory.registrationCapacity())
         .build();
@@ -187,17 +252,19 @@ class CreateBoSwimmingClassControllerTest {
             .contentType(APPLICATION_JSON_VALUE)
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("강습 구분은 null이 될 수 없습니다.")));
+        .andExpect(content().string(containsString("강습구분ID는 0 이상이어야 합니다.")));
   }
 
   @Test
-  @DisplayName("담당강사가 null인 경우 400 반환")
-  void shouldReturn400WhenInstructorIsNull() throws Exception {
+  @DisplayName("담당강사 ID가 0 미만인 경우 400 반환")
+  void shouldReturn400WhenInstructorIdIsLessThan0() throws Exception {
     // given
     val request = CreateBoSwimmingClassRequest.builder()
+        .month(1)
         .days(CreateBoSwimmingClassRequestFactory.days())
         .time(CreateBoSwimmingClassRequestFactory.time())
         .type(CreateBoSwimmingClassRequestFactory.type())
+        .instructorId(-1L)
         .tickets(CreateBoSwimmingClassRequestFactory.tickets())
         .registrationCapacity(CreateBoSwimmingClassRequestFactory.registrationCapacity())
         .build();
@@ -207,7 +274,7 @@ class CreateBoSwimmingClassControllerTest {
             .contentType(APPLICATION_JSON_VALUE)
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("담당강사는 null이 될 수 없습니다.")));
+        .andExpect(content().string(containsString("담당강사ID는 0 이상이어야 합니다.")));
   }
 
   @Test
@@ -215,10 +282,11 @@ class CreateBoSwimmingClassControllerTest {
   void shouldReturn400WhenTicketsIsNull() throws Exception {
     // given
     val request = CreateBoSwimmingClassRequest.builder()
+        .month(1)
         .days(CreateBoSwimmingClassRequestFactory.days())
         .time(CreateBoSwimmingClassRequestFactory.time())
         .type(CreateBoSwimmingClassRequestFactory.type())
-        .instructorName("손지혜")
+        .instructorId(1L)
         .registrationCapacity(CreateBoSwimmingClassRequestFactory.registrationCapacity())
         .build();
     // when
@@ -235,10 +303,11 @@ class CreateBoSwimmingClassControllerTest {
   void shouldReturn400WhenTicketNameIsNull() throws Exception {
     // given
     val request = CreateBoSwimmingClassRequest.builder()
+        .month(1)
         .days(CreateBoSwimmingClassRequestFactory.days())
         .time(CreateBoSwimmingClassRequestFactory.time())
         .type(CreateBoSwimmingClassRequestFactory.type())
-        .instructorName("손지혜")
+        .instructorId(1L)
         .tickets(List.of(Ticket.builder().price(100000).build()))
         .registrationCapacity(CreateBoSwimmingClassRequestFactory.registrationCapacity())
         .build();
@@ -256,10 +325,11 @@ class CreateBoSwimmingClassControllerTest {
   void shouldReturn400WhenRegistrationCapacityIsNull() throws Exception {
     // given
     val request = CreateBoSwimmingClassRequest.builder()
+        .month(1)
         .days(CreateBoSwimmingClassRequestFactory.days())
         .time(CreateBoSwimmingClassRequestFactory.time())
         .type(CreateBoSwimmingClassRequestFactory.type())
-        .instructorName("손지혜")
+        .instructorId(1L)
         .tickets(CreateBoSwimmingClassRequestFactory.tickets())
         .build();
     // when
@@ -275,10 +345,11 @@ class CreateBoSwimmingClassControllerTest {
 
     private static CreateBoSwimmingClassRequest create() {
       return CreateBoSwimmingClassRequest.builder()
+          .month(1)
           .days(days())
           .time(time())
           .type(type())
-          .instructorName("손지혜")
+          .instructorId(1L)
           .tickets(tickets())
           .registrationCapacity(registrationCapacity())
           .build();
@@ -305,8 +376,8 @@ class CreateBoSwimmingClassControllerTest {
 
     private static Type type() {
       return Type.builder()
-          .type(GROUP)
-          .subType("마스터즈")
+          .classTypeId(1L)
+          .classSubTypeId(1L)
           .build();
     }
 
