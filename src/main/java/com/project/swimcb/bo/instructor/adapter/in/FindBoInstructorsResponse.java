@@ -10,7 +10,7 @@ public record FindBoInstructorsResponse(
 ) {
 
   @Builder
-  record Instructor(
+  public record Instructor(
       long instructorId,
       @NonNull String name
   ) {
