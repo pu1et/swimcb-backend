@@ -42,4 +42,8 @@ public class SwimmingInstructor extends BaseEntity {
     swimmingInstructor.name = name;
     return swimmingInstructor;
   }
+
+  public void updateName(@NonNull String name) {
+    this.name = name;
+  }
 }
