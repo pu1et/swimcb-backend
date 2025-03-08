@@ -33,14 +33,16 @@ class CreateBoSwimmingClassSubTypeControllerTest {
   @MockitoBean
   private CreateBoSwimmingClassSubTypeUseCase createBoSwimmingClassSubTypeUseCase;
 
-  private static final String PATH = "/api/bo/swimming-classes/class-sub-types";
   static final long SWIMMING_POOL_ID = 1L;
+
+  private static final String PATH = "/api/bo/swimming-classes/class-types/2/class-sub-types";
+  private static final Long CLASS_TYPE_ID = 2L;
 
   @Test
   @DisplayName("강습구분 단건 생성 성공")
   void shouldCreateSuccessfully() throws Exception {
     // given
-    val request = new CreateBoSwimmingClassSubTypeRequest(1L, "DUMMY_NAME");
+    val request = new CreateBoSwimmingClassSubTypeRequest("DUMMY_NAME");
     // when
     // then
     mockMvc.perform(post(PATH)
@@ -49,7 +51,7 @@ class CreateBoSwimmingClassSubTypeControllerTest {
         .andExpect(status().isOk());
 
     verify(createBoSwimmingClassSubTypeUseCase, only()).createBoSwimmingClassSubType(
-        request.toCommand(SWIMMING_POOL_ID));
+        request.toCommand(SWIMMING_POOL_ID, CLASS_TYPE_ID));
   }
 
   @Test
@@ -67,7 +69,7 @@ class CreateBoSwimmingClassSubTypeControllerTest {
   @DisplayName("강습구분 이름이 null일 경우 400 반환")
   void shouldReturn400WhenTypeNameIsNull() throws Exception {
     // given
-    val request = new CreateBoSwimmingClassSubTypeRequest(1L, null);
+    val request = new CreateBoSwimmingClassSubTypeRequest(null);
     // when
     // then
     mockMvc.perform(post(PATH)
