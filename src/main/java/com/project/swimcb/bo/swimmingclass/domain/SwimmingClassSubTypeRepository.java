@@ -9,4 +9,6 @@ public interface SwimmingClassSubTypeRepository extends JpaRepository<SwimmingCl
 
   Optional<SwimmingClassSubType> findBySwimmingClassType_IdAndId(long swimmingClassTypeId,
       long swimmingClassSubTypeId);
+
+  int deleteBySwimmingClassType_IdAndId(long swimmingClassTypeId, long swimmingClassSubTypeId);
 }
