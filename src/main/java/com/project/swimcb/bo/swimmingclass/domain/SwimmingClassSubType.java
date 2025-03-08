@@ -43,4 +43,8 @@ public class SwimmingClassSubType extends BaseEntity {
     swimmingClassSubType.name = name;
     return swimmingClassSubType;
   }
+
+  public void updateName(@NonNull String name) {
+    this.name = name;
+  }
 }
