@@ -17,6 +17,7 @@ public record CreateBoSwimmingClassSubTypeRequest(
   public @NonNull CreateBoSwimmingClassSubTypeCommand toCommand(long swimmingPoolId, long swimmingClassTypeId) {
     return CreateBoSwimmingClassSubTypeCommand.builder()
         .swimmingPoolId(swimmingPoolId)
+        .swimmingClassTypeId(swimmingClassTypeId)
         .name(name)
         .build();
   }
