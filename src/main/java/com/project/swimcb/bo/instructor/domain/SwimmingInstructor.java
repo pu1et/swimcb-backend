@@ -15,6 +15,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.val;
 
 @Getter
 @Table(name = "swimming_instuctor")
@@ -33,4 +35,11 @@ public class SwimmingInstructor extends BaseEntity {
 
   @Column(name = "name", length = 50)
   private String name;
+
+  public static SwimmingInstructor create(@NonNull SwimmingPool swimmingPool, @NonNull String name) {
+    val swimmingInstructor = new SwimmingInstructor();
+    swimmingInstructor.swimmingPool = swimmingPool;
+    swimmingInstructor.name = name;
+    return swimmingInstructor;
+  }
 }
