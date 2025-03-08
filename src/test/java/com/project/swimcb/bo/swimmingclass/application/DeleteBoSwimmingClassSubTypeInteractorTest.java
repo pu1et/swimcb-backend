@@ -28,7 +28,7 @@ class DeleteBoSwimmingClassSubTypeInteractorTest {
 
   @Test
   @DisplayName("강습구분을 성공적으로 삭제한다.")
-  void shouldCreateSwimmingClassSubTypeSuccessfully() {
+  void shouldDeleteSwimmingClassSubTypeSuccessfully() {
     // given
     val command = TestDeleteBoSwimmingClassSubTypeCommandFactory.create();
 
@@ -43,8 +43,8 @@ class DeleteBoSwimmingClassSubTypeInteractorTest {
   }
 
   @Test
-  @DisplayName("존재하지 않는 강습형태 ID로 삭제 시 NoSuchElementException가 발생한다.")
-  void shouldThrowNoSuchElementExceptionWhenSwimmingClassTypeNotFound() {
+  @DisplayName("존재하지 않는 강습형태ID/강습구분ID로 요청 시 NoSuchElementException가 발생한다.")
+  void shouldThrowNoSuchElementExceptionWhenSwimmingClassTypeOrSubTypeNotFound() {
     // given
     val command = TestDeleteBoSwimmingClassSubTypeCommandFactory.create();
 

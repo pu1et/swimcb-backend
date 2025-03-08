@@ -30,8 +30,8 @@ class UpdateBoSwimmingClassSubTypeInteractorTest {
   private SwimmingClassSubTypeRepository swimmingClassSubTypeRepository;
 
   @Test
-  @DisplayName("강습구분을 성공적으로 생성한다.")
-  void shouldCreateSwimmingClassSubTypeSuccessfully() {
+  @DisplayName("강습구분을 성공적으로 업데이트한다.")
+  void shouldUpdateSwimmingClassSubTypeSuccessfully() {
     // given
     val command = TestUpdateBoSwimmingClassSubTypeCommandFactory.create();
     val subType = mock(SwimmingClassSubType.class);
@@ -47,8 +47,8 @@ class UpdateBoSwimmingClassSubTypeInteractorTest {
   }
 
   @Test
-  @DisplayName("존재하지 않는 강습형태 ID로 요청 시 NoSuchElementException가 발생한다.")
-  void shouldThrowNoSuchElementExceptionWhenSwimmingClassTypeNotFound() {
+  @DisplayName("존재하지 않는 강습형태ID/강습구분ID로 요청 시 NoSuchElementException가 발생한다.")
+  void shouldThrowNoSuchElementExceptionWhenSwimmingClassTypeOrSubTypeNotFound() {
     // given
     val command = TestUpdateBoSwimmingClassSubTypeCommandFactory.create();
 
