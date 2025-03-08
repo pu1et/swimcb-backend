@@ -19,7 +19,7 @@ import lombok.NonNull;
 import lombok.val;
 
 @Getter
-@Table(name = "swimming_instuctor")
+@Table(name = "swimming_instructor")
 @Entity
 @NoArgsConstructor(access = PROTECTED)
 public class SwimmingInstructor extends BaseEntity {
