@@ -13,8 +13,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.val;
 
+@Getter
 @Table(name = "swimming_class_sub_type")
 @Entity
 @NoArgsConstructor(access = PROTECTED)
@@ -34,4 +38,11 @@ public class SwimmingClassSubType extends BaseEntity {
 
   @Column(name = "price")
   private int price;
+
+  public static SwimmingClassSubType create(@NonNull SwimmingClassType swimmingClassType, @NonNull String name) {
+    val swimmingClassSubType = new SwimmingClassSubType();
+    swimmingClassSubType.swimmingClassType = swimmingClassType;
+    swimmingClassSubType.name = name;
+    return swimmingClassSubType;
+  }
 }

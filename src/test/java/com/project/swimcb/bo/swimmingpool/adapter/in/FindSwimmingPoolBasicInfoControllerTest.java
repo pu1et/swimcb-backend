@@ -1,7 +1,6 @@
 package com.project.swimcb.bo.swimmingpool.adapter.in;
 
 import static com.project.swimcb.bo.swimmingpool.adapter.in.FindSwimmingPoolBasicInfoControllerTest.SWIMMING_POOL_ID;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
@@ -35,9 +34,9 @@ class FindSwimmingPoolBasicInfoControllerTest {
   @Autowired
   private ObjectMapper objectMapper;
 
-  private static final String PATH = "/api/bo/swimming-pools/basic-info";
+  static final long SWIMMING_POOL_ID = 1L;
 
-  static final String SWIMMING_POOL_ID = "1";
+  private static final String PATH = "/api/bo/swimming-pools/basic-info";
 
   @Test
   @DisplayName("수영장 기본 정보 조회 성공")
@@ -52,7 +51,7 @@ class FindSwimmingPoolBasicInfoControllerTest {
         .andExpect(status().isOk())
         .andExpect(content().json(objectMapper.writeValueAsString(response)));
 
-    verify(useCase, only()).findSwimmingPoolBasicInfo(Long.parseLong(SWIMMING_POOL_ID));
+    verify(useCase, only()).findSwimmingPoolBasicInfo(SWIMMING_POOL_ID);
   }
 
   @Test
@@ -65,7 +64,7 @@ class FindSwimmingPoolBasicInfoControllerTest {
     mockMvc.perform(get(PATH))
         .andExpect(status().isBadRequest());
 
-    verify(useCase, only()).findSwimmingPoolBasicInfo(Long.parseLong(SWIMMING_POOL_ID));
+    verify(useCase, only()).findSwimmingPoolBasicInfo(SWIMMING_POOL_ID);
   }
 
   private static class FindSwimmingPoolBasicInfoResponseFactory {

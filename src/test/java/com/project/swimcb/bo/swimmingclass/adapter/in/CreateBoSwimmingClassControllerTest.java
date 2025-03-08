@@ -40,9 +40,9 @@ class CreateBoSwimmingClassControllerTest {
   @Autowired
   private ObjectMapper objectMapper;
 
-  private static final String PATH = "/api/bo/swimming-classes";
+  static final long SWIMMING_POOL_ID = 1L;
 
-  static final String SWIMMING_POOL_ID = "1";
+  private static final String PATH = "/api/bo/swimming-classes";
 
   @Test
   @DisplayName("클래스 데이터 관리 - 클래스 추가 성공")
@@ -56,8 +56,7 @@ class CreateBoSwimmingClassControllerTest {
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isOk());
 
-    verify(useCase, only()).createBoSwimmingClass(
-        request.toCommand(Long.parseLong(SWIMMING_POOL_ID)));
+    verify(useCase, only()).createBoSwimmingClass(request.toCommand(SWIMMING_POOL_ID));
   }
 
   @Test

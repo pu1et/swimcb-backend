@@ -19,5 +19,5 @@ public @interface WithMockTokenInfo {
 
   MemberRole role() default CUSTOMER;
 
-  String swimmingPoolId() default "";
+  long swimmingPoolId() default 0L;
 }

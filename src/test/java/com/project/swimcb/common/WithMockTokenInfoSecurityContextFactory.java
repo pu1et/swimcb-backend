@@ -16,7 +16,7 @@ public class WithMockTokenInfoSecurityContextFactory implements
     val context = SecurityContextHolder.createEmptyContext();
 
     val tokenInfo = new TokenInfo(parseLong(annotation.memberId()), annotation.role(),
-        parseLong(annotation.swimmingPoolId()));
+        annotation.swimmingPoolId());
 
     val authentication = new TestingAuthenticationToken(tokenInfo, null);
     context.setAuthentication(authentication);

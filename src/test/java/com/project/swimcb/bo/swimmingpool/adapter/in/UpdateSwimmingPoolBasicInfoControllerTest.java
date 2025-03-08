@@ -1,6 +1,6 @@
 package com.project.swimcb.bo.swimmingpool.adapter.in;
 
-import static com.project.swimcb.bo.swimmingpool.adapter.in.FindSwimmingPoolBasicInfoControllerTest.SWIMMING_POOL_ID;
+import static com.project.swimcb.bo.swimmingpool.adapter.in.UpdateSwimmingPoolBasicInfoControllerTest.SWIMMING_POOL_ID;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -39,6 +39,8 @@ class UpdateSwimmingPoolBasicInfoControllerTest {
 
   @Autowired
   private ObjectMapper objectMapper;
+
+  static final long SWIMMING_POOL_ID = 1L;
 
   private static final String PATH = "/api/bo/swimming-pools/basic-info";
 
