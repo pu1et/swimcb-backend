@@ -9,4 +9,5 @@ public interface SwimmingInstructorRepository extends JpaRepository<SwimmingInst
   Optional<SwimmingInstructor> findById(long instructorId);
   Optional<SwimmingInstructor> findBySwimmingPool_IdAndId(long swimmingPoolId, long instructorId);
   List<SwimmingInstructor> findAllBySwimmingPool_Id(long swimmingPoolId);
+  int deleteBySwimmingPool_IdAndId(long swimmingPoolId, long instructorId);
 }
