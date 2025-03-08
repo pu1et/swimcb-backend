@@ -3,7 +3,6 @@ package com.project.swimcb.bo.swimmingclass.domain;
 import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
 
-import com.project.swimcb.bo.swimmingpool.domain.SwimmingPool;
 import com.project.swimcb.common.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,10 +35,9 @@ public class SwimmingClassSubType extends BaseEntity {
   @Column(name = "name", length = 20)
   private String name;
 
-  @Column(name = "price")
-  private int price;
+  public static SwimmingClassSubType create(@NonNull SwimmingClassType swimmingClassType,
+      @NonNull String name) {
 
-  public static SwimmingClassSubType create(@NonNull SwimmingClassType swimmingClassType, @NonNull String name) {
     val swimmingClassSubType = new SwimmingClassSubType();
     swimmingClassSubType.swimmingClassType = swimmingClassType;
     swimmingClassSubType.name = name;
