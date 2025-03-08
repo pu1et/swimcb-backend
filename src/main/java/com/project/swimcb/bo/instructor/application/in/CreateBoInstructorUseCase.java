@@ -1,9 +1,9 @@
 package com.project.swimcb.bo.instructor.application.in;
 
 import com.project.swimcb.bo.instructor.domain.CreateBoInstructorCommand;
-import jakarta.validation.constraints.NotNull;
+import lombok.NonNull;
 
 public interface CreateBoInstructorUseCase {
 
-  void createBoInstructor(@NotNull CreateBoInstructorCommand request);
+  void createBoInstructor(@NonNull CreateBoInstructorCommand request);
 }
