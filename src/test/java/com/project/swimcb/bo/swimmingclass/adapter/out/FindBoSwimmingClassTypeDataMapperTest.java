@@ -1,5 +1,6 @@
 package com.project.swimcb.bo.swimmingclass.adapter.out;
 
+import static com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -9,6 +10,7 @@ import static org.mockito.Mockito.when;
 import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassTypesResponse.ClassSubType;
 import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassTypesResponse.ClassType;
 import com.project.swimcb.bo.swimmingclass.adapter.out.FindBoSwimmingClassTypeDataMapper.SwimmingClassTypeWithSubType;
+import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Query;
@@ -91,25 +93,25 @@ class FindBoSwimmingClassTypeDataMapperTest {
       return List.of(
           SwimmingClassTypeWithSubType.builder()
               .swimmingClassTypeId(1L)
-              .swimmingClassTypeName("DUMMY_TYPE_NAME1")
+              .swimmingClassTypeName(GROUP)
               .swimmingClassSubTypeId(1L)
               .swimmingClassSubTypeName("DUMMY_SUB_TYPE_NAME1")
               .build(),
           SwimmingClassTypeWithSubType.builder()
               .swimmingClassTypeId(1L)
-              .swimmingClassTypeName("DUMMY_TYPE_NAME1")
+              .swimmingClassTypeName(GROUP)
               .swimmingClassSubTypeId(2L)
               .swimmingClassSubTypeName("DUMMY_SUB_TYPE_NAME2")
               .build(),
           SwimmingClassTypeWithSubType.builder()
               .swimmingClassTypeId(2L)
-              .swimmingClassTypeName("DUMMY_TYPE_NAME2")
+              .swimmingClassTypeName(KIDS_SWIMMING)
               .swimmingClassSubTypeId(3L)
               .swimmingClassSubTypeName("DUMMY_SUB_TYPE_NAME3")
               .build(),
           SwimmingClassTypeWithSubType.builder()
               .swimmingClassTypeId(2L)
-              .swimmingClassTypeName("DUMMY_TYPE_NAME2")
+              .swimmingClassTypeName(KIDS_SWIMMING)
               .swimmingClassSubTypeId(4L)
               .swimmingClassSubTypeName("DUMMY_SUB_TYPE_NAME4")
               .build()
@@ -120,11 +122,11 @@ class FindBoSwimmingClassTypeDataMapperTest {
       return List.of(
           SwimmingClassTypeWithSubType.builder()
               .swimmingClassTypeId(1L)
-              .swimmingClassTypeName("DUMMY_TYPE_NAME1")
+              .swimmingClassTypeName(GROUP)
               .build(),
           SwimmingClassTypeWithSubType.builder()
               .swimmingClassTypeId(2L)
-              .swimmingClassTypeName("DUMMY_TYPE_NAME2")
+              .swimmingClassTypeName(GROUP)
               .build()
       );
     }

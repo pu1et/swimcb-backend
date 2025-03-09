@@ -4,8 +4,8 @@ import static com.project.swimcb.bo.reservation.domain.enums.PaymentMethod.BANK_
 import static com.project.swimcb.bo.reservation.domain.enums.PaymentMethod.CASH_ON_SITE;
 import static com.project.swimcb.bo.reservation.domain.enums.ReservationPaymentStatus.PAYMENT_COMPLETED;
 import static com.project.swimcb.bo.reservation.domain.enums.ReservationPaymentStatus.RESERVATION_REQUESTED;
-import static com.project.swimcb.swimmingpool.domain.enums.SwimmingClassType.AQUA_AEROBICS;
-import static com.project.swimcb.swimmingpool.domain.enums.SwimmingClassType.GROUP;
+import static com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName.AQUA_AEROBICS;
+import static com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName.GROUP;
 
 import com.project.swimcb.bo.reservation.domain.enums.ReservationPaymentStatus;
 import com.project.swimcb.bo.reservation.domain.enums.SwimmingType;

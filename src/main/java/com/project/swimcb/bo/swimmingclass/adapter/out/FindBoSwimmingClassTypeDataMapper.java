@@ -10,12 +10,12 @@ import static java.util.stream.Collectors.toMap;
 import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassTypesResponse;
 import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassTypesResponse.ClassType;
 import com.project.swimcb.bo.swimmingclass.application.out.FindBoSwimmingClassTypeDsGateway;
+import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import com.querydsl.core.annotations.QueryProjection;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import lombok.Builder;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -50,7 +50,7 @@ public class FindBoSwimmingClassTypeDataMapper implements FindBoSwimmingClassTyp
 
           return ClassType.builder()
               .classTypeId(key)
-              .name(classTypeIdAndNameMap.get(key))
+              .name(classTypeIdAndNameMap.get(key).getDescription())
               .classSubTypes(
                   value.stream()
                       .filter(k -> k.swimmingClassSubTypeId != null)
@@ -89,7 +89,7 @@ public class FindBoSwimmingClassTypeDataMapper implements FindBoSwimmingClassTyp
   @Builder
   public record SwimmingClassTypeWithSubType(
       long swimmingClassTypeId,
-      String swimmingClassTypeName,
+      SwimmingClassTypeName swimmingClassTypeName,
       Long swimmingClassSubTypeId,
       String swimmingClassSubTypeName
   ) {

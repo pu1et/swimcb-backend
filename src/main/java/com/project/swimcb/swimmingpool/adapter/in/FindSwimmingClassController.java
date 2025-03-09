@@ -1,7 +1,7 @@
 package com.project.swimcb.swimmingpool.adapter.in;
 
 import com.project.swimcb.swimmingpool.domain.SwimmingClass;
-import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassType;
+import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import com.project.swimcb.swimmingpool.domain.enums.Sort;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -26,7 +26,7 @@ public class FindSwimmingClassController {
   public List<SwimmingClass> findSwimmingClasses(
       @Parameter(description = "시간대", example = "2025-01-01T01:01:01") @RequestParam(value = "class-time", required = false) LocalDateTime classTime,
       @Parameter(description = "강습 요일", example = "MONDAY") @RequestParam(value = "class-day", required = false) DayOfWeek classDay,
-      @Parameter(description = "강습형태", example = "GROUP_BEGINNER") @RequestParam(value = "swimmingClassType", required = false) SwimmingClassType swimmingClassType,
+      @Parameter(description = "강습형태", example = "GROUP_BEGINNER") @RequestParam(value = "swimmingClassType", required = false) SwimmingClassTypeName swimmingClassType,
       @Parameter(description = "마감 클래스 제외 여부", example = "true") @RequestParam("exclude-closed-class") boolean excludeClosedClass,
       @RequestParam("sort") Sort sort
   ) {
