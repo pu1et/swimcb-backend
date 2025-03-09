@@ -41,7 +41,7 @@ public class UpdateBoSwimmingClassDataMapper implements UpdateBoSwimmingClassDsG
     val classSubType = findClassSubType(request.type().subTypeId());
     val instructor = findInstructor(request.instructorId());
 
-    queryFactory.update(swimmingClass)
+    val count = queryFactory.update(swimmingClass)
         .set(swimmingClass.type, classType)
         .set(swimmingClass.subType, classSubType)
         .set(swimmingClass.isMonday, request.days().isMonday())
@@ -55,13 +55,18 @@ public class UpdateBoSwimmingClassDataMapper implements UpdateBoSwimmingClassDsG
         .set(swimmingClass.endTime, request.time().endTime())
         .set(swimmingClass.instructor, instructor)
         .set(swimmingClass.totalCapacity, request.registrationCapacity().totalCapacity())
-        .set(swimmingClass.reservationLimitCount, request.registrationCapacity().reservationLimitCount())
+        .set(swimmingClass.reservationLimitCount,
+            request.registrationCapacity().reservationLimitCount())
         .set(swimmingClass.isVisible, request.isExposed())
         .where(
             swimmingClass.swimmingPool.id.eq(request.swimmingPoolId()),
             swimmingClass.id.eq(request.swimmingClassId())
         )
         .execute();
+
+    if (count != 1) {
+      throw new NoSuchElementException("클래스가 존재하지 않습니다.");
+    }
   }
 
   private SwimmingClassType findClassType(long classTypeId) {

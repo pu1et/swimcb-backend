@@ -1,7 +1,9 @@
 package com.project.swimcb.bo.swimmingclass.adapter.out;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -25,10 +27,12 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Query;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -62,35 +66,141 @@ class UpdateBoSwimmingClassDataMapperTest {
 
   @BeforeEach
   void setUp() {
-    when(entityManager.getEntityManagerFactory()).thenReturn(entityManagerFactory);
-    when(entityManager.createQuery(anyString())).thenReturn(query);
+    lenient().when(entityManager.getEntityManagerFactory()).thenReturn(entityManagerFactory);
+    lenient().when(entityManager.createQuery(anyString())).thenReturn(query);
 
     mapper = spy(new UpdateBoSwimmingClassDataMapper(entityManager, swimmingClassTypeRepository,
         swimmingClassSubTypeRepository, instructorRepository));
   }
 
-  @Test
-  @DisplayName("수영 클래스를 성공적으로 업데이트한다.")
-  void shouldUpdateSwimmingClassSuccessfully() throws Exception {
-    // given
-    val request = TestUpdateBoSwimmingClassCommandFactory.create();
-    val existingClassType = TestSwimmingTypeFactory.create();
-    val existingClassSubType = TestSwimmingSubTypeFactory.create();
-    val existingInstructor = TestSwimmingInstructorFactory.create();
+  @Nested
+  @DisplayName("수영 클래스 업데이트시")
+  class UpdateSwimmingClass {
 
-    when(swimmingClassTypeRepository.findById(anyLong())).thenReturn(
-        Optional.of(existingClassType));
-    when(swimmingClassSubTypeRepository.findById(anyLong())).thenReturn(
-        Optional.of(existingClassSubType));
-    when(instructorRepository.findById(anyLong())).thenReturn(Optional.of(existingInstructor));
-    // when
-    mapper.updateSwimmingClass(request);
-    // then
-    verify(swimmingClassTypeRepository, only()).findById(request.type().typeId());
-    verify(swimmingClassSubTypeRepository, only()).findById(request.type().subTypeId());
-    verify(instructorRepository, only()).findById(request.instructorId());
+    @Nested
+    @DisplayName("업데이트 대상 클래스가 존재하면")
+    class WhenClassExists {
 
-    verify(query, times(1)).executeUpdate();
+      @Test
+      @DisplayName("수영 클래스를 성공적으로 업데이트한다.")
+      void shouldUpdateSwimmingClassSuccessfully() throws Exception {
+        // given
+        val request = TestUpdateBoSwimmingClassCommandFactory.create();
+        val existingClassType = TestSwimmingTypeFactory.create();
+        val existingClassSubType = TestSwimmingSubTypeFactory.create();
+        val existingInstructor = TestSwimmingInstructorFactory.create();
+
+        when(swimmingClassTypeRepository.findById(anyLong())).thenReturn(
+            Optional.of(existingClassType));
+        when(swimmingClassSubTypeRepository.findById(anyLong())).thenReturn(
+            Optional.of(existingClassSubType));
+        when(instructorRepository.findById(anyLong())).thenReturn(Optional.of(existingInstructor));
+        when(query.executeUpdate()).thenReturn(1);
+        // when
+        mapper.updateSwimmingClass(request);
+        // then
+        verify(swimmingClassTypeRepository, only()).findById(request.type().typeId());
+        verify(swimmingClassSubTypeRepository, only()).findById(request.type().subTypeId());
+        verify(instructorRepository, only()).findById(request.instructorId());
+
+        verify(query, times(1)).executeUpdate();
+      }
+    }
+
+    @Nested
+    @DisplayName("업데이트 대상 클래스가 존재하지 않으면")
+    class WhenClassDoesNotExists {
+
+      @Test
+      @DisplayName("NoSuchElementException가 발생한다.")
+      void shouldThrowNoSuchElementExceptionWhenSwimmingClassNotFound() throws Exception {
+        // given
+        val request = TestUpdateBoSwimmingClassCommandFactory.create();
+        val existingClassType = TestSwimmingTypeFactory.create();
+        val existingClassSubType = TestSwimmingSubTypeFactory.create();
+        val existingInstructor = TestSwimmingInstructorFactory.create();
+
+        when(swimmingClassTypeRepository.findById(anyLong())).thenReturn(
+            Optional.of(existingClassType));
+        when(swimmingClassSubTypeRepository.findById(anyLong())).thenReturn(
+            Optional.of(existingClassSubType));
+        when(instructorRepository.findById(anyLong())).thenReturn(Optional.of(existingInstructor));
+        when(query.executeUpdate()).thenReturn(0);
+        // when
+        // then
+        assertThatThrownBy(() -> mapper.updateSwimmingClass(request))
+            .isInstanceOf(NoSuchElementException.class)
+            .hasMessage("클래스가 존재하지 않습니다.");
+      }
+    }
+
+    @Nested
+    @DisplayName("업데이트할 강습형태가 존재하지 않으면")
+    class WhenClassTypeDoesNotExists {
+
+      @Test
+      @DisplayName("NoSuchElementException가 발생한다.")
+      void shouldThrowNoSuchElementExceptionWhenClassTypeNotFound() {
+        // given
+        val request = TestUpdateBoSwimmingClassCommandFactory.create();
+
+        when(swimmingClassTypeRepository.findById(anyLong())).thenReturn(
+            Optional.empty());
+        // when
+        // then
+        assertThatThrownBy(() -> mapper.updateSwimmingClass(request))
+            .isInstanceOf(NoSuchElementException.class)
+            .hasMessage("강습형태가 존재하지 않습니다.");
+      }
+    }
+
+    @Nested
+    @DisplayName("업데이트할 강습구분이 존재하지 않으면")
+    class WhenClassSubTypeDoesNotExists {
+
+      @Test
+      @DisplayName("NoSuchElementException가 발생한다.")
+      void shouldThrowNoSuchElementExceptionWhenClassSubTypeNotFound() throws Exception {
+        // given
+        val request = TestUpdateBoSwimmingClassCommandFactory.create();
+        val existingClassType = TestSwimmingTypeFactory.create();
+
+        when(swimmingClassTypeRepository.findById(anyLong())).thenReturn(
+            Optional.of(existingClassType));
+        when(swimmingClassSubTypeRepository.findById(anyLong())).thenReturn(
+            Optional.empty());
+        // when
+        // then
+        assertThatThrownBy(() -> mapper.updateSwimmingClass(request))
+            .isInstanceOf(NoSuchElementException.class)
+            .hasMessage("강습구분이 존재하지 않습니다.");
+      }
+    }
+
+    @Nested
+    @DisplayName("업데이트할 강사가 존재하지 않으면")
+    class WhenClassInstructorDoesNotExists {
+
+      @Test
+      @DisplayName("NoSuchElementException가 발생한다.")
+      void shouldThrowNoSuchElementExceptionWhenClassInstructorNotFound() throws Exception {
+        // given
+        val request = TestUpdateBoSwimmingClassCommandFactory.create();
+        val existingClassType = TestSwimmingTypeFactory.create();
+        val existingClassSubType = TestSwimmingSubTypeFactory.create();
+
+        when(swimmingClassTypeRepository.findById(anyLong())).thenReturn(
+            Optional.of(existingClassType));
+        when(swimmingClassSubTypeRepository.findById(anyLong())).thenReturn(
+            Optional.of(existingClassSubType));
+        when(instructorRepository.findById(anyLong())).thenReturn(Optional.empty());
+        // when
+        // then
+        assertThatThrownBy(() -> mapper.updateSwimmingClass(request))
+            .isInstanceOf(NoSuchElementException.class)
+            .hasMessage("강사가 존재하지 않습니다.");
+      }
+    }
   }
 
   private static class TestUpdateBoSwimmingClassCommandFactory {
