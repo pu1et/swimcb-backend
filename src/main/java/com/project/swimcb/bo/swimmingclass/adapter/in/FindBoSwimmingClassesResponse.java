@@ -1,6 +1,5 @@
 package com.project.swimcb.bo.swimmingclass.adapter.in;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalTime;
 import java.util.List;
 import lombok.Builder;
@@ -12,12 +11,12 @@ public record FindBoSwimmingClassesResponse(
 ) {
 
   @Builder
-  record SwimmingClass(
+  public record SwimmingClass(
       long swimmingClassId,
       @NonNull Type type,
       @NonNull Days days,
       @NonNull Time time,
-      @NonNull String instructorName,
+      @NonNull Instructor instructor,
       @NonNull TicketPriceRange ticketPriceRange,
       @NonNull List<Ticket> tickets,
       @NonNull RegistrationCapacity registrationCapacity,
@@ -27,15 +26,17 @@ public record FindBoSwimmingClassesResponse(
   }
 
   @Builder
-  record Type(
-      @NonNull String type,
-      @NonNull String subType
+  public record Type(
+      long typeId,
+      @NonNull String typeName,
+      long subTypeId,
+      @NonNull String subTypeName
   ) {
 
   }
 
   @Builder
-  record Days(
+  public record Days(
       boolean isMonday,
       boolean isTuesday,
       boolean isWednesday,
@@ -48,7 +49,7 @@ public record FindBoSwimmingClassesResponse(
   }
 
   @Builder
-  record Time(
+  public record Time(
       @NonNull LocalTime startTime,
       @NonNull LocalTime endTime
   ) {
@@ -56,7 +57,15 @@ public record FindBoSwimmingClassesResponse(
   }
 
   @Builder
-  record TicketPriceRange(
+  public record Instructor(
+      long id,
+      @NonNull String name
+  ) {
+
+  }
+
+  @Builder
+  public record TicketPriceRange(
       int minimumPrice,
       int maximumPrice
   ) {
@@ -64,7 +73,8 @@ public record FindBoSwimmingClassesResponse(
   }
 
   @Builder
-  record Ticket(
+  public record Ticket(
+      long id,
       @NonNull String name,
       int price
   ) {
@@ -72,9 +82,10 @@ public record FindBoSwimmingClassesResponse(
   }
 
   @Builder
-  record RegistrationCapacity(
+  public record RegistrationCapacity(
       int totalCapacity,
       int reservationLimitCount,
+      // TODO. 예약 기능 추가되면 업데이트 해줘야함
       int completedReservationCount,
       int remainingReservationCount
   ) {

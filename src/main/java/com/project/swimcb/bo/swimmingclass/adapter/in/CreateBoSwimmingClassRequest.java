@@ -70,6 +70,7 @@ public record CreateBoSwimmingClassRequest(
   }
 
   @Builder
+  @Schema(name = "CreateBoSwimmingClassRequestType")
   record Type(
       @Min(value = 0, message = "강습형태ID는 0 이상이어야 합니다.")
       @Schema(description = "강습형태ID", example = "1")
