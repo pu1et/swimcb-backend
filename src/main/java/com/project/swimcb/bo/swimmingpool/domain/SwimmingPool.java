@@ -73,6 +73,7 @@ public class SwimmingPool extends BaseEntity {
     this.newRegistrationPeriodEndDay = request.newRegistrationPeriodEndDay();
     this.reRegistrationPeriodStartDay = request.reRegistrationPeriodStartDay();
     this.reRegistrationPeriodEndDay = request.reRegistrationPeriodEndDay();
+    this.isNewRegistrationExtended = request.isNewRegistrationExtended();
     this.operatingDays = request.operatingDays();
     this.closedDays = request.closedDays();
     this.usageAgreementPath = request.usageAgreementPath();

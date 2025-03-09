@@ -30,6 +30,9 @@ public record FindSwimmingPoolBasicInfoResponse(
     @Schema(description = "재등록기간 종료일", example = "20")
     Integer reRegistrationPeriodEndDay,
 
+    @Schema(description = "신규모집기간 이후 신청 가능 여부", example = "true")
+    boolean isNewRegistrationExtended,
+
     @Schema(description = "운영일", example = "월, 화, 수, 목, 금")
     String operatingDays,
 

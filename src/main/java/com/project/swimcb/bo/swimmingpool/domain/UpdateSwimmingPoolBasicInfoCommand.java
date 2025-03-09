@@ -13,6 +13,7 @@ public record UpdateSwimmingPoolBasicInfoCommand(
     Integer newRegistrationPeriodEndDay,
     Integer reRegistrationPeriodStartDay,
     Integer reRegistrationPeriodEndDay,
+    boolean isNewRegistrationExtended,
     String operatingDays,
     String closedDays,
     @NonNull List<String> imagePaths,
