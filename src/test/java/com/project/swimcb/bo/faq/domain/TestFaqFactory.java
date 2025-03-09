@@ -1,6 +1,5 @@
 package com.project.swimcb.bo.faq.domain;
 
-import com.project.swimcb.bo.faq.domain.Faq;
 import java.time.LocalDateTime;
 
 public class TestFaqFactory {

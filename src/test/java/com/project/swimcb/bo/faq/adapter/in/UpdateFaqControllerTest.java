@@ -131,19 +131,19 @@ class UpdateFaqControllerTest {
 
   private static class UpdateFaqRequestFactory {
 
-    public static UpdateFaqRequest create() {
+    private static UpdateFaqRequest create() {
       return new UpdateFaqRequest("title", "content", List.of("image"), true);
     }
 
-    public static UpdateFaqRequest emptyTitle() {
+    private static UpdateFaqRequest emptyTitle() {
       return new UpdateFaqRequest(null, "content", List.of("image"), true);
     }
 
-    public static UpdateFaqRequest emptyContent() {
+    private static UpdateFaqRequest emptyContent() {
       return new UpdateFaqRequest("title", null, List.of("image"), true);
     }
 
-    public static UpdateFaqRequest emptyImageUrls() {
+    private static UpdateFaqRequest emptyImageUrls() {
       return new UpdateFaqRequest("title", "content", null, true);
     }
   }

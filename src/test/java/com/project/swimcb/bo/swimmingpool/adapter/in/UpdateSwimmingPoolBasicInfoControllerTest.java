@@ -114,7 +114,7 @@ class UpdateSwimmingPoolBasicInfoControllerTest {
 
   private static class UpdateSwimmingPoolBasicInfoRequestFactory {
 
-    public static UpdateSwimmingPoolBasicInfoRequest create() {
+    private static UpdateSwimmingPoolBasicInfoRequest create() {
       return UpdateSwimmingPoolBasicInfoRequest.builder()
           .name("name")
           .phone("phone")
@@ -124,7 +124,7 @@ class UpdateSwimmingPoolBasicInfoControllerTest {
           .build();
     }
 
-    public static UpdateSwimmingPoolBasicInfoRequest imagesIsNull() {
+    private static UpdateSwimmingPoolBasicInfoRequest imagesIsNull() {
       return UpdateSwimmingPoolBasicInfoRequest.builder()
           .name("name")
           .phone("phone")
@@ -133,7 +133,7 @@ class UpdateSwimmingPoolBasicInfoControllerTest {
           .build();
     }
 
-    public static UpdateSwimmingPoolBasicInfoRequest imagesIsOver6() {
+    private static UpdateSwimmingPoolBasicInfoRequest imagesIsOver6() {
       return UpdateSwimmingPoolBasicInfoRequest.builder()
           .name("name")
           .phone("phone")

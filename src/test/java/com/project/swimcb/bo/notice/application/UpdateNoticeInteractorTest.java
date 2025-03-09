@@ -59,11 +59,7 @@ class UpdateNoticeInteractorTest {
 
   private static class UpdateNoticeCommandFactory {
 
-    public static UpdateNoticeCommand create() {
-      return new UpdateNoticeCommand(1L, "title", "content", true);
-    }
-
-    public static UpdateNoticeCommand createWithNoImage() {
+    private static UpdateNoticeCommand create() {
       return new UpdateNoticeCommand(1L, "title", "content", true);
     }
   }

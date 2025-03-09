@@ -1,6 +1,5 @@
 package com.project.swimcb.bo.notice.domain;
 
-import com.project.swimcb.bo.notice.domain.Notice;
 import java.time.LocalDateTime;
 
 public class TestNoticeFactory {

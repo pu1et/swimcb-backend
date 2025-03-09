@@ -75,7 +75,7 @@ class UploadSwimmingPoolUsageAgreementFileInteractorTest {
 
   private static class UploadedFileFactory {
 
-    public static UploadedFile create() {
+    private static UploadedFile create() {
       return UploadedFile.builder()
           .name("test.jpg")
           .path("faq/test.jpg")

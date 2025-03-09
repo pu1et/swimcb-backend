@@ -125,19 +125,19 @@ class UpdateNoticeControllerTest {
 
   private static class UpdateNoticeRequestFactory {
 
-    public static UpdateNoticeRequest create() {
+    private static UpdateNoticeRequest create() {
       return new UpdateNoticeRequest("title", "content", List.of("image"), true);
     }
 
-    public static UpdateNoticeRequest emptyTitle() {
+    private static UpdateNoticeRequest emptyTitle() {
       return new UpdateNoticeRequest(null, "content", List.of("image"), true);
     }
 
-    public static UpdateNoticeRequest emptyContent() {
+    private static UpdateNoticeRequest emptyContent() {
       return new UpdateNoticeRequest("title", null, List.of("image"), true);
     }
 
-    public static UpdateNoticeRequest emptyImageUrls() {
+    private static UpdateNoticeRequest emptyImageUrls() {
       return new UpdateNoticeRequest("title", "content", null, true);
     }
   }

@@ -71,7 +71,7 @@ class UpdateNoticeIsVisibleControllerTest {
 
   private static class UpdateNoticeIsVisibleRequestFactory {
 
-    public static UpdateNoticeIsVisibleRequest create() {
+    private static UpdateNoticeIsVisibleRequest create() {
       return new UpdateNoticeIsVisibleRequest(true);
     }
   }

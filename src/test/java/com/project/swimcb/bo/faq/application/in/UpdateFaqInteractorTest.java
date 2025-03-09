@@ -64,7 +64,7 @@ class UpdateFaqInteractorTest {
 
   private static class UpdateFaqCommandFactory {
 
-    public static UpdateFaqCommand create() {
+    private static UpdateFaqCommand create() {
       return new UpdateFaqCommand(1L, "title", "content", List.of("image"), true);
     }
   }

@@ -117,7 +117,7 @@ class CreateNoticeControllerTest {
 
   private static class CreateNoticeRequestFactory {
 
-    public static CreateNoticeRequest create() {
+    private static CreateNoticeRequest create() {
       return CreateNoticeRequest.builder()
           .createdBy("createdBy")
           .title("title")
@@ -127,7 +127,7 @@ class CreateNoticeControllerTest {
           .build();
     }
 
-    public static CreateNoticeRequest createWithNoCreatedBy() {
+    private static CreateNoticeRequest createWithNoCreatedBy() {
       return CreateNoticeRequest.builder()
           .title("title")
           .content("content")
@@ -136,7 +136,7 @@ class CreateNoticeControllerTest {
           .build();
     }
 
-    public static CreateNoticeRequest createWithNoTitle() {
+    private static CreateNoticeRequest createWithNoTitle() {
       return CreateNoticeRequest.builder()
           .createdBy("createdBy")
           .content("content")
@@ -145,7 +145,7 @@ class CreateNoticeControllerTest {
           .build();
     }
 
-    public static CreateNoticeRequest createWithNoContent() {
+    private static CreateNoticeRequest createWithNoContent() {
       return CreateNoticeRequest.builder()
           .createdBy("createdBy")
           .title("title")
@@ -154,7 +154,7 @@ class CreateNoticeControllerTest {
           .build();
     }
 
-    public static CreateNoticeRequest createWithNoImageUrls() {
+    private static CreateNoticeRequest createWithNoImageUrls() {
       return CreateNoticeRequest.builder()
           .createdBy("createdBy")
           .title("title")

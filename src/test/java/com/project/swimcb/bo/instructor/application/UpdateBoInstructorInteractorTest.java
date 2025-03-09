@@ -63,7 +63,7 @@ class UpdateBoInstructorInteractorTest {
 
   private static class TestUpdateBoInstructorCommandFactory {
 
-    public static UpdateBoInstructorCommand create() {
+    private static UpdateBoInstructorCommand create() {
       return UpdateBoInstructorCommand.builder()
           .swimmingPoolId(1L).instructorId(2L).name("DUMMY_NAME")
           .build();

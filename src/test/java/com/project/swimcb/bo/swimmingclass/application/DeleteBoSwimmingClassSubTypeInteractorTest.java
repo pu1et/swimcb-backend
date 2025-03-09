@@ -59,7 +59,7 @@ class DeleteBoSwimmingClassSubTypeInteractorTest {
 
   private static class TestDeleteBoSwimmingClassSubTypeCommandFactory {
 
-    public static DeleteBoSwimmingClassSubTypeCommand create() {
+    private static DeleteBoSwimmingClassSubTypeCommand create() {
       return DeleteBoSwimmingClassSubTypeCommand.builder()
           .swimmingPoolId(1L).swimmingClassTypeId(2L).swimmingClassSubTypeId(3L).build();
     }

@@ -63,7 +63,7 @@ class UpdateBoSwimmingClassSubTypeInteractorTest {
 
   private static class TestUpdateBoSwimmingClassSubTypeCommandFactory {
 
-    public static UpdateBoSwimmingClassSubTypeCommand create() {
+    private static UpdateBoSwimmingClassSubTypeCommand create() {
       return UpdateBoSwimmingClassSubTypeCommand.builder()
           .swimmingPoolId(1L).swimmingClassTypeId(2L).swimmingClassSubTypeId(3L).name("DUMMY_NAME")
           .build();

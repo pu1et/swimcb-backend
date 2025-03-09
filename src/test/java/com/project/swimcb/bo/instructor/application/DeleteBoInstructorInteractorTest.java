@@ -59,7 +59,7 @@ class DeleteBoInstructorInteractorTest {
 
   private static class TestDeleteBoInstructorCommandFactory {
 
-    public static DeleteBoInstructorCommand create() {
+    private static DeleteBoInstructorCommand create() {
       return DeleteBoInstructorCommand.builder().swimmingPoolId(1L).instructorId(2L).build();
     }
   }

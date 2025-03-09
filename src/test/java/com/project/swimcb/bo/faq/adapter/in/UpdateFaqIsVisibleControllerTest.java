@@ -75,7 +75,7 @@ class UpdateFaqIsVisibleControllerTest {
 
   private static class UpdateFaqIsVisibleRequestFactory {
 
-    public static UpdateFaqIsVisibleRequest create() {
+    private static UpdateFaqIsVisibleRequest create() {
       return new UpdateFaqIsVisibleRequest(true);
     }
   }

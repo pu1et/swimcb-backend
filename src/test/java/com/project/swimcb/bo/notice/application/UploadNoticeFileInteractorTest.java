@@ -67,7 +67,7 @@ class UploadNoticeFileInteractorTest {
 
   private static class MultipartFileFactory {
 
-    public static MockMultipartFile create() {
+    private static MockMultipartFile create() {
       return new MockMultipartFile("file", "test.jpg", IMAGE_JPEG_VALUE,
           "test".getBytes());
     }
@@ -75,7 +75,7 @@ class UploadNoticeFileInteractorTest {
 
   private static class UploadedFileFactory {
 
-    public static UploadedFile create() {
+    private static UploadedFile create() {
       return UploadedFile.builder()
           .name("test.jpg")
           .path("notice/test.jpg")
