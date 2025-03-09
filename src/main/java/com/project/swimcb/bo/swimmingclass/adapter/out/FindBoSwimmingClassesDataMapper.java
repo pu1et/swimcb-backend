@@ -97,6 +97,7 @@ class FindBoSwimmingClassesDataMapper implements FindBoSwimmingClassesDsGateway 
                   .totalCapacity(value.totalCapacity())
                   .reservationLimitCount(value.reservationLimitCount())
                   .build())
+              .isExposed(value.isExposed())
               .build();
         }).toList();
 
