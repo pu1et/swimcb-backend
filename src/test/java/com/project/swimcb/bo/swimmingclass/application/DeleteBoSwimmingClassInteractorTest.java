@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import com.project.swimcb.bo.swimmingclass.domain.DeleteBoSwimmingClassCommand;
 import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassRepository;
+import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassTicketRepository;
 import java.util.NoSuchElementException;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
@@ -26,6 +27,9 @@ class DeleteBoSwimmingClassInteractorTest {
   @Mock
   private SwimmingClassRepository swimmingClassRepository;
 
+  @Mock
+  private SwimmingClassTicketRepository swimmingClassTicketRepository;
+
   @Test
   @DisplayName("클래스를 성공적으로 삭제한다.")
   void shouldDeleteSwimmingClassSuccessfully() {
@@ -36,6 +40,8 @@ class DeleteBoSwimmingClassInteractorTest {
     // when
     interactor.deleteBoSwimmingClass(request);
     // then
+    verify(swimmingClassTicketRepository, only()).deleteBySwimmingClass_Id(
+        request.swimmingClassId());
     verify(swimmingClassRepository, only()).deleteBySwimmingPool_IdAndId(request.swimmingPoolId(),
         request.swimmingClassId());
   }
