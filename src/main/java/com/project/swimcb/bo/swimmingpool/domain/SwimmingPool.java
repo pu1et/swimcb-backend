@@ -3,6 +3,7 @@ package com.project.swimcb.bo.swimmingpool.domain;
 import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
 
+import com.project.swimcb.bo.admin.domain.Admin;
 import com.project.swimcb.common.entity.BaseEntity;
 import com.project.swimcb.member.domain.Member;
 import jakarta.persistence.Column;
@@ -29,8 +30,8 @@ public class SwimmingPool extends BaseEntity {
   private long id;
 
   @ManyToOne(fetch = LAZY)
-  @JoinColumn(name = "member_id", nullable = false)
-  private Member member;
+  @JoinColumn(name = "admin_id", nullable = false)
+  private Admin admin;
 
   @Column(name = "name", length = 100)
   private String name;
