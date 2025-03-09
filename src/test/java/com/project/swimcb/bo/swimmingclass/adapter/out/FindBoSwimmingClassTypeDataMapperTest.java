@@ -58,7 +58,7 @@ class FindBoSwimmingClassTypeDataMapperTest {
     // then
     assertThat(response.classTypes()).hasSize(2);
 
-    // classTypeId, classSubTypeId 순서대로 정렬되는지 확인
+    // typeId, subTypeId 순서대로 정렬되는지 확인
     assertThat(response.classTypes()).extracting(ClassType::classTypeId)
         .containsExactly(1L, 2L);
     assertThat(response.classTypes().get(0).classSubTypes())

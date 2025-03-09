@@ -1,6 +1,6 @@
 package com.project.swimcb.bo.swimmingclass.adapter.in;
 
-import com.project.swimcb.bo.swimmingclass.domain.enums.UpdateBoSwimmingClassesSwimmingClassType;
+import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -19,10 +19,6 @@ public record UpdateBoSwimmingClassRequest(
 
   @Builder
   record SwimmingClass(
-
-      @Schema(description = "클래스 ID", example = "1")
-      long id,
-
       @NotNull(message = "강습 요일은 null이 될 수 없습니다.")
       @Schema(description = "강습 요일")
       Days days,
@@ -38,8 +34,8 @@ public record UpdateBoSwimmingClassRequest(
       Type type,
 
       @NotNull(message = "담당강사는 null이 될 수 없습니다.")
-      @Schema(description = "담당강사", example = "손지혜")
-      String instructorName,
+      @Schema(description = "담당강사 ID", example = "1")
+      long instructorId,
 
       @Valid
       @NotNull(message = "강습 티켓 리스트는 null이 될 수 없습니다.")
@@ -78,13 +74,11 @@ public record UpdateBoSwimmingClassRequest(
 
   @Builder
   record Type(
-      @NotNull(message = "강습 형태는 null이 될 수 없습니다.")
-      @Schema(description = "강습 형태", example = "GROUP")
-      UpdateBoSwimmingClassesSwimmingClassType type,
+      @Schema(description = "강습 형태 ID", example = "1")
+      long typeId,
 
-      @NotNull(message = "강습 구분은 null이 될 수 없습니다.")
-      @Schema(description = "강습 구분", example = "마스터즈")
-      String subType
+      @Schema(description = "강습 구분 ID", example = "1")
+      long subTypeId
   ) {
 
   }
@@ -121,5 +115,41 @@ public record UpdateBoSwimmingClassRequest(
       int reservationLimitCount
   ) {
 
+  }
+
+  public UpdateBoSwimmingClassCommand toCommand(long swimmingPoolId, long swimmingClassId) {
+    return UpdateBoSwimmingClassCommand.builder()
+        .swimmingPoolId(swimmingPoolId)
+        .swimmingClassId(swimmingClassId)
+        .days(UpdateBoSwimmingClassCommand.Days.builder()
+            .isMonday(swimmingClass.days().isMonday())
+            .isTuesday(swimmingClass.days().isTuesday())
+            .isWednesday(swimmingClass.days().isWednesday())
+            .isThursday(swimmingClass.days().isThursday())
+            .isFriday(swimmingClass.days().isFriday())
+            .isSaturday(swimmingClass.days().isSaturday())
+            .isSunday(swimmingClass.days().isSunday())
+            .build())
+        .time(UpdateBoSwimmingClassCommand.Time.builder()
+            .startTime(swimmingClass.time().startTime())
+            .endTime(swimmingClass.time().endTime())
+            .build())
+        .type(UpdateBoSwimmingClassCommand.Type.builder()
+            .typeId(swimmingClass.type.typeId())
+            .subTypeId(swimmingClass.type.subTypeId())
+            .build())
+        .instructorId(swimmingClass.instructorId())
+        .tickets(swimmingClass.tickets.stream()
+            .map(i -> UpdateBoSwimmingClassCommand.Ticket.builder()
+                .name(i.name())
+                .price(i.price())
+                .build())
+            .toList())
+        .registrationCapacity(UpdateBoSwimmingClassCommand.RegistrationCapacity.builder()
+            .totalCapacity(swimmingClass.registrationCapacity().totalCapacity())
+            .reservationLimitCount(swimmingClass.registrationCapacity().reservationLimitCount())
+            .build())
+        .isExposed(swimmingClass.isExposed())
+        .build();
   }
 }
