@@ -5,7 +5,6 @@ import static lombok.AccessLevel.PROTECTED;
 
 import com.project.swimcb.bo.admin.domain.Admin;
 import com.project.swimcb.common.entity.BaseEntity;
-import com.project.swimcb.member.domain.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -65,6 +64,12 @@ public class SwimmingPool extends BaseEntity {
 
   @Column(name = "usage_agreement_path", length = 255)
   private String usageAgreementPath;
+
+  @Column(name = "latitude")
+  private Double latitude;
+
+  @Column(name = "longitude")
+  private Double longitude;
 
   public void updateBasicInfo(@NonNull UpdateSwimmingPoolBasicInfoCommand request) {
     this.name = request.name();
