@@ -1,6 +1,7 @@
 package com.project.swimcb.favorite.adapter.in;
 
-import com.project.swimcb.favorite.domain.Favorite;
+import com.project.swimcb.favorite.domain.FindFavoriteResponse;
+import com.project.swimcb.favorite.domain.FindFavoriteResponse.Favorite;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,8 +18,8 @@ public class FindFavoriteController {
 
   @Operation(summary = "즐겨찾기 조회")
   @GetMapping
-  public List<Favorite> findFavorites() {
-    return List.of(
+  public FindFavoriteResponse findFavorites() {
+    return new FindFavoriteResponse(List.of(
         Favorite.builder()
             .favoriteId(1L)
             .swimmingPoolId(1L)
@@ -58,6 +59,6 @@ public class FindFavoriteController {
             .star("4.1")
             .reviewCount(9)
             .build()
-    );
+    ));
   }
 }
