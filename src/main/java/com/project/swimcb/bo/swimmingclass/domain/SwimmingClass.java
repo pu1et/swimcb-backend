@@ -39,6 +39,9 @@ public class SwimmingClass extends BaseEntity {
   @JoinColumn(name = "swimming_pool_id", nullable = false)
   private SwimmingPool swimmingPool;
 
+  @Column(name = "year", nullable = false)
+  private int year;
+
   @Column(name = "month", nullable = false)
   private int month;
 
