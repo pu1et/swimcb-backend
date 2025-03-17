@@ -1,6 +1,7 @@
 package com.project.swimcb.bo.swimmingclass.adapter.in;
 
 import static com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesControllerTest.SWIMMING_POOL_ID;
+import static java.time.DayOfWeek.*;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.only;
@@ -11,7 +12,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesResponse.Days;
 import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesResponse.Instructor;
 import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesResponse.RegistrationCapacity;
 import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesResponse.SwimmingClass;
@@ -21,6 +21,7 @@ import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesRespo
 import com.project.swimcb.bo.swimmingclass.application.in.FindBoSwimmingClassesUseCase;
 import com.project.swimcb.common.WebMvcTestWithoutSecurity;
 import com.project.swimcb.common.WithMockTokenInfo;
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
 import lombok.val;
@@ -77,15 +78,7 @@ class FindBoSwimmingClassesControllerTest {
                   .subTypeId(3L)
                   .subTypeName("DUMMY_SUBTYPE_NAME")
                   .build())
-              .days(Days.builder()
-                  .isMonday(true)
-                  .isTuesday(false)
-                  .isWednesday(true)
-                  .isThursday(false)
-                  .isFriday(true)
-                  .isSaturday(false)
-                  .isSunday(false)
-                  .build())
+              .days(List.of(MONDAY, WEDNESDAY, FRIDAY))
               .time(Time.builder()
                   .startTime(LocalTime.of(9, 0))
                   .endTime(LocalTime.of(10, 0))
@@ -125,15 +118,7 @@ class FindBoSwimmingClassesControllerTest {
                   .subTypeId(4L)
                   .subTypeName("DUMMY_SUBTYPE_NAME")
                   .build())
-              .days(Days.builder()
-                  .isMonday(false)
-                  .isTuesday(true)
-                  .isWednesday(false)
-                  .isThursday(true)
-                  .isFriday(false)
-                  .isSaturday(false)
-                  .isSunday(false)
-                  .build())
+              .days(List.of(TUESDAY, THURSDAY))
               .time(Time.builder()
                   .startTime(LocalTime.of(9, 0))
                   .endTime(LocalTime.of(10, 0))

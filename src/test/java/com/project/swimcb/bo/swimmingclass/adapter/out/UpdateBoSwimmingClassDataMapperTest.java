@@ -1,9 +1,14 @@
 package com.project.swimcb.bo.swimmingclass.adapter.out;
 
+import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClass.swimmingClass;
+import static java.time.DayOfWeek.FRIDAY;
+import static java.time.DayOfWeek.MONDAY;
+import static java.time.DayOfWeek.WEDNESDAY;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -17,14 +22,13 @@ import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassSubTypeRepository
 import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassType;
 import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassTypeRepository;
 import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand;
-import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand.Days;
 import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand.RegistrationCapacity;
 import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand.Ticket;
 import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand.Time;
 import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand.Type;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Query;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.querydsl.jpa.impl.JPAUpdateClause;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -35,7 +39,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -43,17 +46,10 @@ import org.springframework.test.util.ReflectionTestUtils;
 @ExtendWith(MockitoExtension.class)
 class UpdateBoSwimmingClassDataMapperTest {
 
-  @InjectMocks
   private UpdateBoSwimmingClassDataMapper mapper;
 
   @Mock
-  private EntityManager entityManager;
-
-  @Mock
-  private EntityManagerFactory entityManagerFactory;
-
-  @Mock
-  private Query query;
+  private JPAQueryFactory queryFactory;
 
   @Mock
   private SwimmingClassTypeRepository swimmingClassTypeRepository;
@@ -64,12 +60,17 @@ class UpdateBoSwimmingClassDataMapperTest {
   @Mock
   private SwimmingInstructorRepository instructorRepository;
 
+  @Mock
+  private JPAUpdateClause updateClause;
+
   @BeforeEach
   void setUp() {
-    lenient().when(entityManager.getEntityManagerFactory()).thenReturn(entityManagerFactory);
-    lenient().when(entityManager.createQuery(anyString())).thenReturn(query);
+    lenient().when(queryFactory.update(any())).thenReturn(updateClause);
+    lenient().when(queryFactory.update(any())).thenReturn(updateClause);
+    lenient().when(updateClause.set(any(), any(Object.class))).thenReturn(updateClause);
+    lenient().when(updateClause.where(any(Predicate[].class))).thenReturn(updateClause);
 
-    mapper = spy(new UpdateBoSwimmingClassDataMapper(entityManager, swimmingClassTypeRepository,
+    mapper = spy(new UpdateBoSwimmingClassDataMapper(queryFactory, swimmingClassTypeRepository,
         swimmingClassSubTypeRepository, instructorRepository));
   }
 
@@ -95,7 +96,7 @@ class UpdateBoSwimmingClassDataMapperTest {
         when(swimmingClassSubTypeRepository.findById(anyLong())).thenReturn(
             Optional.of(existingClassSubType));
         when(instructorRepository.findById(anyLong())).thenReturn(Optional.of(existingInstructor));
-        when(query.executeUpdate()).thenReturn(1);
+        when(updateClause.execute()).thenReturn(1L);
         // when
         mapper.updateSwimmingClass(request);
         // then
@@ -103,7 +104,18 @@ class UpdateBoSwimmingClassDataMapperTest {
         verify(swimmingClassSubTypeRepository, only()).findById(request.type().subTypeId());
         verify(instructorRepository, only()).findById(request.instructorId());
 
-        verify(query, times(1)).executeUpdate();
+        verify(updateClause, times(1)).set(swimmingClass.type, existingClassType);
+        verify(updateClause, times(1)).set(swimmingClass.subType, existingClassSubType);
+        verify(updateClause, times(1)).set(swimmingClass.daysOfWeek, 84);
+        verify(updateClause, times(1)).set(swimmingClass.startTime, request.time().startTime());
+        verify(updateClause, times(1)).set(swimmingClass.endTime, request.time().endTime());
+        verify(updateClause, times(1)).set(swimmingClass.instructor, existingInstructor);
+        verify(updateClause, times(1)).set(swimmingClass.totalCapacity,
+            request.registrationCapacity().totalCapacity());
+        verify(updateClause, times(1)).set(swimmingClass.reservationLimitCount,
+            request.registrationCapacity().reservationLimitCount());
+        verify(updateClause, times(1)).set(swimmingClass.isVisible, request.isExposed());
+        verify(updateClause, times(1)).execute();
       }
     }
 
@@ -125,12 +137,14 @@ class UpdateBoSwimmingClassDataMapperTest {
         when(swimmingClassSubTypeRepository.findById(anyLong())).thenReturn(
             Optional.of(existingClassSubType));
         when(instructorRepository.findById(anyLong())).thenReturn(Optional.of(existingInstructor));
-        when(query.executeUpdate()).thenReturn(0);
+        when(updateClause.execute()).thenReturn(0L);
         // when
         // then
         assertThatThrownBy(() -> mapper.updateSwimmingClass(request))
             .isInstanceOf(NoSuchElementException.class)
             .hasMessage("클래스가 존재하지 않습니다.");
+
+        verify(updateClause, never()).where(any());
       }
     }
 
@@ -213,15 +227,7 @@ class UpdateBoSwimmingClassDataMapperTest {
               .typeId(3L)
               .subTypeId(4L)
               .build())
-          .days(Days.builder()
-              .isMonday(true)
-              .isTuesday(false)
-              .isWednesday(true)
-              .isThursday(false)
-              .isFriday(true)
-              .isSaturday(false)
-              .isSunday(true)
-              .build())
+          .days(List.of(MONDAY, WEDNESDAY, FRIDAY))
           .time(Time.builder()
               .startTime(LocalTime.of(9, 0))
               .endTime(LocalTime.of(10, 0))

@@ -4,6 +4,7 @@ import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
 import lombok.Builder;
@@ -21,7 +22,7 @@ public record UpdateBoSwimmingClassRequest(
   record SwimmingClass(
       @NotNull(message = "강습 요일은 null이 될 수 없습니다.")
       @Schema(description = "강습 요일")
-      Days days,
+      List<DayOfWeek> days,
 
       @Valid
       @NotNull(message = "강습 시작/종료 시간은 null이 될 수 없습니다.")
@@ -48,26 +49,6 @@ public record UpdateBoSwimmingClassRequest(
 
       @Schema(description = "사용자 노출 여부", example = "true")
       boolean isExposed
-  ) {
-
-  }
-
-  @Builder
-  record Days(
-      @Schema(description = "월요일 수업 여부", example = "true")
-      boolean isMonday,
-      @Schema(description = "화요일 수업 여부", example = "false")
-      boolean isTuesday,
-      @Schema(description = "수요일 수업 여부", example = "true")
-      boolean isWednesday,
-      @Schema(description = "목요일 수업 여부", example = "false")
-      boolean isThursday,
-      @Schema(description = "금요일 수업 여부", example = "false")
-      boolean isFriday,
-      @Schema(description = "토요일 수업 여부", example = "false")
-      boolean isSaturday,
-      @Schema(description = "일요일 수업 여부", example = "false")
-      boolean isSunday
   ) {
 
   }
@@ -121,15 +102,7 @@ public record UpdateBoSwimmingClassRequest(
     return UpdateBoSwimmingClassCommand.builder()
         .swimmingPoolId(swimmingPoolId)
         .swimmingClassId(swimmingClassId)
-        .days(UpdateBoSwimmingClassCommand.Days.builder()
-            .isMonday(swimmingClass.days().isMonday())
-            .isTuesday(swimmingClass.days().isTuesday())
-            .isWednesday(swimmingClass.days().isWednesday())
-            .isThursday(swimmingClass.days().isThursday())
-            .isFriday(swimmingClass.days().isFriday())
-            .isSaturday(swimmingClass.days().isSaturday())
-            .isSunday(swimmingClass.days().isSunday())
-            .build())
+        .days(swimmingClass.days)
         .time(UpdateBoSwimmingClassCommand.Time.builder()
             .startTime(swimmingClass.time().startTime())
             .endTime(swimmingClass.time().endTime())

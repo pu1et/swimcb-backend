@@ -10,7 +10,6 @@ import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toMap;
 
 import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesResponse;
-import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesResponse.Days;
 import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesResponse.Instructor;
 import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesResponse.RegistrationCapacity;
 import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesResponse.SwimmingClass;
@@ -22,8 +21,10 @@ import com.project.swimcb.bo.swimmingclass.application.out.FindBoSwimmingClasses
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.IntStream;
 import lombok.Builder;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,7 @@ class FindBoSwimmingClassesDataMapper implements FindBoSwimmingClassesDsGateway 
         .map(i -> {
           val key = i.getKey();
           val value = i.getValue().getFirst();
+          val days = days(value.daysOfWeek());
           val ticketMap = i.getValue().stream()
               .collect(toMap(BoSwimmingClass::ticketId, j -> j));
           val minimumTicketPrice = ticketMap.values().stream()
@@ -63,15 +65,7 @@ class FindBoSwimmingClassesDataMapper implements FindBoSwimmingClassesDsGateway 
                   .subTypeId(value.classSubTypeId())
                   .subTypeName(value.classSubTypeName())
                   .build())
-              .days(Days.builder()
-                  .isMonday(value.isMonday())
-                  .isTuesday(value.isTuesday())
-                  .isWednesday(value.isWednesday())
-                  .isThursday(value.isThursday())
-                  .isFriday(value.isFriday())
-                  .isSaturday(value.isSaturday())
-                  .isSunday(value.isSunday())
-                  .build())
+              .days(days)
               .time(Time.builder()
                   .startTime(value.startTime())
                   .endTime(value.endTime())
@@ -112,13 +106,7 @@ class FindBoSwimmingClassesDataMapper implements FindBoSwimmingClassesDsGateway 
                 swimmingClassType.name,
                 swimmingClassSubType.id,
                 swimmingClassSubType.name,
-                swimmingClass.isMonday,
-                swimmingClass.isTuesday,
-                swimmingClass.isWednesday,
-                swimmingClass.isThursday,
-                swimmingClass.isFriday,
-                swimmingClass.isSaturday,
-                swimmingClass.isSunday,
+                swimmingClass.daysOfWeek,
                 swimmingClass.startTime,
                 swimmingClass.endTime,
                 swimmingInstructor.id,
@@ -143,6 +131,13 @@ class FindBoSwimmingClassesDataMapper implements FindBoSwimmingClassesDsGateway 
         .fetch();
   }
 
+  private List<DayOfWeek> days(int days) {
+    return IntStream.range(0, 7)
+        .filter(i -> (days & (1 << (6-i))) != 0)
+        .mapToObj(i -> DayOfWeek.of(i + 1))
+        .toList();
+  }
+
   @Builder
   public record BoSwimmingClass(
       long swimmingClassId,
@@ -150,13 +145,7 @@ class FindBoSwimmingClassesDataMapper implements FindBoSwimmingClassesDsGateway 
       SwimmingClassTypeName classTypeName,
       long classSubTypeId,
       String classSubTypeName,
-      boolean isMonday,
-      boolean isTuesday,
-      boolean isWednesday,
-      boolean isThursday,
-      boolean isFriday,
-      boolean isSaturday,
-      boolean isSunday,
+      int daysOfWeek,
       LocalTime startTime,
       LocalTime endTime,
       long instructorId,

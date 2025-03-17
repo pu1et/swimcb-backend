@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
 import lombok.Builder;
@@ -20,7 +21,7 @@ public record CreateBoSwimmingClassRequest(
 
     @NotNull(message = "강습 요일은 null이 될 수 없습니다.")
     @Schema(description = "강습 요일")
-    Days days,
+    List<DayOfWeek> days,
 
     @Valid
     @NotNull(message = "강습 시작/종료 시간은 null이 될 수 없습니다.")
@@ -48,26 +49,6 @@ public record CreateBoSwimmingClassRequest(
     @Schema(description = "사용자 노출 여부", example = "true")
     boolean isExposed
 ) {
-
-  @Builder
-  record Days(
-      @Schema(description = "월요일 수업 여부", example = "true")
-      boolean isMonday,
-      @Schema(description = "화요일 수업 여부", example = "false")
-      boolean isTuesday,
-      @Schema(description = "수요일 수업 여부", example = "true")
-      boolean isWednesday,
-      @Schema(description = "목요일 수업 여부", example = "false")
-      boolean isThursday,
-      @Schema(description = "금요일 수업 여부", example = "false")
-      boolean isFriday,
-      @Schema(description = "토요일 수업 여부", example = "false")
-      boolean isSaturday,
-      @Schema(description = "일요일 수업 여부", example = "false")
-      boolean isSunday
-  ) {
-
-  }
 
   @Builder
   @Schema(name = "CreateBoSwimmingClassRequestType")
@@ -121,17 +102,7 @@ public record CreateBoSwimmingClassRequest(
     return CreateBoSwimmingClassCommand.builder()
         .swimmingPoolId(swimmingPoolId)
         .month(this.month)
-        .days(
-            CreateBoSwimmingClassCommand.Days.builder()
-                .isMonday(this.days.isMonday)
-                .isTuesday(this.days.isTuesday)
-                .isWednesday(this.days.isWednesday)
-                .isThursday(this.days.isThursday)
-                .isFriday(this.days.isFriday)
-                .isSaturday(this.days.isSaturday)
-                .isSunday(this.days.isSunday)
-                .build()
-        )
+        .days(this.days)
         .time(
             CreateBoSwimmingClassCommand.Time.builder()
                 .startTime(this.time.startTime)

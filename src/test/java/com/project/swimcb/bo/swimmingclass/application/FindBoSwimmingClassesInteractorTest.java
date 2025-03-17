@@ -1,5 +1,10 @@
 package com.project.swimcb.bo.swimmingclass.application;
 
+import static java.time.DayOfWeek.FRIDAY;
+import static java.time.DayOfWeek.MONDAY;
+import static java.time.DayOfWeek.THURSDAY;
+import static java.time.DayOfWeek.TUESDAY;
+import static java.time.DayOfWeek.WEDNESDAY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -8,7 +13,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesResponse;
-import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesResponse.Days;
 import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesResponse.Instructor;
 import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesResponse.RegistrationCapacity;
 import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesResponse.SwimmingClass;
@@ -64,15 +68,7 @@ class FindBoSwimmingClassesInteractorTest {
                   .subTypeId(3L)
                   .subTypeName("DUMMY_SUBTYPE_NAME")
                   .build())
-              .days(Days.builder()
-                  .isMonday(true)
-                  .isTuesday(false)
-                  .isWednesday(true)
-                  .isThursday(false)
-                  .isFriday(true)
-                  .isSaturday(false)
-                  .isSunday(false)
-                  .build())
+              .days(List.of(MONDAY, WEDNESDAY, FRIDAY))
               .time(Time.builder()
                   .startTime(LocalTime.of(9, 0))
                   .endTime(LocalTime.of(10, 0))
@@ -112,15 +108,7 @@ class FindBoSwimmingClassesInteractorTest {
                   .subTypeId(4L)
                   .subTypeName("DUMMY_SUBTYPE_NAME")
                   .build())
-              .days(Days.builder()
-                  .isMonday(false)
-                  .isTuesday(true)
-                  .isWednesday(false)
-                  .isThursday(true)
-                  .isFriday(false)
-                  .isSaturday(false)
-                  .isSunday(false)
-                  .build())
+              .days(List.of(TUESDAY, THURSDAY))
               .time(Time.builder()
                   .startTime(LocalTime.of(9, 0))
                   .endTime(LocalTime.of(10, 0))

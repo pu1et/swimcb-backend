@@ -1,5 +1,6 @@
 package com.project.swimcb.bo.swimmingclass.adapter.in;
 
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
 import lombok.Builder;
@@ -14,7 +15,7 @@ public record FindBoSwimmingClassesResponse(
   public record SwimmingClass(
       long swimmingClassId,
       @NonNull Type type,
-      @NonNull Days days,
+      @NonNull List<DayOfWeek> days,
       @NonNull Time time,
       @NonNull Instructor instructor,
       @NonNull TicketPriceRange ticketPriceRange,
@@ -31,19 +32,6 @@ public record FindBoSwimmingClassesResponse(
       @NonNull String typeName,
       long subTypeId,
       @NonNull String subTypeName
-  ) {
-
-  }
-
-  @Builder
-  public record Days(
-      boolean isMonday,
-      boolean isTuesday,
-      boolean isWednesday,
-      boolean isThursday,
-      boolean isFriday,
-      boolean isSaturday,
-      boolean isSunday
   ) {
 
   }

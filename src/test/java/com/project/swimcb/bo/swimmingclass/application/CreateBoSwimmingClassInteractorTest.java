@@ -1,5 +1,8 @@
 package com.project.swimcb.bo.swimmingclass.application;
 
+import static java.time.DayOfWeek.FRIDAY;
+import static java.time.DayOfWeek.MONDAY;
+import static java.time.DayOfWeek.WEDNESDAY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -116,7 +119,7 @@ class CreateBoSwimmingClassInteractorTest {
       assertThat(i.getMonth()).isEqualTo(1);
       assertThat(i.getType()).isEqualTo(swimmingClassType);
       assertThat(i.getSubType()).isEqualTo(swimmingClassSubType);
-      assertThat(i.isMonday()).isTrue();
+      assertThat(i.getDaysOfWeek()).isEqualTo(84);
       assertThat(i.getStartTime()).isEqualTo(command.time().startTime());
       assertThat(i.getInstructor()).isEqualTo(swimmingInstructor);
       assertThat(i.getTotalCapacity()).isEqualTo(command.registrationCapacity().totalCapacity());
@@ -195,15 +198,7 @@ class CreateBoSwimmingClassInteractorTest {
       return CreateBoSwimmingClassCommand.builder()
           .swimmingPoolId(1L)
           .month(1)
-          .days(CreateBoSwimmingClassCommand.Days.builder()
-              .isMonday(true)
-              .isTuesday(true)
-              .isWednesday(true)
-              .isThursday(true)
-              .isFriday(true)
-              .isSaturday(true)
-              .isSunday(true)
-              .build())
+          .days(List.of(MONDAY, WEDNESDAY, FRIDAY))
           .time(CreateBoSwimmingClassCommand.Time.builder()
               .startTime(LocalTime.of(9, 0))
               .endTime(LocalTime.of(10, 0))

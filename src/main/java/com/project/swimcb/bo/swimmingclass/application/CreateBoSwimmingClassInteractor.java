@@ -11,6 +11,8 @@ import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassTicketRepository;
 import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassTypeRepository;
 import com.project.swimcb.bo.swimmingpool.domain.SwimmingPoolRepository;
 import jakarta.transaction.Transactional;
+import java.time.DayOfWeek;
+import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -47,13 +49,7 @@ public class CreateBoSwimmingClassInteractor implements CreateBoSwimmingClassUse
         .month(command.month())
         .type(classType)
         .subType(classSubType)
-        .isMonday(command.days().isMonday())
-        .isTuesday(command.days().isTuesday())
-        .isWednesday(command.days().isWednesday())
-        .isThursday(command.days().isThursday())
-        .isFriday(command.days().isFriday())
-        .isSaturday(command.days().isSaturday())
-        .isSunday(command.days().isSunday())
+        .daysOfWeek(daysOfWeek(command.days()))
         .startTime(command.time().startTime())
         .endTime(command.time().endTime())
         .instructor(instructor)
@@ -68,5 +64,11 @@ public class CreateBoSwimmingClassInteractor implements CreateBoSwimmingClassUse
         .map(i -> SwimmingClassTicket.create(savedSwimmingClass, i.name(), i.price())).toList();
 
     swimmingClassTicketRepository.saveAll(tickets);
+  }
+
+  private int daysOfWeek(@NonNull List<DayOfWeek> days) {
+    return days.stream()
+        .map(i -> 1 << (6 - (i.getValue() - 1)))
+        .reduce(0, (a, b) -> a | b);
   }
 }

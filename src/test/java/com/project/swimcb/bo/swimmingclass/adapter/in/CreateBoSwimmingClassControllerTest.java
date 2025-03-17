@@ -10,7 +10,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.swimcb.bo.swimmingclass.adapter.in.CreateBoSwimmingClassRequest.Days;
 import com.project.swimcb.bo.swimmingclass.adapter.in.CreateBoSwimmingClassRequest.RegistrationCapacity;
 import com.project.swimcb.bo.swimmingclass.adapter.in.CreateBoSwimmingClassRequest.Ticket;
 import com.project.swimcb.bo.swimmingclass.adapter.in.CreateBoSwimmingClassRequest.Time;
@@ -65,7 +64,7 @@ class CreateBoSwimmingClassControllerTest {
     // given
     val request = CreateBoSwimmingClassRequest.builder()
         .month(0)
-        .days(CreateBoSwimmingClassRequestFactory.days())
+        .days(List.of())
         .time(CreateBoSwimmingClassRequestFactory.time())
         .type(CreateBoSwimmingClassRequestFactory.type())
         .instructorId(1L)
@@ -87,7 +86,7 @@ class CreateBoSwimmingClassControllerTest {
     // given
     val request = CreateBoSwimmingClassRequest.builder()
         .month(13)
-        .days(CreateBoSwimmingClassRequestFactory.days())
+        .days(List.of())
         .time(CreateBoSwimmingClassRequestFactory.time())
         .type(CreateBoSwimmingClassRequestFactory.type())
         .instructorId(1L)
@@ -130,7 +129,7 @@ class CreateBoSwimmingClassControllerTest {
     // given
     val request = CreateBoSwimmingClassRequest.builder()
         .month(1)
-        .days(CreateBoSwimmingClassRequestFactory.days())
+        .days(List.of())
         .type(CreateBoSwimmingClassRequestFactory.type())
         .instructorId(1L)
         .tickets(CreateBoSwimmingClassRequestFactory.tickets())
@@ -151,7 +150,7 @@ class CreateBoSwimmingClassControllerTest {
     // given
     val request = CreateBoSwimmingClassRequest.builder()
         .month(1)
-        .days(CreateBoSwimmingClassRequestFactory.days())
+        .days(List.of())
         .time(Time.builder().endTime(LocalTime.of(6, 50)).build())
         .type(CreateBoSwimmingClassRequestFactory.type())
         .instructorId(1L)
@@ -173,7 +172,7 @@ class CreateBoSwimmingClassControllerTest {
     // given
     val request = CreateBoSwimmingClassRequest.builder()
         .month(1)
-        .days(CreateBoSwimmingClassRequestFactory.days())
+        .days(List.of())
         .time(Time.builder().startTime(LocalTime.of(6, 0)).build())
         .type(CreateBoSwimmingClassRequestFactory.type())
         .instructorId(1L)
@@ -195,7 +194,7 @@ class CreateBoSwimmingClassControllerTest {
     // given
     val request = CreateBoSwimmingClassRequest.builder()
         .month(1)
-        .days(CreateBoSwimmingClassRequestFactory.days())
+        .days(List.of())
         .time(CreateBoSwimmingClassRequestFactory.time())
         .instructorId(1L)
         .tickets(CreateBoSwimmingClassRequestFactory.tickets())
@@ -216,7 +215,7 @@ class CreateBoSwimmingClassControllerTest {
     // given
     val request = CreateBoSwimmingClassRequest.builder()
         .month(1)
-        .days(CreateBoSwimmingClassRequestFactory.days())
+        .days(List.of())
         .time(CreateBoSwimmingClassRequestFactory.time())
         .type(Type.builder().classTypeId(-1L).build())
         .instructorId(1L)
@@ -238,7 +237,7 @@ class CreateBoSwimmingClassControllerTest {
     // given
     val request = CreateBoSwimmingClassRequest.builder()
         .month(1)
-        .days(CreateBoSwimmingClassRequestFactory.days())
+        .days(List.of())
         .time(CreateBoSwimmingClassRequestFactory.time())
         .type(Type.builder().classSubTypeId(-1L).build())
         .instructorId(1L)
@@ -260,7 +259,7 @@ class CreateBoSwimmingClassControllerTest {
     // given
     val request = CreateBoSwimmingClassRequest.builder()
         .month(1)
-        .days(CreateBoSwimmingClassRequestFactory.days())
+        .days(List.of())
         .time(CreateBoSwimmingClassRequestFactory.time())
         .type(CreateBoSwimmingClassRequestFactory.type())
         .instructorId(-1L)
@@ -282,7 +281,7 @@ class CreateBoSwimmingClassControllerTest {
     // given
     val request = CreateBoSwimmingClassRequest.builder()
         .month(1)
-        .days(CreateBoSwimmingClassRequestFactory.days())
+        .days(List.of())
         .time(CreateBoSwimmingClassRequestFactory.time())
         .type(CreateBoSwimmingClassRequestFactory.type())
         .instructorId(1L)
@@ -303,7 +302,7 @@ class CreateBoSwimmingClassControllerTest {
     // given
     val request = CreateBoSwimmingClassRequest.builder()
         .month(1)
-        .days(CreateBoSwimmingClassRequestFactory.days())
+        .days(List.of())
         .time(CreateBoSwimmingClassRequestFactory.time())
         .type(CreateBoSwimmingClassRequestFactory.type())
         .instructorId(1L)
@@ -325,7 +324,7 @@ class CreateBoSwimmingClassControllerTest {
     // given
     val request = CreateBoSwimmingClassRequest.builder()
         .month(1)
-        .days(CreateBoSwimmingClassRequestFactory.days())
+        .days(List.of())
         .time(CreateBoSwimmingClassRequestFactory.time())
         .type(CreateBoSwimmingClassRequestFactory.type())
         .instructorId(1L)
@@ -345,24 +344,12 @@ class CreateBoSwimmingClassControllerTest {
     private static CreateBoSwimmingClassRequest create() {
       return CreateBoSwimmingClassRequest.builder()
           .month(1)
-          .days(days())
+          .days(List.of())
           .time(time())
           .type(type())
           .instructorId(1L)
           .tickets(tickets())
           .registrationCapacity(registrationCapacity())
-          .build();
-    }
-
-    private static Days days() {
-      return Days.builder()
-          .isMonday(true)
-          .isTuesday(false)
-          .isWednesday(true)
-          .isThursday(false)
-          .isFriday(false)
-          .isSaturday(false)
-          .isSunday(false)
           .build();
     }
 

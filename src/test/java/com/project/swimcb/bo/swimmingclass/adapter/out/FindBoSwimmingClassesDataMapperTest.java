@@ -2,6 +2,11 @@ package com.project.swimcb.bo.swimmingclass.adapter.out;
 
 import static com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName.GROUP;
 import static com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName.KIDS_SWIMMING;
+import static java.time.DayOfWeek.FRIDAY;
+import static java.time.DayOfWeek.MONDAY;
+import static java.time.DayOfWeek.THURSDAY;
+import static java.time.DayOfWeek.TUESDAY;
+import static java.time.DayOfWeek.WEDNESDAY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -69,8 +74,7 @@ class FindBoSwimmingClassesDataMapperTest {
     assertThat(swimmingClass1.type().typeName()).isEqualTo(GROUP.getDescription());
     assertThat(swimmingClass1.type().subTypeId()).isEqualTo(3L);
     assertThat(swimmingClass1.type().subTypeName()).isEqualTo("DUMMY_SUB_TYPE_NAME3");
-    assertThat(swimmingClass1.days().isMonday()).isTrue();
-    assertThat(swimmingClass1.days().isTuesday()).isFalse();
+    assertThat(swimmingClass1.days()).isEqualTo(List.of(MONDAY, WEDNESDAY, FRIDAY));
     assertThat(swimmingClass1.time().startTime()).isEqualTo(LocalTime.of(9, 0));
     assertThat(swimmingClass1.instructor().id()).isEqualTo(4L);
     assertThat(swimmingClass1.ticketPriceRange().minimumPrice()).isEqualTo(10000);
@@ -89,8 +93,7 @@ class FindBoSwimmingClassesDataMapperTest {
     assertThat(swimmingClass2.type().typeName()).isEqualTo(KIDS_SWIMMING.getDescription());
     assertThat(swimmingClass2.type().subTypeId()).isEqualTo(4L);
     assertThat(swimmingClass2.type().subTypeName()).isEqualTo("DUMMY_SUB_TYPE_NAME4");
-    assertThat(swimmingClass2.days().isMonday()).isFalse();
-    assertThat(swimmingClass2.days().isTuesday()).isTrue();
+    assertThat(swimmingClass2.days()).isEqualTo(List.of(TUESDAY, THURSDAY));
     assertThat(swimmingClass2.time().startTime()).isEqualTo(LocalTime.of(6, 0));
     assertThat(swimmingClass2.instructor().id()).isEqualTo(5L);
     assertThat(swimmingClass2.ticketPriceRange().minimumPrice()).isEqualTo(30000);
@@ -130,13 +133,7 @@ class FindBoSwimmingClassesDataMapperTest {
               .classTypeName(GROUP)
               .classSubTypeId(3L)
               .classSubTypeName("DUMMY_SUB_TYPE_NAME3")
-              .isMonday(true)
-              .isTuesday(false)
-              .isWednesday(true)
-              .isThursday(false)
-              .isFriday(true)
-              .isSaturday(false)
-              .isSunday(false)
+              .daysOfWeek(84)
               .startTime(LocalTime.of(9, 0))
               .endTime(LocalTime.of(10, 0))
               .instructorId(4L)
@@ -154,13 +151,7 @@ class FindBoSwimmingClassesDataMapperTest {
               .classTypeName(GROUP)
               .classSubTypeId(3L)
               .classSubTypeName("DUMMY_SUB_TYPE_NAME3")
-              .isMonday(true)
-              .isTuesday(false)
-              .isWednesday(true)
-              .isThursday(false)
-              .isFriday(true)
-              .isSaturday(false)
-              .isSunday(false)
+              .daysOfWeek(84)
               .startTime(LocalTime.of(9, 0))
               .endTime(LocalTime.of(10, 0))
               .instructorId(4L)
@@ -178,13 +169,7 @@ class FindBoSwimmingClassesDataMapperTest {
               .classTypeName(KIDS_SWIMMING)
               .classSubTypeId(4L)
               .classSubTypeName("DUMMY_SUB_TYPE_NAME4")
-              .isMonday(false)
-              .isTuesday(true)
-              .isWednesday(true)
-              .isThursday(true)
-              .isFriday(false)
-              .isSaturday(false)
-              .isSunday(false)
+              .daysOfWeek(40)
               .startTime(LocalTime.of(6, 0))
               .endTime(LocalTime.of(7, 0))
               .instructorId(5L)
@@ -202,13 +187,7 @@ class FindBoSwimmingClassesDataMapperTest {
               .classTypeName(KIDS_SWIMMING)
               .classSubTypeId(4L)
               .classSubTypeName("DUMMY_SUB_TYPE_NAME4")
-              .isMonday(false)
-              .isTuesday(true)
-              .isWednesday(true)
-              .isThursday(true)
-              .isFriday(false)
-              .isSaturday(false)
-              .isSunday(false)
+              .daysOfWeek(40)
               .startTime(LocalTime.of(6, 0))
               .endTime(LocalTime.of(7, 0))
               .instructorId(5L)

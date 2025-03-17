@@ -1,5 +1,6 @@
 package com.project.swimcb.bo.swimmingclass.domain;
 
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
 import lombok.Builder;
@@ -9,7 +10,7 @@ import lombok.NonNull;
 public record CreateBoSwimmingClassCommand(
     long swimmingPoolId,
     int month,
-    @NonNull Days days,
+    @NonNull List<DayOfWeek> days,
     @NonNull Time time,
     @NonNull Type type,
     long instructorId,
@@ -17,19 +18,6 @@ public record CreateBoSwimmingClassCommand(
     @NonNull RegistrationCapacity registrationCapacity,
     boolean isExposed
 ) {
-
-  @Builder
-  public record Days(
-      boolean isMonday,
-      boolean isTuesday,
-      boolean isWednesday,
-      boolean isThursday,
-      boolean isFriday,
-      boolean isSaturday,
-      boolean isSunday
-  ) {
-
-  }
 
   @Builder
   public record Type(

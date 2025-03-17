@@ -1,6 +1,9 @@
 package com.project.swimcb.bo.swimmingclass.adapter.in;
 
 import static com.project.swimcb.bo.swimmingclass.adapter.in.UpdateBoSwimmingClassControllerTest.SWIMMING_POOL_ID;
+import static java.time.DayOfWeek.FRIDAY;
+import static java.time.DayOfWeek.MONDAY;
+import static java.time.DayOfWeek.WEDNESDAY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.assertArg;
@@ -11,7 +14,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.swimcb.bo.swimmingclass.adapter.in.UpdateBoSwimmingClassRequest.Days;
 import com.project.swimcb.bo.swimmingclass.adapter.in.UpdateBoSwimmingClassRequest.RegistrationCapacity;
 import com.project.swimcb.bo.swimmingclass.adapter.in.UpdateBoSwimmingClassRequest.SwimmingClass;
 import com.project.swimcb.bo.swimmingclass.adapter.in.UpdateBoSwimmingClassRequest.Ticket;
@@ -63,8 +65,7 @@ class UpdateBoSwimmingClassControllerTest {
     verify(useCase).updateBoSwimmingClass(assertArg(i -> {
       assertThat(i.swimmingPoolId()).isEqualTo(SWIMMING_POOL_ID);
       assertThat(i.swimmingClassId()).isEqualTo(SWIMMING_CLASS_ID);
-      assertThat(i.days().isMonday()).isEqualTo(request.swimmingClass().days().isMonday());
-      assertThat(i.days().isTuesday()).isEqualTo(request.swimmingClass().days().isTuesday());
+      assertThat(i.days()).isEqualTo(List.of(MONDAY, WEDNESDAY, FRIDAY));
       assertThat(i.time().startTime()).isEqualTo(request.swimmingClass().time().startTime());
       assertThat(i.instructorId()).isEqualTo(request.swimmingClass().instructorId());
       assertThat(i.tickets()).extracting(UpdateBoSwimmingClassCommand.Ticket::name)
@@ -121,7 +122,7 @@ class UpdateBoSwimmingClassControllerTest {
     val request = UpdateBoSwimmingClassRequest.builder()
         .swimmingClass(
             SwimmingClass.builder()
-                .days(UpdateBoSwimmingClassRequestFactory.days())
+                .days(List.of())
                 .type(UpdateBoSwimmingClassRequestFactory.type())
                 .instructorId(1L)
                 .tickets(UpdateBoSwimmingClassRequestFactory.tickets())
@@ -145,7 +146,7 @@ class UpdateBoSwimmingClassControllerTest {
     val request = UpdateBoSwimmingClassRequest.builder()
         .swimmingClass(
             SwimmingClass.builder()
-                .days(UpdateBoSwimmingClassRequestFactory.days())
+                .days(List.of())
                 .time(Time.builder().endTime(LocalTime.of(6, 50)).build())
                 .type(UpdateBoSwimmingClassRequestFactory.type())
                 .instructorId(1L)
@@ -170,7 +171,7 @@ class UpdateBoSwimmingClassControllerTest {
     val request = UpdateBoSwimmingClassRequest.builder()
         .swimmingClass(
             SwimmingClass.builder()
-                .days(UpdateBoSwimmingClassRequestFactory.days())
+                .days(List.of())
                 .time(Time.builder().startTime(LocalTime.of(6, 0)).build())
                 .type(UpdateBoSwimmingClassRequestFactory.type())
                 .instructorId(1L)
@@ -195,7 +196,7 @@ class UpdateBoSwimmingClassControllerTest {
     val request = UpdateBoSwimmingClassRequest.builder()
         .swimmingClass(
             SwimmingClass.builder()
-                .days(UpdateBoSwimmingClassRequestFactory.days())
+                .days(List.of())
                 .time(UpdateBoSwimmingClassRequestFactory.time())
                 .instructorId(1L)
                 .tickets(UpdateBoSwimmingClassRequestFactory.tickets())
@@ -219,7 +220,7 @@ class UpdateBoSwimmingClassControllerTest {
     val request = UpdateBoSwimmingClassRequest.builder()
         .swimmingClass(
             SwimmingClass.builder()
-                .days(UpdateBoSwimmingClassRequestFactory.days())
+                .days(List.of())
                 .time(UpdateBoSwimmingClassRequestFactory.time())
                 .type(UpdateBoSwimmingClassRequestFactory.type())
                 .instructorId(1L)
@@ -243,7 +244,7 @@ class UpdateBoSwimmingClassControllerTest {
     val request = UpdateBoSwimmingClassRequest.builder()
         .swimmingClass(
             SwimmingClass.builder()
-                .days(UpdateBoSwimmingClassRequestFactory.days())
+                .days(List.of())
                 .time(UpdateBoSwimmingClassRequestFactory.time())
                 .type(UpdateBoSwimmingClassRequestFactory.type())
                 .instructorId(1L)
@@ -268,7 +269,7 @@ class UpdateBoSwimmingClassControllerTest {
     val request = UpdateBoSwimmingClassRequest.builder()
         .swimmingClass(
             SwimmingClass.builder()
-                .days(UpdateBoSwimmingClassRequestFactory.days())
+                .days(List.of())
                 .time(UpdateBoSwimmingClassRequestFactory.time())
                 .type(UpdateBoSwimmingClassRequestFactory.type())
                 .instructorId(1L)
@@ -294,25 +295,13 @@ class UpdateBoSwimmingClassControllerTest {
 
     private static SwimmingClass swimmingClass() {
       return SwimmingClass.builder()
-          .days(days())
+          .days(List.of(MONDAY, WEDNESDAY, FRIDAY))
           .time(time())
           .type(type())
           .instructorId(1L)
           .tickets(tickets())
           .registrationCapacity(registrationCapacity())
           .isExposed(true)
-          .build();
-    }
-
-    private static Days days() {
-      return Days.builder()
-          .isMonday(true)
-          .isTuesday(false)
-          .isWednesday(true)
-          .isThursday(false)
-          .isFriday(false)
-          .isSaturday(false)
-          .isSunday(false)
           .build();
     }
 

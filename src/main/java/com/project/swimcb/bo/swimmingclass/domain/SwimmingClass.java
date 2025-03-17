@@ -50,26 +50,8 @@ public class SwimmingClass extends BaseEntity {
   @JoinColumn(name = "swimming_class_sub_type_id", nullable = false)
   private SwimmingClassSubType subType;
 
-  @Column(name = "is_monday", nullable = false)
-  private boolean isMonday;
-
-  @Column(name = "is_tuesday", nullable = false)
-  private boolean isTuesday;
-
-  @Column(name = "is_wednesday", nullable = false)
-  private boolean isWednesday;
-
-  @Column(name = "is_thursday", nullable = false)
-  private boolean isThursday;
-
-  @Column(name = "is_friday", nullable = false)
-  private boolean isFriday;
-
-  @Column(name = "is_saturday", nullable = false)
-  private boolean isSaturday;
-
-  @Column(name = "is_sunday", nullable = false)
-  private boolean isSunday;
+  @Column(name = "days_of_week", nullable = false)
+  private int daysOfWeek;
 
   @Column(name = "start_time", nullable = false)
   private LocalTime startTime;
