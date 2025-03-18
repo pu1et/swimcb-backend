@@ -11,7 +11,7 @@ alter table swimming_class drop column is_friday;
 alter table swimming_class drop column is_saturday;
 alter table swimming_class drop column is_sunday;
 
-alter table swimming_class add column days_of_week int not null;
+alter table swimming_class add column days_of_week int not null default 0;
 
 --rollback alter table swimming_class drop column days_of_week;
 
