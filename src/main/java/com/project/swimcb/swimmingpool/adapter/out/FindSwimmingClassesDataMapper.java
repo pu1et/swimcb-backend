@@ -68,11 +68,7 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
         .join(swimmingClassType).on(swimmingClass.type.eq(swimmingClassType))
         .join(swimmingClassSubType).on(swimmingClass.subType.eq(swimmingClassSubType))
         .join(swimmingClassTicket).on(swimmingClassTicket.swimmingClass.eq(swimmingClass))
-        .leftJoin(favorite).on(
-            favorite.member.id.eq(condition.memberId()),
-            favorite.targetId.eq(swimmingPool.id),
-            favorite.targetType.eq(SWIMMING_POOL)
-        )
+        .leftJoin(favorite).on(favoriteJoinIfMemberIdExist(condition.memberId()))
         .leftJoin(swimmingPoolRating).on(swimmingPoolRating.swimmingPool.eq(swimmingPool))
         .leftJoin(swimmingPoolReview).on(swimmingPoolReview.swimmingPool.eq(swimmingPool))
         .where(
@@ -152,10 +148,13 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
         memberLatitude, swimmingPool.latitude, swimmingPool.longitude, memberLongitude);
   }
 
-  BooleanExpression swimmingClassDaysOfWeek(@NonNull List<DayOfWeek> days) {
-    val dayBitVector = daysToBitVector(days);
-    return Expressions.numberTemplate(Integer.class, "bitand({0}, {1})",
-        swimmingClass.daysOfWeek, dayBitVector).gt(0);
+  BooleanExpression favoriteJoinIfMemberIdExist(Long memberId) {
+    if (memberId == null) {
+      return Expressions.FALSE;
+    }
+    return favorite.member.id.eq(memberId)
+        .and(favorite.targetId.eq(swimmingPool.id))
+        .and(favorite.targetType.eq(SWIMMING_POOL));
   }
 
   OrderSpecifier<?> sort(@NonNull Sort sort, @NonNull NumberExpression<Double> distanceExpression) {
@@ -188,6 +187,12 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
 
   int daysToBitVector(@NonNull List<DayOfWeek> days) {
     return days.stream().map(i -> 1 << (6 - (i.getValue() - 1))).reduce(0, Integer::sum);
+  }
+
+  private BooleanExpression swimmingClassDaysOfWeek(@NonNull List<DayOfWeek> days) {
+    val dayBitVector = daysToBitVector(days);
+    return Expressions.numberTemplate(Integer.class, "bitand({0}, {1})",
+        swimmingClass.daysOfWeek, dayBitVector).gt(0);
   }
 
   @Builder
