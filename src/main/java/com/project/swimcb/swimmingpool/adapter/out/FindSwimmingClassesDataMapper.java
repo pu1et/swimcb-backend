@@ -77,6 +77,7 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
             swimmingPool.address.isNotNull(),
             swimmingPool.latitude.isNotNull(),
             swimmingPool.longitude.isNotNull(),
+            swimmingClass.isVisible.eq(true),
 
             swimmingPoolNameAndAddressContains(condition.keyword()),
 
@@ -127,6 +128,7 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
                     swimmingPool.address.isNotNull(),
                     swimmingPool.latitude.isNotNull(),
                     swimmingPool.longitude.isNotNull(),
+                    swimmingClass.isVisible.eq(true),
 
                     swimmingPoolNameAndAddressContains(condition.keyword()),
 
