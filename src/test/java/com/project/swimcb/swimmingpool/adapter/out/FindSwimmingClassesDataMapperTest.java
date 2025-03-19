@@ -4,6 +4,7 @@ import static com.project.swimcb.swimmingpool.domain.enums.GroupFixedClassSubTyp
 import static com.project.swimcb.swimmingpool.domain.enums.GroupFixedClassSubTypeName.BEGINNER;
 import static com.project.swimcb.swimmingpool.domain.enums.Sort.DISTANCE_ASC;
 import static com.project.swimcb.swimmingpool.domain.enums.Sort.PRICE_ASC;
+import static com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName.AQUA_AEROBICS;
 import static com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName.GROUP;
 import static com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName.KIDS_SWIMMING;
 import static java.time.DayOfWeek.FRIDAY;
@@ -257,7 +258,7 @@ class FindSwimmingClassesDataMapperTest {
     @DisplayName("강습형태와 강습구분이 모두 주어지면 올바른 필터 조건을 생성한다.")
     void shouldReturnBooleanBuilderWhenCreateClassTypeAndSubTypeIn() {
       // given
-      val classTypes = List.of(GROUP, KIDS_SWIMMING);
+      val classTypes = List.of(GROUP, KIDS_SWIMMING, AQUA_AEROBICS);
       val classSubTypes = List.of(BASIC, BEGINNER);
 
       // when
@@ -266,8 +267,8 @@ class FindSwimmingClassesDataMapperTest {
       assertThat(result).isNotNull();
 
       val resultString = result.toString();
-      assertThat(resultString).contains("GROUP", "KIDS_SWIMMING");
-      assertThat(resultString).contains("BASIC", "BEGINNER");
+      assertThat(resultString).contains("GROUP && ", "in [BASIC, BEGINNER]");
+      assertThat(resultString).contains("in [KIDS_SWIMMING, AQUA_AEROBICS]");
     }
 
     @Test
@@ -285,7 +286,7 @@ class FindSwimmingClassesDataMapperTest {
     @DisplayName("강습형태만 주어지고 강습구분이 없으면 강습형태 필터 조건만 생성한다.")
     void shouldReturnBooleanBuilderWhenCreateClassTypeIn() {
       // given
-      val classTypes = List.of(GROUP, KIDS_SWIMMING);
+      val classTypes = List.of(GROUP, KIDS_SWIMMING, AQUA_AEROBICS);
 
       // when
       val result = mapper.classTypeAndSubTypeIn(classTypes, List.of());
@@ -293,7 +294,7 @@ class FindSwimmingClassesDataMapperTest {
       assertThat(result).isNotNull();
 
       val resultString = result.toString();
-      assertThat(resultString).contains("GROUP", "KIDS_SWIMMING");
+      assertThat(resultString).contains("in [KIDS_SWIMMING, AQUA_AEROBICS]");
       assertThat(resultString).doesNotContain("and");
     }
   }

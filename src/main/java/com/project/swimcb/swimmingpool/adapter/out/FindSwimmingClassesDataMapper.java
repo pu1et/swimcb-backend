@@ -180,7 +180,8 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
           swimmingClassType.name.eq(GROUP).and(swimmingClassSubType.name.in(subTypeNames)));
     }
 
-    booleanBuilder.or(swimmingClassType.name.in(swimmingClassTypeNames));
+    val classTypesExceptGroup = swimmingClassTypeNames.stream().filter(i -> i != GROUP).toList();
+    booleanBuilder.or(swimmingClassType.name.in(classTypesExceptGroup));
 
     return booleanBuilder;
   }
