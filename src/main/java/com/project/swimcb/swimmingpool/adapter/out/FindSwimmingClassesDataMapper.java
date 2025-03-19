@@ -183,6 +183,10 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
       @NonNull List<SwimmingClassTypeName> swimmingClassTypeNames,
       @NonNull List<GroupFixedClassSubTypeName> groupFixedClassSubTypeNames) {
 
+    if (swimmingClassTypeNames.isEmpty() && groupFixedClassSubTypeNames.isEmpty()) {
+      return null;
+    }
+
     if (swimmingClassTypeNames.isEmpty()) {
       return Expressions.asBoolean(false);
     }
@@ -201,14 +205,17 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
     return booleanBuilder;
   }
 
-  int daysToBitVector(@NonNull List<DayOfWeek> days) {
-    return days.stream().map(i -> 1 << (6 - (i.getValue() - 1))).reduce(0, Integer::sum);
-  }
-
-  private BooleanExpression swimmingClassDaysOfWeek(@NonNull List<DayOfWeek> days) {
+  BooleanExpression swimmingClassDaysOfWeek(@NonNull List<DayOfWeek> days) {
+    if (days.isEmpty()) {
+      return null;
+    }
     val dayBitVector = daysToBitVector(days);
     return Expressions.numberTemplate(Integer.class, "bitand({0}, {1})",
         swimmingClass.daysOfWeek, dayBitVector).gt(0);
+  }
+
+  int daysToBitVector(@NonNull List<DayOfWeek> days) {
+    return days.stream().map(i -> 1 << (6 - (i.getValue() - 1))).reduce(0, Integer::sum);
   }
 
   @Builder

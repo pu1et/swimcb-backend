@@ -296,6 +296,16 @@ class FindSwimmingClassesDataMapperTest {
   class ClassTypeAndSubTypeTest {
 
     @Test
+    @DisplayName("강습형태와 강습구분이 모두 empty면 null을 반환한다.")
+    void shouldReturnNullWhenCreateEmptyClassTypeAndSubTypeIn() {
+      // given
+      // when
+      val result = mapper.classTypeAndSubTypeIn(List.of(), List.of());
+      // then
+      assertThat(result).isNull();
+    }
+
+    @Test
     @DisplayName("강습형태와 강습구분이 모두 주어지면 올바른 필터 조건을 생성한다.")
     void shouldReturnBooleanBuilderWhenCreateClassTypeAndSubTypeIn() {
       // given
@@ -308,16 +318,18 @@ class FindSwimmingClassesDataMapperTest {
       assertThat(result).isNotNull();
 
       val resultString = result.toString();
-      assertThat(resultString).contains("GROUP && ", "in [BASIC, BEGINNER]");
-      assertThat(resultString).contains("in [KIDS_SWIMMING, AQUA_AEROBICS]");
+      assertThat(resultString)
+          .contains("GROUP && ", "in [BASIC, BEGINNER]")
+          .contains("in [KIDS_SWIMMING, AQUA_AEROBICS]");
     }
 
     @Test
-    @DisplayName("강습형태가 없으면 false를 반환한다.")
+    @DisplayName("강습형태만 없으면 false를 반환한다.")
     void shouldReturnEmptyBooleanBuilderWhenCreateEmptyClassType() {
       // given
+      val classSubTypes = List.of(BASIC, BEGINNER);
       // when
-      val result = mapper.classTypeAndSubTypeIn(List.of(), List.of());
+      val result = mapper.classTypeAndSubTypeIn(List.of(), classSubTypes);
       // then
       assertThat(result).isNotNull();
       assertThat(result.toString()).contains("false");
@@ -335,10 +347,40 @@ class FindSwimmingClassesDataMapperTest {
       assertThat(result).isNotNull();
 
       val resultString = result.toString();
-      assertThat(resultString).contains("in [KIDS_SWIMMING, AQUA_AEROBICS]");
-      assertThat(resultString).doesNotContain("and");
+      assertThat(resultString)
+          .contains("in [KIDS_SWIMMING, AQUA_AEROBICS]")
+          .doesNotContain("and");
     }
   }
+
+  @Nested
+  @DisplayName("swimmingClassDaysOfWeek 메서드는")
+  class SwimmingClassDaysOfWeekTest {
+
+    @Test
+    @DisplayName("요일 리스트가 비어있으면 null을 반환한다.")
+    void shouldReturnNullWhenDaysIsEmpty() {
+      // given
+      // when
+      val expression = mapper.swimmingClassDaysOfWeek(List.of());
+      // then
+      assertThat(expression).isNull();
+    }
+
+    @Test
+    @DisplayName("요일 리스트가 있으면 daysOfWeek와 bitVector의 bitand 연산 표현식을 생성한다.")
+    void shouldReturnDaysOfWeekExpressionWhenCreateDaysOfWeekExpression() {
+      // given
+      val days = List.of(MONDAY, WEDNESDAY, FRIDAY);
+      // when
+      val expression = mapper.swimmingClassDaysOfWeek(days);
+      // then
+      // 월(64), 수(16), 금(4)의 합인 84와 비교해야 한다.
+      assertThat(expression.toString())
+          .contains("bitand(swimmingClass.daysOfWeek, 84) > 0");
+    }
+  }
+
 
   @Nested
   @DisplayName("bitVector 메서드는 ")

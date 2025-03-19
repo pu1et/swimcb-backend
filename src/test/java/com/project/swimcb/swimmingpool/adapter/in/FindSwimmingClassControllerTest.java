@@ -25,6 +25,7 @@ import com.project.swimcb.common.WithMockTokenInfo;
 import com.project.swimcb.swimmingpool.adapter.in.FindSwimmingClassesResponse.SwimmingClass;
 import com.project.swimcb.swimmingpool.application.in.FindSwimmingClassesUseCase;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
@@ -57,7 +58,7 @@ class FindSwimmingClassControllerTest {
     // given
     val startDate = LocalDate.of(2025, 3, 1);
     val endDate = LocalDate.of(2025, 4, 1);
-    val startTimes = List.of("06:00", "17:00");
+    val startTimes = List.of(LocalTime.of(6, 0), LocalTime.of(17, 0));
     val days = List.of(MONDAY, TUESDAY, WEDNESDAY);
     val classTypes = List.of(GROUP, KIDS_SWIMMING);
     val classSubTypes = List.of(BASIC, BEGINNER);
