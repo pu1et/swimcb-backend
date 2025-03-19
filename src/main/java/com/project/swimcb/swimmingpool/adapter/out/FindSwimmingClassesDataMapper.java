@@ -29,6 +29,7 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.DayOfWeek;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.Builder;
@@ -81,7 +82,7 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
                 condition.endDate().getYear()),
             swimmingClass.month.between(condition.startDate().getMonthValue(),
                 condition.endDate().getMonthValue()),
-            swimmingClass.startTime.goe(condition.startTime()),
+            classTimeBetweenStartTimes(condition.startTimes()),
             swimmingClassDaysOfWeek,
             classTypeAndSubTypeIn(condition.classTypes(), condition.classSubTypes())
         )
@@ -129,7 +130,7 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
                         condition.endDate().getYear()),
                     swimmingClass.month.between(condition.startDate().getMonthValue(),
                         condition.endDate().getMonthValue()),
-                    swimmingClass.startTime.goe(condition.startTime()),
+                    classTimeBetweenStartTimes(condition.startTimes()),
                     swimmingClassDaysOfWeek,
                     classTypeAndSubTypeIn(condition.classTypes(), condition.classSubTypes())
                 )
@@ -155,6 +156,20 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
     return favorite.member.id.eq(memberId)
         .and(favorite.targetId.eq(swimmingPool.id))
         .and(favorite.targetType.eq(SWIMMING_POOL));
+  }
+
+  BooleanBuilder classTimeBetweenStartTimes(@NonNull List<LocalTime> startTimes) {
+    if (startTimes.isEmpty()) {
+      return null;
+    }
+    val builder = new BooleanBuilder();
+
+    startTimes.forEach(i -> {
+      val endTime = i.plusHours(1);
+      builder.or(swimmingClass.startTime.goe(i).and(swimmingClass.startTime.lt(endTime)));
+    });
+
+    return builder;
   }
 
   OrderSpecifier<?> sort(@NonNull Sort sort, @NonNull NumberExpression<Double> distanceExpression) {

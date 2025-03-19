@@ -57,7 +57,7 @@ class FindSwimmingClassControllerTest {
     // given
     val startDate = LocalDate.of(2025, 3, 1);
     val endDate = LocalDate.of(2025, 4, 1);
-    val startTime = "06:00";
+    val startTimes = List.of("06:00", "17:00");
     val days = List.of(MONDAY, TUESDAY, WEDNESDAY);
     val classTypes = List.of(GROUP, KIDS_SWIMMING);
     val classSubTypes = List.of(BASIC, BEGINNER);
@@ -74,7 +74,7 @@ class FindSwimmingClassControllerTest {
     mockMvc.perform(get(PATH)
             .param("start-date", startDate.toString())
             .param("end-date", endDate.toString())
-            .param("start-time", startTime)
+            .param("start-times", "06:00", "17:00")
             .param("days", "MONDAY", "TUESDAY", "WEDNESDAY")
             .param("class-types", "GROUP", "KIDS_SWIMMING")
             .param("class-sub-types", "BASIC", "BEGINNER")
@@ -90,7 +90,7 @@ class FindSwimmingClassControllerTest {
       assertThat(i.memberId()).isEqualTo(Long.parseLong(MEMBER_ID));
       assertThat(i.startDate()).isEqualTo(startDate);
       assertThat(i.endDate()).isEqualTo(endDate);
-      assertThat(i.startTime()).isEqualTo(startTime);
+      assertThat(i.startTimes()).isEqualTo(startTimes);
       assertThat(i.days()).isEqualTo(days);
       assertThat(i.classTypes()).isEqualTo(classTypes);
       assertThat(i.classSubTypes()).isEqualTo(classSubTypes);

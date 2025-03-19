@@ -80,7 +80,7 @@ class FindSwimmingClassesInteractorTest {
           .memberId(1L)
           .startDate(LocalDate.of(2025, 3, 1))
           .endDate(LocalDate.of(2025, 4, 1))
-          .startTime(LocalTime.of(6, 0))
+          .startTimes(List.of(LocalTime.of(6, 0), LocalTime.of(17, 0)))
           .days(List.of(MONDAY, TUESDAY, WEDNESDAY))
           .classTypes(List.of(GROUP, KIDS_SWIMMING))
           .classSubTypes(List.of(BASIC, BEGINNER))

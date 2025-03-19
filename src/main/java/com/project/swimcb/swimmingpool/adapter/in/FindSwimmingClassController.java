@@ -38,7 +38,7 @@ public class FindSwimmingClassController {
 
       @Parameter(description = "검색 시작 날짜", example = "2025-03-01") @RequestParam(value = "start-date") LocalDate startDate,
       @Parameter(description = "검색 종료 날짜", example = "2025-03-31") @RequestParam(value = "end-date") LocalDate endDate,
-      @Parameter(description = "검색 시작 시간", example = "06:00") @RequestParam(value = "start-time") @DateTimeFormat(pattern = "HH:mm") String startTime,
+      @Parameter(description = "검색 시작 시간 리스트", example = "06:00") @RequestParam(value = "start-times") @DateTimeFormat(pattern = "HH:mm") List<String> startTimes,
 
       @Parameter(description = "검색 요일 리스트", example = "MONDAY,TUESDAY,WEDNESDAY") @RequestParam(value = "days") List<DayOfWeek> days,
 
@@ -58,16 +58,16 @@ public class FindSwimmingClassController {
 
     return useCase.findSwimmingClasses(FindSwimmingClassesCondition.builder()
         .memberId(tokenInfo.memberId())
-            .startDate(startDate)
-            .endDate(endDate)
-            .startTime(LocalTime.parse(startTime))
-            .days(days)
-            .classTypes(classTypes)
-            .classSubTypes(classSubTypes)
-            .memberLatitude(memberLatitude)
-            .memberLongitude(memberLongitude)
-            .pageable(PageRequest.of(page - 1, size))
-            .sort(sort)
+        .startDate(startDate)
+        .endDate(endDate)
+        .startTimes(startTimes.stream().map(LocalTime::parse).toList())
+        .days(days)
+        .classTypes(classTypes)
+        .classSubTypes(classSubTypes)
+        .memberLatitude(memberLatitude)
+        .memberLongitude(memberLongitude)
+        .pageable(PageRequest.of(page - 1, size))
+        .sort(sort)
         .build());
   }
 }

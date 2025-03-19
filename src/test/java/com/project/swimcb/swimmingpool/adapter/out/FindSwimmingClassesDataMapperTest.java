@@ -218,6 +218,47 @@ class FindSwimmingClassesDataMapperTest {
   }
 
   @Nested
+  @DisplayName("classTimeBetweenStartTimes 메서드는")
+  class ClassTimeBetweenStartTimesTest {
+
+    @Test
+    @DisplayName("startTimes 리스트가 비어있는 경우 null을 반환한다.")
+    void shouldReturnNullWhenStartTimesIsEmpty() {
+      // given
+      // when
+      val builder = mapper.classTimeBetweenStartTimes(List.of());
+      // then
+      assertThat(builder).isNull();
+    }
+
+    @Test
+    @DisplayName("startTimes에 시간이 하나만 있는 경우 해당 시간에 대한 조건이 포함된 BooleanBuilder를 반환한다.")
+    void shouldReturnBooleanBuilderWhenStartTimesHasOneTime() {
+      // given
+      val startTimes = List.of(LocalTime.of(6, 0));
+      // when
+      val builder = mapper.classTimeBetweenStartTimes(startTimes);
+      // then
+      assertThat(builder.toString())
+          .contains("startTime >= 06:00", "&&", "startTime < 07:00");
+    }
+
+    @Test
+    @DisplayName("startTimes에 시간이 여러 개 있는 경우 각 시간에 대한 조건이 OR로 연결된 BooleanBuilder를 반환한다.")
+    void shouldReturnBooleanBuilderWhenStartTimesHasMultipleTimes() {
+      // given
+      val startTimes = List.of(LocalTime.of(6, 0), LocalTime.of(17, 0));
+      // when
+      val builder = mapper.classTimeBetweenStartTimes(startTimes);
+      // then
+      assertThat(builder.toString())
+          .contains("startTime >= 06:00", "&&", "startTime < 07:00")
+          .contains("||")
+          .contains("startTime >= 17:00", "&&", "startTime < 18:00");
+    }
+  }
+
+  @Nested
   @DisplayName("sort 메서드는")
   class SortTest {
 
@@ -333,7 +374,7 @@ class FindSwimmingClassesDataMapperTest {
           .memberId(1L)
           .startDate(LocalDate.of(2025, 3, 1))
           .endDate(LocalDate.of(2025, 4, 1))
-          .startTime(LocalTime.of(6, 0))
+          .startTimes(List.of(LocalTime.of(6, 0), LocalTime.of(17, 0)))
           .days(List.of(MONDAY, TUESDAY, WEDNESDAY))
           .classTypes(List.of(GROUP, KIDS_SWIMMING))
           .classSubTypes(List.of(BASIC, BEGINNER))

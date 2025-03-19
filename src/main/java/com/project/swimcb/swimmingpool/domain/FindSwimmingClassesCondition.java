@@ -16,7 +16,7 @@ public record FindSwimmingClassesCondition(
     Long memberId,
     @NonNull LocalDate startDate,
     @NonNull LocalDate endDate,
-    @NonNull LocalTime startTime,
+    @NonNull List<LocalTime> startTimes,
     @NonNull List<DayOfWeek> days,
     @NonNull List<SwimmingClassTypeName> classTypes,
     @NonNull List<GroupFixedClassSubTypeName> classSubTypes,
