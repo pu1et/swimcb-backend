@@ -56,6 +56,7 @@ class FindSwimmingClassControllerTest {
   @DisplayName("수영 클래스 조회 요청을 성공적으로 처리한다.")
   void shouldReturnResponseWhenSwimmingClassesExist() throws Exception {
     // given
+    val keyword = "MOCK_KEYWORD";
     val startDate = LocalDate.of(2025, 3, 1);
     val endDate = LocalDate.of(2025, 4, 1);
     val startTimes = List.of(LocalTime.of(6, 0), LocalTime.of(17, 0));
@@ -73,6 +74,7 @@ class FindSwimmingClassControllerTest {
     // when
     // then
     mockMvc.perform(get(PATH)
+            .param("keyword", keyword)
             .param("start-date", startDate.toString())
             .param("end-date", endDate.toString())
             .param("start-times", "06:00", "17:00")
@@ -88,6 +90,7 @@ class FindSwimmingClassControllerTest {
         .andExpect(content().json(objectMapper.writeValueAsString(response)));
 
     verify(useCase, only()).findSwimmingClasses(assertArg(i -> {
+      assertThat(i.keyword()).isEqualTo(keyword);
       assertThat(i.memberId()).isEqualTo(Long.parseLong(MEMBER_ID));
       assertThat(i.startDate()).isEqualTo(startDate);
       assertThat(i.endDate()).isEqualTo(endDate);

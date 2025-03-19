@@ -78,6 +78,8 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
             swimmingPool.latitude.isNotNull(),
             swimmingPool.longitude.isNotNull(),
 
+            swimmingPoolNameAndAddressContains(condition.keyword()),
+
             swimmingClass.year.between(condition.startDate().getYear(),
                 condition.endDate().getYear()),
             swimmingClass.month.between(condition.startDate().getMonthValue(),
@@ -126,6 +128,8 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
                     swimmingPool.latitude.isNotNull(),
                     swimmingPool.longitude.isNotNull(),
 
+                    swimmingPoolNameAndAddressContains(condition.keyword()),
+
                     swimmingClass.year.between(condition.startDate().getYear(),
                         condition.endDate().getYear()),
                     swimmingClass.month.between(condition.startDate().getMonthValue(),
@@ -156,6 +160,14 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
     return favorite.member.id.eq(memberId)
         .and(favorite.targetId.eq(swimmingPool.id))
         .and(favorite.targetType.eq(SWIMMING_POOL));
+  }
+
+  Predicate swimmingPoolNameAndAddressContains(String keyword) {
+    if (keyword == null) {
+      return null;
+    }
+    return swimmingPool.name.containsIgnoreCase(keyword)
+        .or(swimmingPool.address.containsIgnoreCase(keyword));
   }
 
   BooleanBuilder classTimeBetweenStartTimes(@NonNull List<LocalTime> startTimes) {

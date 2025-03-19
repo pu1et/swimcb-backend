@@ -36,6 +36,8 @@ public class FindSwimmingClassController {
   @GetMapping
   public FindSwimmingClassesResponse findSwimmingClasses(
 
+      @Parameter(description = "검색어", example = "냠뇸냠") @RequestParam(value = "keyword", required = false) String keyword,
+
       @Parameter(description = "검색 시작 날짜", example = "2025-03-01") @RequestParam(value = "start-date") LocalDate startDate,
       @Parameter(description = "검색 종료 날짜", example = "2025-03-31") @RequestParam(value = "end-date") LocalDate endDate,
       @Parameter(description = "검색 시작 시간 리스트", example = "06:00") @RequestParam(value = "start-times") @DateTimeFormat(pattern = "HH:mm") List<String> startTimes,
@@ -57,6 +59,7 @@ public class FindSwimmingClassController {
   ) {
 
     return useCase.findSwimmingClasses(FindSwimmingClassesCondition.builder()
+        .keyword(keyword)
         .memberId(tokenInfo.memberId())
         .startDate(startDate)
         .endDate(endDate)

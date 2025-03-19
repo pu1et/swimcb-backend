@@ -218,6 +218,36 @@ class FindSwimmingClassesDataMapperTest {
   }
 
   @Nested
+  @DisplayName("swimmingPoolNameAndAddressContains 메서드는")
+  class SwimmingPoolNameAndAddressContainsTest {
+
+    @Test
+    @DisplayName("키워드가 null이면 null을 반환한다.")
+    void shouldReturnNullWhenKeywordIsNull() {
+      // given
+      // when
+      val result = mapper.swimmingPoolNameAndAddressContains(null);
+      // then
+      assertThat(result).isNull();
+    }
+
+    @Test
+    @DisplayName("키워드가 있으면 수영장 이름 또는 주소에 대한 조건을 반환한다.")
+    void shouldReturnBooleanBuilderWhenKeywordIsNotNull() {
+      // given
+      val keyword = "MOCK_KEYWORD";
+      // when
+      val result = mapper.swimmingPoolNameAndAddressContains(keyword);
+      // then
+      val resultString = result.toString();
+      assertThat(resultString)
+          .contains("swimmingPool.name", "MOCK_KEYWORD")
+          .contains("||")
+          .contains("swimmingPool.address", "MOCK_KEYWORD");
+    }
+  }
+
+  @Nested
   @DisplayName("classTimeBetweenStartTimes 메서드는")
   class ClassTimeBetweenStartTimesTest {
 

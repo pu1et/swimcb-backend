@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 
 @Builder
 public record FindSwimmingClassesCondition(
+    String keyword,
     Long memberId,
     @NonNull LocalDate startDate,
     @NonNull LocalDate endDate,
