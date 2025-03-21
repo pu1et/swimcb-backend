@@ -75,6 +75,7 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
         .where(
             swimmingPool.name.isNotNull(),
             swimmingPool.address.isNotNull(),
+            // TODO. 폰번호 조건 추가
             swimmingPool.latitude.isNotNull(),
             swimmingPool.longitude.isNotNull(),
             swimmingClass.isVisible.eq(true),
