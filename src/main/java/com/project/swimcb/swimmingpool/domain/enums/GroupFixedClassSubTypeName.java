@@ -1,7 +1,9 @@
 package com.project.swimcb.swimmingpool.domain.enums;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Getter
 @RequiredArgsConstructor
 public enum GroupFixedClassSubTypeName {
   BASIC("기초"),
