@@ -78,6 +78,7 @@ class FindSwimmingPoolDetailClassesDataMapper implements
         .leftJoin(favorite).on(favoriteJoinIfMemberIdExist(condition.memberId()))
         .where(
             swimmingClass.swimmingPool.id.eq(condition.swimmingPoolId()),
+            swimmingClass.isVisible.isTrue(),
 
             swimmingClass.year.between(condition.startDate().getYear(),
                 condition.endDate().getYear()),
@@ -94,8 +95,8 @@ class FindSwimmingPoolDetailClassesDataMapper implements
             swimmingClass.daysOfWeek,
             swimmingClass.startTime,
             swimmingClass.endTime,
-            swimmingClass.totalCapacity,
             swimmingClass.reservationLimitCount,
+            swimmingClass.reservedCount,
             swimmingClassTicket.id,
             swimmingClassTicket.name,
             swimmingClassTicket.price
@@ -120,8 +121,8 @@ class FindSwimmingPoolDetailClassesDataMapper implements
               .endTime(value.getFirst().endTime())
               .minimumPrice(value.getFirst().minimumPrice())
               .isFavorite(value.getFirst().isFavorite())
-              .isReservable(isReservable(value.getFirst().totalCapacity(),
-                  value.getFirst().reservationLimitCount()))
+              .isReservable(isReservable(value.getFirst().reservationLimitCount(),
+                  value.getFirst().reservedCount()))
               .tickets(value.stream()
                   .map(j -> new SwimmingClassTicket(j.ticketId(), j.ticketName(), j.ticketPrice()))
                   .toList())
@@ -232,8 +233,8 @@ class FindSwimmingPoolDetailClassesDataMapper implements
         .toList();
   }
 
-  private boolean isReservable(int totalCapacity, int reservationLimitCount) {
-    return totalCapacity - reservationLimitCount > 0;
+  private boolean isReservable(int reservationLimitCount, int reservedCount) {
+    return reservationLimitCount - reservedCount > 0;
   }
 
   @Builder
@@ -246,8 +247,8 @@ class FindSwimmingPoolDetailClassesDataMapper implements
       @NonNull LocalTime endTime,
       int minimumPrice,
       boolean isFavorite,
-      int totalCapacity,
       int reservationLimitCount,
+      int reservedCount,
       long ticketId,
       String ticketName,
       int ticketPrice
