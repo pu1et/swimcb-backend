@@ -72,6 +72,9 @@ public class SwimmingClass extends BaseEntity {
   @Column(name = "reservation_limit_count", nullable = false)
   private int reservationLimitCount;
 
+  @Column(name = "reserved_count", nullable = false)
+  private int reservedCount;
+
   @Column(name = "is_visible", nullable = false)
   private boolean isVisible;
 }
