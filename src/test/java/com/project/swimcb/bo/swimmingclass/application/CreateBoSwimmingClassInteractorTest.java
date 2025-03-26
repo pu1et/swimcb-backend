@@ -26,6 +26,7 @@ import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassType;
 import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassTypeRepository;
 import com.project.swimcb.bo.swimmingpool.domain.SwimmingPool;
 import com.project.swimcb.bo.swimmingpool.domain.SwimmingPoolRepository;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -116,6 +117,7 @@ class CreateBoSwimmingClassInteractorTest {
     // then
     verify(swimmingClassRepository, only()).save(assertArg(i -> {
       assertThat(i.getSwimmingPool()).isEqualTo(swimmingPool);
+      assertThat(i.getYear()).isEqualTo(LocalDate.now().getYear());
       assertThat(i.getMonth()).isEqualTo(1);
       assertThat(i.getType()).isEqualTo(swimmingClassType);
       assertThat(i.getSubType()).isEqualTo(swimmingClassSubType);

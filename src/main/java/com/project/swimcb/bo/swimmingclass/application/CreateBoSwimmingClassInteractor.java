@@ -12,6 +12,7 @@ import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassTypeRepository;
 import com.project.swimcb.bo.swimmingpool.domain.SwimmingPoolRepository;
 import jakarta.transaction.Transactional;
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +47,7 @@ public class CreateBoSwimmingClassInteractor implements CreateBoSwimmingClassUse
 
     val swimmingClass = SwimmingClass.builder()
         .swimmingPool(pool)
+        .year(LocalDate.now().getYear())
         .month(command.month())
         .type(classType)
         .subType(classSubType)
