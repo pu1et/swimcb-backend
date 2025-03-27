@@ -77,4 +77,12 @@ public class SwimmingClass extends BaseEntity {
 
   @Column(name = "is_visible", nullable = false)
   private boolean isVisible;
+
+  public boolean isFull() {
+    return reservationLimitCount == reservedCount;
+  }
+
+  public void increaseReservedCount() {
+    this.reservedCount++;
+  }
 }
