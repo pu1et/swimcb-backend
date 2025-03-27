@@ -1,6 +1,6 @@
 package com.project.swimcb.swimmingpool.domain;
 
-import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_REQUEST;
+import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_PENDING;
 import static com.project.swimcb.swimmingpool.domain.enums.TicketType.SWIMMING_CLASS;
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
@@ -73,7 +73,7 @@ public class Reservation extends BaseEntity {
         .ticketId(ticketId)
         .paymentMethod(paymentMethod)
         .reservedAt(LocalDateTime.now())
-        .reservationStatus(RESERVATION_REQUEST)
+        .reservationStatus(PAYMENT_PENDING)
         .build();
   }
 }
