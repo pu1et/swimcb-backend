@@ -14,9 +14,9 @@ import static java.time.DayOfWeek.TUESDAY;
 import static java.time.DayOfWeek.WEDNESDAY;
 
 import com.project.swimcb.swimmingpool.application.out.FindSwimmingClassTicketGateway;
+import com.project.swimcb.swimmingpool.domain.SwimmingClassAvailabilityStatus;
 import com.project.swimcb.swimmingpool.domain.SwimmingClassTicketInfo;
 import com.project.swimcb.swimmingpool.domain.SwimmingClassTicketInfo.SwimmingClass;
-import com.project.swimcb.swimmingpool.domain.SwimmingClassReservationStatus;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import com.querydsl.core.annotations.QueryProjection;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -75,15 +75,16 @@ class FindSwimmingClassTicketDataMapper implements FindSwimmingClassTicketGatewa
                 .days(bitVectorToDays(ticket.daysOfWeek()))
                 .startTime(ticket.startTime())
                 .endTime(ticket.endTime())
+                .availabilityStatus(
+                    SwimmingClassAvailabilityStatus.calculateStatus(
+                        ticket.reservationLimitCount,
+                        ticket.reservedCount))
                 .build()
         )
         .ticket(
             SwimmingClassTicketInfo.SwimmingClassTicket.builder()
                 .name(ticket.ticketName())
                 .price(ticket.ticketPrice())
-                .status(SwimmingClassReservationStatus.calculateStatus(
-                    ticket.reservationLimitCount,
-                    ticket.reservedCount))
                 .build()
         )
         .build();

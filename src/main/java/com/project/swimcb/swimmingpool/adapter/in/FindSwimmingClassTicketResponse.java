@@ -1,6 +1,6 @@
 package com.project.swimcb.swimmingpool.adapter.in;
 
-import com.project.swimcb.swimmingpool.domain.SwimmingClassReservationStatus;
+import com.project.swimcb.swimmingpool.domain.SwimmingClassAvailabilityStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalTime;
 import java.util.List;
@@ -33,7 +33,10 @@ public record FindSwimmingClassTicketResponse(
       @NonNull LocalTime startTime,
 
       @Schema(description = "종료 시간", example = "11:00:00")
-      @NonNull LocalTime endTime
+      @NonNull LocalTime endTime,
+
+      @Schema(description = "클래스 예약 가능 상태", example = "NOT_RESERVABLE|WAITING_RESERVABLE|RESERVABLE")
+      @NonNull SwimmingClassAvailabilityStatus availabilityStatus
   ) {
 
   }
@@ -46,10 +49,7 @@ public record FindSwimmingClassTicketResponse(
       @NonNull String name,
 
       @Schema(description = "가격", example = "10000")
-      int price,
-
-      @Schema(description = "예약 상태", example = "NOT_RESERVABLE|WAITING_RESERVABLE|RESERVABLE")
-      @NonNull SwimmingClassReservationStatus status
+      int price
   ) {
 
   }

@@ -1,7 +1,7 @@
 package com.project.swimcb.swimmingpool.application;
 
-import static com.project.swimcb.swimmingpool.domain.SwimmingClassReservationStatus.NOT_RESERVABLE;
-import static com.project.swimcb.swimmingpool.domain.SwimmingClassReservationStatus.WAITING_RESERVABLE;
+import static com.project.swimcb.swimmingpool.domain.SwimmingClassAvailabilityStatus.NOT_RESERVABLE;
+import static com.project.swimcb.swimmingpool.domain.SwimmingClassAvailabilityStatus.WAITING_RESERVABLE;
 
 import com.project.swimcb.bo.swimmingclass.domain.SwimmingClass;
 import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassRepository;

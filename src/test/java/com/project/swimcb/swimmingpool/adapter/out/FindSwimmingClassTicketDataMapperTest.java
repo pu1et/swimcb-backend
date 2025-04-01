@@ -1,6 +1,6 @@
 package com.project.swimcb.swimmingpool.adapter.out;
 
-import static com.project.swimcb.swimmingpool.domain.SwimmingClassReservationStatus.RESERVABLE;
+import static com.project.swimcb.swimmingpool.domain.SwimmingClassAvailabilityStatus.RESERVABLE;
 import static com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName.GROUP;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -77,9 +77,7 @@ class FindSwimmingClassTicketDataMapperTest {
         assertThat(classInfo.days()).isEqualTo(List.of("월", "화", "수"));
         assertThat(classInfo.startTime()).isEqualTo(result.startTime());
         assertThat(classInfo.endTime()).isEqualTo(result.endTime());
-
-        val ticket = ticketInfo.ticket();
-        assertThat(ticket.status()).isEqualTo(RESERVABLE);
+        assertThat(classInfo.availabilityStatus()).isEqualTo(RESERVABLE);
       }
     }
 

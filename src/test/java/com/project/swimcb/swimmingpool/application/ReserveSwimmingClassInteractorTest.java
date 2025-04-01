@@ -1,8 +1,8 @@
 package com.project.swimcb.swimmingpool.application;
 
-import static com.project.swimcb.swimmingpool.domain.SwimmingClassReservationStatus.NOT_RESERVABLE;
-import static com.project.swimcb.swimmingpool.domain.SwimmingClassReservationStatus.RESERVABLE;
-import static com.project.swimcb.swimmingpool.domain.SwimmingClassReservationStatus.WAITING_RESERVABLE;
+import static com.project.swimcb.swimmingpool.domain.SwimmingClassAvailabilityStatus.NOT_RESERVABLE;
+import static com.project.swimcb.swimmingpool.domain.SwimmingClassAvailabilityStatus.RESERVABLE;
+import static com.project.swimcb.swimmingpool.domain.SwimmingClassAvailabilityStatus.WAITING_RESERVABLE;
 import static com.project.swimcb.swimmingpool.domain.enums.PaymentMethod.BANK_TRANSFER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

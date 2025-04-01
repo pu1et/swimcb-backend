@@ -1,8 +1,7 @@
 package com.project.swimcb.swimmingpool.application;
 
-import static com.project.swimcb.swimmingpool.domain.SwimmingClassReservationStatus.RESERVABLE;
+import static com.project.swimcb.swimmingpool.domain.SwimmingClassAvailabilityStatus.RESERVABLE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -58,13 +57,13 @@ class FindSwimmingClassTicketInteractorTest {
                   .days(List.of("월", "화", "수"))
                   .startTime(LocalTime.of(10, 0))
                   .endTime(LocalTime.of(11, 0))
+                  .availabilityStatus(RESERVABLE)
                   .build()
           )
           .ticket(
               SwimmingClassTicketInfo.SwimmingClassTicket.builder()
                   .name("DUMMY_TICKET_NAME")
                   .price(10000)
-                  .status(RESERVABLE)
                   .build()
           )
           .build();

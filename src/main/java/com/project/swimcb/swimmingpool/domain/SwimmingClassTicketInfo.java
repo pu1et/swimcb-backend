@@ -19,7 +19,8 @@ public record SwimmingClassTicketInfo(
       @NonNull String subType,
       @NonNull List<String> days,
       @NonNull LocalTime startTime,
-      @NonNull LocalTime endTime
+      @NonNull LocalTime endTime,
+      @NonNull SwimmingClassAvailabilityStatus availabilityStatus
   ) {
 
   }
@@ -27,8 +28,7 @@ public record SwimmingClassTicketInfo(
   @Builder
   public record SwimmingClassTicket(
       @NonNull String name,
-      int price,
-      @NonNull SwimmingClassReservationStatus status
+      int price
   ) {
 
   }

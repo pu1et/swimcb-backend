@@ -24,13 +24,13 @@ class FindSwimmingClassTicketResponseFormatter implements
                 .days(swimmingClass.days())
                 .startTime(swimmingClass.startTime())
                 .endTime(swimmingClass.endTime())
+                .availabilityStatus(swimmingClass.availabilityStatus())
                 .build()
         )
         .ticket(
             SwimmingClassTicket.builder()
                 .name(ticket.name())
                 .price(ticket.price())
-                .status(ticket.status())
                 .build()
         )
         .build();

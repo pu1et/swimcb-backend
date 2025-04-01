@@ -1,7 +1,7 @@
 package com.project.swimcb.swimmingpool.adapter.in;
 
 import static com.project.swimcb.swimmingpool.adapter.in.ReserveSwimmingClassControllerTest.MEMBER_ID;
-import static com.project.swimcb.swimmingpool.domain.SwimmingClassReservationStatus.RESERVABLE;
+import static com.project.swimcb.swimmingpool.domain.SwimmingClassAvailabilityStatus.RESERVABLE;
 import static com.project.swimcb.swimmingpool.domain.enums.PaymentMethod.BANK_TRANSFER;
 import static com.project.swimcb.swimmingpool.domain.enums.PaymentMethod.CASH_ON_SITE;
 import static org.assertj.core.api.Assertions.assertThat;
