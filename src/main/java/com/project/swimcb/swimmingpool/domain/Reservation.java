@@ -63,6 +63,9 @@ public class Reservation extends BaseEntity {
   @Column(name = "reservation_status", nullable = false)
   private ReservationStatus reservationStatus;
 
+  @Column(name = "waiting_no")
+  private Integer waitingNo;
+
   @Builder(builderClassName = "createClassReservation", builderMethodName = "createClassReservation")
   private static Reservation create(@NonNull Member member, long ticketId,
       @NonNull PaymentMethod paymentMethod) {
