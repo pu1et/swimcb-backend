@@ -1,6 +1,6 @@
 package com.project.swimcb.swimmingpool.application;
 
-import static com.project.swimcb.swimmingpool.domain.SwimmingClassTicketReservationStatus.RESERVABLE;
+import static com.project.swimcb.swimmingpool.domain.SwimmingClassReservationStatus.RESERVABLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;

@@ -1,6 +1,6 @@
 package com.project.swimcb.swimmingpool.adapter.out;
 
-import static com.project.swimcb.swimmingpool.domain.SwimmingClassTicketReservationStatus.RESERVABLE;
+import static com.project.swimcb.swimmingpool.domain.SwimmingClassReservationStatus.RESERVABLE;
 import static com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName.GROUP;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

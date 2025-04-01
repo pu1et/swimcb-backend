@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,17 +27,19 @@ public class ReserveSwimmingClassController {
 
   @Operation(summary = "수영 클래스 예약")
   @PostMapping
-  public void reserveSwimmingClass(
+  public ReserveSwimmingClassResponse reserveSwimmingClass(
       @PathVariable(value = "swimmingClassId") long swimmingClassId,
 
       @Valid @RequestBody ReserveSwimmingClassRequest request,
       @AuthenticationPrincipal TokenInfo tokenInfo
   ) {
-    useCase.reserveSwimmingClass(ReserveSwimmingClassCommand.builder()
+    val reservationInfo = useCase.reserveSwimmingClass(ReserveSwimmingClassCommand.builder()
         .memberId(tokenInfo.memberId())
         .swimmingClassId(swimmingClassId)
         .ticketId(request.ticketId())
         .paymentMethod(request.paymentMethod())
         .build());
+
+    return new ReserveSwimmingClassResponse(reservationInfo.status(), reservationInfo.waitingNo());
   }
 }

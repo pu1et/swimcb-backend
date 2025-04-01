@@ -3,7 +3,7 @@ package com.project.swimcb.swimmingpool.domain;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum SwimmingClassTicketReservationStatus {
+public enum SwimmingClassReservationStatus {
 
   NOT_RESERVABLE("예약 불가"),
   WAITING_RESERVABLE("대기 가능"),
@@ -11,7 +11,7 @@ public enum SwimmingClassTicketReservationStatus {
 
   private final String description;
 
-  public static SwimmingClassTicketReservationStatus calculateStatus(int reservationLimitCount,
+  public static SwimmingClassReservationStatus calculateStatus(int reservationLimitCount,
       int reservedCount) {
 
     int reservableCount = reservationLimitCount - reservedCount;

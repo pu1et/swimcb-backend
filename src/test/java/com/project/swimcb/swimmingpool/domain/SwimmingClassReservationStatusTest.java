@@ -1,8 +1,8 @@
 package com.project.swimcb.swimmingpool.domain;
 
-import static com.project.swimcb.swimmingpool.domain.SwimmingClassTicketReservationStatus.NOT_RESERVABLE;
-import static com.project.swimcb.swimmingpool.domain.SwimmingClassTicketReservationStatus.RESERVABLE;
-import static com.project.swimcb.swimmingpool.domain.SwimmingClassTicketReservationStatus.WAITING_RESERVABLE;
+import static com.project.swimcb.swimmingpool.domain.SwimmingClassReservationStatus.NOT_RESERVABLE;
+import static com.project.swimcb.swimmingpool.domain.SwimmingClassReservationStatus.RESERVABLE;
+import static com.project.swimcb.swimmingpool.domain.SwimmingClassReservationStatus.WAITING_RESERVABLE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import lombok.val;
@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-class SwimmingClassTicketReservationStatusTest {
+class SwimmingClassReservationStatusTest {
 
   @Nested
   @DisplayName("수영 클래스 티켓의 예약 가능 상태는")
@@ -26,7 +26,7 @@ class SwimmingClassTicketReservationStatusTest {
       val reservedCount = 5;
 
       // when
-      val status = SwimmingClassTicketReservationStatus.calculateStatus(reservationLimitCount,
+      val status = SwimmingClassReservationStatus.calculateStatus(reservationLimitCount,
           reservedCount);
 
       // then
@@ -41,7 +41,7 @@ class SwimmingClassTicketReservationStatusTest {
       val reservedCount = 20; // 정원 꽉 참
 
       // when
-      val status = SwimmingClassTicketReservationStatus.calculateStatus(reservationLimitCount,
+      val status = SwimmingClassReservationStatus.calculateStatus(reservationLimitCount,
           reservedCount);
 
       // then
@@ -56,7 +56,7 @@ class SwimmingClassTicketReservationStatusTest {
       val reservedCount = 23; // 정원(20명) + 대기자 3명
 
       // when
-      val status = SwimmingClassTicketReservationStatus.calculateStatus(reservationLimitCount,
+      val status = SwimmingClassReservationStatus.calculateStatus(reservationLimitCount,
           reservedCount);
 
       // then
@@ -71,7 +71,7 @@ class SwimmingClassTicketReservationStatusTest {
       val reservedCount = 24; // 정원(20명) + 대기자 최대(4명)
 
       // when
-      val status = SwimmingClassTicketReservationStatus.calculateStatus(reservationLimitCount,
+      val status = SwimmingClassReservationStatus.calculateStatus(reservationLimitCount,
           reservedCount);
 
       // then
@@ -90,11 +90,11 @@ class SwimmingClassTicketReservationStatusTest {
         "20, 30, NOT_RESERVABLE"     // 대기 불가 (초과)
     })
     void reservationStatusByEnrollmentCount(int capacity, int enrolled,
-        SwimmingClassTicketReservationStatus expected) {
+        SwimmingClassReservationStatus expected) {
 
       // given
       // when
-      val status = SwimmingClassTicketReservationStatus.calculateStatus(capacity, enrolled);
+      val status = SwimmingClassReservationStatus.calculateStatus(capacity, enrolled);
 
       // then
       assertThat(status).isEqualTo(expected);

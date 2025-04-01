@@ -16,7 +16,7 @@ import static java.time.DayOfWeek.WEDNESDAY;
 import com.project.swimcb.swimmingpool.application.out.FindSwimmingClassTicketGateway;
 import com.project.swimcb.swimmingpool.domain.SwimmingClassTicketInfo;
 import com.project.swimcb.swimmingpool.domain.SwimmingClassTicketInfo.SwimmingClass;
-import com.project.swimcb.swimmingpool.domain.SwimmingClassTicketReservationStatus;
+import com.project.swimcb.swimmingpool.domain.SwimmingClassReservationStatus;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import com.querydsl.core.annotations.QueryProjection;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -79,7 +79,7 @@ class FindSwimmingClassTicketDataMapper implements FindSwimmingClassTicketGatewa
             SwimmingClassTicketInfo.SwimmingClassTicket.builder()
                 .name(ticket.ticketName())
                 .price(ticket.ticketPrice())
-                .status(SwimmingClassTicketReservationStatus.calculateStatus(
+                .status(SwimmingClassReservationStatus.calculateStatus(
                     ticket.reservationLimitCount,
                     ticket.reservedCount))
                 .build()

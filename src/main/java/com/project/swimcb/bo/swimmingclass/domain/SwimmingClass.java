@@ -7,6 +7,7 @@ import static lombok.AccessLevel.PROTECTED;
 import com.project.swimcb.bo.instructor.domain.SwimmingInstructor;
 import com.project.swimcb.bo.swimmingpool.domain.SwimmingPool;
 import com.project.swimcb.common.entity.BaseEntity;
+import com.project.swimcb.swimmingpool.domain.SwimmingClassReservationStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -78,11 +79,16 @@ public class SwimmingClass extends BaseEntity {
   @Column(name = "is_visible", nullable = false)
   private boolean isVisible;
 
-  public boolean isFull() {
-    return reservationLimitCount == reservedCount;
+  public SwimmingClassReservationStatus getReservationStatus() {
+    return SwimmingClassReservationStatus.calculateStatus(this.reservationLimitCount,
+        this.reservedCount);
   }
 
   public void increaseReservedCount() {
     this.reservedCount++;
+  }
+
+  public int calculateWaitingNum() {
+    return this.reservedCount - this.reservationLimitCount + 1;
   }
 }

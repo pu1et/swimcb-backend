@@ -1,13 +1,16 @@
 package com.project.swimcb.swimmingpool.adapter.in;
 
 import static com.project.swimcb.swimmingpool.adapter.in.ReserveSwimmingClassControllerTest.MEMBER_ID;
+import static com.project.swimcb.swimmingpool.domain.SwimmingClassReservationStatus.RESERVABLE;
 import static com.project.swimcb.swimmingpool.domain.enums.PaymentMethod.BANK_TRANSFER;
 import static com.project.swimcb.swimmingpool.domain.enums.PaymentMethod.CASH_ON_SITE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.assertArg;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -17,7 +20,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.swimcb.common.WebMvcTestWithoutSecurity;
 import com.project.swimcb.common.WithMockTokenInfo;
 import com.project.swimcb.swimmingpool.application.in.ReserveSwimmingClassUseCase;
+import com.project.swimcb.swimmingpool.domain.ReservationInfo;
 import lombok.val;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -47,18 +52,29 @@ class ReserveSwimmingClassControllerTest {
 
     private final long SWIMMING_CLASS_ID = 2L;
     private final long TICKET_ID = 3L;
+    private ReservationInfo reservationInfo;
+
+    @BeforeEach
+    void setUp() {
+      reservationInfo = new ReservationInfo(RESERVABLE, 1);
+    }
 
     @Test
     @DisplayName("정상적인 요청이 들어오면 예약이 성공적으로 처리된다.")
     void shouldReserveSwimmingClass() throws Exception {
       // given
       val request = new ReserveSwimmingClassRequest(TICKET_ID, BANK_TRANSFER);
+      val expectedResponse = new ReserveSwimmingClassResponse(reservationInfo.status(),
+          reservationInfo.waitingNo());
+
+      when(useCase.reserveSwimmingClass(any())).thenReturn(reservationInfo);
       // when
       // then
       mockMvc.perform(post(PATH, SWIMMING_CLASS_ID)
               .contentType(APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(request)))
-          .andExpect(status().isOk());
+          .andExpect(status().isOk())
+          .andExpect(content().json(objectMapper.writeValueAsString(expectedResponse)));
 
       verify(useCase, only()).reserveSwimmingClass(assertArg(i -> {
         assertThat(i.memberId()).isEqualTo(Long.parseLong(MEMBER_ID));
@@ -87,6 +103,8 @@ class ReserveSwimmingClassControllerTest {
     void shouldReserveSwimmingClassWithDifferentPaymentMethod() throws Exception {
       // given
       val request = new ReserveSwimmingClassRequest(TICKET_ID, CASH_ON_SITE);
+
+      when(useCase.reserveSwimmingClass(any())).thenReturn(reservationInfo);
       // when
       // then
       mockMvc.perform(post(PATH, SWIMMING_CLASS_ID)

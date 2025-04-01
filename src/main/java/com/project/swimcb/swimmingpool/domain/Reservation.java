@@ -66,7 +66,7 @@ public class Reservation extends BaseEntity {
   @Column(name = "waiting_no")
   private Integer waitingNo;
 
-  @Builder(builderClassName = "createClassReservation", builderMethodName = "createClassReservation")
+  @Builder(builderClassName = "createClassNormalReservation", builderMethodName = "createClassNormalReservation")
   private static Reservation create(@NonNull Member member, long ticketId,
       @NonNull PaymentMethod paymentMethod) {
 
@@ -77,6 +77,21 @@ public class Reservation extends BaseEntity {
         .paymentMethod(paymentMethod)
         .reservedAt(LocalDateTime.now())
         .reservationStatus(PAYMENT_PENDING)
+        .build();
+  }
+
+  @Builder(builderClassName = "createClassWaitingReservation", builderMethodName = "createClassWaitingReservation")
+  private static Reservation create(@NonNull Member member, long ticketId,
+      @NonNull PaymentMethod paymentMethod, int waitingNo) {
+
+    return Reservation.builder()
+        .member(member)
+        .ticketType(SWIMMING_CLASS)
+        .ticketId(ticketId)
+        .paymentMethod(paymentMethod)
+        .reservedAt(LocalDateTime.now())
+        .reservationStatus(PAYMENT_PENDING)
+        .waitingNo(waitingNo)
         .build();
   }
 }
