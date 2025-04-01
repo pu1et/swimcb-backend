@@ -18,6 +18,7 @@ class FindSwimmingClassTicketResponseFormatter implements
     return FindSwimmingClassTicketResponse.builder()
         .swimmingClass(
             SwimmingClass.builder()
+                .month(swimmingClass.month())
                 .type(swimmingClass.type())
                 .subType(swimmingClass.subType())
                 .days(swimmingClass.days())

@@ -14,6 +14,7 @@ public record SwimmingClassTicketInfo(
   @Builder
   public record SwimmingClass(
       long id,
+      int month,
       @NonNull String type,
       @NonNull String subType,
       @NonNull List<String> days,

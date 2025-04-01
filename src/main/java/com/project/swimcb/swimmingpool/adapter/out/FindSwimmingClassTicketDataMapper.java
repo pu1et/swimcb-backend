@@ -41,6 +41,7 @@ class FindSwimmingClassTicketDataMapper implements FindSwimmingClassTicketGatewa
   public SwimmingClassTicketInfo findSwimmingClassTicket(long ticketId) {
     val ticket = queryFactory.select(constructor(QuerySwimmingClassTicketInfo.class,
             swimmingClass.id,
+            swimmingClass.month,
             swimmingClass.reservationLimitCount,
             swimmingClass.reservedCount,
             swimmingClassType.name,
@@ -68,6 +69,7 @@ class FindSwimmingClassTicketDataMapper implements FindSwimmingClassTicketGatewa
         .swimmingClass(
             SwimmingClass.builder()
                 .id(ticket.swimmingClassId())
+                .month(ticket.month())
                 .type(ticket.clssType().getDescription())
                 .subType(ticket.classSubType())
                 .days(bitVectorToDays(ticket.daysOfWeek()))
@@ -107,6 +109,7 @@ class FindSwimmingClassTicketDataMapper implements FindSwimmingClassTicketGatewa
   @Builder
   public record QuerySwimmingClassTicketInfo(
       long swimmingClassId,
+      int month,
       int reservationLimitCount,
       int reservedCount,
       SwimmingClassTypeName clssType,

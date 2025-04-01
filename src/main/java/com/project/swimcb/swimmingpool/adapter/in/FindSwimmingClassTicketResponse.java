@@ -14,6 +14,7 @@ public record FindSwimmingClassTicketResponse(
 
   @Builder
   public record SwimmingClass(
+      int month,
       @NonNull String type,
       @NonNull String subType,
       @NonNull List<String> days,
