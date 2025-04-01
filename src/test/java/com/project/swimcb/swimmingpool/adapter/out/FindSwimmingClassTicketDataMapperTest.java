@@ -141,6 +141,7 @@ class FindSwimmingClassTicketDataMapperTest {
     private static QuerySwimmingClassTicketInfo create() {
       return new QuerySwimmingClassTicketInfo(
           1L,
+          3,
           10,
           5,
           GROUP,
