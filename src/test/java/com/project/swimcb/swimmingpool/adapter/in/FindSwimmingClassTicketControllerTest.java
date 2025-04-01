@@ -1,5 +1,6 @@
 package com.project.swimcb.swimmingpool.adapter.in;
 
+import static com.project.swimcb.swimmingpool.domain.SwimmingClassTicketReservationStatus.RESERVABLE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.only;
@@ -78,6 +79,7 @@ class FindSwimmingClassTicketControllerTest {
               SwimmingClassTicketInfo.SwimmingClassTicket.builder()
                   .name("DUMMY_TICKET_NAME")
                   .price(10000)
+                  .status(RESERVABLE)
                   .build()
           )
           .build();
@@ -101,6 +103,7 @@ class FindSwimmingClassTicketControllerTest {
               FindSwimmingClassTicketResponse.SwimmingClassTicket.builder()
                   .name("DUMMY_TICKET_NAME")
                   .price(10000)
+                  .status(RESERVABLE)
                   .build()
           )
           .build();

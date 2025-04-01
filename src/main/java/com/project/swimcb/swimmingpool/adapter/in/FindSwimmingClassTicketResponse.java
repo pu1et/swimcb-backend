@@ -1,5 +1,6 @@
 package com.project.swimcb.swimmingpool.adapter.in;
 
+import com.project.swimcb.swimmingpool.domain.SwimmingClassTicketReservationStatus;
 import java.time.LocalTime;
 import java.util.List;
 import lombok.Builder;
@@ -25,7 +26,8 @@ public record FindSwimmingClassTicketResponse(
   @Builder
   public record SwimmingClassTicket(
       @NonNull String name,
-      int price
+      int price,
+      @NonNull SwimmingClassTicketReservationStatus status
   ) {
 
   }

@@ -1,5 +1,6 @@
 package com.project.swimcb.swimmingpool.adapter.in;
 
+import static com.project.swimcb.swimmingpool.domain.SwimmingClassTicketReservationStatus.RESERVABLE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.project.swimcb.swimmingpool.domain.SwimmingClassTicketInfo;
@@ -56,6 +57,7 @@ class FindSwimmingClassTicketResponseFormatterTest {
               SwimmingClassTicketInfo.SwimmingClassTicket.builder()
                   .name("DUMMY_TICKET_NAME")
                   .price(10000)
+                  .status(RESERVABLE)
                   .build()
           )
           .build();

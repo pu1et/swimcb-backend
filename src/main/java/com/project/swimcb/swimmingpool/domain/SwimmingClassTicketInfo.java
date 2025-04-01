@@ -26,7 +26,8 @@ public record SwimmingClassTicketInfo(
   @Builder
   public record SwimmingClassTicket(
       @NonNull String name,
-      int price
+      int price,
+      @NonNull SwimmingClassTicketReservationStatus status
   ) {
 
   }

@@ -29,6 +29,7 @@ class FindSwimmingClassTicketResponseFormatter implements
             SwimmingClassTicket.builder()
                 .name(ticket.name())
                 .price(ticket.price())
+                .status(ticket.status())
                 .build()
         )
         .build();

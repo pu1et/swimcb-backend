@@ -1,5 +1,6 @@
 package com.project.swimcb.swimmingpool.application;
 
+import static com.project.swimcb.swimmingpool.domain.SwimmingClassTicketReservationStatus.RESERVABLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -63,6 +64,7 @@ class FindSwimmingClassTicketInteractorTest {
               SwimmingClassTicketInfo.SwimmingClassTicket.builder()
                   .name("DUMMY_TICKET_NAME")
                   .price(10000)
+                  .status(RESERVABLE)
                   .build()
           )
           .build();

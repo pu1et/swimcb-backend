@@ -4,8 +4,6 @@ import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClass.swimming
 import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassSubType.swimmingClassSubType;
 import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassTicket.swimmingClassTicket;
 import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassType.swimmingClassType;
-import static com.project.swimcb.bo.swimmingpool.domain.QSwimmingPool.swimmingPool;
-import static com.project.swimcb.bo.swimmingpool.domain.QSwimmingPoolImage.swimmingPoolImage;
 import static com.querydsl.core.types.Projections.constructor;
 import static java.time.DayOfWeek.FRIDAY;
 import static java.time.DayOfWeek.MONDAY;
@@ -18,6 +16,7 @@ import static java.time.DayOfWeek.WEDNESDAY;
 import com.project.swimcb.swimmingpool.application.out.FindSwimmingClassTicketGateway;
 import com.project.swimcb.swimmingpool.domain.SwimmingClassTicketInfo;
 import com.project.swimcb.swimmingpool.domain.SwimmingClassTicketInfo.SwimmingClass;
+import com.project.swimcb.swimmingpool.domain.SwimmingClassTicketReservationStatus;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import com.querydsl.core.annotations.QueryProjection;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -42,6 +41,8 @@ class FindSwimmingClassTicketDataMapper implements FindSwimmingClassTicketGatewa
   public SwimmingClassTicketInfo findSwimmingClassTicket(long ticketId) {
     val ticket = queryFactory.select(constructor(QuerySwimmingClassTicketInfo.class,
             swimmingClass.id,
+            swimmingClass.reservationLimitCount,
+            swimmingClass.reservedCount,
             swimmingClassType.name,
             swimmingClassSubType.name,
             swimmingClass.daysOfWeek,
@@ -78,6 +79,9 @@ class FindSwimmingClassTicketDataMapper implements FindSwimmingClassTicketGatewa
             SwimmingClassTicketInfo.SwimmingClassTicket.builder()
                 .name(ticket.ticketName())
                 .price(ticket.ticketPrice())
+                .status(SwimmingClassTicketReservationStatus.calculateStatus(
+                    ticket.reservationLimitCount,
+                    ticket.reservedCount))
                 .build()
         )
         .build();
@@ -103,6 +107,8 @@ class FindSwimmingClassTicketDataMapper implements FindSwimmingClassTicketGatewa
   @Builder
   public record QuerySwimmingClassTicketInfo(
       long swimmingClassId,
+      int reservationLimitCount,
+      int reservedCount,
       SwimmingClassTypeName clssType,
       String classSubType,
       int daysOfWeek,
