@@ -6,6 +6,7 @@ import static com.project.swimcb.swimmingpool.domain.SwimmingClassAvailabilitySt
 import static com.project.swimcb.swimmingpool.domain.enums.PaymentMethod.BANK_TRANSFER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.assertArg;
 import static org.mockito.Mockito.mock;
@@ -18,6 +19,7 @@ import com.project.swimcb.bo.swimmingclass.domain.SwimmingClass;
 import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassRepository;
 import com.project.swimcb.member.MemberRepository;
 import com.project.swimcb.member.domain.Member;
+import com.project.swimcb.swimmingpool.domain.Reservation;
 import com.project.swimcb.swimmingpool.domain.ReservationInfo;
 import com.project.swimcb.swimmingpool.domain.ReservationRepository;
 import com.project.swimcb.swimmingpool.domain.ReserveSwimmingClassCommand;
@@ -59,6 +61,7 @@ class ReserveSwimmingClassInteractorTest {
     private ReserveSwimmingClassCommand command;
     private SwimmingClass swimmingClass;
     private Member member;
+    private Reservation createdReservation;
 
     @BeforeEach
     void setUp() {
@@ -71,23 +74,29 @@ class ReserveSwimmingClassInteractorTest {
 
       swimmingClass = mock(SwimmingClass.class);
       member = mock(Member.class);
+      createdReservation = mock(Reservation.class);
     }
 
     @Test
     @DisplayName("일반 예약이 가능한 상태면 일반 예약을 생성한다")
     void shouldCreateNormalReservationWhenReservable() {
       // given
+      val reservationId = 1L;
       val reservationStatus = RESERVABLE;
 
       when(swimmingClassRepository.findById(anyLong())).thenReturn(Optional.of(swimmingClass));
       when(memberRepository.findById(anyLong())).thenReturn(Optional.of(member));
       when(swimmingClass.getReservationStatus()).thenReturn(reservationStatus);
+      when(reservationRepository.save(any())).thenReturn(createdReservation);
+      when(createdReservation.getId()).thenReturn(reservationId);
+      when(createdReservation.getWaitingNo()).thenReturn(null);
 
       // when
       val result = interactor.reserveSwimmingClass(command);
 
       // then
-      assertThat(result.status()).isEqualTo(reservationStatus);
+      assertThat(result.id()).isEqualTo(reservationId);
+      assertThat(result.availabilityStatus()).isEqualTo(reservationStatus);
       assertThat(result.waitingNo()).isNull();
 
       verify(swimmingClassRepository, only()).findById(command.swimmingClassId());
@@ -104,25 +113,30 @@ class ReserveSwimmingClassInteractorTest {
     @DisplayName("대기 예약 상태면 대기 예약을 생성한다")
     void shouldCreateWaitingReservationWhenWaitingReservable() {
       // given
-      val waitingNum = 1;
+      val reservationId = 1L;
+      val waitingNo = 1;
 
       when(swimmingClassRepository.findById(anyLong())).thenReturn(Optional.of(swimmingClass));
       when(memberRepository.findById(anyLong())).thenReturn(Optional.of(member));
       when(swimmingClass.getReservationStatus()).thenReturn(WAITING_RESERVABLE);
-      when(swimmingClass.calculateWaitingNum()).thenReturn(waitingNum);
+      when(swimmingClass.calculateWaitingNum()).thenReturn(waitingNo);
+      when(reservationRepository.save(any())).thenReturn(createdReservation);
+      when(createdReservation.getId()).thenReturn(reservationId);
+      when(createdReservation.getWaitingNo()).thenReturn(waitingNo);
 
       // when
       ReservationInfo result = interactor.reserveSwimmingClass(command);
 
       // then
-      assertThat(result.status()).isEqualTo(WAITING_RESERVABLE);
-      assertThat(result.waitingNo()).isEqualTo(waitingNum);
+      assertThat(result.id()).isEqualTo(reservationId);
+      assertThat(result.availabilityStatus()).isEqualTo(WAITING_RESERVABLE);
+      assertThat(result.waitingNo()).isEqualTo(waitingNo);
 
       verify(reservationRepository, only()).save(assertArg(i -> {
         assertThat(i.getMember()).isEqualTo(member);
         assertThat(i.getTicketId()).isEqualTo(command.ticketId());
         assertThat(i.getPaymentMethod()).isEqualTo(command.paymentMethod());
-        assertThat(i.getWaitingNo()).isEqualTo(waitingNum);
+        assertThat(i.getWaitingNo()).isEqualTo(waitingNo);
       }));
       verify(swimmingClass, times(1)).increaseReservedCount();
     }

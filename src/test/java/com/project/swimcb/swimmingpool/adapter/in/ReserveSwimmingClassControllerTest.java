@@ -56,7 +56,7 @@ class ReserveSwimmingClassControllerTest {
 
     @BeforeEach
     void setUp() {
-      reservationInfo = new ReservationInfo(RESERVABLE, 1);
+      reservationInfo = new ReservationInfo(1L, RESERVABLE, 1);
     }
 
     @Test
@@ -64,8 +64,8 @@ class ReserveSwimmingClassControllerTest {
     void shouldReserveSwimmingClass() throws Exception {
       // given
       val request = new ReserveSwimmingClassRequest(TICKET_ID, BANK_TRANSFER);
-      val expectedResponse = new ReserveSwimmingClassResponse(reservationInfo.status(),
-          reservationInfo.waitingNo());
+      val expectedResponse = new ReserveSwimmingClassResponse(reservationInfo.id(),
+          reservationInfo.availabilityStatus(), reservationInfo.waitingNo());
 
       when(useCase.reserveSwimmingClass(any())).thenReturn(reservationInfo);
       // when

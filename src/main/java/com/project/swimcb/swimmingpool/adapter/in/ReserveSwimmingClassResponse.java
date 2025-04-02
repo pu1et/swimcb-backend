@@ -6,6 +6,9 @@ import lombok.NonNull;
 
 @Schema(name = "수영 클래스 예약 응답")
 public record ReserveSwimmingClassResponse(
+    @Schema(description = "예약 번호", example = "1")
+    long id,
+
     @Schema(description = "예약 상태", example = "NOT_RESERVABLE|WAITING_RESERVABLE|RESERVABLE")
     @NonNull SwimmingClassAvailabilityStatus availabilityStatus,
 

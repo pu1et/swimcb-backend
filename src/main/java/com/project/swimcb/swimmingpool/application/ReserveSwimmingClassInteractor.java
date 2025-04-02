@@ -39,11 +39,11 @@ class ReserveSwimmingClassInteractor implements ReserveSwimmingClassUseCase {
 
     val reservation = createClassReservation(command, swimmingClass, member);
 
-    reservationRepository.save(reservation);
+    val createdReservation = reservationRepository.save(reservation);
 
     swimmingClass.increaseReservedCount();
 
-    return new ReservationInfo(swimmingClass.getReservationStatus(), reservation.getWaitingNo());
+    return reservationInfo(createdReservation, swimmingClass);
   }
 
   private Reservation createClassReservation(@NonNull ReserveSwimmingClassCommand command,
@@ -68,6 +68,14 @@ class ReserveSwimmingClassInteractor implements ReserveSwimmingClassUseCase {
         .member(member)
         .ticketId(command.ticketId())
         .paymentMethod(command.paymentMethod())
+        .build();
+  }
+
+  private ReservationInfo reservationInfo(@NonNull Reservation createdReservation, @NonNull SwimmingClass swimmingClass) {
+    return ReservationInfo.builder()
+        .id(createdReservation.getId())
+        .availabilityStatus(swimmingClass.getReservationStatus())
+        .waitingNo(createdReservation.getWaitingNo())
         .build();
   }
 }

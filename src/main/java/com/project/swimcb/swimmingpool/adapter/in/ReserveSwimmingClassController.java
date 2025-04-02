@@ -40,6 +40,7 @@ public class ReserveSwimmingClassController {
         .paymentMethod(request.paymentMethod())
         .build());
 
-    return new ReserveSwimmingClassResponse(reservationInfo.status(), reservationInfo.waitingNo());
+    return new ReserveSwimmingClassResponse(reservationInfo.id(),
+        reservationInfo.availabilityStatus(), reservationInfo.waitingNo());
   }
 }
