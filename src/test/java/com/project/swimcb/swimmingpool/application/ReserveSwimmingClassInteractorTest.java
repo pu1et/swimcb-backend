@@ -17,10 +17,11 @@ import static org.mockito.Mockito.when;
 
 import com.project.swimcb.bo.swimmingclass.domain.SwimmingClass;
 import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassRepository;
+import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassTicket;
+import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassTicketRepository;
 import com.project.swimcb.member.MemberRepository;
 import com.project.swimcb.member.domain.Member;
 import com.project.swimcb.swimmingpool.domain.Reservation;
-import com.project.swimcb.swimmingpool.domain.ReservationInfo;
 import com.project.swimcb.swimmingpool.domain.ReservationRepository;
 import com.project.swimcb.swimmingpool.domain.ReserveSwimmingClassCommand;
 import java.util.NoSuchElementException;
@@ -50,6 +51,9 @@ class ReserveSwimmingClassInteractorTest {
   @Mock
   private MemberRepository memberRepository;
 
+  @Mock
+  private SwimmingClassTicketRepository ticketRepository;
+
   @Nested
   @DisplayName("수영 클래스 예약시")
   class ReserveSwimmingClassTest {
@@ -57,11 +61,13 @@ class ReserveSwimmingClassInteractorTest {
     private final long MEMBER_ID = 1L;
     private final long SWIMMING_CLASS_ID = 2L;
     private final long TICKET_ID = 3L;
+    private final int TICKET_PRICE = 10000;
 
     private ReserveSwimmingClassCommand command;
     private SwimmingClass swimmingClass;
     private Member member;
     private Reservation createdReservation;
+    private SwimmingClassTicket ticket;
 
     @BeforeEach
     void setUp() {
@@ -75,6 +81,7 @@ class ReserveSwimmingClassInteractorTest {
       swimmingClass = mock(SwimmingClass.class);
       member = mock(Member.class);
       createdReservation = mock(Reservation.class);
+      ticket = mock(SwimmingClassTicket.class);
     }
 
     @Test
@@ -85,6 +92,8 @@ class ReserveSwimmingClassInteractorTest {
       val reservationStatus = RESERVABLE;
 
       when(swimmingClassRepository.findById(anyLong())).thenReturn(Optional.of(swimmingClass));
+      when(ticketRepository.findById(anyLong())).thenReturn(Optional.of(ticket));
+      when(ticket.getPrice()).thenReturn(TICKET_PRICE);
       when(memberRepository.findById(anyLong())).thenReturn(Optional.of(member));
       when(swimmingClass.getReservationStatus()).thenReturn(reservationStatus);
       when(reservationRepository.save(any())).thenReturn(createdReservation);
@@ -101,10 +110,12 @@ class ReserveSwimmingClassInteractorTest {
 
       verify(swimmingClassRepository, only()).findById(command.swimmingClassId());
       verify(memberRepository, only()).findById(command.memberId());
+      verify(ticketRepository, only()).findById(command.ticketId());
       verify(reservationRepository, only()).save(assertArg(i -> {
         assertThat(i.getMember()).isEqualTo(member);
         assertThat(i.getTicketId()).isEqualTo(command.ticketId());
         assertThat(i.getPaymentMethod()).isEqualTo(command.paymentMethod());
+        assertThat(i.getPaymentAmount()).isEqualTo(ticket.getPrice());
       }));
       verify(swimmingClass, times(1)).increaseReservedCount();
     }
@@ -117,6 +128,8 @@ class ReserveSwimmingClassInteractorTest {
       val waitingNo = 1;
 
       when(swimmingClassRepository.findById(anyLong())).thenReturn(Optional.of(swimmingClass));
+      when(ticketRepository.findById(anyLong())).thenReturn(Optional.of(ticket));
+      when(ticket.getPrice()).thenReturn(TICKET_PRICE);
       when(memberRepository.findById(anyLong())).thenReturn(Optional.of(member));
       when(swimmingClass.getReservationStatus()).thenReturn(WAITING_RESERVABLE);
       when(swimmingClass.calculateWaitingNum()).thenReturn(waitingNo);
@@ -125,7 +138,7 @@ class ReserveSwimmingClassInteractorTest {
       when(createdReservation.getWaitingNo()).thenReturn(waitingNo);
 
       // when
-      ReservationInfo result = interactor.reserveSwimmingClass(command);
+      val result = interactor.reserveSwimmingClass(command);
 
       // then
       assertThat(result.id()).isEqualTo(reservationId);
@@ -137,6 +150,7 @@ class ReserveSwimmingClassInteractorTest {
         assertThat(i.getTicketId()).isEqualTo(command.ticketId());
         assertThat(i.getPaymentMethod()).isEqualTo(command.paymentMethod());
         assertThat(i.getWaitingNo()).isEqualTo(waitingNo);
+        assertThat(i.getPaymentAmount()).isEqualTo(ticket.getPrice());
       }));
       verify(swimmingClass, times(1)).increaseReservedCount();
     }
@@ -146,6 +160,7 @@ class ReserveSwimmingClassInteractorTest {
     void shouldThrowExceptionWhenNotReservable() {
       // given
       when(swimmingClassRepository.findById(anyLong())).thenReturn(Optional.of(swimmingClass));
+      when(ticketRepository.findById(anyLong())).thenReturn(Optional.of(ticket));
       when(memberRepository.findById(anyLong())).thenReturn(Optional.of(member));
       when(swimmingClass.getReservationStatus()).thenReturn(NOT_RESERVABLE);
 
@@ -172,12 +187,26 @@ class ReserveSwimmingClassInteractorTest {
     void shouldThrowNoSuchElementExceptionWhenMemberDoesNotExist() {
       // given
       when(swimmingClassRepository.findById(anyLong())).thenReturn(Optional.of(swimmingClass));
+      when(ticketRepository.findById(anyLong())).thenReturn(Optional.of(ticket));
       when(memberRepository.findById(anyLong())).thenReturn(Optional.empty());
       // when
       // then
       assertThatThrownBy(() -> interactor.reserveSwimmingClass(command))
           .isInstanceOf(NoSuchElementException.class)
           .hasMessage("회원이 존재하지 않습니다 : " + command.memberId());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 티켓이라면 NoSuchElementException를 발생시킨다.")
+    void shouldThrowNoSuchElementExceptionWhenTicketDoesNotExist() {
+      // given
+      when(swimmingClassRepository.findById(anyLong())).thenReturn(Optional.of(swimmingClass));
+      when(ticketRepository.findById(anyLong())).thenReturn(Optional.empty());
+      // when
+      // then
+      assertThatThrownBy(() -> interactor.reserveSwimmingClass(command))
+          .isInstanceOf(NoSuchElementException.class)
+          .hasMessage("티켓이 존재하지 않습니다 : " + command.ticketId());
     }
   }
 }

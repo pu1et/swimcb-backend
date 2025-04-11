@@ -52,10 +52,6 @@ public class Reservation extends BaseEntity {
   @Column(name = "ticket_id", nullable = false)
   private long ticketId;
 
-  @Enumerated(STRING)
-  @Column(name = "payment_method", nullable = false)
-  private PaymentMethod paymentMethod;
-
   @Column(name = "reserved_at", nullable = false)
   private LocalDateTime reservedAt;
 
@@ -66,9 +62,28 @@ public class Reservation extends BaseEntity {
   @Column(name = "waiting_no")
   private Integer waitingNo;
 
+  @Enumerated(STRING)
+  @Column(name = "payment_method", nullable = false)
+  private PaymentMethod paymentMethod;
+
+  @Column(name = "payment_amount", nullable = false)
+  private int paymentAmount;
+
+  @Column(name = "payment_approved_at")
+  private LocalDateTime paymentApprovedAt;
+
+  @Column(name = "canceled_at")
+  private LocalDateTime canceledAt;
+
+  @Column(name = "refund_amount")
+  private int refundAmount;
+
+  @Column(name = "refunded_at")
+  private LocalDateTime refundedAt;
+
   @Builder(builderClassName = "createClassNormalReservation", builderMethodName = "createClassNormalReservation")
   private static Reservation create(@NonNull Member member, long ticketId,
-      @NonNull PaymentMethod paymentMethod) {
+      @NonNull PaymentMethod paymentMethod, int paymentAmount) {
 
     return Reservation.builder()
         .member(member)
@@ -77,12 +92,13 @@ public class Reservation extends BaseEntity {
         .paymentMethod(paymentMethod)
         .reservedAt(LocalDateTime.now())
         .reservationStatus(PAYMENT_PENDING)
+        .paymentAmount(paymentAmount)
         .build();
   }
 
   @Builder(builderClassName = "createClassWaitingReservation", builderMethodName = "createClassWaitingReservation")
   private static Reservation create(@NonNull Member member, long ticketId,
-      @NonNull PaymentMethod paymentMethod, int waitingNo) {
+      @NonNull PaymentMethod paymentMethod, int waitingNo, int paymentAmount) {
 
     return Reservation.builder()
         .member(member)
@@ -92,6 +108,7 @@ public class Reservation extends BaseEntity {
         .reservedAt(LocalDateTime.now())
         .reservationStatus(PAYMENT_PENDING)
         .waitingNo(waitingNo)
+        .paymentAmount(paymentAmount)
         .build();
   }
 }

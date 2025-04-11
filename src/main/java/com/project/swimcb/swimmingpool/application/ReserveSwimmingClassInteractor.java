@@ -5,6 +5,8 @@ import static com.project.swimcb.swimmingpool.domain.SwimmingClassAvailabilitySt
 
 import com.project.swimcb.bo.swimmingclass.domain.SwimmingClass;
 import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassRepository;
+import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassTicket;
+import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassTicketRepository;
 import com.project.swimcb.member.MemberRepository;
 import com.project.swimcb.member.domain.Member;
 import com.project.swimcb.swimmingpool.application.in.ReserveSwimmingClassUseCase;
@@ -27,6 +29,7 @@ class ReserveSwimmingClassInteractor implements ReserveSwimmingClassUseCase {
   private final SwimmingClassRepository swimmingClassRepository;
   private final ReservationRepository reservationRepository;
   private final MemberRepository memberRepository;
+  private final SwimmingClassTicketRepository ticketRepository;
 
   @Override
   public ReservationInfo reserveSwimmingClass(@NonNull ReserveSwimmingClassCommand command) {
@@ -34,10 +37,13 @@ class ReserveSwimmingClassInteractor implements ReserveSwimmingClassUseCase {
         .orElseThrow(
             () -> new NoSuchElementException("수영 클래스가 존재하지 않습니다 : " + command.swimmingClassId()));
 
+    val ticket = ticketRepository.findById(command.ticketId())
+        .orElseThrow(() -> new NoSuchElementException("티켓이 존재하지 않습니다 : " + command.ticketId()));
+
     val member = memberRepository.findById(command.memberId())
         .orElseThrow(() -> new NoSuchElementException("회원이 존재하지 않습니다 : " + command.memberId()));
 
-    val reservation = createClassReservation(command, swimmingClass, member);
+    val reservation = createClassReservation(command, swimmingClass, ticket, member);
 
     val createdReservation = reservationRepository.save(reservation);
 
@@ -47,7 +53,8 @@ class ReserveSwimmingClassInteractor implements ReserveSwimmingClassUseCase {
   }
 
   private Reservation createClassReservation(@NonNull ReserveSwimmingClassCommand command,
-      @NonNull SwimmingClass swimmingClass, @NonNull Member member) {
+      @NonNull SwimmingClass swimmingClass, @NonNull SwimmingClassTicket ticket,
+      @NonNull Member member) {
 
     val reservationStatus = swimmingClass.getReservationStatus();
 
@@ -61,6 +68,7 @@ class ReserveSwimmingClassInteractor implements ReserveSwimmingClassUseCase {
           .ticketId(command.ticketId())
           .paymentMethod(command.paymentMethod())
           .waitingNo(swimmingClass.calculateWaitingNum())
+          .paymentAmount(ticket.getPrice())
           .build();
     }
 
@@ -68,10 +76,12 @@ class ReserveSwimmingClassInteractor implements ReserveSwimmingClassUseCase {
         .member(member)
         .ticketId(command.ticketId())
         .paymentMethod(command.paymentMethod())
+        .paymentAmount(ticket.getPrice())
         .build();
   }
 
-  private ReservationInfo reservationInfo(@NonNull Reservation createdReservation, @NonNull SwimmingClass swimmingClass) {
+  private ReservationInfo reservationInfo(@NonNull Reservation createdReservation,
+      @NonNull SwimmingClass swimmingClass) {
     return ReservationInfo.builder()
         .id(createdReservation.getId())
         .availabilityStatus(swimmingClass.getReservationStatus())
