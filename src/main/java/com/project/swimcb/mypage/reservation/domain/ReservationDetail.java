@@ -1,58 +1,61 @@
 package com.project.swimcb.mypage.reservation.domain;
 
+import com.project.swimcb.swimmingpool.domain.enums.PaymentMethod;
+import com.project.swimcb.swimmingpool.domain.enums.ReservationStatus;
+import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.Builder;
 import lombok.NonNull;
 
 @Builder
 public record ReservationDetail(
-    @NonNull Reservation reservation,
     @NonNull SwimmingPool swimmingPool,
-    SwimmingClass swimmingClass,
-    FreeSwimming freeSwimming,
-    @NonNull List<Payment> payments
+    @NonNull SwimmingClass swimmingClass,
+    @NonNull Ticket ticket,
+    @NonNull Reservation reservation,
+    @NonNull Payment payment
 ) {
 
   @Builder
-  public record Reservation(
-      String waitingNumberFlag,
-      @NonNull LocalDateTime dateTime
-  ) {
-
-  }
-
-  @Builder
   public record SwimmingPool(
+      long id,
       @NonNull String name,
-      @NonNull String address
+      @NonNull String imagePath
   ) {
 
   }
 
   @Builder
   public record SwimmingClass(
-      @NonNull String type,
-      @NonNull String subType,
-      @NonNull String date,
-      @NonNull String time,
+      long id,
+      @NonNull SwimmingClassTypeName type,
+      @NonNull String subType
+  ) {
+
+  }
+
+  @Builder
+  public record Ticket(
+      long id,
+      @NonNull String name,
       int price
   ) {
 
   }
 
   @Builder
-  public record FreeSwimming(
-      @NonNull String type,
-      int price
+  public record Reservation(
+      long id,
+      @NonNull ReservationStatus status,
+      @NonNull LocalDateTime reservedAt
   ) {
 
   }
 
   @Builder
   public record Payment(
-      @NonNull String method,
-      int price
+      @NonNull PaymentMethod method,
+      int amount
   ) {
 
   }

@@ -1,7 +1,9 @@
 package com.project.swimcb.swimmingpool.domain.enums;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Getter
 @RequiredArgsConstructor
 public enum ReservationStatus {
   PAYMENT_PENDING("결제 대기"),
