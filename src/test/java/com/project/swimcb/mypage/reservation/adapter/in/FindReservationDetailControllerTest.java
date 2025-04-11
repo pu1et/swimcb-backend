@@ -1,5 +1,7 @@
 package com.project.swimcb.mypage.reservation.adapter.in;
 
+import static com.project.swimcb.swimmingpool.domain.enums.PaymentMethod.CASH_ON_SITE;
+import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_COMPLETED;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
@@ -9,10 +11,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
 import com.project.swimcb.common.WebMvcTestWithoutSecurity;
+import com.project.swimcb.mypage.reservation.adapter.out.ClassDayOfWeek;
 import com.project.swimcb.mypage.reservation.application.port.in.FindReservationDetailUseCase;
 import com.project.swimcb.mypage.reservation.domain.ReservationDetail;
+import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -74,13 +81,18 @@ class FindReservationDetailControllerTest {
                   .id(1L)
                   .name("테스트 수영장")
                   .imagePath("images/pool/1.jpg")
+                  .accountNo(AccountNo.of("123-456-7890"))
                   .build()
           )
           .swimmingClass(
               ReservationDetail.SwimmingClass.builder()
                   .id(2L)
-                  .type(com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName.GROUP)
+                  .month(3)
+                  .type(SwimmingClassTypeName.GROUP)
                   .subType("초급반")
+                  .daysOfWeek(new ClassDayOfWeek(List.of()))
+                  .startTime(LocalTime.of(10, 0))
+                  .endTime(LocalTime.of(11, 0))
                   .build()
           )
           .ticket(
@@ -93,16 +105,18 @@ class FindReservationDetailControllerTest {
           .reservation(
               ReservationDetail.Reservation.builder()
                   .id(1L)
-                  .status(
-                      com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_COMPLETED)
+                  .status(PAYMENT_COMPLETED)
                   .reservedAt(LocalDateTime.of(2023, 4, 1, 10, 0, 0))
                   .build()
           )
           .payment(
               ReservationDetail.Payment.builder()
-                  .method(com.project.swimcb.swimmingpool.domain.enums.PaymentMethod.CASH_ON_SITE)
+                  .method(CASH_ON_SITE)
                   .amount(50000)
                   .build()
+          )
+          .review(
+              ReservationDetail.Review.builder().build()
           )
           .build();
     }
@@ -117,13 +131,18 @@ class FindReservationDetailControllerTest {
                   .id(1L)
                   .name("DUMMY_POOL_NAME")
                   .imageUrl("DUMMY_POOL_IMAGE_URL")
+                  .accountNo("DUMMY_ACCOUNT_NO")
                   .build()
           )
           .swimmingClass(
               FindReservationDetailResponse.SwimmingClass.builder()
                   .id(2L)
+                  .month(3)
                   .type("DUMMY_CLASS_TYPE")
                   .subType("DUMMY_CLASS_SUB_TYPE")
+                  .days(List.of("월", "수", "금"))
+                  .startTime(LocalTime.of(10, 0))
+                  .endTime(LocalTime.of(11, 0))
                   .build()
           )
           .ticket(
@@ -146,6 +165,9 @@ class FindReservationDetailControllerTest {
                   .amount(50000)
                   .requestedAt(LocalDateTime.of(2023, 4, 1, 10, 0, 0))
                   .build()
+          )
+          .review(
+              FindReservationDetailResponse.Review.builder().build()
           )
           .build();
     }

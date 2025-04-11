@@ -6,13 +6,16 @@ import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassTicket.sw
 import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassType.swimmingClassType;
 import static com.project.swimcb.bo.swimmingpool.domain.QSwimmingPool.swimmingPool;
 import static com.project.swimcb.bo.swimmingpool.domain.QSwimmingPoolImage.swimmingPoolImage;
+import static com.project.swimcb.swimming_pool_review.domain.QSwimmingPoolReview.swimmingPoolReview;
 import static com.project.swimcb.swimmingpool.domain.QReservation.reservation;
 import static com.querydsl.core.types.Projections.constructor;
 
+import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
 import com.project.swimcb.mypage.reservation.application.port.out.FindReservationDetailGateway;
 import com.project.swimcb.mypage.reservation.domain.ReservationDetail;
 import com.project.swimcb.mypage.reservation.domain.ReservationDetail.Payment;
 import com.project.swimcb.mypage.reservation.domain.ReservationDetail.Reservation;
+import com.project.swimcb.mypage.reservation.domain.ReservationDetail.Review;
 import com.project.swimcb.mypage.reservation.domain.ReservationDetail.SwimmingClass;
 import com.project.swimcb.mypage.reservation.domain.ReservationDetail.SwimmingPool;
 import com.project.swimcb.mypage.reservation.domain.ReservationDetail.Ticket;
@@ -22,6 +25,7 @@ import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import com.querydsl.core.annotations.QueryProjection;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.NoSuchElementException;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -40,16 +44,23 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
             swimmingPool.id,
             swimmingPool.name,
             swimmingPoolImage.path,
+            swimmingPool.accountNo,
             swimmingClass.id,
+            swimmingClass.month,
             swimmingClassType.name,
             swimmingClassSubType.name,
+            swimmingClass.daysOfWeek,
+            swimmingClass.startTime,
+            swimmingClass.endTime,
             swimmingClassTicket.id,
             swimmingClassTicket.name,
             swimmingClassTicket.price,
             reservation.reservationStatus,
             reservation.reservedAt,
+            reservation.waitingNo,
             reservation.paymentMethod,
-            reservation.paymentAmount
+            reservation.paymentAmount,
+            swimmingPoolReview.id
         ))
         .from(reservation)
         .join(swimmingClassTicket).on(reservation.ticketId.eq(swimmingClassTicket.id))
@@ -58,6 +69,7 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
         .join(swimmingClassSubType).on(swimmingClass.subType.eq(swimmingClassSubType))
         .join(swimmingPool).on(swimmingClass.swimmingPool.eq(swimmingPool))
         .join(swimmingPoolImage).on(swimmingPool.eq(swimmingPoolImage.swimmingPool))
+        .leftJoin(swimmingPoolReview).on(swimmingPool.eq(swimmingPoolReview.swimmingPool))
         .where(
             reservation.id.eq(reservationId)
         )
@@ -73,13 +85,18 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
                 .id(result.swimmingPoolId())
                 .name(result.swimmingPoolName())
                 .imagePath(result.swimmingPoolImagePath())
+                .accountNo(result.accountNo())
                 .build()
         )
         .swimmingClass(
             SwimmingClass.builder()
                 .id(result.swimmingClassId())
+                .month(result.month())
                 .type(result.swimmingClassType())
                 .subType(result.swimmingClassSubType())
+                .daysOfWeek(ClassDayOfWeek.of(result.daysOfWeek()))
+                .startTime(result.startTime())
+                .endTime(result.endTime())
                 .build()
         )
         .ticket(
@@ -93,6 +110,7 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
             Reservation.builder()
                 .id(reservationId)
                 .status(result.reservationStatus())
+                .waitingNo(result.waitingNo())
                 .reservedAt(result.reservedAt())
                 .build()
         )
@@ -100,6 +118,11 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
             Payment.builder()
                 .method(result.paymentMethod())
                 .amount(result.paymentAmount())
+                .build()
+        )
+        .review(
+            Review.builder()
+                .id(result.reviewId())
                 .build()
         )
         .build();
@@ -110,16 +133,23 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
       long swimmingPoolId,
       String swimmingPoolName,
       String swimmingPoolImagePath,
+      AccountNo accountNo,
       long swimmingClassId,
+      int month,
       SwimmingClassTypeName swimmingClassType,
       String swimmingClassSubType,
+      int daysOfWeek,
+      LocalTime startTime,
+      LocalTime endTime,
       long ticketId,
       String ticketName,
       int ticketPrice,
       ReservationStatus reservationStatus,
       LocalDateTime reservedAt,
+      Integer waitingNo,
       PaymentMethod paymentMethod,
-      int paymentAmount
+      int paymentAmount,
+      Long reviewId
   ) {
 
     @QueryProjection

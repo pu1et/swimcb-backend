@@ -3,14 +3,20 @@ package com.project.swimcb.mypage.reservation.adapter.in;
 import static com.project.swimcb.swimmingpool.domain.enums.PaymentMethod.CASH_ON_SITE;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_PENDING;
 import static com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName.GROUP;
+import static java.time.DayOfWeek.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import com.project.swimcb.bo.swimmingpool.application.out.ImageUrlPort;
+import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
+import com.project.swimcb.mypage.reservation.adapter.out.ClassDayOfWeek;
 import com.project.swimcb.mypage.reservation.domain.ReservationDetail;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,11 +52,14 @@ class FindReservationDetailResponseMapperTest {
     // SwimmingPool 검증
     assertThat(response.swimmingPool().id()).isEqualTo(detail.swimmingPool().id());
     assertThat(response.swimmingPool().imageUrl()).isEqualTo(imageUrl);
+    assertThat(response.swimmingPool().accountNo()).isEqualTo(
+        detail.swimmingPool().accountNo().value());
 
     // SwimmingClass 검증
     assertThat(response.swimmingClass().id()).isEqualTo(detail.swimmingClass().id());
     assertThat(response.swimmingClass().type()).isEqualTo(GROUP.getDescription());
     assertThat(response.swimmingClass().subType()).isEqualTo(detail.swimmingClass().subType());
+    assertThat(response.swimmingClass().days()).isEqualTo(List.of("월", "수", "금"));
 
     // Ticket 검증
     assertThat(response.ticket().id()).isEqualTo(detail.ticket().id());
@@ -60,10 +69,14 @@ class FindReservationDetailResponseMapperTest {
     assertThat(response.reservation().id()).isEqualTo(detail.reservation().id());
     assertThat(response.reservation().status()).isEqualTo(PAYMENT_PENDING.getDescription());
     assertThat(response.reservation().reservedAt()).isEqualTo(detail.reservation().reservedAt());
+    assertThat(response.reservation().waitingNo()).isEqualTo(detail.reservation().waitingNo());
 
     // Payment 검증
     assertThat(response.payment().method()).isEqualTo(CASH_ON_SITE.getDescription());
     assertThat(response.payment().requestedAt()).isEqualTo(detail.reservation().reservedAt());
+
+    // Review 검증
+    assertThat(response.review().id()).isEqualTo(detail.review().id());
   }
 
   private static class TestFindReservationDetailFactory {
@@ -75,13 +88,18 @@ class FindReservationDetailResponseMapperTest {
                   .id(1L)
                   .name("DUMMY_POOL_NAME")
                   .imagePath("DUMMY_POOL_IMAGE_PATH")
+                  .accountNo(AccountNo.of("DUMMY_ACCOUNT_NO"))
                   .build()
           )
           .swimmingClass(
               ReservationDetail.SwimmingClass.builder()
                   .id(2L)
+                  .month(3)
                   .type(SwimmingClassTypeName.GROUP)
                   .subType("DUMMY_CLASS_SUB_TYPE")
+                  .daysOfWeek(new ClassDayOfWeek(List.of(MONDAY, WEDNESDAY, FRIDAY)))
+                  .startTime(LocalTime.of(10, 0))
+                  .endTime(LocalTime.of(11, 0))
                   .build()
           )
           .ticket(
@@ -102,6 +120,11 @@ class FindReservationDetailResponseMapperTest {
               ReservationDetail.Payment.builder()
                   .method(CASH_ON_SITE)
                   .amount(50000)
+                  .build()
+          )
+          .review(
+              ReservationDetail.Review.builder()
+                  .id(5L)
                   .build()
           )
           .build();

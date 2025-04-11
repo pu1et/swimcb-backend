@@ -2,6 +2,8 @@ package com.project.swimcb.mypage.reservation.adapter.in;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 import lombok.Builder;
 import lombok.NonNull;
 
@@ -12,7 +14,8 @@ public record FindReservationDetailResponse(
     @NonNull SwimmingClass swimmingClass,
     @NonNull Ticket ticket,
     @NonNull Reservation reservation,
-    @NonNull Payment payment
+    @NonNull Payment payment,
+    @NonNull Review review
 ) {
 
   @Builder
@@ -26,7 +29,10 @@ public record FindReservationDetailResponse(
       @NonNull String name,
 
       @Schema(example = "https://example.com/image.jpg")
-      @NonNull String imageUrl
+      @NonNull String imageUrl,
+
+      @Schema(example = "1234567890")
+      @NonNull String accountNo
   ) {
 
   }
@@ -38,11 +44,23 @@ public record FindReservationDetailResponse(
       @Schema(example = "1")
       long id,
 
+      @Schema(example = "4")
+      int month,
+
       @Schema(example = "[단체강습|아동수영|아쿠아로빅|특별반|레슨]")
       @NonNull String type,
 
       @Schema(example = "기초")
-      @NonNull String subType
+      @NonNull String subType,
+
+      @Schema(example = "[월|화|수|목|금|토|일]")
+      @NonNull List<String> days,
+
+      @Schema(example = "06:00:00")
+      @NonNull LocalTime startTime,
+
+      @Schema(example = "07:00:00")
+      @NonNull LocalTime endTime
   ) {
 
   }
@@ -73,7 +91,10 @@ public record FindReservationDetailResponse(
       @NonNull String status,
 
       @Schema(example = "2025-04-01T10:00:00")
-      @NonNull LocalDateTime reservedAt
+      @NonNull LocalDateTime reservedAt,
+
+      @Schema(example = "1")
+      Integer waitingNo
   ) {
 
   }
@@ -88,6 +109,14 @@ public record FindReservationDetailResponse(
 
       @Schema(example = "2025-04-01T10:00:00")
       @NonNull LocalDateTime requestedAt
+  ) {
+
+  }
+
+  @Builder
+  public record Review(
+      @Schema(example = "1")
+      Long id
   ) {
 
   }

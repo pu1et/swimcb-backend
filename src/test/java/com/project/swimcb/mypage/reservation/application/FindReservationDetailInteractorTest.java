@@ -6,10 +6,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
+import com.project.swimcb.mypage.reservation.adapter.out.ClassDayOfWeek;
 import com.project.swimcb.mypage.reservation.application.port.out.FindReservationDetailGateway;
 import com.project.swimcb.mypage.reservation.domain.ReservationDetail;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -53,13 +57,18 @@ class FindReservationDetailInteractorTest {
                   .id(1L)
                   .name("DUMMY_POOL_NAME")
                   .imagePath("DUMMY_POOL_IMAGE_PATH")
+                  .accountNo(AccountNo.of("DUMMY_ACCOUNT_NO"))
                   .build()
           )
           .swimmingClass(
               ReservationDetail.SwimmingClass.builder()
                   .id(2L)
+                  .month(3)
                   .type(SwimmingClassTypeName.GROUP)
                   .subType("DUMMY_CLASS_SUB_TYPE")
+                  .daysOfWeek(new ClassDayOfWeek(List.of()))
+                  .startTime(LocalTime.of(10, 0))
+                  .endTime(LocalTime.of(11, 0))
                   .build()
           )
           .ticket(
@@ -81,6 +90,9 @@ class FindReservationDetailInteractorTest {
                   .method(CASH_ON_SITE)
                   .amount(50000)
                   .build()
+          )
+          .review(
+              ReservationDetail.Review.builder().build()
           )
           .build();
     }

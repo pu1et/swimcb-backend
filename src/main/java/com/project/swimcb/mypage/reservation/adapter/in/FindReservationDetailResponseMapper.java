@@ -22,13 +22,18 @@ public class FindReservationDetailResponseMapper {
                 .id(detail.swimmingPool().id())
                 .name(detail.swimmingPool().name())
                 .imageUrl(imageUrl)
+                .accountNo(detail.swimmingPool().accountNo().value())
                 .build()
         )
         .swimmingClass(
             FindReservationDetailResponse.SwimmingClass.builder()
                 .id(detail.swimmingClass().id())
+                .month(detail.swimmingClass().month())
                 .type(detail.swimmingClass().type().getDescription())
                 .subType(detail.swimmingClass().subType())
+                .days(detail.swimmingClass().daysOfWeek().toDays())
+                .startTime(detail.swimmingClass().startTime())
+                .endTime(detail.swimmingClass().endTime())
                 .build()
         )
         .ticket(
@@ -43,6 +48,7 @@ public class FindReservationDetailResponseMapper {
                 .id(detail.reservation().id())
                 .status(detail.reservation().status().getDescription())
                 .reservedAt(detail.reservation().reservedAt())
+                .waitingNo(detail.reservation().waitingNo())
                 .build()
         )
         .payment(
@@ -50,6 +56,11 @@ public class FindReservationDetailResponseMapper {
                 .method(detail.payment().method().getDescription())
                 .amount(detail.payment().amount())
                 .requestedAt(detail.reservation().reservedAt())
+                .build()
+        )
+        .review(
+            FindReservationDetailResponse.Review.builder()
+                .id(detail.review().id())
                 .build()
         )
         .build();

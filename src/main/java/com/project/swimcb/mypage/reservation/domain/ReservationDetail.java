@@ -1,9 +1,12 @@
 package com.project.swimcb.mypage.reservation.domain;
 
+import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
+import com.project.swimcb.mypage.reservation.adapter.out.ClassDayOfWeek;
 import com.project.swimcb.swimmingpool.domain.enums.PaymentMethod;
 import com.project.swimcb.swimmingpool.domain.enums.ReservationStatus;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import lombok.Builder;
 import lombok.NonNull;
 
@@ -13,14 +16,16 @@ public record ReservationDetail(
     @NonNull SwimmingClass swimmingClass,
     @NonNull Ticket ticket,
     @NonNull Reservation reservation,
-    @NonNull Payment payment
+    @NonNull Payment payment,
+    @NonNull Review review
 ) {
 
   @Builder
   public record SwimmingPool(
       long id,
       @NonNull String name,
-      @NonNull String imagePath
+      @NonNull String imagePath,
+      @NonNull AccountNo accountNo
   ) {
 
   }
@@ -28,8 +33,12 @@ public record ReservationDetail(
   @Builder
   public record SwimmingClass(
       long id,
+      int month,
       @NonNull SwimmingClassTypeName type,
-      @NonNull String subType
+      @NonNull String subType,
+      @NonNull ClassDayOfWeek daysOfWeek,
+      @NonNull LocalTime startTime,
+      @NonNull LocalTime endTime
   ) {
 
   }
@@ -47,7 +56,8 @@ public record ReservationDetail(
   public record Reservation(
       long id,
       @NonNull ReservationStatus status,
-      @NonNull LocalDateTime reservedAt
+      @NonNull LocalDateTime reservedAt,
+      Integer waitingNo
   ) {
 
   }
@@ -56,6 +66,13 @@ public record ReservationDetail(
   public record Payment(
       @NonNull PaymentMethod method,
       int amount
+  ) {
+
+  }
+
+  @Builder
+  public record Review(
+      Long id
   ) {
 
   }

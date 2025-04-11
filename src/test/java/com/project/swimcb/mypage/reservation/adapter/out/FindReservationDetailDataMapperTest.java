@@ -3,11 +3,15 @@ package com.project.swimcb.mypage.reservation.adapter.out;
 import static com.project.swimcb.swimmingpool.domain.enums.PaymentMethod.CASH_ON_SITE;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_PENDING;
 import static com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName.GROUP;
+import static java.time.DayOfWeek.FRIDAY;
+import static java.time.DayOfWeek.MONDAY;
+import static java.time.DayOfWeek.WEDNESDAY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
 import com.project.swimcb.mypage.reservation.adapter.out.FindReservationDetailDataMapper.QueryReservationDetail;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
@@ -15,6 +19,7 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.NoSuchElementException;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
@@ -61,11 +66,17 @@ class FindReservationDetailDataMapperTest {
       assertThat(result.swimmingPool().id()).isEqualTo(queryResult.swimmingPoolId());
       assertThat(result.swimmingPool().name()).isEqualTo(queryResult.swimmingPoolName());
       assertThat(result.swimmingPool().imagePath()).isEqualTo(queryResult.swimmingPoolImagePath());
+      assertThat(result.swimmingPool().accountNo()).isEqualTo(queryResult.accountNo());
 
       // SwimmingClass 검증
       assertThat(result.swimmingClass().id()).isEqualTo(queryResult.swimmingClassId());
+      assertThat(result.swimmingClass().month()).isEqualTo(queryResult.month());
       assertThat(result.swimmingClass().type()).isEqualTo(queryResult.swimmingClassType());
       assertThat(result.swimmingClass().subType()).isEqualTo(queryResult.swimmingClassSubType());
+      assertThat(result.swimmingClass().daysOfWeek().value())
+          .containsExactly(MONDAY, WEDNESDAY, FRIDAY);
+      assertThat(result.swimmingClass().startTime()).isEqualTo(queryResult.startTime());
+      assertThat(result.swimmingClass().endTime()).isEqualTo(queryResult.endTime());
 
       // Ticket 검증
       assertThat(result.ticket().id()).isEqualTo(queryResult.ticketId());
@@ -76,10 +87,14 @@ class FindReservationDetailDataMapperTest {
       assertThat(result.reservation().id()).isEqualTo(reservationId);
       assertThat(result.reservation().status()).isEqualTo(queryResult.reservationStatus());
       assertThat(result.reservation().reservedAt()).isEqualTo(queryResult.reservedAt());
+      assertThat(result.reservation().waitingNo()).isEqualTo(queryResult.waitingNo());
 
       // Payment 검증
       assertThat(result.payment().method()).isEqualTo(queryResult.paymentMethod());
       assertThat(result.payment().amount()).isEqualTo(queryResult.paymentAmount());
+
+      // Review 검증
+      assertThat(result.review().id()).isEqualTo(queryResult.reviewId());
     }
 
     @Test
@@ -105,6 +120,7 @@ class FindReservationDetailDataMapperTest {
       when(queryFactory.select(any(Expression.class))).thenReturn(query);
       when(query.from(any(EntityPath.class))).thenReturn(query);
       when(query.join(any(EntityPath.class))).thenReturn(query);
+      when(query.leftJoin(any(EntityPath.class))).thenReturn(query);
       when(query.on(any(Predicate.class))).thenReturn(query);
       when(query.where(any(Predicate.class))).thenReturn(query);
       when(query.fetchFirst()).thenReturn(result);
@@ -115,11 +131,26 @@ class FindReservationDetailDataMapperTest {
 
     private static QueryReservationDetail create() {
       return new QueryReservationDetail(
-          1L, "DUMMY_POOL_NAME", "DUMMY_IMAGE_PATH",
-          2L, GROUP, "DUMMY_CLASS_SUB_TYPE",
-          3L, "DUMMY_TICKET_NAME", 50000,
-          PAYMENT_PENDING, LocalDateTime.of(2025, 4, 1, 10, 0, 0),
-          CASH_ON_SITE, 50000
+          1L,
+          "DUMMY_POOL_NAME",
+          "DUMMY_IMAGE_PATH",
+          new AccountNo("DUMMY_ACCOUNT_NO"),
+          2L,
+          3,
+          GROUP,
+          "DUMMY_CLASS_SUB_TYPE",
+          0b1010100,
+          LocalTime.of(10, 0),
+          LocalTime.of(11, 0),
+          3L,
+          "DUMMY_TICKET_NAME",
+          50000,
+          PAYMENT_PENDING,
+          LocalDateTime.of(2025, 4, 1, 10, 0, 0),
+          null,
+          CASH_ON_SITE,
+          50000,
+          4L
       );
     }
   }
