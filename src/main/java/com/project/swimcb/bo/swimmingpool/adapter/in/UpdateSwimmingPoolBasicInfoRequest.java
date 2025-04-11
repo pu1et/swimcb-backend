@@ -1,5 +1,6 @@
 package com.project.swimcb.bo.swimmingpool.adapter.in;
 
+import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
 import com.project.swimcb.bo.swimmingpool.domain.UpdateSwimmingPoolBasicInfoCommand;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -47,7 +48,10 @@ public record UpdateSwimmingPoolBasicInfoRequest(
     List<String> imagePaths,
 
     @Schema(description = "이용약관 Path", example = "/swimming-pool/usage-agreement.txt")
-    String usageAgreementPath
+    String usageAgreementPath,
+
+    @Schema(description = "계좌번호", example = "123456789012")
+    String accountNo
 ) {
 
   public UpdateSwimmingPoolBasicInfoCommand toCommand() {
@@ -64,6 +68,7 @@ public record UpdateSwimmingPoolBasicInfoRequest(
         .closedDays(this.closedDays)
         .imagePaths(this.imagePaths)
         .usageAgreementPath(this.usageAgreementPath)
+        .accountNo(AccountNo.of(this.accountNo))
         .build();
   }
 }

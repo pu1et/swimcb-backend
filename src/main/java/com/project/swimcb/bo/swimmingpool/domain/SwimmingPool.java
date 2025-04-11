@@ -6,6 +6,7 @@ import static lombok.AccessLevel.PROTECTED;
 import com.project.swimcb.bo.admin.domain.Admin;
 import com.project.swimcb.common.entity.BaseEntity;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +17,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.apache.commons.lang3.StringUtils;
 
 @Getter
 @Table(name = "swimming_pool")
@@ -71,6 +73,10 @@ public class SwimmingPool extends BaseEntity {
   @Column(name = "longitude")
   private Double longitude;
 
+  @Column(name = "account_no")
+  @Convert(converter = AccountNoConverter.class)
+  private AccountNo accountNo;
+
   public void updateBasicInfo(@NonNull UpdateSwimmingPoolBasicInfoCommand request) {
     this.name = request.name();
     this.phone = request.phone();
@@ -82,6 +88,6 @@ public class SwimmingPool extends BaseEntity {
     this.isNewRegistrationExtended = request.isNewRegistrationExtended();
     this.operatingDays = request.operatingDays();
     this.closedDays = request.closedDays();
-    this.usageAgreementPath = request.usageAgreementPath();
+    this.accountNo = request.accountNo();
   }
 }

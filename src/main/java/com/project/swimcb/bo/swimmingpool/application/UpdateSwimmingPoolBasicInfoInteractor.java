@@ -7,6 +7,7 @@ import com.project.swimcb.bo.swimmingpool.domain.SwimmingPoolImageRepository;
 import com.project.swimcb.bo.swimmingpool.domain.SwimmingPoolRepository;
 import com.project.swimcb.bo.swimmingpool.domain.UpdateSwimmingPoolBasicInfoCommand;
 import java.util.List;
+import java.util.Optional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.val;

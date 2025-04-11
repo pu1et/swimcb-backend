@@ -3,6 +3,7 @@ package com.project.swimcb.bo.swimmingpool.domain;
 import java.util.List;
 import lombok.Builder;
 import lombok.NonNull;
+import lombok.With;
 
 @Builder
 public record UpdateSwimmingPoolBasicInfoCommand(
@@ -17,7 +18,8 @@ public record UpdateSwimmingPoolBasicInfoCommand(
     String operatingDays,
     String closedDays,
     @NonNull List<String> imagePaths,
-    String usageAgreementPath
+    String usageAgreementPath,
+    @NonNull AccountNo accountNo
 ) {
 
 }

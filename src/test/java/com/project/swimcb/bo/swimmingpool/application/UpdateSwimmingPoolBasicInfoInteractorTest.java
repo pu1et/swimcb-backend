@@ -11,6 +11,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
+import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
 import com.project.swimcb.bo.swimmingpool.domain.SwimmingPool;
 import com.project.swimcb.bo.swimmingpool.domain.SwimmingPoolImage;
 import com.project.swimcb.bo.swimmingpool.domain.SwimmingPoolImageRepository;
@@ -48,6 +49,7 @@ class UpdateSwimmingPoolBasicInfoInteractorTest {
         .name("DUMMY_NAME")
         .address("DUMMY_ADDRESS")
         .imagePaths(List.of("DUMMY_IMAGE_PATH1", "DUMMY_IMAGE_PATH2"))
+        .accountNo(AccountNo.of("DUMMY_ACCOUNT_NO"))
         .build();
 
     when(swimmingPoolRepository.findById(anyLong())).thenReturn(Optional.of(existingSwimmingPool));
@@ -83,6 +85,7 @@ class UpdateSwimmingPoolBasicInfoInteractorTest {
         .name("DUMMY_NAME")
         .address("DUMMY_ADDRESS")
         .imagePaths(List.of())
+        .accountNo(AccountNo.of("DUMMY_ACCOUNT_NO"))
         .build();
 
     when(swimmingPoolRepository.findById(anyLong())).thenReturn(Optional.of(existingSwimmingPool));
@@ -111,6 +114,7 @@ class UpdateSwimmingPoolBasicInfoInteractorTest {
         .name("DUMMY_NAME")
         .address("DUMMY_ADDRESS")
         .imagePaths(List.of("DUMMY_IMAGE_PATH1", "DUMMY_IMAGE_PATH2"))
+        .accountNo(AccountNo.of("DUMMY_ACCOUNT_NO"))
         .build();
 
     when(swimmingPoolRepository.findById(nonExistentSwimmingPoolId)).thenReturn(Optional.empty());
