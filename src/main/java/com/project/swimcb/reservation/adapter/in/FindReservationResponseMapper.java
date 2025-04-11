@@ -26,6 +26,7 @@ public class FindReservationResponseMapper {
             FindReservationResponse.SwimmingPool.builder()
                 .id(reservationInfo.swimmingPool().id())
                 .name(reservationInfo.swimmingPool().name())
+                .accountNo(reservationInfo.swimmingPool().accountNo().value())
                 .build()
         )
         .swimmingClass(
@@ -46,7 +47,18 @@ public class FindReservationResponseMapper {
                 .price(reservationInfo.ticket().price())
                 .build()
         )
-        .paymentMethod(reservationInfo.paymentMethod().getDescription())
+        .reservation(
+            FindReservationResponse.Reservation.builder()
+                .id(reservationInfo.reservation().id())
+                .reservedAt(reservationInfo.reservation().reservedAt())
+                .waitingNo(reservationInfo.reservation().waitingNo())
+                .build()
+        )
+        .payment(
+            FindReservationResponse.Payment.builder()
+                .method(reservationInfo.payment().method().getDescription())
+                .build()
+        )
         .build();
   }
 

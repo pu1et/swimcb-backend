@@ -7,12 +7,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
 import com.project.swimcb.reservation.adapter.out.FindReservationDataMapper.QueryReservationInfo;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.NoSuchElementException;
 import lombok.val;
@@ -45,12 +47,7 @@ class FindReservationDataMapperTest {
     void returnReservationInfoWithValidId() {
       // given
       val reservationId = 1L;
-      val queryResult = new FindReservationDataMapper.QueryReservationInfo(
-          1L, "DUMMY_POOL_NAME", 2L, 5,
-          GROUP, "DUMMY_CLASS_SUB_TYPE", 1,
-          LocalTime.of(10, 0), LocalTime.of(11, 0),
-          3L, "DUMMY_TICKET_NAME", 50000, CASH_ON_SITE
-      );
+      val queryResult = TestQueryReservationInfoFactory.create();
 
       // QueryDSL 체인 설정
       setupQueryChain(queryResult);
@@ -60,14 +57,24 @@ class FindReservationDataMapperTest {
 
       // then
       assertThat(result).isNotNull();
+
+      // SwimmingPool 검증
       assertThat(result.swimmingPool().id()).isEqualTo(queryResult.swimmingPoolId());
       assertThat(result.swimmingPool().name()).isEqualTo(queryResult.swimmingPoolName());
+      assertThat(result.swimmingPool().accountNo()).isEqualTo(queryResult.accountNo());
+
+      // SwimmingClass 검증
       assertThat(result.swimmingClass().id()).isEqualTo(queryResult.swimmingClassId());
       assertThat(result.swimmingClass().type()).isEqualTo(queryResult.swimmingClassType());
       assertThat(result.swimmingClass().daysOfWeek()).isEqualTo(queryResult.daysOfWeek());
       assertThat(result.swimmingClass().startTime()).isEqualTo(queryResult.startTime());
+
+      // Ticket 검증
       assertThat(result.ticket().id()).isEqualTo(queryResult.ticketId());
-      assertThat(result.paymentMethod()).isEqualTo(queryResult.paymentMethod());
+
+      // Reservation 검증
+      assertThat(result.reservation().id()).isEqualTo(reservationId);
+      assertThat(result.reservation().waitingNo()).isEqualTo(queryResult.waitingNo());
     }
 
     @Test
@@ -96,6 +103,30 @@ class FindReservationDataMapperTest {
       when(query.on(any(Predicate.class))).thenReturn(query);
       when(query.where(any(Predicate.class))).thenReturn(query);
       when(query.fetchFirst()).thenReturn(result);
+    }
+  }
+
+  private static class TestQueryReservationInfoFactory {
+
+    private static QueryReservationInfo create() {
+      return new QueryReservationInfo(
+          1L,
+          "DUMMY_POOL_NAME",
+          AccountNo.of("DUMMY_ACCOUNT_NO"),
+          2L,
+          5,
+          GROUP,
+          "DUMMY_CLASS_SUB_TYPE",
+          1,
+          LocalTime.of(10, 0),
+          LocalTime.of(11, 0),
+          3L,
+          "DUMMY_TICKET_NAME",
+          50000,
+          LocalDateTime.of(2025, 4, 1, 10, 0, 0),
+          null,
+          CASH_ON_SITE
+      );
     }
   }
 }

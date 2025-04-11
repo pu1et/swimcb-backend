@@ -1,6 +1,7 @@
 package com.project.swimcb.reservation.adapter.in;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import lombok.Builder;
@@ -12,9 +13,8 @@ public record FindReservationResponse(
     @NonNull SwimmingPool swimmingPool,
     @NonNull SwimmingClass swimmingClass,
     @NonNull Ticket ticket,
-
-    @Schema(example = "[현장결제|계좌이체]")
-    @NonNull String paymentMethod
+    @NonNull Reservation reservation,
+    @NonNull Payment payment
 ) {
 
   @Builder
@@ -24,7 +24,10 @@ public record FindReservationResponse(
       long id,
 
       @Schema(example = "올림픽 수영장")
-      @NonNull String name
+      @NonNull String name,
+
+      @Schema(example = "1234567890")
+      @NonNull String accountNo
   ) {
 
   }
@@ -68,6 +71,32 @@ public record FindReservationResponse(
 
       @Schema(example = "10000")
       int price
+  ) {
+
+  }
+
+  @Builder
+  @Schema(name = "FindReservationResponse.Reservation")
+  public record Reservation(
+
+      @Schema(example = "1")
+      long id,
+
+      @Schema(example = "2025-04-01T10:00:00")
+      @NonNull LocalDateTime reservedAt,
+
+      @Schema(example = "1")
+      Integer waitingNo
+  ) {
+
+  }
+
+  @Builder
+  @Schema(name = "FindReservationResponse.Payment")
+  public record Payment(
+
+      @Schema(example = "[현장결제|계좌이체]")
+      @NonNull String method
   ) {
 
   }

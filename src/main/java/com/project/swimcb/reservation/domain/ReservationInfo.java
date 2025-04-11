@@ -1,7 +1,9 @@
 package com.project.swimcb.reservation.domain;
 
+import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
 import com.project.swimcb.swimmingpool.domain.enums.PaymentMethod;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import lombok.Builder;
 import lombok.NonNull;
@@ -11,13 +13,15 @@ public record ReservationInfo(
     @NonNull SwimmingPool swimmingPool,
     @NonNull SwimmingClass swimmingClass,
     @NonNull Ticket ticket,
-    @NonNull PaymentMethod paymentMethod
+    @NonNull Reservation reservation,
+    @NonNull Payment payment
 ) {
 
   @Builder
   public record SwimmingPool(
       long id,
-      @NonNull String name
+      @NonNull String name,
+      @NonNull AccountNo accountNo
   ) {
 
   }
@@ -40,6 +44,23 @@ public record ReservationInfo(
       long id,
       @NonNull String name,
       int price
+  ) {
+
+  }
+
+  @Builder
+  public record Reservation(
+      long id,
+      @NonNull LocalDateTime reservedAt,
+      Integer waitingNo
+  ) {
+
+  }
+
+  @Builder
+  public record Payment(
+      long id,
+      @NonNull PaymentMethod method
   ) {
 
   }

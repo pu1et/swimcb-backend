@@ -10,9 +10,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
 import com.project.swimcb.common.WebMvcTestWithoutSecurity;
 import com.project.swimcb.reservation.application.port.in.FindReservationUseCase;
 import com.project.swimcb.reservation.domain.ReservationInfo;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
@@ -74,6 +76,7 @@ class FindReservationInfoControllerTest {
               ReservationInfo.SwimmingPool.builder()
                   .id(1L)
                   .name("DUMMY_POOL_NAME")
+                  .accountNo(AccountNo.of("DUMMY_ACCOUNT_NO"))
                   .build()
           )
           .swimmingClass(
@@ -94,7 +97,17 @@ class FindReservationInfoControllerTest {
                   .price(50000)
                   .build()
           )
-          .paymentMethod(CASH_ON_SITE)
+          .reservation(
+              ReservationInfo.Reservation.builder()
+                  .id(4L)
+                  .reservedAt(LocalDateTime.of(2025, 4, 1, 10, 0))
+                  .build()
+          )
+          .payment(
+              ReservationInfo.Payment.builder()
+                  .method(CASH_ON_SITE)
+                  .build()
+          )
           .build();
     }
   }
@@ -107,6 +120,7 @@ class FindReservationInfoControllerTest {
               FindReservationResponse.SwimmingPool.builder()
                   .id(1L)
                   .name("DUMMY_POOL_NAME")
+                  .accountNo("DUMMY_ACCOUNT_NO")
                   .build()
           )
           .swimmingClass(
@@ -127,7 +141,17 @@ class FindReservationInfoControllerTest {
                   .price(50000)
                   .build()
           )
-          .paymentMethod("DUMMY_PAYMENT_METHOD")
+          .reservation(
+              FindReservationResponse.Reservation.builder()
+                  .id(4L)
+                  .reservedAt(LocalDateTime.of(2025, 4, 1, 10, 0))
+                  .build()
+          )
+          .payment(
+              FindReservationResponse.Payment.builder()
+                  .method("DUMMY_PAYMENT_METHOD")
+                  .build()
+          )
           .build();
     }
   }

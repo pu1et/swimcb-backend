@@ -4,7 +4,9 @@ import static com.project.swimcb.swimmingpool.domain.enums.PaymentMethod.CASH_ON
 import static com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName.GROUP;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
 import com.project.swimcb.reservation.domain.ReservationInfo;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
@@ -39,6 +41,7 @@ class FindReservationResponseMapperTest {
       // 수영장 정보 검증
       assertThat(response.swimmingPool().id()).isEqualTo(1L);
       assertThat(response.swimmingPool().name()).isEqualTo("DUMMY_POOL_NAME");
+      assertThat(response.swimmingPool().accountNo()).isEqualTo("DUMMY_ACCOUNT_NO");
 
       // 수영 클래스 정보 검증
       assertThat(response.swimmingClass().id()).isEqualTo(2L);
@@ -54,8 +57,14 @@ class FindReservationResponseMapperTest {
       assertThat(response.ticket().name()).isEqualTo("DUMMY_TICKET_NAME");
       assertThat(response.ticket().price()).isEqualTo(50000);
 
+      // 예약 상태 검증
+      assertThat(response.reservation().id()).isEqualTo(4L);
+      assertThat(response.reservation().reservedAt()).isEqualTo(
+          LocalDateTime.of(2025, 4, 1, 10, 0));
+      assertThat(response.reservation().waitingNo()).isNull();
+
       // 결제 정보 검증
-      assertThat(response.paymentMethod()).isEqualTo(CASH_ON_SITE.getDescription());
+      assertThat(response.payment().method()).isEqualTo(CASH_ON_SITE.getDescription());
     }
 
     @Test
@@ -88,6 +97,7 @@ class FindReservationResponseMapperTest {
                 ReservationInfo.SwimmingPool.builder()
                     .id(1L)
                     .name("DUMMY_POOL_NAME")
+                    .accountNo(AccountNo.of("DUMMY_ACCOUNT_NO"))
                     .build()
             )
             .swimmingClass(
@@ -108,7 +118,17 @@ class FindReservationResponseMapperTest {
                     .price(50000)
                     .build()
             )
-            .paymentMethod(CASH_ON_SITE)
+            .reservation(
+                ReservationInfo.Reservation.builder()
+                    .id(4L)
+                    .reservedAt(LocalDateTime.of(2025, 4, 1, 10, 0))
+                    .build()
+            )
+            .payment(
+                ReservationInfo.Payment.builder()
+                    .method(CASH_ON_SITE)
+                    .build()
+            )
             .build();
       }
     }

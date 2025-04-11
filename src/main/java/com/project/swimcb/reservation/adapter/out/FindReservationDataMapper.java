@@ -8,12 +8,14 @@ import static com.project.swimcb.bo.swimmingpool.domain.QSwimmingPool.swimmingPo
 import static com.project.swimcb.swimmingpool.domain.QReservation.reservation;
 import static com.querydsl.core.types.Projections.constructor;
 
+import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
 import com.project.swimcb.reservation.application.port.out.FindReservationGateway;
 import com.project.swimcb.reservation.domain.ReservationInfo;
 import com.project.swimcb.swimmingpool.domain.enums.PaymentMethod;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import com.querydsl.core.annotations.QueryProjection;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.NoSuchElementException;
 import lombok.Builder;
@@ -32,6 +34,7 @@ public class FindReservationDataMapper implements FindReservationGateway {
     val result = queryFactory.select(constructor(QueryReservationInfo.class,
             swimmingPool.id,
             swimmingPool.name,
+            swimmingPool.accountNo,
             swimmingClass.id,
             swimmingClass.month,
             swimmingClassType.name,
@@ -42,6 +45,8 @@ public class FindReservationDataMapper implements FindReservationGateway {
             swimmingClassTicket.id,
             swimmingClassTicket.name,
             swimmingClassTicket.price,
+            reservation.reservedAt,
+            reservation.waitingNo,
             reservation.paymentMethod
         ))
         .from(reservation)
@@ -64,6 +69,7 @@ public class FindReservationDataMapper implements FindReservationGateway {
             ReservationInfo.SwimmingPool.builder()
                 .id(result.swimmingPoolId())
                 .name(result.swimmingPoolName())
+                .accountNo(result.accountNo())
                 .build()
         )
         .swimmingClass(
@@ -84,7 +90,18 @@ public class FindReservationDataMapper implements FindReservationGateway {
                 .price(result.ticketPrice())
                 .build()
         )
-        .paymentMethod(result.paymentMethod())
+        .reservation(
+            ReservationInfo.Reservation.builder()
+                .id(reservationId)
+                .reservedAt(result.reservedAt())
+                .waitingNo(result.waitingNo())
+                .build()
+        )
+        .payment(
+            ReservationInfo.Payment.builder()
+                .method(result.paymentMethod())
+                .build()
+        )
         .build();
   }
 
@@ -92,6 +109,7 @@ public class FindReservationDataMapper implements FindReservationGateway {
   public record QueryReservationInfo(
       long swimmingPoolId,
       String swimmingPoolName,
+      AccountNo accountNo,
       long swimmingClassId,
       int month,
       SwimmingClassTypeName swimmingClassType,
@@ -102,6 +120,8 @@ public class FindReservationDataMapper implements FindReservationGateway {
       long ticketId,
       String ticketName,
       int ticketPrice,
+      LocalDateTime reservedAt,
+      Integer waitingNo,
       PaymentMethod paymentMethod
   ) {
 
