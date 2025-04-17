@@ -1,5 +1,6 @@
 package com.project.swimcb.swimmingpool.domain;
 
+import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.*;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_PENDING;
 import static com.project.swimcb.swimmingpool.domain.enums.TicketType.SWIMMING_CLASS;
 import static jakarta.persistence.EnumType.STRING;
@@ -46,7 +47,7 @@ public class Reservation extends BaseEntity {
   private Member member;
 
   @Enumerated(STRING)
-  @Column(name = "ticket_type", nullable = false)
+  @Column(name = "ticket_type", length = 20, nullable = false)
   private TicketType ticketType;
 
   @Column(name = "ticket_id", nullable = false)
@@ -56,14 +57,14 @@ public class Reservation extends BaseEntity {
   private LocalDateTime reservedAt;
 
   @Enumerated(STRING)
-  @Column(name = "reservation_status", nullable = false)
+  @Column(name = "reservation_status", length = 30, nullable = false)
   private ReservationStatus reservationStatus;
 
   @Column(name = "waiting_no")
   private Integer waitingNo;
 
   @Enumerated(STRING)
-  @Column(name = "payment_method", nullable = false)
+  @Column(name = "payment_method", length = 20, nullable = false)
   private PaymentMethod paymentMethod;
 
   @Column(name = "payment_amount", nullable = false)
@@ -76,7 +77,7 @@ public class Reservation extends BaseEntity {
   private LocalDateTime canceledAt;
 
   @Column(name = "refund_amount")
-  private int refundAmount;
+  private Integer refundAmount;
 
   @Column(name = "refunded_at")
   private LocalDateTime refundedAt;
@@ -110,6 +111,11 @@ public class Reservation extends BaseEntity {
         .waitingNo(waitingNo)
         .paymentAmount(paymentAmount)
         .build();
+  }
+
+  public void cancel() {
+    this.reservationStatus = RESERVATION_CANCELLED;
+    this.canceledAt = LocalDateTime.now();
   }
 }
 
