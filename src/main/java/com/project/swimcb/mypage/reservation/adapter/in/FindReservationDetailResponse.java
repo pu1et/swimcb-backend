@@ -87,7 +87,7 @@ public record FindReservationDetailResponse(
       @Schema(example = "1")
       long id,
 
-      @Schema(example = "[결제대기|결제완료|예약대기|예약취소|환불완료]")
+      @Schema(example = "[결제대기|결제완료|예약대기|취소완료|환불완료]")
       @NonNull String status,
 
       @Schema(example = "2025-04-01T10:00:00")
