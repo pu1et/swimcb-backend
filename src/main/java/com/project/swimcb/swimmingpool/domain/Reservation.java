@@ -83,6 +83,12 @@ public class Reservation extends BaseEntity {
   @Column(name = "refund_amount")
   private Integer refundAmount;
 
+  @Column(name = "refund_account_no", length = 50)
+  private String refundAccountNo;
+
+  @Column(name = "refund_bank_name", length = 50)
+  private String refundBankName;
+
   @Column(name = "refunded_at")
   private LocalDateTime refundedAt;
 
