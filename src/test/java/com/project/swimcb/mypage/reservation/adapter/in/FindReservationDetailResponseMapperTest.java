@@ -72,6 +72,13 @@ class FindReservationDetailResponseMapperTest {
     assertThat(response.reservation().reservedAt()).isEqualTo(detail.reservation().reservedAt());
     assertThat(response.reservation().waitingNo()).isEqualTo(detail.reservation().waitingNo());
 
+    // Cancel 검증
+    assertThat(response.cancel().canceledAt()).isEqualTo(detail.cancel().canceledAt());
+
+    // Refund 검증
+    assertThat(response.refund().amount()).isEqualTo(detail.refund().amount());
+    assertThat(response.refund().accountNo()).isNull();
+
     // Payment 검증
     assertThat(response.payment().method()).isEqualTo(CASH_ON_SITE.getDescription());
     assertThat(response.payment().pendingAt()).isEqualTo(detail.payment().pendingAt());
@@ -88,6 +95,7 @@ class FindReservationDetailResponseMapperTest {
               ReservationDetail.SwimmingPool.builder()
                   .id(1L)
                   .name("DUMMY_POOL_NAME")
+                  .phone("DUMMY_POOL_PHONE")
                   .imagePath("DUMMY_POOL_IMAGE_PATH")
                   .accountNo(AccountNo.of("DUMMY_ACCOUNT_NO"))
                   .build()
@@ -122,6 +130,12 @@ class FindReservationDetailResponseMapperTest {
                   .method(CASH_ON_SITE)
                   .amount(50000)
                   .build()
+          )
+          .cancel(
+              ReservationDetail.Cancel.builder().build()
+          )
+          .refund(
+              ReservationDetail.Refund.builder().build()
           )
           .review(
               ReservationDetail.Review.builder()

@@ -1,6 +1,7 @@
 package com.project.swimcb.mypage.reservation.adapter.in;
 
 import com.project.swimcb.bo.swimmingpool.application.out.ImageUrlPort;
+import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
 import com.project.swimcb.mypage.reservation.domain.ReservationDetail;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class FindReservationDetailResponseMapper {
             FindReservationDetailResponse.SwimmingPool.builder()
                 .id(detail.swimmingPool().id())
                 .name(detail.swimmingPool().name())
+                .phone(detail.swimmingPool().phone())
                 .imageUrl(imageUrl)
                 .accountNo(detail.swimmingPool().accountNo().value())
                 .build()
@@ -57,8 +59,19 @@ public class FindReservationDetailResponseMapper {
                 .amount(detail.payment().amount())
                 .pendingAt(detail.payment().pendingAt())
                 .approvedAt(detail.payment().approvedAt())
-                .canceledAt(detail.payment().canceledAt())
-                .refundedAt(detail.payment().refundedAt())
+                .build()
+        )
+        .cancel(
+            FindReservationDetailResponse.Cancel.builder()
+                .canceledAt(detail.cancel().canceledAt())
+                .build()
+        )
+        .refund(
+            FindReservationDetailResponse.Refund.builder()
+                .amount(detail.refund().amount())
+                .accountNo(accountNo(detail.refund().accountNo()))
+                .bankName(detail.refund().bankName())
+                .refundedAt(detail.refund().refundedAt())
                 .build()
         )
         .review(
@@ -67,5 +80,12 @@ public class FindReservationDetailResponseMapper {
                 .build()
         )
         .build();
+  }
+
+  private String accountNo(AccountNo accountNo) {
+    if (accountNo == null) {
+      return null;
+    }
+    return accountNo.value();
   }
 }

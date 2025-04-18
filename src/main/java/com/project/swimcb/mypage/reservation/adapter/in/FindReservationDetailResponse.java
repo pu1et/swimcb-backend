@@ -15,6 +15,8 @@ public record FindReservationDetailResponse(
     @NonNull Ticket ticket,
     @NonNull Reservation reservation,
     @NonNull Payment payment,
+    @NonNull Cancel cancel,
+    @NonNull Refund refund,
     @NonNull Review review
 ) {
 
@@ -27,6 +29,9 @@ public record FindReservationDetailResponse(
 
       @Schema(example = "올림픽 수영장")
       @NonNull String name,
+
+      @Schema(example = "82 10-1234-5678")
+      @NonNull String phone,
 
       @Schema(example = "https://example.com/image.jpg")
       @NonNull String imageUrl,
@@ -111,12 +116,31 @@ public record FindReservationDetailResponse(
       LocalDateTime pendingAt,
 
       @Schema(example = "2025-04-01T10:00:00")
-      LocalDateTime approvedAt,
+      LocalDateTime approvedAt
+  ) {
+
+  }
+
+  @Builder
+  public record Cancel(
+      @Schema(example = "2025-04-01T10:00:00")
+      LocalDateTime canceledAt
+  ) {
+
+  }
+
+  @Builder
+  public record Refund(
+      @Schema(example = "10000")
+      Integer amount,
+
+      @Schema(example = "123-456-7890")
+      String accountNo,
+
+      @Schema(example = "우리은행")
+      String bankName,
 
       @Schema(example = "2025-04-01T10:00:00")
-      LocalDateTime canceledAt,
-
-      @Schema(example = "")
       LocalDateTime refundedAt
   ) {
 

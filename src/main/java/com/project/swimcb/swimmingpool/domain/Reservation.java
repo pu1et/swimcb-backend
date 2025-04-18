@@ -8,12 +8,15 @@ import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PRIVATE;
 import static lombok.AccessLevel.PROTECTED;
 
+import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
+import com.project.swimcb.bo.swimmingpool.domain.AccountNoConverter;
 import com.project.swimcb.common.entity.BaseEntity;
 import com.project.swimcb.member.domain.Member;
 import com.project.swimcb.swimmingpool.domain.enums.PaymentMethod;
 import com.project.swimcb.swimmingpool.domain.enums.ReservationStatus;
 import com.project.swimcb.swimmingpool.domain.enums.TicketType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
@@ -84,7 +87,8 @@ public class Reservation extends BaseEntity {
   private Integer refundAmount;
 
   @Column(name = "refund_account_no", length = 50)
-  private String refundAccountNo;
+  @Convert(converter = AccountNoConverter.class)
+  private AccountNo refundAccountNo;
 
   @Column(name = "refund_bank_name", length = 50)
   private String refundBankName;

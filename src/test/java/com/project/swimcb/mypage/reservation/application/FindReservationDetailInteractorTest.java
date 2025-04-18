@@ -56,6 +56,7 @@ class FindReservationDetailInteractorTest {
               ReservationDetail.SwimmingPool.builder()
                   .id(1L)
                   .name("DUMMY_POOL_NAME")
+                  .phone("DUMMY_POOL_PHONE")
                   .imagePath("DUMMY_POOL_IMAGE_PATH")
                   .accountNo(AccountNo.of("DUMMY_ACCOUNT_NO"))
                   .build()
@@ -90,6 +91,12 @@ class FindReservationDetailInteractorTest {
                   .method(CASH_ON_SITE)
                   .amount(50000)
                   .build()
+          )
+          .cancel(
+              ReservationDetail.Cancel.builder().build()
+          )
+          .refund(
+              ReservationDetail.Refund.builder().build()
           )
           .review(
               ReservationDetail.Review.builder().build()

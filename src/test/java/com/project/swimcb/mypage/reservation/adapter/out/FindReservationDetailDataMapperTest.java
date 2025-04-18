@@ -133,6 +133,7 @@ class FindReservationDetailDataMapperTest {
       return new QueryReservationDetail(
           1L,
           "DUMMY_POOL_NAME",
+          "DUMMY_POOL_PHONE",
           "DUMMY_IMAGE_PATH",
           new AccountNo("DUMMY_ACCOUNT_NO"),
           2L,
@@ -151,6 +152,9 @@ class FindReservationDetailDataMapperTest {
           CASH_ON_SITE,
           50000,
           LocalDateTime.of(2025, 4, 1, 10, 0, 0),
+          null,
+          null,
+          null,
           null,
           null,
           null,
