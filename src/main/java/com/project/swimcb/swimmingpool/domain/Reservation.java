@@ -1,7 +1,7 @@
 package com.project.swimcb.swimmingpool.domain;
 
-import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.*;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_PENDING;
+import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_CANCELLED;
 import static com.project.swimcb.swimmingpool.domain.enums.TicketType.SWIMMING_CLASS;
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
@@ -59,6 +59,9 @@ public class Reservation extends BaseEntity {
   @Enumerated(STRING)
   @Column(name = "reservation_status", length = 30, nullable = false)
   private ReservationStatus reservationStatus;
+
+  @Column(name = "payment_pending_at")
+  private LocalDateTime paymentPendingAt;
 
   @Column(name = "waiting_no")
   private Integer waitingNo;
