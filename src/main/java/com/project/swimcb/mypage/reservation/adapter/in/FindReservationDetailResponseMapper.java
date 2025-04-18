@@ -55,7 +55,10 @@ public class FindReservationDetailResponseMapper {
             FindReservationDetailResponse.Payment.builder()
                 .method(detail.payment().method().getDescription())
                 .amount(detail.payment().amount())
-                .requestedAt(detail.reservation().reservedAt())
+                .pendingAt(detail.payment().pendingAt())
+                .approvedAt(detail.payment().approvedAt())
+                .canceledAt(detail.payment().canceledAt())
+                .refundedAt(detail.payment().refundedAt())
                 .build()
         )
         .review(

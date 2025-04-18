@@ -28,6 +28,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.val;
 
 @Getter
 @Table(name = "reservation")
@@ -89,13 +90,16 @@ public class Reservation extends BaseEntity {
   private static Reservation create(@NonNull Member member, long ticketId,
       @NonNull PaymentMethod paymentMethod, int paymentAmount) {
 
+    val now = LocalDateTime.now();
+
     return Reservation.builder()
         .member(member)
         .ticketType(SWIMMING_CLASS)
         .ticketId(ticketId)
         .paymentMethod(paymentMethod)
-        .reservedAt(LocalDateTime.now())
+        .reservedAt(now)
         .reservationStatus(PAYMENT_PENDING)
+        .paymentPendingAt(now)
         .paymentAmount(paymentAmount)
         .build();
   }

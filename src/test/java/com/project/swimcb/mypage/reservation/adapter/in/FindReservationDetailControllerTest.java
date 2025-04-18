@@ -163,7 +163,10 @@ class FindReservationDetailControllerTest {
               FindReservationDetailResponse.Payment.builder()
                   .method("DUMMY_PAYMENT_METHOD")
                   .amount(50000)
-                  .requestedAt(LocalDateTime.of(2023, 4, 1, 10, 0, 0))
+                  .pendingAt(LocalDateTime.of(2023, 4, 1, 10, 0, 0))
+                  .approvedAt(null)
+                  .canceledAt(null)
+                  .refundedAt(null)
                   .build()
           )
           .review(

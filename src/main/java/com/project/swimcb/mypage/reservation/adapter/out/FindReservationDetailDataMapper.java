@@ -60,6 +60,10 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
             reservation.waitingNo,
             reservation.paymentMethod,
             reservation.paymentAmount,
+            reservation.paymentPendingAt,
+            reservation.paymentApprovedAt,
+            reservation.canceledAt,
+            reservation.refundedAt,
             swimmingPoolReview.id
         ))
         .from(reservation)
@@ -118,6 +122,10 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
             Payment.builder()
                 .method(result.paymentMethod())
                 .amount(result.paymentAmount())
+                .pendingAt(null)
+                .approvedAt(null)
+                .canceledAt(null)
+                .refundedAt(null)
                 .build()
         )
         .review(
@@ -149,6 +157,10 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
       Integer waitingNo,
       PaymentMethod paymentMethod,
       int paymentAmount,
+      LocalDateTime paymentPendingAt,
+      LocalDateTime paymentApprovedAt,
+      LocalDateTime canceledAt,
+      LocalDateTime refundedAt,
       Long reviewId
   ) {
 

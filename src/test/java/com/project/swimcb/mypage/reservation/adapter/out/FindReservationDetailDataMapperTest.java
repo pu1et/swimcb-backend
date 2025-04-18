@@ -150,6 +150,10 @@ class FindReservationDetailDataMapperTest {
           null,
           CASH_ON_SITE,
           50000,
+          LocalDateTime.of(2025, 4, 1, 10, 0, 0),
+          null,
+          null,
+          null,
           4L
       );
     }

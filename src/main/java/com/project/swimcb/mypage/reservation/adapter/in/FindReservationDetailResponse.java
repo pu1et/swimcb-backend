@@ -108,7 +108,16 @@ public record FindReservationDetailResponse(
       int amount,
 
       @Schema(example = "2025-04-01T10:00:00")
-      @NonNull LocalDateTime requestedAt
+      LocalDateTime pendingAt,
+
+      @Schema(example = "2025-04-01T10:00:00")
+      LocalDateTime approvedAt,
+
+      @Schema(example = "2025-04-01T10:00:00")
+      LocalDateTime canceledAt,
+
+      @Schema(example = "")
+      LocalDateTime refundedAt
   ) {
 
   }

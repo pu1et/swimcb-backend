@@ -3,7 +3,9 @@ package com.project.swimcb.mypage.reservation.adapter.in;
 import static com.project.swimcb.swimmingpool.domain.enums.PaymentMethod.CASH_ON_SITE;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_PENDING;
 import static com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName.GROUP;
-import static java.time.DayOfWeek.*;
+import static java.time.DayOfWeek.FRIDAY;
+import static java.time.DayOfWeek.MONDAY;
+import static java.time.DayOfWeek.WEDNESDAY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -13,7 +15,6 @@ import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
 import com.project.swimcb.mypage.reservation.adapter.out.ClassDayOfWeek;
 import com.project.swimcb.mypage.reservation.domain.ReservationDetail;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
-import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -73,7 +74,7 @@ class FindReservationDetailResponseMapperTest {
 
     // Payment 검증
     assertThat(response.payment().method()).isEqualTo(CASH_ON_SITE.getDescription());
-    assertThat(response.payment().requestedAt()).isEqualTo(detail.reservation().reservedAt());
+    assertThat(response.payment().pendingAt()).isEqualTo(detail.payment().pendingAt());
 
     // Review 검증
     assertThat(response.review().id()).isEqualTo(detail.review().id());

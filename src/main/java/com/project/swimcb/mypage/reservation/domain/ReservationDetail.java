@@ -65,7 +65,11 @@ public record ReservationDetail(
   @Builder
   public record Payment(
       @NonNull PaymentMethod method,
-      int amount
+      int amount,
+      LocalDateTime pendingAt,
+      LocalDateTime approvedAt,
+      LocalDateTime canceledAt,
+      LocalDateTime refundedAt
   ) {
 
   }
