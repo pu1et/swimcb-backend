@@ -130,6 +130,7 @@ class FindReservationDetailControllerTest {
               FindReservationDetailResponse.SwimmingPool.builder()
                   .id(1L)
                   .name("DUMMY_POOL_NAME")
+                  .phone("DUMMY_POOL_PHONE")
                   .imageUrl("DUMMY_POOL_IMAGE_URL")
                   .accountNo("DUMMY_ACCOUNT_NO")
                   .build()
@@ -159,14 +160,18 @@ class FindReservationDetailControllerTest {
                   .reservedAt(LocalDateTime.of(2023, 4, 1, 10, 0, 0))
                   .build()
           )
+          .cancel(
+              FindReservationDetailResponse.Cancel.builder().build()
+          )
+          .refund(
+              FindReservationDetailResponse.Refund.builder().build()
+          )
           .payment(
               FindReservationDetailResponse.Payment.builder()
                   .method("DUMMY_PAYMENT_METHOD")
                   .amount(50000)
                   .pendingAt(LocalDateTime.of(2023, 4, 1, 10, 0, 0))
                   .approvedAt(null)
-                  .canceledAt(null)
-                  .refundedAt(null)
                   .build()
           )
           .review(

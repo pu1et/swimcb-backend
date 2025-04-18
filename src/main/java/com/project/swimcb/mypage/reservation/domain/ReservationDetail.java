@@ -17,6 +17,8 @@ public record ReservationDetail(
     @NonNull Ticket ticket,
     @NonNull Reservation reservation,
     @NonNull Payment payment,
+    @NonNull Cancel cancel,
+    @NonNull Refund refund,
     @NonNull Review review
 ) {
 
@@ -24,6 +26,7 @@ public record ReservationDetail(
   public record SwimmingPool(
       long id,
       @NonNull String name,
+      @NonNull String phone,
       @NonNull String imagePath,
       @NonNull AccountNo accountNo
   ) {
@@ -67,8 +70,23 @@ public record ReservationDetail(
       @NonNull PaymentMethod method,
       int amount,
       LocalDateTime pendingAt,
-      LocalDateTime approvedAt,
-      LocalDateTime canceledAt,
+      LocalDateTime approvedAt
+  ) {
+
+  }
+
+  @Builder
+  public record Cancel(
+      LocalDateTime canceledAt
+  ) {
+
+  }
+
+  @Builder
+  public record Refund(
+      Integer amount,
+      AccountNo accountNo,
+      String bankName,
       LocalDateTime refundedAt
   ) {
 

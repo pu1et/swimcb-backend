@@ -13,7 +13,9 @@ import static com.querydsl.core.types.Projections.constructor;
 import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
 import com.project.swimcb.mypage.reservation.application.port.out.FindReservationDetailGateway;
 import com.project.swimcb.mypage.reservation.domain.ReservationDetail;
+import com.project.swimcb.mypage.reservation.domain.ReservationDetail.Cancel;
 import com.project.swimcb.mypage.reservation.domain.ReservationDetail.Payment;
+import com.project.swimcb.mypage.reservation.domain.ReservationDetail.Refund;
 import com.project.swimcb.mypage.reservation.domain.ReservationDetail.Reservation;
 import com.project.swimcb.mypage.reservation.domain.ReservationDetail.Review;
 import com.project.swimcb.mypage.reservation.domain.ReservationDetail.SwimmingClass;
@@ -43,6 +45,7 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
     val result = queryFactory.select(constructor(QueryReservationDetail.class,
             swimmingPool.id,
             swimmingPool.name,
+            swimmingPool.phone,
             swimmingPoolImage.path,
             swimmingPool.accountNo,
             swimmingClass.id,
@@ -63,6 +66,9 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
             reservation.paymentPendingAt,
             reservation.paymentApprovedAt,
             reservation.canceledAt,
+            reservation.refundAmount,
+            reservation.refundAccountNo,
+            reservation.refundBankName,
             reservation.refundedAt,
             swimmingPoolReview.id
         ))
@@ -88,6 +94,7 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
             SwimmingPool.builder()
                 .id(result.swimmingPoolId())
                 .name(result.swimmingPoolName())
+                .phone(result.swimmingPoolPhone())
                 .imagePath(result.swimmingPoolImagePath())
                 .accountNo(result.accountNo())
                 .build()
@@ -122,10 +129,21 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
             Payment.builder()
                 .method(result.paymentMethod())
                 .amount(result.paymentAmount())
-                .pendingAt(null)
-                .approvedAt(null)
-                .canceledAt(null)
-                .refundedAt(null)
+                .pendingAt(result.paymentPendingAt())
+                .approvedAt(result.paymentApprovedAt())
+                .build()
+        )
+        .cancel(
+            Cancel.builder()
+                .canceledAt(result.canceledAt())
+                .build()
+        )
+        .refund(
+            Refund.builder()
+                .amount(result.refundAmount())
+                .accountNo(result.refundAccountNo())
+                .bankName(result.refundBankName())
+                .refundedAt(result.refundedAt())
                 .build()
         )
         .review(
@@ -140,6 +158,7 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
   public record QueryReservationDetail(
       long swimmingPoolId,
       String swimmingPoolName,
+      String swimmingPoolPhone,
       String swimmingPoolImagePath,
       AccountNo accountNo,
       long swimmingClassId,
@@ -160,6 +179,9 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
       LocalDateTime paymentPendingAt,
       LocalDateTime paymentApprovedAt,
       LocalDateTime canceledAt,
+      Integer refundAmount,
+      AccountNo refundAccountNo,
+      String refundBankName,
       LocalDateTime refundedAt,
       Long reviewId
   ) {
