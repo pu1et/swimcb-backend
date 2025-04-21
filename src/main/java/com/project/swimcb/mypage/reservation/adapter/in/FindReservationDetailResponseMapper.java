@@ -1,7 +1,16 @@
 package com.project.swimcb.mypage.reservation.adapter.in;
 
+import static com.project.swimcb.mypage.reservation.adapter.in.FindReservationDetailResponse.Payment;
+import static com.project.swimcb.mypage.reservation.adapter.in.FindReservationDetailResponse.Reservation;
+import static com.project.swimcb.mypage.reservation.adapter.in.FindReservationDetailResponse.SwimmingClass;
+import static com.project.swimcb.mypage.reservation.adapter.in.FindReservationDetailResponse.SwimmingPool;
+import static com.project.swimcb.mypage.reservation.adapter.in.FindReservationDetailResponse.Ticket;
+
 import com.project.swimcb.bo.swimmingpool.application.out.ImageUrlPort;
 import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
+import com.project.swimcb.mypage.reservation.adapter.in.FindReservationDetailResponse.Cancel;
+import com.project.swimcb.mypage.reservation.adapter.in.FindReservationDetailResponse.Refund;
+import com.project.swimcb.mypage.reservation.adapter.in.FindReservationDetailResponse.Review;
 import com.project.swimcb.mypage.reservation.domain.ReservationDetail;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +28,7 @@ public class FindReservationDetailResponseMapper {
 
     return FindReservationDetailResponse.builder()
         .swimmingPool(
-            FindReservationDetailResponse.SwimmingPool.builder()
+            SwimmingPool.builder()
                 .id(detail.swimmingPool().id())
                 .name(detail.swimmingPool().name())
                 .phone(detail.swimmingPool().phone())
@@ -28,7 +37,7 @@ public class FindReservationDetailResponseMapper {
                 .build()
         )
         .swimmingClass(
-            FindReservationDetailResponse.SwimmingClass.builder()
+            SwimmingClass.builder()
                 .id(detail.swimmingClass().id())
                 .month(detail.swimmingClass().month())
                 .type(detail.swimmingClass().type().getDescription())
@@ -39,14 +48,14 @@ public class FindReservationDetailResponseMapper {
                 .build()
         )
         .ticket(
-            FindReservationDetailResponse.Ticket.builder()
+            Ticket.builder()
                 .id(detail.ticket().id())
                 .name(detail.ticket().name())
                 .price(detail.ticket().price())
                 .build()
         )
         .reservation(
-            FindReservationDetailResponse.Reservation.builder()
+            Reservation.builder()
                 .id(detail.reservation().id())
                 .status(detail.reservation().status().getDescription())
                 .reservedAt(detail.reservation().reservedAt())
@@ -54,31 +63,46 @@ public class FindReservationDetailResponseMapper {
                 .build()
         )
         .payment(
-            FindReservationDetailResponse.Payment.builder()
+            Payment.builder()
                 .method(detail.payment().method().getDescription())
                 .amount(detail.payment().amount())
                 .pendingAt(detail.payment().pendingAt())
                 .approvedAt(detail.payment().approvedAt())
                 .build()
         )
-        .cancel(
-            FindReservationDetailResponse.Cancel.builder()
-                .canceledAt(detail.cancel().canceledAt())
-                .build()
-        )
-        .refund(
-            FindReservationDetailResponse.Refund.builder()
-                .amount(detail.refund().amount())
-                .accountNo(accountNo(detail.refund().accountNo()))
-                .bankName(detail.refund().bankName())
-                .refundedAt(detail.refund().refundedAt())
-                .build()
-        )
-        .review(
-            FindReservationDetailResponse.Review.builder()
-                .id(detail.review().id())
-                .build()
-        )
+        .cancel(cancel(detail))
+        .refund(refund(detail))
+        .review(review(detail))
+        .build();
+  }
+
+  private Cancel cancel(@NonNull ReservationDetail detail) {
+    if (detail.cancel() == null) {
+      return null;
+    }
+    return Cancel.builder()
+        .canceledAt(detail.cancel().canceledAt())
+        .build();
+  }
+
+  private Refund refund(@NonNull ReservationDetail detail) {
+    if (detail.refund() == null) {
+      return null;
+    }
+    return Refund.builder()
+        .amount(detail.refund().amount())
+        .accountNo(accountNo(detail.refund().accountNo()))
+        .bankName(detail.refund().bankName())
+        .refundedAt(detail.refund().refundedAt())
+        .build();
+  }
+
+  private Review review(@NonNull ReservationDetail detail) {
+    if (detail.review() == null) {
+      return null;
+    }
+    return FindReservationDetailResponse.Review.builder()
+        .id(detail.review().id())
         .build();
   }
 

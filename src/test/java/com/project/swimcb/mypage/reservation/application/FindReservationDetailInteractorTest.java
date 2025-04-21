@@ -92,15 +92,6 @@ class FindReservationDetailInteractorTest {
                   .amount(50000)
                   .build()
           )
-          .cancel(
-              ReservationDetail.Cancel.builder().build()
-          )
-          .refund(
-              ReservationDetail.Refund.builder().build()
-          )
-          .review(
-              ReservationDetail.Review.builder().build()
-          )
           .build();
     }
   }

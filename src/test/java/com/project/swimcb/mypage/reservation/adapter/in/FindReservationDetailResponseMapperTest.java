@@ -7,7 +7,9 @@ import static java.time.DayOfWeek.FRIDAY;
 import static java.time.DayOfWeek.MONDAY;
 import static java.time.DayOfWeek.WEDNESDAY;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.project.swimcb.bo.swimmingpool.application.out.ImageUrlPort;
@@ -36,7 +38,7 @@ class FindReservationDetailResponseMapperTest {
   private ImageUrlPort imageUrlPort;
 
   @Test
-  @DisplayName("ReservationDetail 객체를 FindReservationDetailResponse 객체로 변환한다")
+  @DisplayName("기본 예약 정보가 올바르게 응답으로 변환된다")
   void shouldConvertToFindReservationDetailResponse() {
     // given
     val imageUrl = "DUMMY_IMAGE_URL";
@@ -72,19 +74,88 @@ class FindReservationDetailResponseMapperTest {
     assertThat(response.reservation().reservedAt()).isEqualTo(detail.reservation().reservedAt());
     assertThat(response.reservation().waitingNo()).isEqualTo(detail.reservation().waitingNo());
 
+    // Payment 검증
+    assertThat(response.payment().method()).isEqualTo(CASH_ON_SITE.getDescription());
+    assertThat(response.payment().pendingAt()).isEqualTo(detail.payment().pendingAt());
+
     // Cancel 검증
     assertThat(response.cancel().canceledAt()).isEqualTo(detail.cancel().canceledAt());
 
     // Refund 검증
     assertThat(response.refund().amount()).isEqualTo(detail.refund().amount());
-    assertThat(response.refund().accountNo()).isNull();
-
-    // Payment 검증
-    assertThat(response.payment().method()).isEqualTo(CASH_ON_SITE.getDescription());
-    assertThat(response.payment().pendingAt()).isEqualTo(detail.payment().pendingAt());
+    assertThat(response.refund().accountNo()).isNotNull();
 
     // Review 검증
     assertThat(response.review().id()).isEqualTo(detail.review().id());
+  }
+
+  @Test
+  @DisplayName("취소 정보가 있는 경우 올바르게 매핑된다")
+  void shouldMapCancelInformation() {
+    // given
+    val imageUrl = "https://example.com/image.jpg";
+    val detail = TestFindReservationDetailFactory.createCancel();
+
+    when(imageUrlPort.getImageUrl(anyString())).thenReturn(imageUrl);
+
+    // when
+    val response = mapper.toResponse(detail);
+
+    // then
+    assertThat(response.cancel()).isNotNull();
+    assertThat(response.cancel().canceledAt()).isEqualTo(detail.cancel().canceledAt());
+
+    // 취소된 경우 환불 정보는 없어야 함
+    assertThat(response.refund()).isNull();
+  }
+
+  @Test
+  @DisplayName("환불 정보가 있는 경우 올바르게 매핑된다")
+  void shouldMapRefundInformation() {
+    // given
+    val imageUrl = "https://example.com/image.jpg";
+    val detail = TestFindReservationDetailFactory.createRefund();
+
+    when(imageUrlPort.getImageUrl(anyString())).thenReturn(imageUrl);
+
+    // when
+    val response = mapper.toResponse(detail);
+
+    // then
+    assertThat(response.refund()).isNotNull();
+    assertThat(response.refund().amount()).isEqualTo(detail.refund().amount());
+    assertThat(response.refund().bankName()).isEqualTo(detail.refund().bankName());
+    assertThat(response.refund().accountNo()).isEqualTo(detail.refund().accountNo().value());
+    assertThat(response.refund().refundedAt()).isEqualTo(detail.refund().refundedAt());
+
+    // 환불된 경우 취소 정보는 없어야 함
+    assertThat(response.cancel()).isNull();
+  }
+
+  @Test
+  @DisplayName("리뷰 정보가 있는 경우 올바르게 매핑된다")
+  void shouldMapReviewInformation() {
+    // given
+    val imageUrl = "https://example.com/image.jpg";
+    val detail = TestFindReservationDetailFactory.createWithReview();
+
+    when(imageUrlPort.getImageUrl(anyString())).thenReturn(imageUrl);
+
+    // when
+    val response = mapper.toResponse(detail);
+
+    // then
+    assertThat(response.review()).isNotNull();
+    assertThat(response.review().id()).isEqualTo(detail.review().id());
+  }
+
+  @Test
+  @DisplayName("예약 정보가 null이면 NullPointerException이 발생한다")
+  void shouldThrowNullPointerExceptionForNullInput() {
+    // when
+    // then
+    assertThatThrownBy(() -> mapper.toResponse(null))
+        .isInstanceOf(NullPointerException.class);
   }
 
   private static class TestFindReservationDetailFactory {
@@ -122,26 +193,84 @@ class FindReservationDetailResponseMapperTest {
               ReservationDetail.Reservation.builder()
                   .id(4L)
                   .status(PAYMENT_PENDING)
-                  .reservedAt(LocalDateTime.MIN)
+                  .reservedAt(LocalDateTime.of(2025, 5, 1, 10, 0))
+                  .waitingNo(null)
                   .build()
           )
           .payment(
               ReservationDetail.Payment.builder()
                   .method(CASH_ON_SITE)
                   .amount(50000)
+                  .pendingAt(LocalDateTime.of(2025, 5, 2, 10, 0))
+                  .approvedAt(null)
                   .build()
           )
           .cancel(
-              ReservationDetail.Cancel.builder().build()
+              ReservationDetail.Cancel.builder()
+                  .canceledAt(LocalDateTime.of(2025, 5, 3, 10, 0))
+                  .build()
           )
           .refund(
-              ReservationDetail.Refund.builder().build()
+              ReservationDetail.Refund.builder()
+                  .amount(45000)
+                  .accountNo(new AccountNo("DUMMY_ACCOUNT_NO"))
+                  .bankName("DUMMY_BANK")
+                  .refundedAt(LocalDateTime.of(2025, 5, 4, 10, 0))
+                  .build()
           )
           .review(
               ReservationDetail.Review.builder()
                   .id(5L)
                   .build()
           )
+          .build();
+    }
+
+    private static ReservationDetail createCancel() {
+      val detail = create();
+      return ReservationDetail.builder()
+          .swimmingPool(detail.swimmingPool())
+          .swimmingClass(detail.swimmingClass())
+          .ticket(detail.ticket())
+          .reservation(detail.reservation())
+          .payment(detail.payment())
+          .cancel(detail.cancel())
+          .build();
+    }
+
+    private static ReservationDetail createRefund() {
+      val detail = create();
+      return ReservationDetail.builder()
+          .swimmingPool(detail.swimmingPool())
+          .swimmingClass(detail.swimmingClass())
+          .ticket(detail.ticket())
+          .reservation(detail.reservation())
+          .payment(detail.payment())
+          .refund(detail.refund())
+          .build();
+    }
+
+    private static ReservationDetail createWithoutReview() {
+      val detail = create();
+      return ReservationDetail.builder()
+          .swimmingPool(detail.swimmingPool())
+          .swimmingClass(detail.swimmingClass())
+          .ticket(detail.ticket())
+          .reservation(detail.reservation())
+          .payment(detail.payment())
+          .review(null)
+          .build();
+    }
+
+    private static ReservationDetail createWithReview() {
+      val detail = create();
+      return ReservationDetail.builder()
+          .swimmingPool(detail.swimmingPool())
+          .swimmingClass(detail.swimmingClass())
+          .ticket(detail.ticket())
+          .reservation(detail.reservation())
+          .payment(detail.payment())
+          .review(detail.review())
           .build();
     }
   }

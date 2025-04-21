@@ -15,13 +15,13 @@ public record FindReservationDetailResponse(
     @NonNull Ticket ticket,
     @NonNull Reservation reservation,
     @NonNull Payment payment,
-    @NonNull Cancel cancel,
-    @NonNull Refund refund,
-    @NonNull Review review
+    Cancel cancel,
+    Refund refund,
+    Review review
 ) {
 
   @Builder
-  @Schema(name = "FindReservationDetailResponse.Reservation")
+  @Schema(name = "FindReservationDetailResponse.SwimmingPool")
   public record SwimmingPool(
 
       @Schema(example = "1")
@@ -105,12 +105,13 @@ public record FindReservationDetailResponse(
   }
 
   @Builder
+  @Schema(name = "FindReservationDetailResponse.Payment")
   public record Payment(
       @Schema(example = "[현장결제|계좌이체]")
       @NonNull String method,
 
       @Schema(example = "10000")
-      int amount,
+      @NonNull Integer amount,
 
       @Schema(example = "2025-04-01T10:00:00")
       LocalDateTime pendingAt,
@@ -122,34 +123,37 @@ public record FindReservationDetailResponse(
   }
 
   @Builder
+  @Schema(name = "FindReservationDetailResponse.Cancel")
   public record Cancel(
       @Schema(example = "2025-04-01T10:00:00")
-      LocalDateTime canceledAt
+      @NonNull LocalDateTime canceledAt
   ) {
 
   }
 
   @Builder
+  @Schema(name = "FindReservationDetailResponse.Refund")
   public record Refund(
       @Schema(example = "10000")
-      Integer amount,
+      @NonNull Integer amount,
 
       @Schema(example = "123-456-7890")
-      String accountNo,
+      @NonNull String accountNo,
 
       @Schema(example = "우리은행")
-      String bankName,
+      @NonNull String bankName,
 
       @Schema(example = "2025-04-01T10:00:00")
-      LocalDateTime refundedAt
+      @NonNull LocalDateTime refundedAt
   ) {
 
   }
 
   @Builder
+  @Schema(name = "FindReservationDetailResponse.Review")
   public record Review(
       @Schema(example = "1")
-      Long id
+      @NonNull Long id
   ) {
 
   }

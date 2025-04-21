@@ -116,15 +116,6 @@ class FindReservationDetailControllerTest {
                   .amount(50000)
                   .build()
           )
-          .cancel(
-              ReservationDetail.Cancel.builder().build()
-          )
-          .refund(
-              ReservationDetail.Refund.builder().build()
-          )
-          .review(
-              ReservationDetail.Review.builder().build()
-          )
           .build();
     }
   }
@@ -167,12 +158,6 @@ class FindReservationDetailControllerTest {
                   .reservedAt(LocalDateTime.of(2023, 4, 1, 10, 0, 0))
                   .build()
           )
-          .cancel(
-              FindReservationDetailResponse.Cancel.builder().build()
-          )
-          .refund(
-              FindReservationDetailResponse.Refund.builder().build()
-          )
           .payment(
               FindReservationDetailResponse.Payment.builder()
                   .method("DUMMY_PAYMENT_METHOD")
@@ -180,9 +165,6 @@ class FindReservationDetailControllerTest {
                   .pendingAt(LocalDateTime.of(2023, 4, 1, 10, 0, 0))
                   .approvedAt(null)
                   .build()
-          )
-          .review(
-              FindReservationDetailResponse.Review.builder().build()
           )
           .build();
     }

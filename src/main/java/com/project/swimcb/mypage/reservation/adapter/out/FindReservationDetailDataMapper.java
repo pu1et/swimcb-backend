@@ -30,6 +30,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.NoSuchElementException;
 import lombok.Builder;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -133,24 +134,39 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
                 .approvedAt(result.paymentApprovedAt())
                 .build()
         )
-        .cancel(
-            Cancel.builder()
-                .canceledAt(result.canceledAt())
-                .build()
-        )
-        .refund(
-            Refund.builder()
-                .amount(result.refundAmount())
-                .accountNo(result.refundAccountNo())
-                .bankName(result.refundBankName())
-                .refundedAt(result.refundedAt())
-                .build()
-        )
-        .review(
-            Review.builder()
-                .id(result.reviewId())
-                .build()
-        )
+        .cancel(cancel(result))
+        .refund(refund(result))
+        .review(review(result))
+        .build();
+  }
+
+  private Cancel cancel(@NonNull QueryReservationDetail result) {
+    if (result.reservationStatus() != ReservationStatus.RESERVATION_CANCELLED) {
+      return null;
+    }
+    return Cancel.builder()
+        .canceledAt(result.canceledAt())
+        .build();
+  }
+
+  private Refund refund(@NonNull QueryReservationDetail result) {
+    if (result.reservationStatus() != ReservationStatus.REFUND_COMPLETED) {
+      return null;
+    }
+    return Refund.builder()
+        .amount(result.refundAmount())
+        .accountNo(result.refundAccountNo())
+        .bankName(result.refundBankName())
+        .refundedAt(result.refundedAt())
+        .build();
+  }
+
+  private Review review(@NonNull QueryReservationDetail result) {
+    if (result.reviewId() == null) {
+      return null;
+    }
+    return Review.builder()
+        .id(result.reviewId())
         .build();
   }
 

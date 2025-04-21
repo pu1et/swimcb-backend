@@ -1,7 +1,9 @@
 package com.project.swimcb.mypage.reservation.adapter.out;
 
 import static com.project.swimcb.swimmingpool.domain.enums.PaymentMethod.CASH_ON_SITE;
-import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_PENDING;
+import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.REFUND_COMPLETED;
+import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_CANCELLED;
+import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_PENDING;
 import static com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName.GROUP;
 import static java.time.DayOfWeek.FRIDAY;
 import static java.time.DayOfWeek.MONDAY;
@@ -9,6 +11,7 @@ import static java.time.DayOfWeek.WEDNESDAY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
@@ -113,6 +116,93 @@ class FindReservationDetailDataMapperTest {
           .hasMessageContaining("예약 상세 정보가 존재하지 않습니다");
     }
 
+    @Test
+    @DisplayName("예약 취소된 경우 취소 정보만 포함되고 환불 정보는 포함되지 않아야 한다")
+    void shouldIncludeCancelInfoWhenReservationCancelled() {
+      // given
+      val reservationId = 1L;
+      val result = TestQueryReservationDetailFactory.create();
+
+      setupQueryChain(result);
+
+      when(result.reservationStatus()).thenReturn(RESERVATION_CANCELLED);
+      when(result.canceledAt()).thenReturn(LocalDateTime.of(2025, 4, 1, 10, 0, 0));
+
+      // when
+      val detail = mapper.findReservationDetail(reservationId);
+
+      // then
+      assertThat(detail.cancel()).isNotNull();
+      assertThat(detail.cancel().canceledAt()).isEqualTo(result.canceledAt());
+
+      assertThat(detail.refund()).isNull();
+    }
+
+    @Test
+    @DisplayName("환불 완료된 경우 환불 정보만 포함되고 취소 정보는 포함되지 않아야 한다")
+    void shouldIncludeRefundInfoWhenRefundCompleted() {
+      // given
+      val reservationId = 1L;
+      val result = TestQueryReservationDetailFactory.create();
+
+      setupQueryChain(result);
+
+      when(result.reservationStatus()).thenReturn(REFUND_COMPLETED);
+      when(result.refundAmount()).thenReturn(10000);
+      when(result.refundAccountNo()).thenReturn(new AccountNo("DUMMY_ACCOUNT_NO"));
+      when(result.refundBankName()).thenReturn("DUMMY_BANK_NAME");
+      when(result.refundedAt()).thenReturn(LocalDateTime.of(2025, 4, 1, 10, 0, 0));
+
+      // when
+      val detail = mapper.findReservationDetail(reservationId);
+
+      // then
+      assertThat(detail.refund()).isNotNull();
+      assertThat(detail.refund().amount()).isEqualTo(result.refundAmount());
+      assertThat(detail.refund().accountNo()).isEqualTo(result.refundAccountNo());
+      assertThat(detail.refund().bankName()).isEqualTo(result.refundBankName());
+      assertThat(detail.refund().refundedAt()).isEqualTo(result.refundedAt());
+
+      assertThat(detail.cancel()).isNull();
+    }
+
+    @Test
+    @DisplayName("리뷰 정보가 없는 경우 리뷰 정보는 포함되지 않아야 한다.")
+    void shouldNotIncludeReviewInfoWhenReviewNotExists() {
+      // given
+      val reservationId = 1L;
+      val result = TestQueryReservationDetailFactory.create();
+
+      setupQueryChain(result);
+
+      when(result.reviewId()).thenReturn(null);
+
+      // when
+      val detail = mapper.findReservationDetail(reservationId);
+
+      // then
+      assertThat(detail.review()).isNull();
+    }
+
+    @Test
+    @DisplayName("리뷰 정보가 있는 경우 리뷰 정보가 포함되어야 한다")
+    void shouldIncludeReviewInfoWhenReviewExists() {
+      // given
+      val reservationId = 1L;
+      val result = TestQueryReservationDetailFactory.create();
+
+      setupQueryChain(result);
+
+      when(result.reviewId()).thenReturn(2L);
+
+      // when
+      val detail = mapper.findReservationDetail(reservationId);
+
+      // then
+      assertThat(detail.review()).isNotNull();
+      assertThat(detail.review().id()).isEqualTo(result.reviewId());
+    }
+
     /**
      * QueryDSL 체인을 설정하는 메서드
      */
@@ -130,36 +220,30 @@ class FindReservationDetailDataMapperTest {
   private static class TestQueryReservationDetailFactory {
 
     private static QueryReservationDetail create() {
-      return new QueryReservationDetail(
-          1L,
-          "DUMMY_POOL_NAME",
-          "DUMMY_POOL_PHONE",
-          "DUMMY_IMAGE_PATH",
-          new AccountNo("DUMMY_ACCOUNT_NO"),
-          2L,
-          3,
-          GROUP,
-          "DUMMY_CLASS_SUB_TYPE",
-          0b1010100,
-          LocalTime.of(10, 0),
-          LocalTime.of(11, 0),
-          3L,
-          "DUMMY_TICKET_NAME",
-          50000,
-          PAYMENT_PENDING,
-          LocalDateTime.of(2025, 4, 1, 10, 0, 0),
-          null,
-          CASH_ON_SITE,
-          50000,
-          LocalDateTime.of(2025, 4, 1, 10, 0, 0),
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          4L
-      );
+      val detail = mock(QueryReservationDetail.class);
+      when(detail.swimmingPoolId()).thenReturn(1L);
+      when(detail.swimmingPoolName()).thenReturn("DUMMY_POOL_NAME");
+      when(detail.swimmingPoolPhone()).thenReturn("DUMMY_POOL_PHONE");
+      when(detail.swimmingPoolImagePath()).thenReturn("DUMMY_IMAGE_PATH");
+      when(detail.accountNo()).thenReturn(new AccountNo("DUMMY_ACCOUNT_NO"));
+      when(detail.swimmingClassId()).thenReturn(2L);
+      when(detail.month()).thenReturn(3);
+      when(detail.swimmingClassType()).thenReturn(GROUP);
+      when(detail.swimmingClassSubType()).thenReturn("DUMMY_CLASS_SUB_TYPE");
+      when(detail.daysOfWeek()).thenReturn(0b1010100);
+      when(detail.startTime()).thenReturn(LocalTime.of(10, 0));
+      when(detail.endTime()).thenReturn(LocalTime.of(11, 0));
+      when(detail.ticketId()).thenReturn(3L);
+      when(detail.ticketName()).thenReturn("DUMMY_TICKET_NAME");
+      when(detail.ticketPrice()).thenReturn(50000);
+      when(detail.reservationStatus()).thenReturn(RESERVATION_PENDING);
+      when(detail.reservedAt()).thenReturn(LocalDateTime.of(2025, 4, 1, 10, 0, 0));
+      when(detail.waitingNo()).thenReturn(null);
+      when(detail.paymentMethod()).thenReturn(CASH_ON_SITE);
+      when(detail.paymentAmount()).thenReturn(50000);
+      when(detail.paymentPendingAt()).thenReturn(LocalDateTime.of(2025, 4, 1, 10, 0, 0));
+      when(detail.paymentApprovedAt()).thenReturn(null);
+      return detail;
     }
   }
 }

@@ -17,9 +17,9 @@ public record ReservationDetail(
     @NonNull Ticket ticket,
     @NonNull Reservation reservation,
     @NonNull Payment payment,
-    @NonNull Cancel cancel,
-    @NonNull Refund refund,
-    @NonNull Review review
+    Cancel cancel,
+    Refund refund,
+    Review review
 ) {
 
   @Builder
@@ -68,7 +68,7 @@ public record ReservationDetail(
   @Builder
   public record Payment(
       @NonNull PaymentMethod method,
-      int amount,
+      @NonNull Integer amount,
       LocalDateTime pendingAt,
       LocalDateTime approvedAt
   ) {
@@ -84,17 +84,17 @@ public record ReservationDetail(
 
   @Builder
   public record Refund(
-      Integer amount,
-      AccountNo accountNo,
-      String bankName,
-      LocalDateTime refundedAt
+      @NonNull Integer amount,
+      @NonNull AccountNo accountNo,
+      @NonNull String bankName,
+      @NonNull LocalDateTime refundedAt
   ) {
 
   }
 
   @Builder
   public record Review(
-      Long id
+      @NonNull Long id
   ) {
 
   }
