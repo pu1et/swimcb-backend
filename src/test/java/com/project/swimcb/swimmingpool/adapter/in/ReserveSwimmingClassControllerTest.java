@@ -43,7 +43,7 @@ class ReserveSwimmingClassControllerTest {
   @MockitoBean
   private ReserveSwimmingClassUseCase useCase;
 
-  static final String MEMBER_ID = "1";
+  static final long MEMBER_ID = 1L;
   private static final String PATH = "/api/swimming-classes/{swimmingClassId}/reservations";
 
   @Nested
@@ -77,7 +77,7 @@ class ReserveSwimmingClassControllerTest {
           .andExpect(content().json(objectMapper.writeValueAsString(expectedResponse)));
 
       verify(useCase, only()).reserveSwimmingClass(assertArg(i -> {
-        assertThat(i.memberId()).isEqualTo(Long.parseLong(MEMBER_ID));
+        assertThat(i.memberId()).isEqualTo(MEMBER_ID);
         assertThat(i.swimmingClassId()).isEqualTo(SWIMMING_CLASS_ID);
         assertThat(i.ticketId()).isEqualTo(TICKET_ID);
         assertThat(i.paymentMethod()).isEqualTo(BANK_TRANSFER);

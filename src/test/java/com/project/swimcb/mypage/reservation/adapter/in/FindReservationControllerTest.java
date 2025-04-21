@@ -48,7 +48,7 @@ class FindReservationControllerTest {
   @MockitoBean
   private FindReservationsResponseMapper mapper;
 
-  static final String MEMBER_ID = "1";
+  static final long MEMBER_ID = 1L;
 
   private static final String PATH = "/api/my-page/reservations";
 
@@ -60,7 +60,6 @@ class FindReservationControllerTest {
     @DisplayName("예약 목록을 정상적으로 반환한다")
     void returnReservationsWhenRequested() throws Exception {
       // given
-      val memberId = Long.parseLong(MEMBER_ID);
       val pageable = PageRequest.of(0, 10);
 
       val reservation = TestReservationFactory.create();
@@ -68,7 +67,7 @@ class FindReservationControllerTest {
 
       val response = TestFindReservationsResponseFactory.create();
 
-      when(useCase.findReservations(memberId, pageable)).thenReturn(reservationsPage);
+      when(useCase.findReservations(MEMBER_ID, pageable)).thenReturn(reservationsPage);
       when(mapper.toResponse(reservationsPage)).thenReturn(response);
 
       // when
@@ -79,7 +78,7 @@ class FindReservationControllerTest {
           .andExpect(status().isOk())
           .andExpect(content().json(objectMapper.writeValueAsString(response)));
 
-      verify(useCase, only()).findReservations(memberId, pageable);
+      verify(useCase, only()).findReservations(MEMBER_ID, pageable);
       verify(mapper, only()).toResponse(reservationsPage);
     }
 
@@ -109,7 +108,7 @@ class FindReservationControllerTest {
 
   private static class TestReservationFactory {
 
-    static Reservation create() {
+    private static Reservation create() {
       return Reservation.builder()
           .swimmingPool(
               Reservation.SwimmingPool.builder()

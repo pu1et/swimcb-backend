@@ -48,7 +48,7 @@ class FindSwimmingClassControllerTest {
   @MockitoBean
   private FindSwimmingClassesUseCase useCase;
 
-  static final String MEMBER_ID = "1";
+  static final long MEMBER_ID = 1L;
 
   private static final String PATH = "/api/swimming-classes";
 
@@ -91,7 +91,7 @@ class FindSwimmingClassControllerTest {
 
     verify(useCase, only()).findSwimmingClasses(assertArg(i -> {
       assertThat(i.keyword()).isEqualTo(keyword);
-      assertThat(i.memberId()).isEqualTo(Long.parseLong(MEMBER_ID));
+      assertThat(i.memberId()).isEqualTo(MEMBER_ID);
       assertThat(i.startDate()).isEqualTo(startDate);
       assertThat(i.endDate()).isEqualTo(endDate);
       assertThat(i.startTimes()).isEqualTo(startTimes);

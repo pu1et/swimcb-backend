@@ -39,7 +39,7 @@ class FindSwimmingPoolDetailMainControllerTest {
   @MockitoBean
   private FindSwimmingPoolDetailMainResponseFactory factory;
 
-  static final String MEMBER_ID = "1";
+  static final long MEMBER_ID = 1L;
 
   private static final String PATH = "/api/swimming-pools/1/main";
   private static final long SWIMMING_POOL_ID = 1L;
@@ -59,7 +59,7 @@ class FindSwimmingPoolDetailMainControllerTest {
         .andExpect(status().isOk())
         .andExpect(content().json(objectMapper.writeValueAsString(response)));
 
-    verify(useCase, only()).findSwimmingPoolDetailMain(SWIMMING_POOL_ID, Long.valueOf(MEMBER_ID));
+    verify(useCase, only()).findSwimmingPoolDetailMain(SWIMMING_POOL_ID, MEMBER_ID);
     verify(factory, only()).create(result);
   }
 

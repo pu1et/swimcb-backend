@@ -15,7 +15,7 @@ import org.springframework.security.test.context.support.WithSecurityContext;
 @WithSecurityContext(factory = WithMockTokenInfoSecurityContextFactory.class)
 public @interface WithMockTokenInfo {
 
-  String memberId() default "";
+  long memberId() default 0L;
 
   MemberRole role() default CUSTOMER;
 

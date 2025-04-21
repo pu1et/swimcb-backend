@@ -29,15 +29,14 @@ class CancelReservationControllerTest {
   @MockitoBean
   private CancelReservationUseCase useCase;
 
-  static final String MEMBER_ID = "1";
+  static final long MEMBER_ID = 1L;
 
   private static final String PATH = "/api/my-page/reservations/{reservationId}/cancel";
 
   @Test
   @DisplayName("인증된 사용자의 유효한 예약 ID로 요청 시 예약을 취소한다")
   void cancelReservationWhenValidIdProvided() throws Exception {
-    // Given
-    val memberId = 1L;
+    // given
     val reservationId = 2L;
 
     // when
@@ -45,7 +44,7 @@ class CancelReservationControllerTest {
     mockMvc.perform(put(PATH, reservationId))
         .andExpect(status().isOk());
 
-    verify(useCase, only()).cancelReservation(memberId, reservationId);
+    verify(useCase, only()).cancelReservation(MEMBER_ID, reservationId);
   }
 
   @Test
