@@ -11,13 +11,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTestWithoutSecurity(controllers = FindBoReservationsWithPaymentsController.class)
-class FindBoReservationsWithPaymentsControllerTest {
+@WebMvcTestWithoutSecurity(controllers = FindBoReservationsController.class)
+class FindBoReservationsControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
 
-  private static final String PATH = "/api/bo/reservations-with-payments";
+  private static final String PATH = "/api/bo/reservations";
 
   @Test
   @DisplayName("정상적인 요청이 들어온 경우 조회 성공")
