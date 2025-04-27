@@ -15,18 +15,20 @@ public record FindBoReservationsResponse(
     @NonNull Page<BoReservation> reservations
 ) {
 
+  @Builder
   record BoReservation(
-      @NonNull Customer customer,
+      @NonNull Member member,
       @NonNull SwimmingClass swimmingClass,
-      @NonNull ReservationInfo reservationInfo,
-      @NonNull Payment payment
+      @NonNull ReservationDetail reservationDetail,
+      @NonNull Payment payment,
+      Refund refund
   ) {
 
   }
 
   @Builder
   @Schema(name = "FindBoReservationsResponse.Customer")
-  record Customer(
+  record Member(
       @Schema(example = "1")
       long id,
 
@@ -66,7 +68,7 @@ public record FindBoReservationsResponse(
 
   @Builder
   @Schema(name = "FindBoReservationsResponse.ReservationInfo")
-  record ReservationInfo(
+  record ReservationDetail(
 
       @Schema(example = "1")
       long id,
@@ -81,10 +83,7 @@ public record FindBoReservationsResponse(
       @NonNull LocalDateTime reservedAt,
 
       @Schema(description = "최종 상태 변경 시간", example = "2025-04-01T11:30:00")
-      @NonNull LocalDateTime lastStatusChangedAt,
-
-      @Schema(description = "환불 정보")
-      Refund refund
+      @NonNull LocalDateTime lastStatusChangedAt
   ) {
 
   }
