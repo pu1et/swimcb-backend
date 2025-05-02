@@ -80,6 +80,10 @@ public class Reservation extends BaseEntity {
   @Column(name = "payment_approved_at")
   private LocalDateTime paymentApprovedAt;
 
+  @Enumerated(STRING)
+  @Column(name = "cancellation_reasone", length = 50)
+  private CancellationReason cancellationReason;
+
   @Column(name = "canceled_at")
   private LocalDateTime canceledAt;
 
@@ -92,6 +96,9 @@ public class Reservation extends BaseEntity {
 
   @Column(name = "refund_bank_name", length = 50)
   private String refundBankName;
+
+  @Column(name = "refund_account_holder", length = 100)
+  private String refundAccountHolder;
 
   @Column(name = "refunded_at")
   private LocalDateTime refundedAt;
