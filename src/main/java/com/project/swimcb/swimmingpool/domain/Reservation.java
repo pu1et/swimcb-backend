@@ -79,6 +79,9 @@ public class Reservation extends BaseEntity {
   @Column(name = "payment_amount", nullable = false)
   private int paymentAmount;
 
+  @Column(name = "payment_verification_at")
+  private LocalDateTime paymentVerificationAt;
+
   @Column(name = "payment_approved_at")
   private LocalDateTime paymentApprovedAt;
 

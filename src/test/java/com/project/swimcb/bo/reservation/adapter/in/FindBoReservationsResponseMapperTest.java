@@ -3,6 +3,7 @@ package com.project.swimcb.bo.reservation.adapter.in;
 import static com.project.swimcb.swimmingpool.domain.enums.PaymentMethod.CASH_ON_SITE;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_COMPLETED;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_PENDING;
+import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_VERIFICATION;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.REFUND_COMPLETED;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_CANCELLED;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -133,6 +134,8 @@ class FindBoReservationsResponseMapperTest {
       // given
       val now = LocalDateTime.now();
       val pendingReservation = TestBoReservationFactory.createWithStatus(PAYMENT_PENDING, now);
+      val paymentVerificationReservation = TestBoReservationFactory.createWithStatus(
+          PAYMENT_VERIFICATION, now);
       val completedReservation = TestBoReservationFactory.createWithStatus(PAYMENT_COMPLETED, now);
       val cancelledReservation = TestBoReservationFactory.createWithStatus(RESERVATION_CANCELLED,
           now);
@@ -141,12 +144,13 @@ class FindBoReservationsResponseMapperTest {
       val page = new PageImpl<>(
           List.of(
               pendingReservation,
+              paymentVerificationReservation,
               completedReservation,
               cancelledReservation,
               refundedReservation
           ),
           PageRequest.of(0, 10),
-          4
+          5
       );
 
       // when
@@ -159,12 +163,15 @@ class FindBoReservationsResponseMapperTest {
           .isEqualTo(pendingReservation.reservationDetail().paymentPendingAt());
 
       assertThat(reservations.get(1).reservationDetail().lastStatusChangedAt())
-          .isEqualTo(completedReservation.reservationDetail().paymentCompletedAt());
+          .isEqualTo(paymentVerificationReservation.reservationDetail().paymentVerificationAt());
 
       assertThat(reservations.get(2).reservationDetail().lastStatusChangedAt())
-          .isEqualTo(cancelledReservation.reservationDetail().canceledAt());
+          .isEqualTo(completedReservation.reservationDetail().paymentCompletedAt());
 
       assertThat(reservations.get(3).reservationDetail().lastStatusChangedAt())
+          .isEqualTo(cancelledReservation.reservationDetail().canceledAt());
+
+      assertThat(reservations.get(4).reservationDetail().lastStatusChangedAt())
           .isEqualTo(refundedReservation.reservationDetail().refundedAt());
     }
   }
@@ -221,10 +228,19 @@ class FindBoReservationsResponseMapperTest {
 
       // 상태에 따라 적절한 시간 설정
       switch (status) {
-        case PAYMENT_PENDING -> detailBuilder.paymentPendingAt(baseTime.minusDays(4));
+        case PAYMENT_PENDING -> {
+          detailBuilder.paymentPendingAt(baseTime.minusDays(4));
+        }
         case PAYMENT_COMPLETED -> {
           detailBuilder.paymentPendingAt(baseTime.minusDays(4));
           detailBuilder.paymentCompletedAt(baseTime.minusDays(3));
+        }
+        case RESERVATION_PENDING -> {
+          detailBuilder.reservedAt(baseTime.minusDays(5));
+        }
+        case PAYMENT_VERIFICATION -> {
+          detailBuilder.paymentPendingAt(baseTime.minusDays(4));
+          detailBuilder.paymentVerificationAt(baseTime.minusDays(3));
         }
         case RESERVATION_CANCELLED -> detailBuilder.canceledAt(baseTime.minusDays(2));
         case REFUND_COMPLETED -> {

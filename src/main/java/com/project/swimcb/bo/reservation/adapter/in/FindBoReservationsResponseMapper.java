@@ -78,8 +78,7 @@ public class FindBoReservationsResponseMapper {
       case PAYMENT_PENDING -> i.reservationDetail().paymentPendingAt();
       case PAYMENT_COMPLETED -> i.reservationDetail().paymentCompletedAt();
       case RESERVATION_PENDING -> i.reservationDetail().reservedAt();
-      // TODO. 입금확인중 시간 추가
-      case PAYMENT_VERIFICATION -> i.reservationDetail().paymentPendingAt();
+      case PAYMENT_VERIFICATION -> i.reservationDetail().paymentVerificationAt();
       case RESERVATION_CANCELLED -> i.reservationDetail().canceledAt();
       case REFUND_COMPLETED -> i.reservationDetail().refundedAt();
     };

@@ -68,6 +68,7 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
             reservation.waitingNo,
             reservation.reservedAt,
             reservation.paymentPendingAt,
+            reservation.paymentVerificationAt,
             reservation.paymentApprovedAt,
             reservation.canceledAt,
             reservation.refundedAt,
@@ -172,7 +173,7 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
                 .reservedAt(i.reservedAt())
                 .waitingNo(i.waitingNo())
                 .paymentPendingAt(i.paymentPendingAt())
-                .paymentPendingAt(i.paymentPendingAt())
+                .paymentVerificationAt(i.paymentVerificationAt())
                 .paymentCompletedAt(i.paymentCompletedAt())
                 .canceledAt(i.canceledAt())
                 .refundedAt(i.refundedAt())
@@ -229,6 +230,7 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
       Integer waitingNo,
       @NonNull LocalDateTime reservedAt,
       LocalDateTime paymentPendingAt,
+      LocalDateTime paymentVerificationAt,
       LocalDateTime paymentCompletedAt,
       LocalDateTime canceledAt,
       LocalDateTime refundedAt,

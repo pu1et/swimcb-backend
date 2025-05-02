@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import lombok.Builder;
 import lombok.NonNull;
+import org.springframework.cglib.core.Local;
 
 @Builder
 public record BoReservation(
@@ -52,6 +53,7 @@ public record BoReservation(
       Integer waitingNo,
       @NonNull LocalDateTime reservedAt,
       LocalDateTime paymentPendingAt,
+      LocalDateTime paymentVerificationAt,
       LocalDateTime paymentCompletedAt,
       LocalDateTime canceledAt,
       LocalDateTime refundedAt
