@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "BO")
+@Tag(name = "BO - 완료")
 @SecurityRequirement(name = "Bearer Authentication")
 @RestController
 @RequestMapping("/api/bo/reservations/{reservationId}/complete")
