@@ -11,6 +11,7 @@ import static java.time.LocalTime.MAX;
 
 import com.project.swimcb.bo.reservation.application.port.out.FindBoReservationsDsGateway;
 import com.project.swimcb.bo.reservation.domain.BoReservation;
+import com.project.swimcb.bo.reservation.domain.BoReservation.Cancel;
 import com.project.swimcb.bo.reservation.domain.BoReservation.Member;
 import com.project.swimcb.bo.reservation.domain.BoReservation.Payment;
 import com.project.swimcb.bo.reservation.domain.BoReservation.Refund;
@@ -19,6 +20,7 @@ import com.project.swimcb.bo.reservation.domain.BoReservation.SwimmingClass;
 import com.project.swimcb.bo.reservation.domain.FindBoReservationsCondition;
 import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
 import com.project.swimcb.mypage.reservation.adapter.out.ClassDayOfWeek;
+import com.project.swimcb.swimmingpool.domain.enums.CancellationReason;
 import com.project.swimcb.swimmingpool.domain.enums.PaymentMethod;
 import com.project.swimcb.swimmingpool.domain.enums.ReservationStatus;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
@@ -30,7 +32,6 @@ import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Optional;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.val;
@@ -64,6 +65,7 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
             reservation.id,
             reservation.ticketType,
             reservation.reservationStatus,
+            reservation.waitingNo,
             reservation.reservedAt,
             reservation.paymentPendingAt,
             reservation.paymentApprovedAt,
@@ -73,9 +75,12 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
             reservation.paymentMethod,
             reservation.paymentAmount,
 
+            reservation.cancellationReason,
+
             reservation.refundAmount,
             reservation.refundAccountNo,
-            reservation.refundBankName
+            reservation.refundBankName,
+            reservation.refundAccountHolder
         ))
         .from(reservation)
         .join(swimmingClassTicket).on(reservation.ticketId.eq(swimmingClassTicket.id))
@@ -164,6 +169,7 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
                 .ticketType(i.ticketType())
                 .status(i.reservationStatus())
                 .reservedAt(i.reservedAt())
+                .waitingNo(i.waitingNo())
                 .paymentPendingAt(i.paymentPendingAt())
                 .paymentPendingAt(i.paymentPendingAt())
                 .paymentCompletedAt(i.paymentCompletedAt())
@@ -177,18 +183,29 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
                 .amount(i.amount())
                 .build()
         )
-        .refund(
-            Optional.ofNullable(i.refundedAt)
-                .map(j ->
-                    Refund.builder()
-                        .amount(i.refundAmount())
-                        .accountNo(i.refundAccountNo())
-                        .bankName(i.refundBankName())
-                        .accountHolder("DUMMY_ACCOUNT_HOLDER")
-                        .build()
-                )
-                .orElse(null)
-        )
+        .cancel(cancel(i))
+        .refund(refund(i))
+        .build();
+  }
+
+  private Cancel cancel(@NonNull FindBoReservationsDataMapper.QueryReservation i) {
+    if (i.reservationStatus != ReservationStatus.RESERVATION_CANCELLED) {
+      return null;
+    }
+    return Cancel.builder()
+        .reason(i.cancellationReason())
+        .build();
+  }
+
+  private Refund refund(@NonNull FindBoReservationsDataMapper.QueryReservation i) {
+    if (i.reservationStatus != ReservationStatus.REFUND_COMPLETED) {
+      return null;
+    }
+    return Refund.builder()
+        .amount(i.refundAmount())
+        .accountNo(i.refundAccountNo())
+        .bankName(i.refundBankName())
+        .accountHolder(i.refundAccountHolder())
         .build();
   }
 
@@ -208,6 +225,7 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
       @NonNull Long reservationId,
       @NonNull TicketType ticketType,
       @NonNull ReservationStatus reservationStatus,
+      Integer waitingNo,
       @NonNull LocalDateTime reservedAt,
       LocalDateTime paymentPendingAt,
       LocalDateTime paymentCompletedAt,
@@ -217,9 +235,12 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
       @NonNull PaymentMethod paymentMethod,
       @NonNull Integer amount,
 
+      CancellationReason cancellationReason,
+
       Integer refundAmount,
       AccountNo refundAccountNo,
-      String refundBankName
+      String refundBankName,
+      String refundAccountHolder
   ) {
 
     @QueryProjection

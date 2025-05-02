@@ -82,7 +82,7 @@ public class Reservation extends BaseEntity {
   private LocalDateTime paymentApprovedAt;
 
   @Enumerated(STRING)
-  @Column(name = "cancellation_reasone", length = 50)
+  @Column(name = "cancellation_reason", length = 50)
   private CancellationReason cancellationReason;
 
   @Column(name = "canceled_at")

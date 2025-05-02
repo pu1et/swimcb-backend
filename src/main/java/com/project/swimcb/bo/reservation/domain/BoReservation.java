@@ -2,6 +2,7 @@ package com.project.swimcb.bo.reservation.domain;
 
 import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
 import com.project.swimcb.mypage.reservation.adapter.out.ClassDayOfWeek;
+import com.project.swimcb.swimmingpool.domain.enums.CancellationReason;
 import com.project.swimcb.swimmingpool.domain.enums.PaymentMethod;
 import com.project.swimcb.swimmingpool.domain.enums.ReservationStatus;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
@@ -18,6 +19,7 @@ public record BoReservation(
     @NonNull SwimmingClass swimmingClass,
     @NonNull ReservationDetail reservationDetail,
     @NonNull Payment payment,
+    Cancel cancel,
     Refund refund
 ) {
 
@@ -47,6 +49,7 @@ public record BoReservation(
       long id,
       @NonNull TicketType ticketType,
       @NonNull ReservationStatus status,
+      Integer waitingNo,
       @NonNull LocalDateTime reservedAt,
       LocalDateTime paymentPendingAt,
       LocalDateTime paymentCompletedAt,
@@ -60,6 +63,13 @@ public record BoReservation(
   public record Payment(
       @NonNull PaymentMethod method,
       @NonNull Integer amount
+  ) {
+
+  }
+
+  @Builder
+  public record Cancel(
+      @NonNull CancellationReason reason
   ) {
 
   }

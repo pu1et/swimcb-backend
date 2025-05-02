@@ -263,6 +263,7 @@ class FindBoReservationsControllerTest {
               1001L,
               TicketType.SWIMMING_CLASS,
               "DUMMY_RESERVATION_STATUS",
+              null,
               LocalDateTime.now().minusDays(5),
               LocalDateTime.now().minusDays(4)
           ),
@@ -270,6 +271,7 @@ class FindBoReservationsControllerTest {
               "DUMMY_PAYMENT_METHOD",
               50000
           ),
+          null,
           null
       );
 

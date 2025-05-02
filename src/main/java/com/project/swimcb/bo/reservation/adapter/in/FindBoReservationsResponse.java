@@ -21,6 +21,7 @@ public record FindBoReservationsResponse(
       @NonNull SwimmingClass swimmingClass,
       @NonNull ReservationDetail reservationDetail,
       @NonNull Payment payment,
+      Cancel cancel,
       Refund refund
   ) {
 
@@ -79,6 +80,9 @@ public record FindBoReservationsResponse(
       @Schema(example = "[결제대기|결제완료|예약대기|취소완료|환불완료]")
       @NonNull String status,
 
+      @Schema(example = "1")
+      Integer waitingNo,
+
       @Schema(example = "2025-04-01T10:00:00")
       @NonNull LocalDateTime reservedAt,
 
@@ -97,6 +101,16 @@ public record FindBoReservationsResponse(
 
       @Schema(example = "10000")
       @NonNull Integer amount
+  ) {
+
+  }
+
+  @Builder
+  @Schema(name = "FindBoReservationsResponse.Cancel")
+  record Cancel(
+
+      @Schema(description = "환불사유", example = "[사용자취소|입금기한만료]")
+      @NonNull String reason
   ) {
 
   }

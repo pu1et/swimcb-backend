@@ -36,6 +36,7 @@ public class FindBoReservationsResponseMapper {
                     .id(i.reservationDetail().id())
                     .ticketType(i.reservationDetail().ticketType())
                     .status(i.reservationDetail().status().getDescription())
+                    .waitingNo(i.reservationDetail().waitingNo())
                     .reservedAt(i.reservationDetail().reservedAt())
                     .lastStatusChangedAt(lastStatusChangedAt(i))
                     .build())
@@ -44,6 +45,15 @@ public class FindBoReservationsResponseMapper {
                         .method(i.payment().method().getDescription())
                         .amount(i.payment().amount())
                         .build())
+                .cancel(
+                    Optional.ofNullable(i.cancel())
+                        .map(j ->
+                            FindBoReservationsResponse.Cancel.builder()
+                                .reason(j.reason().getDescription())
+                                .build()
+                        )
+                        .orElse(null)
+                )
                 .refund(
                     Optional.ofNullable(i.refund())
                         .map(j ->
