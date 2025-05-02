@@ -1,6 +1,7 @@
 package com.project.swimcb.swimmingpool.domain;
 
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_PENDING;
+import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_VERIFICATION;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_CANCELLED;
 import static com.project.swimcb.swimmingpool.domain.enums.TicketType.SWIMMING_CLASS;
 import static jakarta.persistence.EnumType.STRING;
@@ -141,6 +142,16 @@ public class Reservation extends BaseEntity {
   public void cancel() {
     this.reservationStatus = RESERVATION_CANCELLED;
     this.canceledAt = LocalDateTime.now();
+  }
+
+  public boolean canTransitionToComplete() {
+    return this.reservationStatus == PAYMENT_PENDING ||
+        this.reservationStatus == PAYMENT_VERIFICATION;
+  }
+
+  public void complete() {
+    this.reservationStatus = ReservationStatus.PAYMENT_COMPLETED;
+    this.paymentApprovedAt = LocalDateTime.now();
   }
 }
 
