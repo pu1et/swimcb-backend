@@ -12,6 +12,7 @@ import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
 import com.project.swimcb.bo.swimmingpool.domain.AccountNoConverter;
 import com.project.swimcb.common.entity.BaseEntity;
 import com.project.swimcb.member.domain.Member;
+import com.project.swimcb.swimmingpool.domain.enums.CancellationReason;
 import com.project.swimcb.swimmingpool.domain.enums.PaymentMethod;
 import com.project.swimcb.swimmingpool.domain.enums.ReservationStatus;
 import com.project.swimcb.swimmingpool.domain.enums.TicketType;
