@@ -96,6 +96,7 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
             reservationStatusEqIfExists(condition.reservationStatus()),
             paymentMethodEqIfExists(condition.paymentMethod())
         )
+        .orderBy(reservation.reservedAt.desc())
         .offset(condition.pageable().getOffset())
         .limit(condition.pageable().getPageSize())
         .fetch()
