@@ -1,8 +1,10 @@
 package com.project.swimcb.swimmingpool.domain;
 
+import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_COMPLETED;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_PENDING;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_VERIFICATION;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_CANCELLED;
+import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_PENDING;
 import static com.project.swimcb.swimmingpool.domain.enums.TicketType.SWIMMING_CLASS;
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
@@ -142,9 +144,10 @@ public class Reservation extends BaseEntity {
         .build();
   }
 
-  public void cancel() {
+  public void cancel(@NonNull CancellationReason reason) {
     this.reservationStatus = RESERVATION_CANCELLED;
     this.canceledAt = LocalDateTime.now();
+    this.cancellationReason = reason;
   }
 
   public boolean canTransitionToComplete() {
@@ -153,9 +156,18 @@ public class Reservation extends BaseEntity {
   }
 
   public void complete(@NonNull PaymentMethod paymentMethod) {
-    this.reservationStatus = ReservationStatus.PAYMENT_COMPLETED;
+    this.reservationStatus = PAYMENT_COMPLETED;
     this.paymentApprovedAt = LocalDateTime.now();
     this.paymentMethod = paymentMethod;
+  }
+
+  public boolean canTransitionToCancelByAdmin() {
+    return this.reservationStatus == PAYMENT_VERIFICATION;
+  }
+
+  public boolean canTransitionToCancelByUser() {
+    return this.reservationStatus == RESERVATION_PENDING ||
+        this.reservationStatus == PAYMENT_PENDING;
   }
 }
 

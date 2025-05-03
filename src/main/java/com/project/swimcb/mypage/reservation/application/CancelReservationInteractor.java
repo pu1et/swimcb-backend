@@ -1,5 +1,7 @@
 package com.project.swimcb.mypage.reservation.application;
 
+import static com.project.swimcb.swimmingpool.domain.enums.CancellationReason.*;
+
 import com.project.swimcb.mypage.reservation.application.port.in.CancelReservationUseCase;
 import com.project.swimcb.swimmingpool.domain.ReservationRepository;
 import java.util.NoSuchElementException;
@@ -21,6 +23,9 @@ public class CancelReservationInteractor implements CancelReservationUseCase {
     val reservation = reservationRepository.findByIdAndMemberId(reservationId, memberId)
         .orElseThrow(() -> new NoSuchElementException("예약을 찾을 수 없습니다 : " + reservationId));
 
-    reservation.cancel();
+    if (!reservation.canTransitionToCancelByUser()) {
+      throw new IllegalStateException("예약을 취소할 수 없습니다 : " + reservation);
+    }
+    reservation.cancel(USER_CANCELLED);
   }
 }
