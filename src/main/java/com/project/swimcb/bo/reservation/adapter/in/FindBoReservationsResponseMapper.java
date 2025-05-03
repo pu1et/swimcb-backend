@@ -1,7 +1,6 @@
 package com.project.swimcb.bo.reservation.adapter.in;
 
 import com.project.swimcb.bo.reservation.domain.BoReservation;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.NonNull;
 import lombok.val;
@@ -38,17 +37,20 @@ public class FindBoReservationsResponseMapper {
                     .status(i.reservationDetail().status().getDescription())
                     .waitingNo(i.reservationDetail().waitingNo())
                     .reservedAt(i.reservationDetail().reservedAt())
-                    .lastStatusChangedAt(lastStatusChangedAt(i))
                     .build())
                 .payment(
                     FindBoReservationsResponse.Payment.builder()
                         .method(i.payment().method().getDescription())
                         .amount(i.payment().amount())
+                        .pendingAt(i.payment().pendingAt())
+                        .verificationAt(i.payment().verificationAt())
+                        .approvedAt(i.payment().completedAt())
                         .build())
                 .cancel(
                     Optional.ofNullable(i.cancel())
                         .map(j ->
                             FindBoReservationsResponse.Cancel.builder()
+                                .canceledAt(j.canceledAt())
                                 .reason(j.reason().getDescription())
                                 .build()
                         )
@@ -62,6 +64,7 @@ public class FindBoReservationsResponseMapper {
                                 .accountNo(j.accountNo().value())
                                 .bankName(j.bankName())
                                 .accountHolder(j.accountHolder())
+                                .refundedAt(j.refundedAt())
                                 .build()
                         )
                         .orElse(null)
@@ -71,16 +74,5 @@ public class FindBoReservationsResponseMapper {
         .toList();
     return new FindBoReservationsResponse(
         new PageImpl<>(result, reservations.getPageable(), reservations.getTotalElements()));
-  }
-
-  private LocalDateTime lastStatusChangedAt(@NonNull BoReservation i) {
-    return switch (i.reservationDetail().status()) {
-      case PAYMENT_PENDING -> i.reservationDetail().paymentPendingAt();
-      case PAYMENT_COMPLETED -> i.reservationDetail().paymentCompletedAt();
-      case RESERVATION_PENDING -> i.reservationDetail().reservedAt();
-      case PAYMENT_VERIFICATION -> i.reservationDetail().paymentVerificationAt();
-      case RESERVATION_CANCELLED -> i.reservationDetail().canceledAt();
-      case REFUND_COMPLETED -> i.reservationDetail().refundedAt();
-    };
   }
 }

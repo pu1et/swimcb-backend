@@ -172,17 +172,15 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
                 .status(i.reservationStatus())
                 .reservedAt(i.reservedAt())
                 .waitingNo(i.waitingNo())
-                .paymentPendingAt(i.paymentPendingAt())
-                .paymentVerificationAt(i.paymentVerificationAt())
-                .paymentCompletedAt(i.paymentCompletedAt())
-                .canceledAt(i.canceledAt())
-                .refundedAt(i.refundedAt())
                 .build()
         )
         .payment(
             Payment.builder()
                 .method(i.paymentMethod())
                 .amount(i.amount())
+                .pendingAt(i.paymentPendingAt())
+                .verificationAt(i.paymentVerificationAt())
+                .completedAt(i.paymentCompletedAt())
                 .build()
         )
         .cancel(cancel(i))
@@ -196,6 +194,7 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
     }
     return Cancel.builder()
         .reason(i.cancellationReason())
+        .canceledAt(i.canceledAt())
         .build();
   }
 
@@ -208,6 +207,7 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
         .accountNo(i.refundAccountNo())
         .bankName(i.refundBankName())
         .accountHolder(i.refundAccountHolder())
+        .refundedAt(i.refundedAt())
         .build();
   }
 

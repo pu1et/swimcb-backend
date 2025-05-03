@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import lombok.Builder;
 import lombok.NonNull;
-import org.springframework.cglib.core.Local;
 
 @Builder
 public record BoReservation(
@@ -51,12 +50,7 @@ public record BoReservation(
       @NonNull TicketType ticketType,
       @NonNull ReservationStatus status,
       Integer waitingNo,
-      @NonNull LocalDateTime reservedAt,
-      LocalDateTime paymentPendingAt,
-      LocalDateTime paymentVerificationAt,
-      LocalDateTime paymentCompletedAt,
-      LocalDateTime canceledAt,
-      LocalDateTime refundedAt
+      @NonNull LocalDateTime reservedAt
   ) {
 
   }
@@ -64,14 +58,18 @@ public record BoReservation(
   @Builder
   public record Payment(
       @NonNull PaymentMethod method,
-      @NonNull Integer amount
+      @NonNull Integer amount,
+      LocalDateTime pendingAt,
+      LocalDateTime verificationAt,
+      LocalDateTime completedAt
   ) {
 
   }
 
   @Builder
   public record Cancel(
-      @NonNull CancellationReason reason
+      @NonNull CancellationReason reason,
+      @NonNull LocalDateTime canceledAt
   ) {
 
   }
@@ -81,7 +79,8 @@ public record BoReservation(
       @NonNull Integer amount,
       @NonNull AccountNo accountNo,
       @NonNull String bankName,
-      @NonNull String accountHolder
+      @NonNull String accountHolder,
+      @NonNull LocalDateTime refundedAt
   ) {
 
   }

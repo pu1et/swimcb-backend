@@ -84,10 +84,7 @@ public record FindBoReservationsResponse(
       Integer waitingNo,
 
       @Schema(example = "2025-04-01T10:00:00")
-      @NonNull LocalDateTime reservedAt,
-
-      @Schema(description = "최종 상태 변경 시간", example = "2025-04-01T11:30:00")
-      @NonNull LocalDateTime lastStatusChangedAt
+      @NonNull LocalDateTime reservedAt
   ) {
 
   }
@@ -100,7 +97,16 @@ public record FindBoReservationsResponse(
       @NonNull String method,
 
       @Schema(example = "10000")
-      @NonNull Integer amount
+      @NonNull Integer amount,
+
+      @Schema(example = "2025-04-01T10:00:00")
+      LocalDateTime pendingAt,
+
+      @Schema(example = "2025-04-01T10:00:00")
+      LocalDateTime verificationAt,
+
+      @Schema(example = "2025-04-01T10:00:00")
+      LocalDateTime approvedAt
   ) {
 
   }
@@ -108,6 +114,9 @@ public record FindBoReservationsResponse(
   @Builder
   @Schema(name = "FindBoReservationsResponse.Cancel")
   record Cancel(
+
+      @Schema(example = "2025-04-01T10:00:00")
+      @NonNull LocalDateTime canceledAt,
 
       @Schema(description = "환불사유", example = "[사용자취소|입금기한만료]")
       @NonNull String reason
@@ -129,7 +138,10 @@ public record FindBoReservationsResponse(
       @NonNull String bankName,
 
       @Schema(example = "홍길동")
-      @NonNull String accountHolder
+      @NonNull String accountHolder,
+
+      @Schema(example = "2025-04-01T10:00:00")
+      @NonNull LocalDateTime refundedAt
   ) {
 
   }

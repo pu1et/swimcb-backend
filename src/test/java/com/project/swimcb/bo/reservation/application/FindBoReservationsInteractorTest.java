@@ -210,11 +210,11 @@ class FindBoReservationsInteractorTest {
               .ticketType(SWIMMING_CLASS)
               .status(PAYMENT_COMPLETED)
               .reservedAt(LocalDateTime.now().minusDays(5))
-              .paymentCompletedAt(LocalDateTime.now().minusDays(4))
               .build())
           .payment(Payment.builder()
               .method(CASH_ON_SITE)
               .amount(50000)
+              .completedAt(LocalDateTime.now().minusDays(4))
               .build())
           .build();
     }
@@ -227,7 +227,6 @@ class FindBoReservationsInteractorTest {
           .ticketType(defaultRes.reservationDetail().ticketType())
           .status(status)
           .reservedAt(defaultRes.reservationDetail().reservedAt())
-          .paymentCompletedAt(defaultRes.reservationDetail().paymentCompletedAt())
           .build();
 
       return BoReservation.builder()
@@ -259,10 +258,9 @@ class FindBoReservationsInteractorTest {
 
       val newDetail = ReservationDetail.builder()
           .id(defaultRes.reservationDetail().id())
-          .ticketType(type) // Use the provided ticket type
+          .ticketType(type)
           .status(defaultRes.reservationDetail().status())
           .reservedAt(defaultRes.reservationDetail().reservedAt())
-          .paymentCompletedAt(defaultRes.reservationDetail().paymentCompletedAt())
           .build();
 
       return BoReservation.builder()

@@ -225,12 +225,12 @@ class FindBoReservationsControllerTest {
               .ticketType(TicketType.SWIMMING_CLASS)
               .status(ReservationStatus.PAYMENT_COMPLETED)
               .reservedAt(LocalDateTime.now().minusDays(5))
-              .paymentPendingAt(LocalDateTime.now().minusDays(5))
-              .paymentCompletedAt(LocalDateTime.now().minusDays(4))
               .build())
           .payment(Payment.builder()
               .method(PaymentMethod.CASH_ON_SITE)
               .amount(50000)
+              .pendingAt(LocalDateTime.now().minusDays(5))
+              .completedAt(LocalDateTime.now().minusDays(4))
               .build())
           .build();
 
@@ -264,12 +264,14 @@ class FindBoReservationsControllerTest {
               TicketType.SWIMMING_CLASS,
               "DUMMY_RESERVATION_STATUS",
               null,
-              LocalDateTime.now().minusDays(5),
-              LocalDateTime.now().minusDays(4)
+              LocalDateTime.now().minusDays(5)
           ),
           new FindBoReservationsResponse.Payment(
               "DUMMY_PAYMENT_METHOD",
-              50000
+              50000,
+              LocalDateTime.now().minusDays(5),
+              LocalDateTime.now().minusDays(4),
+              LocalDateTime.now().minusDays(3)
           ),
           null,
           null
