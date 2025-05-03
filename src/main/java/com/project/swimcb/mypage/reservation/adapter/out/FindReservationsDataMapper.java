@@ -79,6 +79,7 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
         .where(
             reservation.member.id.eq(memberId)
         )
+        .orderBy(reservation.reservedAt.desc())
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
         .fetch()

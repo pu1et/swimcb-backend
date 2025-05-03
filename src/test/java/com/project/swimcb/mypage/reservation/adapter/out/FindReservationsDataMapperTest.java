@@ -12,6 +12,7 @@ import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import com.project.swimcb.swimmingpool.domain.enums.TicketType;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -159,6 +160,7 @@ class FindReservationsDataMapperTest {
     when(resultQuery.leftJoin(any(EntityPath.class))).thenReturn(resultQuery);
     when(resultQuery.on(any(Predicate.class))).thenReturn(resultQuery);
     when(resultQuery.where(any(Predicate.class))).thenReturn(resultQuery);
+    when(resultQuery.orderBy(any(OrderSpecifier.class))).thenReturn(resultQuery);
     when(resultQuery.offset(any(Long.class))).thenReturn(resultQuery);
     when(resultQuery.limit(any(Long.class))).thenReturn(resultQuery);
 
