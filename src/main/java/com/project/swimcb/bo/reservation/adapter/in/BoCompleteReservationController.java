@@ -13,6 +13,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +28,7 @@ public class BoCompleteReservationController {
   private final CompleteReservationUseCase useCase;
 
   @Operation(summary = "[BO] 결제 완료로 변경")
-  @PostMapping
+  @PutMapping
   public void complete(
       @PathVariable(value = "reservationId") long reservationId,
       @Valid @RequestBody BoCompleteReservationRequest request
