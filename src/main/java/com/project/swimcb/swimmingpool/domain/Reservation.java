@@ -152,9 +152,10 @@ public class Reservation extends BaseEntity {
         this.reservationStatus == PAYMENT_VERIFICATION;
   }
 
-  public void complete() {
+  public void complete(@NonNull PaymentMethod paymentMethod) {
     this.reservationStatus = ReservationStatus.PAYMENT_COMPLETED;
     this.paymentApprovedAt = LocalDateTime.now();
+    this.paymentMethod = paymentMethod;
   }
 }
 
