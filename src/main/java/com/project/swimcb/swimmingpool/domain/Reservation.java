@@ -3,6 +3,7 @@ package com.project.swimcb.swimmingpool.domain;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_COMPLETED;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_PENDING;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_VERIFICATION;
+import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.REFUND_COMPLETED;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_CANCELLED;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_PENDING;
 import static com.project.swimcb.swimmingpool.domain.enums.TicketType.SWIMMING_CLASS;
@@ -168,6 +169,24 @@ public class Reservation extends BaseEntity {
   public boolean canTransitionToCancelByUser() {
     return this.reservationStatus == RESERVATION_PENDING ||
         this.reservationStatus == PAYMENT_PENDING;
+  }
+
+  public boolean canTransitionToRefund() {
+    return this.reservationStatus == PAYMENT_COMPLETED;
+  }
+
+  public void refund(
+      @NonNull String bankName,
+      @NonNull AccountNo accountNo,
+      @NonNull String accountHolder,
+      @NonNull Integer amount
+  ) {
+    this.reservationStatus = REFUND_COMPLETED;
+    this.refundBankName = bankName;
+    this.refundAccountNo = accountNo;
+    this.refundAccountHolder = accountHolder;
+    this.refundAmount = amount;
+    this.refundedAt = LocalDateTime.now();
   }
 }
 
