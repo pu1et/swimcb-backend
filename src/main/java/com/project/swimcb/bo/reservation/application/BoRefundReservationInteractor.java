@@ -25,7 +25,7 @@ class BoRefundReservationInteractor implements BoRefundReservationUseCase {
             () -> new NoSuchElementException("예약이 존재하지 않습니다 : " + command.reservationId()));
 
     if (!reservation.canTransitionToRefund()) {
-      throw new IllegalStateException("견제완료 상태만 환불이 가능합니다 : " + command.reservationId());
+      throw new IllegalStateException("결제완료|취소완료 상태에서만 환불이 가능합니다 : " + command.reservationId());
     }
 
     reservation.refund(
