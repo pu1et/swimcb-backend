@@ -171,6 +171,15 @@ public class Reservation extends BaseEntity {
         this.reservationStatus == PAYMENT_PENDING;
   }
 
+  public boolean canTransitionToPaymentVerificationByUser() {
+    return this.reservationStatus == PAYMENT_PENDING;
+  }
+
+  public void updateStatusToPaymentVerification() {
+    this.reservationStatus = PAYMENT_VERIFICATION;
+    this.paymentVerificationAt = LocalDateTime.now();
+  }
+
   // 환불가능한 상태
   // 결제완료 : 정상 플로우
   // 취소완료 : 입금했는데 입금확인중을 누르지 않아 자동 취소된 경우
