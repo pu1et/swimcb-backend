@@ -32,7 +32,7 @@ public class FindReservationController {
       @Parameter(description = "페이지 번호") @RequestParam(value = "page", defaultValue = "1") int page,
       @Parameter(description = "페이지 크기") @RequestParam(value = "size", defaultValue = "10") int size
   ) {
-    val pageable = PageRequest.of(page, size);
+    val pageable = PageRequest.of(page - 1, size);
     return mapper.toResponse(useCase.findReservations(tokenInfo.memberId(), pageable));
   }
 }

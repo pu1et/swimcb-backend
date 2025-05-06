@@ -73,7 +73,7 @@ class FindReservationControllerTest {
       // when
       // then
       mockMvc.perform(get(PATH)
-              .param("page", "0")
+              .param("page", "1")
               .param("size", "10"))
           .andExpect(status().isOk())
           .andExpect(content().json(objectMapper.writeValueAsString(response)));
@@ -87,7 +87,7 @@ class FindReservationControllerTest {
     void useDefaultParametersWhenNotProvided() throws Exception {
       // given
       val memberId = 1L;
-      val defaultPageable = PageRequest.of(1, 10); // 컨트롤러의 기본값
+      val defaultPageable = PageRequest.of(0, 10); // 컨트롤러의 기본값
 
       final Page<Reservation> emptyPage = new PageImpl<>(List.of(), defaultPageable, 0);
       val emptyResponse = TestFindReservationsResponseFactory.createEmpty();
