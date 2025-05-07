@@ -201,6 +201,15 @@ public class Reservation extends BaseEntity {
     this.refundAmount = amount;
     this.refundedAt = LocalDateTime.now();
   }
+
+  public boolean canChangePaymentMethod() {
+    return this.reservationStatus == RESERVATION_PENDING
+        || this.reservationStatus == PAYMENT_PENDING;
+  }
+
+  public void changePaymentMethod(@NonNull PaymentMethod paymentMethod) {
+    this.paymentMethod = paymentMethod;
+  }
 }
 
 
