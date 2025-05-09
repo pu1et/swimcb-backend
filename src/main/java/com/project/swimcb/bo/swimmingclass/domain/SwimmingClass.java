@@ -17,6 +17,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -81,6 +82,12 @@ public class SwimmingClass extends BaseEntity {
 
   @Column(name = "is_canceled", nullable = false)
   private boolean isCanceled;
+
+  @Column(name = "cancel_reason")
+  private String cancelReason;
+
+  @Column(name = "canceled_at")
+  private LocalDateTime canceledAt;
 
   public SwimmingClassAvailabilityStatus getReservationStatus() {
     return SwimmingClassAvailabilityStatus.calculateStatus(this.reservationLimitCount,
