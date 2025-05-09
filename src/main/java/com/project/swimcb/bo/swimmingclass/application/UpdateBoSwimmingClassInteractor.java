@@ -36,7 +36,7 @@ public class UpdateBoSwimmingClassInteractor implements UpdateBoSwimmingClassUse
     val swimmingClass = classRepository.findBySwimmingPool_IdAndId(swimmingPoolId, swimmingClassId)
         .orElseThrow(() -> new NoSuchElementException("클래스가 존재하지 않습니다."));
 
-    ticketRepository.deleteBySwimmingClass_Id(swimmingClassId);
+    gateway.deleteAllTicketsBySwimmingClassId(swimmingClassId);
 
     val newTickets = tickets.stream()
         .map(i -> SwimmingClassTicket.create(swimmingClass, i.name(), i.price()))

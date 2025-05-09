@@ -6,4 +6,7 @@ import lombok.NonNull;
 public interface UpdateBoSwimmingClassDsGateway {
 
   void updateSwimmingClass(@NonNull UpdateBoSwimmingClassCommand request);
+
+  void deleteAllTicketsBySwimmingClassId(@NonNull Long swimmingClassId);
+
 }

@@ -1,6 +1,7 @@
 package com.project.swimcb.bo.swimmingclass.adapter.out;
 
 import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClass.swimmingClass;
+import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassTicket.swimmingClassTicket;
 
 import com.project.swimcb.bo.instructor.domain.SwimmingInstructor;
 import com.project.swimcb.bo.instructor.domain.SwimmingInstructorRepository;
@@ -11,6 +12,7 @@ import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassType;
 import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassTypeRepository;
 import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
 import java.time.DayOfWeek;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -27,6 +29,7 @@ public class UpdateBoSwimmingClassDataMapper implements UpdateBoSwimmingClassDsG
   private final SwimmingClassTypeRepository swimmingClassTypeRepository;
   private final SwimmingClassSubTypeRepository swimmingClassSubTypeRepository;
   private final SwimmingInstructorRepository swimmingInstructorRepository;
+  private final EntityManager entityManager;
 
   @Override
   public void updateSwimmingClass(@NonNull UpdateBoSwimmingClassCommand request) {
@@ -55,6 +58,17 @@ public class UpdateBoSwimmingClassDataMapper implements UpdateBoSwimmingClassDsG
     if (count != 1) {
       throw new NoSuchElementException("클래스가 존재하지 않습니다.");
     }
+  }
+
+  @Override
+  public void deleteAllTicketsBySwimmingClassId(@NonNull Long swimmingClassId) {
+    queryFactory.update(swimmingClassTicket)
+        .set(swimmingClassTicket.isDeleted, true)
+        .where(swimmingClassTicket.swimmingClass.id.eq(swimmingClassId))
+        .execute();
+
+    entityManager.flush();
+    entityManager.clear();
   }
 
   private SwimmingClassType findClassType(long classTypeId) {

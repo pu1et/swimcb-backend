@@ -29,6 +29,7 @@ import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand.T
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.querydsl.jpa.impl.JPAUpdateClause;
+import jakarta.persistence.EntityManager;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -63,6 +64,9 @@ class UpdateBoSwimmingClassDataMapperTest {
   @Mock
   private JPAUpdateClause updateClause;
 
+  @Mock
+  private EntityManager entityManager;
+
   @BeforeEach
   void setUp() {
     lenient().when(queryFactory.update(any())).thenReturn(updateClause);
@@ -71,7 +75,7 @@ class UpdateBoSwimmingClassDataMapperTest {
     lenient().when(updateClause.where(any(Predicate[].class))).thenReturn(updateClause);
 
     mapper = spy(new UpdateBoSwimmingClassDataMapper(queryFactory, swimmingClassTypeRepository,
-        swimmingClassSubTypeRepository, instructorRepository));
+        swimmingClassSubTypeRepository, instructorRepository, entityManager));
   }
 
   @Nested

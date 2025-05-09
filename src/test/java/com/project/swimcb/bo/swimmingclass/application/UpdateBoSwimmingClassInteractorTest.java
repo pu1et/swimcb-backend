@@ -67,8 +67,10 @@ class UpdateBoSwimmingClassInteractorTest {
       // when
       interactor.updateBoSwimmingClass(request);
       // then
-      verify(gateway, only()).updateSwimmingClass(request);
-      verify(ticketRepository, times(1)).deleteBySwimmingClass_Id(anyLong());
+      verify(gateway, times(1)).updateSwimmingClass(request);
+      verify(swimmingClassRepository, only()).findBySwimmingPool_IdAndId(request.swimmingPoolId(),
+          request.swimmingClassId());
+      verify(gateway, times(1)).deleteAllTicketsBySwimmingClassId(request.swimmingClassId());
       verify(ticketRepository, times(1)).saveAll(assertArg(i -> {
         assertThat(i).hasSize(2);
         assertThat(i).extracting(j -> j.getSwimmingClass().getId())
@@ -79,6 +81,7 @@ class UpdateBoSwimmingClassInteractorTest {
             .containsExactly(10000, 20000);
       }));
     }
+
   }
 
   @Nested
@@ -99,6 +102,7 @@ class UpdateBoSwimmingClassInteractorTest {
           .isInstanceOf(NoSuchElementException.class)
           .hasMessage("클래스가 존재하지 않습니다.");
     }
+
   }
 
   private static class TestUpdateBoSwimmingClassCommandFactory {
@@ -134,6 +138,7 @@ class UpdateBoSwimmingClassInteractorTest {
           .isExposed(true)
           .build();
     }
+
   }
 
 
@@ -146,5 +151,7 @@ class UpdateBoSwimmingClassInteractorTest {
       ReflectionTestUtils.setField(swimmingClass, "id", 1L);
       return swimmingClass;
     }
+
   }
+
 }
