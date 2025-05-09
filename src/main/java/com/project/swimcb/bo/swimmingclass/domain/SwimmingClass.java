@@ -79,6 +79,9 @@ public class SwimmingClass extends BaseEntity {
   @Column(name = "is_visible", nullable = false)
   private boolean isVisible;
 
+  @Column(name = "is_canceled", nullable = false)
+  private boolean isCanceled;
+
   public SwimmingClassAvailabilityStatus getReservationStatus() {
     return SwimmingClassAvailabilityStatus.calculateStatus(this.reservationLimitCount,
         this.reservedCount);

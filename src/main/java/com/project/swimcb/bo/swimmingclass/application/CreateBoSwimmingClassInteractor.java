@@ -58,6 +58,7 @@ public class CreateBoSwimmingClassInteractor implements CreateBoSwimmingClassUse
         .totalCapacity(command.registrationCapacity().totalCapacity())
         .reservationLimitCount(command.registrationCapacity().reservationLimitCount())
         .isVisible(command.isExposed())
+        .isCanceled(false)
         .build();
 
     val savedSwimmingClass = swimmingClassRepository.save(swimmingClass);
