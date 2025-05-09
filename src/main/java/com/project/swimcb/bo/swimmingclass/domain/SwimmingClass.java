@@ -23,6 +23,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Getter
 @Table(name = "swimming_class")
@@ -101,4 +102,11 @@ public class SwimmingClass extends BaseEntity {
   public int calculateWaitingNum() {
     return this.reservedCount - this.reservationLimitCount + 1;
   }
+
+  public void cancel(@NonNull String cancelReason) {
+    this.isCanceled = true;
+    this.cancelReason = cancelReason;
+    this.canceledAt = LocalDateTime.now();
+  }
+
 }
