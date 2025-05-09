@@ -79,14 +79,16 @@ class FindSwimmingPoolDetailClassesDataMapper implements
         .where(
             swimmingClass.swimmingPool.id.eq(condition.swimmingPoolId()),
             swimmingClass.isVisible.isTrue(),
-
+            swimmingClass.isCanceled.isFalse(),
             swimmingClass.year.between(condition.startDate().getYear(),
                 condition.endDate().getYear()),
             swimmingClass.month.between(condition.startDate().getMonthValue(),
                 condition.endDate().getMonthValue()),
             classTimeBetweenStartTimes(condition.startTimes()),
             swimmingClassDaysOfWeek,
-            classTypeAndSubTypeIn(condition.classTypes(), condition.classSubTypes())
+            classTypeAndSubTypeIn(condition.classTypes(), condition.classSubTypes()),
+
+            swimmingClassTicket.isDeleted.isFalse()
         )
         .groupBy(
             swimmingClass.id,

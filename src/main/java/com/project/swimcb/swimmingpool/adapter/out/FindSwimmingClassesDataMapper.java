@@ -78,17 +78,19 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
             // TODO. 폰번호 조건 추가
             swimmingPool.latitude.isNotNull(),
             swimmingPool.longitude.isNotNull(),
-            swimmingClass.isVisible.eq(true),
-
             swimmingPoolNameAndAddressContains(condition.keyword()),
 
+            swimmingClass.isVisible.isTrue(),
+            swimmingClass.isCanceled.isFalse(),
             swimmingClass.year.between(condition.startDate().getYear(),
                 condition.endDate().getYear()),
             swimmingClass.month.between(condition.startDate().getMonthValue(),
                 condition.endDate().getMonthValue()),
             classTimeBetweenStartTimes(condition.startTimes()),
             swimmingClassDaysOfWeek,
-            classTypeAndSubTypeIn(condition.classTypes(), condition.classSubTypes())
+            classTypeAndSubTypeIn(condition.classTypes(), condition.classSubTypes()),
+
+            swimmingClassTicket.isDeleted.isFalse()
         )
         .groupBy(
             swimmingPool.id,
