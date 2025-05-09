@@ -38,12 +38,16 @@ public class SwimmingClassTicket extends BaseEntity {
   @Column(name = "price", nullable = false)
   private int price;
 
+  @Column(name = "is_deleted", nullable = false)
+  private boolean isDeleted;
+
   public static SwimmingClassTicket create(@NonNull SwimmingClass swimmingClass,
       @NonNull String name, int price) {
     val swimmingClassTicket = new SwimmingClassTicket();
     swimmingClassTicket.swimmingClass = swimmingClass;
     swimmingClassTicket.name = name;
     swimmingClassTicket.price = price;
+    swimmingClassTicket.isDeleted = false;
     return swimmingClassTicket;
   }
 }
