@@ -126,7 +126,8 @@ class FindBoSwimmingClassesDataMapper implements FindBoSwimmingClassesDsGateway 
         .where(
             swimmingClass.swimmingPool.id.eq(swimmingPoolId),
             swimmingClass.month.eq(month),
-            swimmingClassTicket.isDeleted.isFalse()
+            swimmingClassTicket.isDeleted.isFalse(),
+            swimmingClass.isCanceled.isFalse()
         )
         .orderBy(swimmingClass.createdAt.asc())
         .fetch();
