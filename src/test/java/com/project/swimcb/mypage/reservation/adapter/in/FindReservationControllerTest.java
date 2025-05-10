@@ -126,6 +126,7 @@ class FindReservationControllerTest {
                   .daysOfWeek(new ClassDayOfWeek(List.of(MONDAY)))
                   .startTime(LocalTime.of(18, 0))
                   .endTime(LocalTime.of(19, 0))
+                  .isCanceled(false)
                   .build()
           )
           .ticket(
@@ -170,6 +171,7 @@ class FindReservationControllerTest {
           .days(List.of("월", "수", "금"))
           .startTime(LocalTime.of(18, 0))
           .endTime(LocalTime.of(19, 0))
+          .isCanceled(false)
           .build();
 
       val ticket = FindReservationsResponse.Ticket.builder()

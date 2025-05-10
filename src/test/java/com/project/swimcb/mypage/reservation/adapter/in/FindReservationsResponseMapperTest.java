@@ -139,6 +139,7 @@ class FindReservationsResponseMapperTest {
                   .daysOfWeek(ClassDayOfWeek.of(0b1010100)) // 월, 수, 금
                   .startTime(LocalTime.of(18, 0))
                   .endTime(LocalTime.of(19, 0))
+                  .isCanceled(false)
                   .build()
           )
           .ticket(

@@ -112,6 +112,7 @@ class FindReservationsInteractorTest {
                 .daysOfWeek(new ClassDayOfWeek(List.of(MONDAY)))
                 .startTime(LocalTime.of(18, 0))
                 .endTime(LocalTime.of(19, 0))
+                .isCanceled(false)
                 .build()
         )
         .ticket(

@@ -55,6 +55,7 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
             swimmingClass.daysOfWeek,
             swimmingClass.startTime,
             swimmingClass.endTime,
+            swimmingClass.isCanceled,
 
             swimmingClassTicket.id,
             swimmingClassTicket.name,
@@ -121,6 +122,7 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
                 .daysOfWeek(ClassDayOfWeek.of(i.daysOfWeek()))
                 .startTime(i.startTime())
                 .endTime(i.endTime())
+                .isCanceled(i.isCanceled())
                 .build()
         )
         .ticket(
@@ -162,6 +164,7 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
       int daysOfWeek,
       LocalTime startTime,
       LocalTime endTime,
+      boolean isCanceled,
 
       long ticketId,
       String ticketName,

@@ -35,6 +35,7 @@ public class FindReservationsResponseMapper {
                     .days(i.swimmingClass().daysOfWeek().toDays())
                     .startTime(i.swimmingClass().startTime())
                     .endTime(i.swimmingClass().endTime())
+                    .isCanceled(i.swimmingClass().isCanceled())
                     .build()
                 )
                 .ticket(FindReservationsResponse.Ticket.builder()
