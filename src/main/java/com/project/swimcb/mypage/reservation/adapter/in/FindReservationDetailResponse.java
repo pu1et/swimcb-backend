@@ -65,7 +65,10 @@ public record FindReservationDetailResponse(
       @NonNull LocalTime startTime,
 
       @Schema(example = "07:00:00")
-      @NonNull LocalTime endTime
+      @NonNull LocalTime endTime,
+
+      @Schema(example = "false")
+      @NonNull Boolean isCanceled
   ) {
 
   }

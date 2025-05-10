@@ -180,6 +180,7 @@ class FindReservationDetailResponseMapperTest {
                   .daysOfWeek(new ClassDayOfWeek(List.of(MONDAY, WEDNESDAY, FRIDAY)))
                   .startTime(LocalTime.of(10, 0))
                   .endTime(LocalTime.of(11, 0))
+                  .isCanceled(false)
                   .build()
           )
           .ticket(

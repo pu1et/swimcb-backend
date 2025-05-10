@@ -49,6 +49,7 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
             swimmingPool.phone,
             swimmingPoolImage.path,
             swimmingPool.accountNo,
+
             swimmingClass.id,
             swimmingClass.month,
             swimmingClassType.name,
@@ -56,9 +57,12 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
             swimmingClass.daysOfWeek,
             swimmingClass.startTime,
             swimmingClass.endTime,
+            swimmingClass.isCanceled,
+
             swimmingClassTicket.id,
             swimmingClassTicket.name,
             swimmingClassTicket.price,
+
             reservation.reservationStatus,
             reservation.reservedAt,
             reservation.waitingNo,
@@ -71,6 +75,7 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
             reservation.refundAccountNo,
             reservation.refundBankName,
             reservation.refundedAt,
+
             swimmingPoolReview.id
         ))
         .from(reservation)
@@ -109,6 +114,7 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
                 .daysOfWeek(ClassDayOfWeek.of(result.daysOfWeek()))
                 .startTime(result.startTime())
                 .endTime(result.endTime())
+                .isCanceled(result.isCanceled())
                 .build()
         )
         .ticket(
@@ -177,6 +183,7 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
       String swimmingPoolPhone,
       String swimmingPoolImagePath,
       AccountNo accountNo,
+
       long swimmingClassId,
       int month,
       SwimmingClassTypeName swimmingClassType,
@@ -184,9 +191,12 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
       int daysOfWeek,
       LocalTime startTime,
       LocalTime endTime,
+      boolean isCanceled,
+
       long ticketId,
       String ticketName,
       int ticketPrice,
+
       ReservationStatus reservationStatus,
       LocalDateTime reservedAt,
       Integer waitingNo,
@@ -199,6 +209,7 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
       AccountNo refundAccountNo,
       String refundBankName,
       LocalDateTime refundedAt,
+
       Long reviewId
   ) {
 

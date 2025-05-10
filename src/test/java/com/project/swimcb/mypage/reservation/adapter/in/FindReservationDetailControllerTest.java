@@ -94,6 +94,7 @@ class FindReservationDetailControllerTest {
                   .daysOfWeek(new ClassDayOfWeek(List.of()))
                   .startTime(LocalTime.of(10, 0))
                   .endTime(LocalTime.of(11, 0))
+                  .isCanceled(false)
                   .build()
           )
           .ticket(
@@ -142,6 +143,7 @@ class FindReservationDetailControllerTest {
                   .days(List.of("월", "수", "금"))
                   .startTime(LocalTime.of(10, 0))
                   .endTime(LocalTime.of(11, 0))
+                  .isCanceled(false)
                   .build()
           )
           .ticket(
