@@ -53,10 +53,6 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-tasks.withType(JavaCompile).configureEach {
-	options.annotationProcessorGeneratedSourcesDirectory = file("$buildDir/generated/sources/annotationProcessor/java/main")
-}
-
 sourceSets {
-	main.java.srcDirs += "$buildDir/generated/sources/annotationProcessor/java/main"
+	main.java.srcDirs += "$buildDir/generated"
 }
