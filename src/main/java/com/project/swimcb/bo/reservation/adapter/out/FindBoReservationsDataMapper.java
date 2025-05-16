@@ -26,6 +26,7 @@ import com.project.swimcb.swimmingpool.domain.enums.ReservationStatus;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import com.project.swimcb.swimmingpool.domain.enums.TicketType;
 import com.querydsl.core.annotations.QueryProjection;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -94,6 +95,7 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
             reservation.reservedAt.between(
                 condition.startDate().atStartOfDay(), condition.endDate().atTime(MAX)),
             programTypeEqIfExists(condition.programType()),
+            swimmingClassIdEqIfExists(condition.swimmingClassId()),
             reservationStatusEqIfExists(condition.reservationStatus()),
             paymentMethodEqIfExists(condition.paymentMethod())
         )
@@ -117,6 +119,7 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
             reservation.reservedAt.between(
                 condition.startDate().atStartOfDay(), condition.endDate().atTime(MAX)),
             programTypeEqIfExists(condition.programType()),
+            swimmingClassIdEqIfExists(condition.swimmingClassId()),
             reservationStatusEqIfExists(condition.reservationStatus()),
             paymentMethodEqIfExists(condition.paymentMethod())
         )
@@ -130,6 +133,13 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
       return null;
     }
     return reservation.ticketType.eq(programType);
+  }
+
+  private BooleanExpression swimmingClassIdEqIfExists(Long swimmingClassId) {
+    if (swimmingClassId == null) {
+      return null;
+    }
+    return swimmingClass.id.eq(swimmingClassId);
   }
 
   private BooleanExpression reservationStatusEqIfExists(ReservationStatus reservationStatus) {

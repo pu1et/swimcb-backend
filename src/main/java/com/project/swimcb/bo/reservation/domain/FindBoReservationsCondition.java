@@ -14,6 +14,8 @@ public record FindBoReservationsCondition(
     @NonNull LocalDate startDate,
     @NonNull LocalDate endDate,
     TicketType programType,
+    Long swimmingClassId,
+    Long freeSwimmingId,
     ReservationStatus reservationStatus,
     PaymentMethod paymentMethod,
     @NonNull Pageable pageable

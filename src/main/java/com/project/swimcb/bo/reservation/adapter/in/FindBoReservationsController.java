@@ -41,6 +41,8 @@ public class FindBoReservationsController {
       @Parameter(description = "조회 종료일", example = "2025-03-01") @RequestParam LocalDate endDate,
 
       @RequestParam(required = false) TicketType programType,
+      @RequestParam(required = false) Long swimmingClassId,
+      @RequestParam(required = false) Long freeSwimmingId,
       @RequestParam(required = false) ReservationStatus reservationStatus,
       @RequestParam(required = false) PaymentMethod paymentMethod,
 
@@ -54,6 +56,8 @@ public class FindBoReservationsController {
         .startDate(startDate)
         .endDate(endDate)
         .programType(programType)
+        .swimmingClassId(swimmingClassId)
+        .freeSwimmingId(freeSwimmingId)
         .reservationStatus(reservationStatus)
         .paymentMethod(paymentMethod)
         .pageable(PageRequest.of(page - 1, size))
