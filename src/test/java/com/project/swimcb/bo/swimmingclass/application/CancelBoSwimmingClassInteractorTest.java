@@ -1,16 +1,27 @@
 package com.project.swimcb.bo.swimmingclass.application;
 
+import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_COMPLETED;
+import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_PENDING;
+import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_VERIFICATION;
+import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_PENDING;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
+import com.project.swimcb.bo.swimmingclass.application.out.CancelBoSwimmingClassDsGateway;
 import com.project.swimcb.bo.swimmingclass.application.out.UpdateBoSwimmingClassDsGateway;
 import com.project.swimcb.bo.swimmingclass.domain.CancelBoSwimmingClassCommand;
 import com.project.swimcb.bo.swimmingclass.domain.SwimmingClass;
 import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassRepository;
+import com.project.swimcb.swimmingpool.domain.enums.CancellationReason;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.val;
@@ -35,6 +46,9 @@ class CancelBoSwimmingClassInteractorTest {
   @Mock
   private UpdateBoSwimmingClassDsGateway updateBoSwimmingClassDsGateway;
 
+  @Mock
+  private CancelBoSwimmingClassDsGateway cancelBoSwimmingClassDsGateway;
+
   @Nested
   @DisplayName("수영 클래스 취소 시")
   class CancelSwimmingClassTests {
@@ -54,22 +68,58 @@ class CancelBoSwimmingClassInteractorTest {
     }
 
     @Test
-    @DisplayName("클래스가 존재하면 연관된 티켓을 삭제하고 클래스를 취소 상태로 변경한다")
-    void shouldCancelClassAndDeleteTicketsWhenClassExists() {
+    @DisplayName("클래스가 존재하고 결제완료/입금확인중인 예약이 없으면 클래스를 취소하고 예약을 취소 상태로 변경한다")
+    void shouldCancelClassAndReservationsWhenNoCompletedPayments() {
       // given
       val swimmingClass = mock(SwimmingClass.class);
       when(swimmingClassRepository.findBySwimmingPool_IdAndId(anyLong(), anyLong()))
           .thenReturn(Optional.of(swimmingClass));
+      when(cancelBoSwimmingClassDsGateway.existsReservationBySwimmingClassIdReservationStatusIn(
+          any(), any())).thenReturn(false);
 
       // when
       interactor.cancelBoSwimmingClass(command);
 
       // then
+      verify(cancelBoSwimmingClassDsGateway, times(1))
+          .existsReservationBySwimmingClassIdReservationStatusIn(command.swimmingClassId(),
+              List.of(PAYMENT_VERIFICATION, PAYMENT_COMPLETED));
       verify(updateBoSwimmingClassDsGateway, only()).deleteAllTicketsBySwimmingClassId(
           command.swimmingClassId());
-      verify(swimmingClassRepository, only()).findBySwimmingPool_IdAndId(command.swimmingPoolId(),
+      verify(cancelBoSwimmingClassDsGateway, times(1))
+          .cancelAllReservationsBySwimmingClassIdAndReservationStatusIn(
+              command.swimmingClassId(),
+              List.of(RESERVATION_PENDING, PAYMENT_PENDING),
+              CancellationReason.SWIMMING_CLASS_CANCELLED);
+      verify(swimmingClass).cancel(command.cancelReason());
+    }
+
+    @Test
+    @DisplayName("결제완료 또는 입금확인중인 예약이 있으면 예외를 발생시킨다")
+    void shouldThrowExceptionWhenCompletedPaymentsExist() {
+      // given
+      val swimmingClass = mock(SwimmingClass.class);
+      when(swimmingClassRepository.findBySwimmingPool_IdAndId(anyLong(), anyLong()))
+          .thenReturn(Optional.of(swimmingClass));
+      when(cancelBoSwimmingClassDsGateway.existsReservationBySwimmingClassIdReservationStatusIn(
+          any(), any())).thenReturn(true);
+
+      // when
+      // then
+      assertThatThrownBy(() -> interactor.cancelBoSwimmingClass(command))
+          .isInstanceOf(IllegalStateException.class)
+          .hasMessageContaining("입금확인중, 결제완료 건이 있어 폐강이 불가합니다");
+
+      verify(cancelBoSwimmingClassDsGateway, only())
+          .existsReservationBySwimmingClassIdReservationStatusIn(
+              command.swimmingClassId(),
+              List.of(PAYMENT_VERIFICATION, PAYMENT_COMPLETED)
+          );
+      verify(updateBoSwimmingClassDsGateway, never()).deleteAllTicketsBySwimmingClassId(
           command.swimmingClassId());
-      verify(swimmingClass, only()).cancel(command.cancelReason());
+      verify(cancelBoSwimmingClassDsGateway, never())
+          .cancelAllReservationsBySwimmingClassIdAndReservationStatusIn(any(), any(), any());
+      verify(swimmingClass, never()).cancel(any());
     }
 
     @Test
@@ -84,8 +134,8 @@ class CancelBoSwimmingClassInteractorTest {
       assertThatThrownBy(() -> interactor.cancelBoSwimmingClass(command))
           .isInstanceOf(NoSuchElementException.class);
 
-      verify(updateBoSwimmingClassDsGateway, only()).deleteAllTicketsBySwimmingClassId(
-          command.swimmingClassId());
+      verifyNoInteractions(updateBoSwimmingClassDsGateway);
+      verifyNoInteractions(cancelBoSwimmingClassDsGateway);
     }
 
     @Test
@@ -96,5 +146,7 @@ class CancelBoSwimmingClassInteractorTest {
       assertThatThrownBy(() -> interactor.cancelBoSwimmingClass(null))
           .isInstanceOf(NullPointerException.class);
     }
+
   }
+
 }
