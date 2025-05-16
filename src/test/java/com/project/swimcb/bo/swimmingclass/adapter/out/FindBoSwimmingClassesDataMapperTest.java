@@ -10,11 +10,13 @@ import static java.time.DayOfWeek.WEDNESDAY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesResponse.Ticket;
+import com.project.swimcb.bo.swimmingclass.adapter.out.FindBoSwimmingClassesDataMapper.BoCompletedReservationCount;
 import com.project.swimcb.bo.swimmingclass.adapter.out.FindBoSwimmingClassesDataMapper.BoSwimmingClass;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -58,8 +60,11 @@ class FindBoSwimmingClassesDataMapperTest {
     val swimmingPoolId = 1L;
     val month = 3;
     val result = TestBoSwimmingClassesFactory.create();
+    val completedReservationResult = TestBoCompletedReservationCountFactory.create();
 
     when(mapper.findSwimmingClasses(anyLong(), anyInt())).thenReturn(result);
+    when(mapper.findCompletedReservationCountBySwimmingPool(anySet()))
+        .thenReturn(completedReservationResult);
     // when
     val response = mapper.findBySwimmingPoolId(swimmingPoolId, month);
     // then
@@ -86,7 +91,11 @@ class FindBoSwimmingClassesDataMapperTest {
         .containsExactly("DUMMY_TICKET_NAME5", "DUMMY_TICKET_NAME6");
     assertThat(swimmingClass1.tickets()).extracting(Ticket::price)
         .containsExactly(10000, 20000);
+
     assertThat(swimmingClass1.registrationCapacity().totalCapacity()).isEqualTo(10);
+    assertThat(swimmingClass1.registrationCapacity().reservationLimitCount()).isEqualTo(5);
+    assertThat(swimmingClass1.registrationCapacity().completedReservationCount()).isEqualTo(2);
+    assertThat(swimmingClass1.registrationCapacity().remainingReservationCount()).isEqualTo(3);
 
     assertThat(swimmingClass2.swimmingClassId()).isEqualTo(2L);
     assertThat(swimmingClass2.type().typeId()).isEqualTo(3L);
@@ -105,7 +114,11 @@ class FindBoSwimmingClassesDataMapperTest {
         .containsExactly("DUMMY_TICKET_NAME7", "DUMMY_TICKET_NAME8");
     assertThat(swimmingClass2.tickets()).extracting(Ticket::price)
         .containsExactly(30000, 40000);
+
     assertThat(swimmingClass2.registrationCapacity().totalCapacity()).isEqualTo(20);
+    assertThat(swimmingClass2.registrationCapacity().reservationLimitCount()).isEqualTo(10);
+    assertThat(swimmingClass2.registrationCapacity().completedReservationCount()).isEqualTo(8);
+    assertThat(swimmingClass2.registrationCapacity().remainingReservationCount()).isEqualTo(2);
   }
 
   @Test
@@ -201,5 +214,24 @@ class FindBoSwimmingClassesDataMapperTest {
               .build()
       );
     }
+
   }
+
+  private static class TestBoCompletedReservationCountFactory {
+
+    private static List<BoCompletedReservationCount> create() {
+      return List.of(
+          BoCompletedReservationCount.builder()
+              .swimmingClassId(1L)
+              .completedReservationCount(2)
+              .build(),
+          BoCompletedReservationCount.builder()
+              .swimmingClassId(2L)
+              .completedReservationCount(8)
+              .build()
+      );
+    }
+
+  }
+
 }

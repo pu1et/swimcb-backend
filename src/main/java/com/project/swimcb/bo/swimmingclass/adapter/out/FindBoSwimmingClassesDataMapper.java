@@ -5,6 +5,9 @@ import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClass.swimming
 import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassSubType.swimmingClassSubType;
 import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassTicket.swimmingClassTicket;
 import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassType.swimmingClassType;
+import static com.project.swimcb.swimmingpool.domain.QReservation.reservation;
+import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_COMPLETED;
+import static com.project.swimcb.swimmingpool.domain.enums.TicketType.SWIMMING_CLASS;
 import static com.querydsl.core.types.Projections.constructor;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toMap;
@@ -24,8 +27,11 @@ import jakarta.persistence.EntityManager;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.Builder;
+import lombok.NonNull;
 import lombok.val;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +49,14 @@ class FindBoSwimmingClassesDataMapper implements FindBoSwimmingClassesDsGateway 
     val groupingBySwimmingClass = findSwimmingClasses(swimmingPoolId, month)
         .stream().collect(groupingBy(i -> i.swimmingClassId));
 
+    val completedReservationCountBySwimmingPool = findCompletedReservationCountBySwimmingPool(
+        groupingBySwimmingClass.keySet())
+        .stream()
+        .collect(Collectors.toMap(
+            BoCompletedReservationCount::swimmingClassId,
+            BoCompletedReservationCount::completedReservationCount
+        ));
+
     val result = groupingBySwimmingClass
         .entrySet()
         .stream()
@@ -56,6 +70,9 @@ class FindBoSwimmingClassesDataMapper implements FindBoSwimmingClassesDsGateway 
               .mapToInt(BoSwimmingClass::ticketPrice).min().orElse(0);
           val maximumTicketPrice = ticketMap.values().stream()
               .mapToInt(BoSwimmingClass::ticketPrice).max().orElse(0);
+          val completedReservationCount = completedReservationCountBySwimmingPool.getOrDefault(
+              i.getKey(), 0L).intValue();
+          val remainingReservationCount = value.reservationLimitCount() - completedReservationCount;
 
           return SwimmingClass.builder()
               .swimmingClassId(key)
@@ -90,6 +107,8 @@ class FindBoSwimmingClassesDataMapper implements FindBoSwimmingClassesDsGateway 
               .registrationCapacity(RegistrationCapacity.builder()
                   .totalCapacity(value.totalCapacity())
                   .reservationLimitCount(value.reservationLimitCount())
+                  .completedReservationCount(completedReservationCount)
+                  .remainingReservationCount(remainingReservationCount)
                   .build())
               .isExposed(value.isExposed())
               .build();
@@ -133,9 +152,31 @@ class FindBoSwimmingClassesDataMapper implements FindBoSwimmingClassesDsGateway 
         .fetch();
   }
 
+  List<BoCompletedReservationCount> findCompletedReservationCountBySwimmingPool(
+      @NonNull Set<Long> swimmingClassIds) {
+
+    return queryFactory.select(
+            constructor(BoCompletedReservationCount.class,
+                swimmingClass.id,
+                reservation.id.count()
+            ))
+        .from(reservation)
+        .join(swimmingClassTicket).on(
+            reservation.ticketType.eq(SWIMMING_CLASS),
+            reservation.ticketId.eq(swimmingClassTicket.id)
+        )
+        .join(swimmingClassTicket.swimmingClass, swimmingClass)
+        .where(
+            swimmingClass.id.in(swimmingClassIds),
+            reservation.reservationStatus.in(PAYMENT_COMPLETED)
+        )
+        .groupBy(swimmingClass.id)
+        .fetch();
+  }
+
   private List<DayOfWeek> days(int days) {
     return IntStream.range(0, 7)
-        .filter(i -> (days & (1 << (6-i))) != 0)
+        .filter(i -> (days & (1 << (6 - i))) != 0)
         .mapToObj(i -> DayOfWeek.of(i + 1))
         .toList();
   }
@@ -161,4 +202,13 @@ class FindBoSwimmingClassesDataMapper implements FindBoSwimmingClassesDsGateway 
   ) {
 
   }
+
+  @Builder
+  public record BoCompletedReservationCount(
+      long swimmingClassId,
+      long completedReservationCount
+  ) {
+
+  }
+
 }

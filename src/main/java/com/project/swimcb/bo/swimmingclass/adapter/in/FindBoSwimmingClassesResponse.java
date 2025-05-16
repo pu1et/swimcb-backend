@@ -73,7 +73,6 @@ public record FindBoSwimmingClassesResponse(
   public record RegistrationCapacity(
       int totalCapacity,
       int reservationLimitCount,
-      // TODO. 예약 기능 추가되면 업데이트 해줘야함
       int completedReservationCount,
       int remainingReservationCount
   ) {
