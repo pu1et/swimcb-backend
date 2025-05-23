@@ -1,9 +1,12 @@
 package com.project.swimcb.bo.reservation.application;
 
+import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_PENDING;
+
 import com.project.swimcb.bo.reservation.application.port.in.BoRefundReservationUseCase;
 import com.project.swimcb.bo.reservation.application.port.out.BoCancelReservationDsGateway;
 import com.project.swimcb.bo.reservation.domain.BoRefundReservationCommand;
 import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
+import com.project.swimcb.swimmingpool.domain.Reservation;
 import com.project.swimcb.swimmingpool.domain.ReservationRepository;
 import java.util.NoSuchElementException;
 import lombok.NonNull;
@@ -39,6 +42,18 @@ class BoRefundReservationInteractor implements BoRefundReservationUseCase {
     val swimmingClassId = boCancelReservationDsGateway.findSwimmingClassByReservationId(
         command.reservationId());
     boCancelReservationDsGateway.updateSwimmingClassReservedCount(swimmingClassId, -1);
+
+    updateWaitingStatusAfterReservation(reservation);
   }
 
+  // 취소한 예약이 어떤 상태냐에 따라 처리가 다름
+  // 1. 결제대기 상태 -> 가장 앞 순번인 예약대기를 결제대기로 변경
+  // 2. 예약대기 상태 -> 아무것도 하지 않음
+  private void updateWaitingStatusAfterReservation(@NonNull Reservation reservation) {
+    if (reservation.getReservationStatus() == RESERVATION_PENDING) {
+      return;
+    }
+    boCancelReservationDsGateway.findFirstWaitingReservationId(reservation.getId())
+        .ifPresent(boCancelReservationDsGateway::updateReservationStatusToPaymentPending);
+  }
 }
