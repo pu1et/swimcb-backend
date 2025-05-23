@@ -9,6 +9,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.project.swimcb.bo.reservation.application.port.out.BoCancelReservationDsGateway;
 import com.project.swimcb.swimmingpool.domain.Reservation;
 import com.project.swimcb.swimmingpool.domain.ReservationRepository;
 import java.util.NoSuchElementException;
@@ -31,6 +32,9 @@ class CancelReservationInteractorTest {
   @Mock
   private ReservationRepository reservationRepository;
 
+  @Mock
+  private BoCancelReservationDsGateway boCancelReservationDsGateway;
+
   private Long memberId;
   private Long reservationId;
 
@@ -45,10 +49,13 @@ class CancelReservationInteractorTest {
   void shouldCancelWithUserCancelled_WhenCanTransitionToCancel() {
     // given
     val reservation = mock(Reservation.class);
+    val swimmingClassId = 1L;
 
     when(reservationRepository.findByIdAndMemberId(reservationId, memberId))
         .thenReturn(Optional.of(reservation));
     when(reservation.canTransitionToCancelByUser()).thenReturn(true);
+    when(boCancelReservationDsGateway.findSwimmingClassByReservationId(reservationId))
+        .thenReturn(swimmingClassId);
 
     // when
     interactor.cancelReservation(memberId, reservationId);
@@ -57,6 +64,9 @@ class CancelReservationInteractorTest {
     verify(reservationRepository, only()).findByIdAndMemberId(reservationId, memberId);
     verify(reservation, times(1)).canTransitionToCancelByUser();
     verify(reservation, times(1)).cancel(USER_CANCELLED);
+    verify(boCancelReservationDsGateway, times(1)).findSwimmingClassByReservationId(reservationId);
+    verify(boCancelReservationDsGateway, times(1))
+        .updateSwimmingClassReservedCount(swimmingClassId, -1);
   }
 
   @Test
@@ -111,4 +121,5 @@ class CancelReservationInteractorTest {
     assertThatThrownBy(() -> interactor.cancelReservation(memberId, reservationId))
         .isInstanceOf(IllegalStateException.class);
   }
+
 }

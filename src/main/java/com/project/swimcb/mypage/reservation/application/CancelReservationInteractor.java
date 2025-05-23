@@ -2,6 +2,7 @@ package com.project.swimcb.mypage.reservation.application;
 
 import static com.project.swimcb.swimmingpool.domain.enums.CancellationReason.*;
 
+import com.project.swimcb.bo.reservation.application.port.out.BoCancelReservationDsGateway;
 import com.project.swimcb.mypage.reservation.application.port.in.CancelReservationUseCase;
 import com.project.swimcb.swimmingpool.domain.ReservationRepository;
 import java.util.NoSuchElementException;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CancelReservationInteractor implements CancelReservationUseCase {
 
   private final ReservationRepository reservationRepository;
+  private final BoCancelReservationDsGateway boCancelReservationDsGateway;
 
   @Override
   public void cancelReservation(@NonNull Long memberId, @NonNull Long reservationId) {
@@ -27,5 +29,8 @@ public class CancelReservationInteractor implements CancelReservationUseCase {
       throw new IllegalStateException("예약을 취소할 수 없습니다 : " + reservation);
     }
     reservation.cancel(USER_CANCELLED);
+
+    val swimmingClassId = boCancelReservationDsGateway.findSwimmingClassByReservationId(reservationId);
+    boCancelReservationDsGateway.updateSwimmingClassReservedCount(swimmingClassId, -1);
   }
 }
