@@ -1,5 +1,6 @@
 package com.project.swimcb.bo.reservation.application.port.out;
 
+import java.util.Optional;
 import lombok.NonNull;
 
 public interface BoCancelReservationDsGateway {
@@ -10,5 +11,9 @@ public interface BoCancelReservationDsGateway {
       @NonNull Long swimmingClassId,
       int count
   );
+
+  Optional<Long> findFirstWaitingReservationId(@NonNull Long reservationId);
+
+  void updateReservationStatusToPaymentPending(@NonNull Long reservationId);
 
 }
