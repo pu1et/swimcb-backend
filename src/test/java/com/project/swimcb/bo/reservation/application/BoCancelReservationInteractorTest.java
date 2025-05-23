@@ -9,6 +9,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.project.swimcb.bo.reservation.application.port.out.BoCancelReservationDsGateway;
 import com.project.swimcb.swimmingpool.domain.Reservation;
 import com.project.swimcb.swimmingpool.domain.ReservationRepository;
 import java.util.NoSuchElementException;
@@ -31,6 +32,9 @@ class BoCancelReservationInteractorTest {
   @Mock
   private ReservationRepository repository;
 
+  @Mock
+  private BoCancelReservationDsGateway boCancelReservationDsGateway;
+
   private Long reservationId;
 
   @BeforeEach
@@ -43,9 +47,12 @@ class BoCancelReservationInteractorTest {
   void shouldCancelReservation_WhenCanTransitionToCancel() {
     // given
     val reservation = mock(Reservation.class);
+    val swimmingClassId = 1L;
 
     when(repository.findById(anyLong())).thenReturn(Optional.of(reservation));
     when(reservation.canTransitionToCancelByAdmin()).thenReturn(true);
+    when(boCancelReservationDsGateway.findSwimmingClassByReservationId(reservationId))
+        .thenReturn(swimmingClassId);
 
     // when
     interactor.cancelReservation(reservationId);
@@ -54,6 +61,9 @@ class BoCancelReservationInteractorTest {
     verify(repository, only()).findById(reservationId);
     verify(reservation, times(1)).canTransitionToCancelByAdmin();
     verify(reservation, times(1)).cancel(NO_PAYMENT_RECEIVED);
+    verify(boCancelReservationDsGateway, times(1)).findSwimmingClassByReservationId(reservationId);
+    verify(boCancelReservationDsGateway, times(1))
+        .updateSwimmingClassReservedCount(swimmingClassId, -1);
   }
 
   @Test

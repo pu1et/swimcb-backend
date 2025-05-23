@@ -3,6 +3,7 @@ package com.project.swimcb.bo.reservation.application;
 import static com.project.swimcb.swimmingpool.domain.enums.CancellationReason.NO_PAYMENT_RECEIVED;
 
 import com.project.swimcb.bo.reservation.application.port.in.BoCancelReservationUseCase;
+import com.project.swimcb.bo.reservation.application.port.out.BoCancelReservationDsGateway;
 import com.project.swimcb.swimmingpool.domain.ReservationRepository;
 import java.util.NoSuchElementException;
 import lombok.NonNull;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 class BoCancelReservationInteractor implements BoCancelReservationUseCase {
 
   private final ReservationRepository reservationRepository;
+  private final BoCancelReservationDsGateway boCancelReservationDsGateway;
 
   @Override
   public void cancelReservation(@NonNull Long reservationId) {
@@ -28,5 +30,8 @@ class BoCancelReservationInteractor implements BoCancelReservationUseCase {
     }
 
     reservation.cancel(NO_PAYMENT_RECEIVED);
+
+    val swimmingClassId = boCancelReservationDsGateway.findSwimmingClassByReservationId(reservationId);
+    boCancelReservationDsGateway.updateSwimmingClassReservedCount(swimmingClassId, -1);
   }
 }
