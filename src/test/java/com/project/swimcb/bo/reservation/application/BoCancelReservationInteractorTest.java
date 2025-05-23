@@ -1,11 +1,13 @@
 package com.project.swimcb.bo.reservation.application;
 
 import static com.project.swimcb.swimmingpool.domain.enums.CancellationReason.NO_PAYMENT_RECEIVED;
+import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_PENDING;
+import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_PENDING;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.only;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -35,49 +37,93 @@ class BoCancelReservationInteractorTest {
   @Mock
   private BoCancelReservationDsGateway boCancelReservationDsGateway;
 
-  private Long reservationId;
+  private final Long RESERVATION_ID = 1L;
+  private final Long SWIMMING_CLASS_ID = 10L;
 
-  @BeforeEach
-  void setUp() {
-    reservationId = 1L;
+  @Test
+  @DisplayName("결제대기 상태 예약이면 취소 처리 후 대기 예약을 결제대기로 변경한다")
+  void shouldCancelPaymentPendingReservationAndUpdateWaitingReservation() {
+    // given
+    val reservation = mock(Reservation.class);
+    when(repository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
+    when(reservation.canTransitionToCancelByAdmin()).thenReturn(true);
+    when(reservation.getReservationStatus()).thenReturn(PAYMENT_PENDING);
+    when(reservation.getId()).thenReturn(RESERVATION_ID);
+
+    when(boCancelReservationDsGateway.findSwimmingClassByReservationId(RESERVATION_ID))
+        .thenReturn(SWIMMING_CLASS_ID);
+
+    val waitingReservationId = 5L;
+    when(boCancelReservationDsGateway.findFirstWaitingReservationId(RESERVATION_ID))
+        .thenReturn(Optional.of(waitingReservationId));
+
+    // when
+    interactor.cancelReservation(RESERVATION_ID);
+
+    // then
+    verify(reservation).cancel(NO_PAYMENT_RECEIVED);
+    verify(boCancelReservationDsGateway).updateSwimmingClassReservedCount(SWIMMING_CLASS_ID, -1);
+    verify(boCancelReservationDsGateway).findFirstWaitingReservationId(RESERVATION_ID);
+    verify(boCancelReservationDsGateway).updateReservationStatusToPaymentPending(waitingReservationId);
   }
 
   @Test
-  @DisplayName("취소로 변경이 가능한 예약이면, 입금미확인 사유로 취소 처리한다")
-  void shouldCancelReservation_WhenCanTransitionToCancel() {
+  @DisplayName("예약대기 상태인 경우 예약이 취소되고 대기 예약은 업데이트하지 않는다")
+  void shouldCancelReservationPendingAndNotUpdateWaitingReservation() {
     // given
     val reservation = mock(Reservation.class);
-    val swimmingClassId = 1L;
-
-    when(repository.findById(anyLong())).thenReturn(Optional.of(reservation));
+    when(repository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
     when(reservation.canTransitionToCancelByAdmin()).thenReturn(true);
-    when(boCancelReservationDsGateway.findSwimmingClassByReservationId(reservationId))
-        .thenReturn(swimmingClassId);
+    when(reservation.getReservationStatus()).thenReturn(RESERVATION_PENDING);
+
+    when(boCancelReservationDsGateway.findSwimmingClassByReservationId(RESERVATION_ID))
+        .thenReturn(SWIMMING_CLASS_ID);
 
     // when
-    interactor.cancelReservation(reservationId);
+    interactor.cancelReservation(RESERVATION_ID);
 
     // then
-    verify(repository, only()).findById(reservationId);
-    verify(reservation, times(1)).canTransitionToCancelByAdmin();
-    verify(reservation, times(1)).cancel(NO_PAYMENT_RECEIVED);
-    verify(boCancelReservationDsGateway, times(1)).findSwimmingClassByReservationId(reservationId);
-    verify(boCancelReservationDsGateway, times(1))
-        .updateSwimmingClassReservedCount(swimmingClassId, -1);
+    verify(reservation).cancel(NO_PAYMENT_RECEIVED);
+    verify(boCancelReservationDsGateway).updateSwimmingClassReservedCount(SWIMMING_CLASS_ID, -1);
+    verify(boCancelReservationDsGateway, never()).findFirstWaitingReservationId(RESERVATION_ID);
+    verify(boCancelReservationDsGateway, never()).updateReservationStatusToPaymentPending(RESERVATION_ID);
+  }
+
+  @Test
+  @DisplayName("결제대기 상태이지만 대기 예약이 없는 경우 예약만 취소된다")
+  void shouldCancelPaymentPendingReservationWhenNoWaitingReservation() {
+    // given
+    val reservation = mock(Reservation.class);
+    when(repository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
+    when(reservation.canTransitionToCancelByAdmin()).thenReturn(true);
+    when(reservation.getReservationStatus()).thenReturn(PAYMENT_PENDING);
+    when(reservation.getId()).thenReturn(RESERVATION_ID);
+
+    when(boCancelReservationDsGateway.findSwimmingClassByReservationId(RESERVATION_ID))
+        .thenReturn(SWIMMING_CLASS_ID);
+
+    when(boCancelReservationDsGateway.findFirstWaitingReservationId(RESERVATION_ID))
+        .thenReturn(Optional.empty());
+
+    // when
+    interactor.cancelReservation(RESERVATION_ID);
+
+    // then
+    verify(reservation).cancel(NO_PAYMENT_RECEIVED);
+    verify(boCancelReservationDsGateway).updateSwimmingClassReservedCount(SWIMMING_CLASS_ID, -1);
+    verify(boCancelReservationDsGateway, never()).updateReservationStatusToPaymentPending(RESERVATION_ID);
   }
 
   @Test
   @DisplayName("존재하지 않는 예약인 경우 예외가 발생한다")
   void shouldThrowException_WhenReservationNotFound() {
     // given
-    val nonExistentReservationId = 999L;
-    when(repository.findById(anyLong())).thenReturn(Optional.empty());
+    when(repository.findById(RESERVATION_ID)).thenReturn(Optional.empty());
 
-    // when
-    // then
-    assertThatThrownBy(
-        () -> interactor.cancelReservation(nonExistentReservationId))
-        .isInstanceOf(NoSuchElementException.class);
+    // when & then
+    assertThatThrownBy(() -> interactor.cancelReservation(RESERVATION_ID))
+        .isInstanceOf(NoSuchElementException.class)
+        .hasMessageContaining("예약이 존재하지 않습니다");
   }
 
   @Test
@@ -85,13 +131,20 @@ class BoCancelReservationInteractorTest {
   void shouldThrowException_WhenCannotTransitionToCancel() {
     // given
     val reservation = mock(Reservation.class);
-
-    when(repository.findById(anyLong())).thenReturn(Optional.of(reservation));
+    when(repository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
     when(reservation.canTransitionToCancelByAdmin()).thenReturn(false);
 
-    // when
-    // then
-    assertThatThrownBy(() -> interactor.cancelReservation(reservationId))
-        .isInstanceOf(IllegalStateException.class);
+    // when & then
+    assertThatThrownBy(() -> interactor.cancelReservation(RESERVATION_ID))
+        .isInstanceOf(IllegalStateException.class)
+        .hasMessageContaining("입금 확인 중 상태만 취소할 수 있습니다");
+  }
+
+  @Test
+  @DisplayName("파라미터가 null이면 NullPointerException 예외를 발생시킨다")
+  void shouldThrowNullPointerExceptionWhenArgumentIsNull() {
+    // when & then
+    assertThatThrownBy(() -> interactor.cancelReservation(null))
+        .isInstanceOf(NullPointerException.class);
   }
 }
