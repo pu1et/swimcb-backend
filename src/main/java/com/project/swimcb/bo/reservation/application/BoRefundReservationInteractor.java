@@ -1,6 +1,7 @@
 package com.project.swimcb.bo.reservation.application;
 
 import com.project.swimcb.bo.reservation.application.port.in.BoRefundReservationUseCase;
+import com.project.swimcb.bo.reservation.application.port.out.BoCancelReservationDsGateway;
 import com.project.swimcb.bo.reservation.domain.BoRefundReservationCommand;
 import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
 import com.project.swimcb.swimmingpool.domain.ReservationRepository;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 class BoRefundReservationInteractor implements BoRefundReservationUseCase {
 
   private final ReservationRepository reservationRepository;
+  private final BoCancelReservationDsGateway boCancelReservationDsGateway;
 
   @Override
   public void refundReservation(@NonNull BoRefundReservationCommand command) {
@@ -34,5 +36,9 @@ class BoRefundReservationInteractor implements BoRefundReservationUseCase {
         command.accountHolder(),
         command.amount()
     );
+    val swimmingClassId = boCancelReservationDsGateway.findSwimmingClassByReservationId(
+        command.reservationId());
+    boCancelReservationDsGateway.updateSwimmingClassReservedCount(swimmingClassId, -1);
   }
+
 }

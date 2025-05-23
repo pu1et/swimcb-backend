@@ -8,6 +8,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.project.swimcb.bo.reservation.application.port.out.BoCancelReservationDsGateway;
 import com.project.swimcb.bo.reservation.domain.BoRefundReservationCommand;
 import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
 import com.project.swimcb.swimmingpool.domain.Reservation;
@@ -32,6 +33,9 @@ class BoRefundReservationInteractorTest {
   @Mock
   private ReservationRepository repository;
 
+  @Mock
+  private BoCancelReservationDsGateway boCancelReservationDsGateway;
+
   private BoRefundReservationCommand command;
 
   @BeforeEach
@@ -50,9 +54,12 @@ class BoRefundReservationInteractorTest {
   void shouldRefundReservation_WhenCanTransitionToRefund() {
     // given
     val reservation = mock(Reservation.class);
+    val swimmingClassId = 1L;
 
     when(repository.findById(anyLong())).thenReturn(Optional.of(reservation));
     when(reservation.canTransitionToRefund()).thenReturn(true);
+    when(boCancelReservationDsGateway.findSwimmingClassByReservationId(anyLong())).thenReturn(
+        swimmingClassId);
 
     // when
     interactor.refundReservation(command);
@@ -66,6 +73,10 @@ class BoRefundReservationInteractorTest {
         command.accountHolder(),
         command.amount()
     );
+    verify(boCancelReservationDsGateway, times(1))
+        .findSwimmingClassByReservationId(command.reservationId());
+    verify(boCancelReservationDsGateway, times(1))
+        .updateSwimmingClassReservedCount(swimmingClassId, -1);
   }
 
   @Test
