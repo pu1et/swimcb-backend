@@ -1,28 +1,36 @@
 package com.project.swimcb.mypage.reservation.adapter.out;
 
+import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_PENDING;
+import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_PENDING;
+import static com.project.swimcb.swimmingpool.domain.enums.TicketType.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anySet;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import com.project.swimcb.mypage.reservation.adapter.out.FindReservationsDataMapper.QueryReservation;
+import com.project.swimcb.mypage.reservation.adapter.out.FindReservationsDataMapper.WaitingReservation;
+import com.project.swimcb.mypage.reservation.domain.Reservation;
+import com.project.swimcb.mypage.reservation.domain.Reservation.ReservationDetail;
+import com.project.swimcb.mypage.reservation.domain.Reservation.SwimmingClass;
+import com.project.swimcb.mypage.reservation.domain.Reservation.SwimmingPool;
+import com.project.swimcb.mypage.reservation.domain.Reservation.Ticket;
 import com.project.swimcb.swimmingpool.domain.enums.ReservationStatus;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import com.project.swimcb.swimmingpool.domain.enums.TicketType;
-import com.querydsl.core.types.EntityPath;
-import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Set;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -40,162 +48,118 @@ class FindReservationsDataMapperTest {
   @Mock
   private JPAQueryFactory queryFactory;
 
-  private JPAQuery<QueryReservation> resultQuery;
-  private JPAQuery<Long> countQuery;
+  @Nested
+  @DisplayName("setCurrentWaitingNo 메서드 테스트")
+  class SetCurrentWaitingNoTest {
 
-  private long memberId = 1L;
-  private Pageable pageable;
+    @Test
+    @DisplayName("대기 예약 번호가 정상적으로 계산되어야 한다")
+    void shouldCalculateCurrentWaitingNumbers() {
+      // given
+      val findReservationsDataMapper = spy(new FindReservationsDataMapper(queryFactory));
+      val reservation1 = create(3L, 1L, RESERVATION_PENDING, 5);
+      val reservation2 = create(5L, 2L, PAYMENT_PENDING, null);
+      val reservation3 = create(10L, 3L, RESERVATION_PENDING, 5);
 
-  @BeforeEach
-  void setUp() {
-    pageable = PageRequest.of(0, 10);
+      val reservations = List.of(reservation1, reservation2, reservation3);
 
-    setupQueryChain();
-  }
+      val mockRelatedReservations = List.of(
+          new WaitingReservation(1L, 1, RESERVATION_PENDING, 1L),
+          new WaitingReservation(2L, 2, RESERVATION_PENDING, 1L),
+          new WaitingReservation(3L, 3, RESERVATION_PENDING, 1L),
 
-  @Test
-  @DisplayName("예약 목록 조회 시 정상적으로 매핑되어야 한다")
-  void shouldMapCorrectlyWhenFetchingReservations() {
-    // given
-    val queryResult = TestQueryReservationFactory.create();
-    val reviewId = 5L;
+          new WaitingReservation(6L, 1, RESERVATION_PENDING, 3L),
+          new WaitingReservation(7L, 1, RESERVATION_PENDING, 3L),
+          new WaitingReservation(8L, 1, RESERVATION_PENDING, 3L),
+          new WaitingReservation(9L, 1, RESERVATION_PENDING, 3L)
+      );
 
-    when(queryResult.reviewId()).thenReturn(reviewId);
+      doReturn(mockRelatedReservations)
+          .when(findReservationsDataMapper)
+          .findRelatedReservationPendingReservations(anySet());
 
-    when(resultQuery.fetch()).thenReturn(List.of(queryResult));
-    when(countQuery.fetchOne()).thenReturn(1L);
+      // when
+      val result = findReservationsDataMapper.setCurrentWaitingNo(reservations);
 
-    // when
-    val result = findReservationsDataMapper.findReservations(memberId, pageable);
+      // then
+      assertThat(result).hasSize(3);
 
-    // then
-    assertThat(result).isNotNull();
-    assertThat(result).hasSize(1);
+      // 첫번째 예약은 대기 세번째
+      assertThat(result.get(0).reservationDetail().waitingNo()).isEqualTo(3);
 
-    val reservation = result.getContent().get(0);
+      // 두번째 예약은 대기 상태가 아니므로 null
+      assertThat(result.get(1).reservationDetail().waitingNo()).isNull();
 
-    // 수영장 정보 확인
-    assertThat(reservation.swimmingPool().id()).isEqualTo(queryResult.swimmingPoolId());
-    assertThat(reservation.swimmingPool().name()).isEqualTo(queryResult.swimmingPoolName());
-    assertThat(reservation.swimmingPool().imagePath()).isEqualTo(
-        queryResult.swimmingPoolImagePath());
+      // 세번째 예약은 대기 두번째
+      assertThat(result.get(2).reservationDetail().waitingNo()).isEqualTo(5);
 
-    // 수영 클래스 정보 확인
-    assertThat(reservation.swimmingClass().id()).isEqualTo(queryResult.swimmingClassId());
-    assertThat(reservation.swimmingClass().month()).isEqualTo(queryResult.month());
-    assertThat(reservation.swimmingClass().type()).isEqualTo(queryResult.swimmingClassType());
-    assertThat(reservation.swimmingClass().subType()).isEqualTo(queryResult.swimmingClassSubType());
-    assertThat(reservation.swimmingClass().startTime()).isEqualTo(queryResult.startTime());
-    assertThat(reservation.swimmingClass().endTime()).isEqualTo(queryResult.endTime());
-
-    // 티켓 정보 확인
-    assertThat(reservation.ticket().id()).isEqualTo(queryResult.ticketId());
-    assertThat(reservation.ticket().name()).isEqualTo(queryResult.ticketName());
-    assertThat(reservation.ticket().price()).isEqualTo(queryResult.ticketPrice());
-
-    // 예약 상세 정보 확인
-    assertThat(reservation.reservationDetail().id()).isEqualTo(queryResult.reservationId());
-    assertThat(reservation.reservationDetail().ticketType()).isEqualTo(queryResult.ticketType());
-    assertThat(reservation.reservationDetail().status()).isEqualTo(queryResult.reservationStatus());
-    assertThat(reservation.reservationDetail().reservedAt()).isEqualTo(queryResult.reservedAt());
-    assertThat(reservation.reservationDetail().waitingNo()).isEqualTo(queryResult.waitingNo());
-
-    // 리뷰 정보 확인
-    assertThat(reservation.review().id()).isEqualTo(queryResult.reviewId());
-  }
-
-  @Test
-  @DisplayName("리뷰가 없는 경우에도 정상적으로 매핑되어야 한다")
-  void shouldMapCorrectlyWhenReviewIsNull() {
-    // given
-    val queryResult = TestQueryReservationFactory.create();
-
-    when(queryResult.reviewId()).thenReturn(null);
-
-    when(resultQuery.fetch()).thenReturn(List.of(queryResult));
-    when(countQuery.fetchOne()).thenReturn(1L);
-
-    // when
-    val result = findReservationsDataMapper.findReservations(memberId, pageable);
-
-    // then
-    assertThat(result)
-        .isNotNull()
-        .hasSize(1);
-
-    val reservation = result.getContent().get(0);
-
-    assertThat(reservation.review()).isNull();
-  }
-
-  @Test
-  @DisplayName("예약 내역이 없는 경우 빈 페이지가 반환되어야 한다")
-  void shouldReturnEmptyPageWhenNoReservations() {
-    // given
-    when(resultQuery.fetch()).thenReturn(List.of());
-    when(countQuery.fetchOne()).thenReturn(0L);
-
-    // when
-    val result = findReservationsDataMapper.findReservations(memberId, pageable);
-
-    // then
-    assertThat(result)
-        .isNotNull()
-        .isEmpty();
-    assertThat(result.getTotalElements()).isZero();
-    assertThat(result.getTotalPages()).isZero();
-  }
-
-  /**
-   * QueryDSL 체인을 설정하는 메서드
-   */
-  @SuppressWarnings("unchecked")
-  private void setupQueryChain() {
-    resultQuery = mock(JPAQuery.class);
-    countQuery = mock(JPAQuery.class);
-
-    when(queryFactory.select(any(Expression.class))).thenReturn(resultQuery);
-    when(resultQuery.from(any(EntityPath.class))).thenReturn(resultQuery);
-    when(resultQuery.join(any(EntityPath.class))).thenReturn(resultQuery);
-    when(resultQuery.leftJoin(any(EntityPath.class))).thenReturn(resultQuery);
-    when(resultQuery.on(any(Predicate.class))).thenReturn(resultQuery);
-    when(resultQuery.where(any(Predicate.class))).thenReturn(resultQuery);
-    when(resultQuery.orderBy(any(OrderSpecifier.class))).thenReturn(resultQuery);
-    when(resultQuery.offset(any(Long.class))).thenReturn(resultQuery);
-    when(resultQuery.limit(any(Long.class))).thenReturn(resultQuery);
-
-    lenient().when(queryFactory.select(any(NumberExpression.class))).thenReturn(countQuery);
-    lenient().when(countQuery.from(any(EntityPath.class))).thenReturn(countQuery);
-    lenient().when(countQuery.join(any(EntityPath.class))).thenReturn(countQuery);
-    lenient().when(countQuery.where(any(Predicate.class))).thenReturn(countQuery);
-    lenient().when(countQuery.on(any(Predicate.class))).thenReturn(countQuery);
-  }
-
-  private static class TestQueryReservationFactory {
-
-    public static QueryReservation create() {
-      val queryReservation = mock(QueryReservation.class);
-
-      when(queryReservation.swimmingPoolId()).thenReturn(1L);
-      when(queryReservation.swimmingPoolName()).thenReturn("DUMMY_POOL_NAME");
-      when(queryReservation.swimmingPoolImagePath()).thenReturn("DUMMY_POOL_IMAGE_PATH");
-      when(queryReservation.swimmingClassId()).thenReturn(2L);
-      when(queryReservation.month()).thenReturn(4);
-      when(queryReservation.swimmingClassType()).thenReturn(SwimmingClassTypeName.GROUP);
-      when(queryReservation.swimmingClassSubType()).thenReturn("DUMMY_SUB_TYPE");
-      when(queryReservation.daysOfWeek()).thenReturn(0b1010100); // 월,수,금
-      when(queryReservation.startTime()).thenReturn(LocalTime.of(10, 0));
-      when(queryReservation.endTime()).thenReturn(LocalTime.of(11, 0));
-      when(queryReservation.ticketId()).thenReturn(3L);
-      when(queryReservation.ticketName()).thenReturn("DUMMY_TICKET_NAME");
-      when(queryReservation.ticketPrice()).thenReturn(10000);
-      when(queryReservation.reservationId()).thenReturn(4L);
-      when(queryReservation.ticketType()).thenReturn(TicketType.SWIMMING_CLASS);
-      when(queryReservation.reservationStatus()).thenReturn(ReservationStatus.PAYMENT_PENDING);
-      when(queryReservation.reservedAt()).thenReturn(LocalDateTime.of(2023, 4, 1, 9, 0));
-      when(queryReservation.waitingNo()).thenReturn(null);
-
-      return queryReservation;
+      verify(findReservationsDataMapper, times(1)).findRelatedReservationPendingReservations(Set.of(1L, 3L));
     }
+
+    @Test
+    @DisplayName("회원의 예약내역 중 대기 예약이 없는 경우 원본 목록을 그대로 반환해야 한다")
+    void shouldReturnOriginalListWhenNoWaitingReservations() {
+      // given
+      val findReservationsDataMapper = spy(new FindReservationsDataMapper(queryFactory));
+      val reservation1 = create(1L, 1L, PAYMENT_PENDING, null);
+      val reservation2 = create(2L, 1L, PAYMENT_PENDING, null);
+
+      val reservations = List.of(reservation1, reservation2);
+
+      // when
+      val result = findReservationsDataMapper.setCurrentWaitingNo(reservations);
+
+      // then
+      assertThat(result).isEqualTo(reservations);
+
+      verify(findReservationsDataMapper, never()).findRelatedReservationPendingReservations(Set.of(1L));
+    }
+
   }
+
+  private static Reservation create(Long id, Long swimmingClassId, ReservationStatus status,
+      Integer waitingNo) {
+    return Reservation.builder()
+        .swimmingPool(createSwimmingPool())
+        .swimmingClass(createSwimmingClass(swimmingClassId))
+        .ticket(createTicket())
+        .reservationDetail(ReservationDetail.builder()
+            .id(id)
+            .ticketType(SWIMMING_CLASS)
+            .status(status)
+            .reservedAt(LocalDateTime.now())
+            .waitingNo(waitingNo)
+            .build())
+        .build();
+  }
+
+  private static SwimmingPool createSwimmingPool() {
+    return SwimmingPool.builder()
+        .id(1L)
+        .name("DUMMY_POOL_NAME")
+        .imagePath("DUMMY_POOL_IMAGE_PATH")
+        .build();
+  }
+
+  private static SwimmingClass createSwimmingClass(Long id) {
+    return SwimmingClass.builder()
+        .id(id)
+        .month(5)
+        .type(SwimmingClassTypeName.GROUP)
+        .subType("DUMMY_SUB_TYPE")
+        .daysOfWeek(ClassDayOfWeek.of(0b1111111))
+        .startTime(LocalTime.of(10, 0))
+        .endTime(LocalTime.of(11, 0))
+        .isCanceled(false)
+        .build();
+  }
+
+  private static Ticket createTicket() {
+    return Ticket.builder()
+        .id(1L)
+        .name("DUMMY_TICKET_NAME")
+        .price(100000)
+        .build();
+  }
+
 }

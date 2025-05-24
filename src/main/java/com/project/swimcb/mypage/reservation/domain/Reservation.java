@@ -9,13 +9,14 @@ import java.time.LocalTime;
 import java.util.List;
 import lombok.Builder;
 import lombok.NonNull;
+import lombok.With;
 
 @Builder
 public record Reservation(
     @NonNull SwimmingPool swimmingPool,
     @NonNull SwimmingClass swimmingClass,
     @NonNull Ticket ticket,
-    @NonNull ReservationDetail reservationDetail,
+    @With @NonNull ReservationDetail reservationDetail,
     Review review
 ) {
 
@@ -57,7 +58,7 @@ public record Reservation(
       @NonNull TicketType ticketType,
       @NonNull ReservationStatus status,
       @NonNull LocalDateTime reservedAt,
-      Integer waitingNo
+      @With Integer waitingNo
   ) {
 
   }
