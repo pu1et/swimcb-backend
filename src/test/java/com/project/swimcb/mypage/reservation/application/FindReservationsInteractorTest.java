@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import com.project.swimcb.mypage.reservation.adapter.out.ClassDayOfWeek;
 import com.project.swimcb.mypage.reservation.application.port.out.FindReservationsDsGateway;
 import com.project.swimcb.mypage.reservation.domain.Reservation;
+import com.project.swimcb.swimmingpool.domain.enums.PaymentMethod;
 import com.project.swimcb.swimmingpool.domain.enums.ReservationStatus;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import com.project.swimcb.swimmingpool.domain.enums.TicketType;
@@ -129,6 +130,12 @@ class FindReservationsInteractorTest {
                 .status(ReservationStatus.PAYMENT_PENDING)
                 .reservedAt(LocalDateTime.of(2025, 1, 1, 1, 1))
                 .waitingNo(null)
+                .build()
+        )
+        .payment(
+            Reservation.Payment.builder()
+                .method(PaymentMethod.BANK_TRANSFER)
+                .pendingAt(LocalDateTime.of(2025, 1, 1, 1, 1))
                 .build()
         )
         .review(

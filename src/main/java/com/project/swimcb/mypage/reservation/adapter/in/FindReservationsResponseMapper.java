@@ -52,6 +52,12 @@ public class FindReservationsResponseMapper {
                     .waitingNo(i.reservationDetail().waitingNo())
                     .build()
                 )
+                .payment(
+                    FindReservationsResponse.Payment.builder()
+                        .method(i.payment().method().getDescription())
+                        .pendingAt(i.payment().pendingAt())
+                        .build()
+                )
                 .review(
                     Optional.ofNullable(i.review())
                         .map(

@@ -1,6 +1,7 @@
 package com.project.swimcb.mypage.reservation.adapter.in;
 
 import static com.project.swimcb.mypage.reservation.adapter.in.FindReservationControllerTest.MEMBER_ID;
+import static com.project.swimcb.swimmingpool.domain.enums.PaymentMethod.*;
 import static java.time.DayOfWeek.MONDAY;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
@@ -15,6 +16,7 @@ import com.project.swimcb.common.WithMockTokenInfo;
 import com.project.swimcb.mypage.reservation.adapter.out.ClassDayOfWeek;
 import com.project.swimcb.mypage.reservation.application.port.in.FindReservationsUseCase;
 import com.project.swimcb.mypage.reservation.domain.Reservation;
+import com.project.swimcb.swimmingpool.domain.enums.PaymentMethod;
 import com.project.swimcb.swimmingpool.domain.enums.ReservationStatus;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import com.project.swimcb.swimmingpool.domain.enums.TicketType;
@@ -145,6 +147,12 @@ class FindReservationControllerTest {
                   .waitingNo(null)
                   .build()
           )
+          .payment(
+              Reservation.Payment.builder()
+                  .method(CASH_ON_SITE)
+                  .pendingAt(LocalDateTime.of(2025, 1, 1, 1, 1))
+                  .build()
+          )
           .review(
               Reservation.Review.builder()
                   .id(5L)
@@ -188,6 +196,11 @@ class FindReservationControllerTest {
           .waitingNo(null)
           .build();
 
+      val payment = FindReservationsResponse.Payment.builder()
+          .method(PaymentMethod.CASH_ON_SITE.getDescription())
+          .pendingAt(LocalDateTime.of(2025, 1, 1, 1, 1))
+          .build();
+
       val review = FindReservationsResponse.Review.builder()
           .id(5L)
           .build();
@@ -197,6 +210,7 @@ class FindReservationControllerTest {
           .swimmingClass(swimmingClass)
           .ticket(ticket)
           .reservationInfo(reservationInfo)
+          .payment(payment)
           .review(review)
           .build();
 

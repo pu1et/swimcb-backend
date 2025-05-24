@@ -22,6 +22,7 @@ public record FindReservationsResponse(
       @NonNull SwimmingClass swimmingClass,
       @NonNull Ticket ticket,
       @NonNull ReservationInfo reservationInfo,
+      @NonNull Payment payment,
       Review review
   ) {
 
@@ -108,6 +109,19 @@ public record FindReservationsResponse(
 
       @Schema(example = "1")
       Integer waitingNo
+  ) {
+
+  }
+
+  @Builder
+  @Schema(name = "FindReservationsResponse.Payment")
+  public record Payment(
+
+      @Schema(example = "현장결제")
+      @NonNull String method,
+
+      @Schema(example = "2025-04-01T10:00:00")
+      LocalDateTime pendingAt
   ) {
 
   }

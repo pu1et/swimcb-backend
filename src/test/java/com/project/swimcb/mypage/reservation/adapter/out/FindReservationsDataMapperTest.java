@@ -1,5 +1,6 @@
 package com.project.swimcb.mypage.reservation.adapter.out;
 
+import static com.project.swimcb.swimmingpool.domain.enums.PaymentMethod.*;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_PENDING;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_PENDING;
 import static com.project.swimcb.swimmingpool.domain.enums.TicketType.SWIMMING_CLASS;
@@ -13,10 +14,12 @@ import static org.mockito.Mockito.verify;
 
 import com.project.swimcb.mypage.reservation.adapter.out.FindReservationsDataMapper.WaitingReservation;
 import com.project.swimcb.mypage.reservation.domain.Reservation;
+import com.project.swimcb.mypage.reservation.domain.Reservation.Payment;
 import com.project.swimcb.mypage.reservation.domain.Reservation.ReservationDetail;
 import com.project.swimcb.mypage.reservation.domain.Reservation.SwimmingClass;
 import com.project.swimcb.mypage.reservation.domain.Reservation.SwimmingPool;
 import com.project.swimcb.mypage.reservation.domain.Reservation.Ticket;
+import com.project.swimcb.swimmingpool.domain.enums.PaymentMethod;
 import com.project.swimcb.swimmingpool.domain.enums.ReservationStatus;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -121,6 +124,10 @@ class FindReservationsDataMapperTest {
             .status(status)
             .reservedAt(LocalDateTime.now())
             .waitingNo(waitingNo)
+            .build())
+        .payment(Payment.builder()
+            .method(BANK_TRANSFER)
+            .pendingAt(LocalDateTime.now())
             .build())
         .build();
   }

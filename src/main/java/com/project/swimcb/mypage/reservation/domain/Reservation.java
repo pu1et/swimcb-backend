@@ -1,6 +1,7 @@
 package com.project.swimcb.mypage.reservation.domain;
 
 import com.project.swimcb.mypage.reservation.adapter.out.ClassDayOfWeek;
+import com.project.swimcb.swimmingpool.domain.enums.PaymentMethod;
 import com.project.swimcb.swimmingpool.domain.enums.ReservationStatus;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import com.project.swimcb.swimmingpool.domain.enums.TicketType;
@@ -17,6 +18,7 @@ public record Reservation(
     @NonNull SwimmingClass swimmingClass,
     @NonNull Ticket ticket,
     @With @NonNull ReservationDetail reservationDetail,
+    @NonNull Payment payment,
     Review review
 ) {
 
@@ -59,6 +61,14 @@ public record Reservation(
       @NonNull ReservationStatus status,
       @NonNull LocalDateTime reservedAt,
       @With Integer waitingNo
+  ) {
+
+  }
+
+  @Builder
+  public record Payment(
+      @NonNull PaymentMethod method,
+      LocalDateTime pendingAt
   ) {
 
   }

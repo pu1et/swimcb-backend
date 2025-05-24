@@ -15,6 +15,7 @@ import com.project.swimcb.mypage.reservation.domain.Reservation.Review;
 import com.project.swimcb.mypage.reservation.domain.Reservation.SwimmingClass;
 import com.project.swimcb.mypage.reservation.domain.Reservation.SwimmingPool;
 import com.project.swimcb.mypage.reservation.domain.Reservation.Ticket;
+import com.project.swimcb.swimmingpool.domain.enums.PaymentMethod;
 import com.project.swimcb.swimmingpool.domain.enums.ReservationStatus;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import com.project.swimcb.swimmingpool.domain.enums.TicketType;
@@ -156,6 +157,12 @@ class FindReservationsResponseMapperTest {
                   .status(ReservationStatus.PAYMENT_PENDING)
                   .reservedAt(LocalDateTime.of(2025, 1, 1, 1, 1))
                   .waitingNo(null)
+                  .build()
+          )
+          .payment(
+              Reservation.Payment.builder()
+                  .method(PaymentMethod.CASH_ON_SITE)
+                  .pendingAt(LocalDateTime.of(2025, 1, 1, 1, 1))
                   .build()
           )
           .review(

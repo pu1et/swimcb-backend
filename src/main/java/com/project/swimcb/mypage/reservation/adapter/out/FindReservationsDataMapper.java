@@ -14,11 +14,13 @@ import static com.querydsl.core.types.Projections.constructor;
 
 import com.project.swimcb.mypage.reservation.application.port.out.FindReservationsDsGateway;
 import com.project.swimcb.mypage.reservation.domain.Reservation;
+import com.project.swimcb.mypage.reservation.domain.Reservation.Payment;
 import com.project.swimcb.mypage.reservation.domain.Reservation.ReservationDetail;
 import com.project.swimcb.mypage.reservation.domain.Reservation.Review;
 import com.project.swimcb.mypage.reservation.domain.Reservation.SwimmingClass;
 import com.project.swimcb.mypage.reservation.domain.Reservation.SwimmingPool;
 import com.project.swimcb.mypage.reservation.domain.Reservation.Ticket;
+import com.project.swimcb.swimmingpool.domain.enums.PaymentMethod;
 import com.project.swimcb.swimmingpool.domain.enums.ReservationStatus;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import com.project.swimcb.swimmingpool.domain.enums.TicketType;
@@ -74,6 +76,9 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
             reservation.reservationStatus,
             reservation.reservedAt,
             reservation.waitingNo,
+
+            reservation.paymentMethod,
+            reservation.paymentPendingAt,
 
             swimmingPoolReview.id
         ))
@@ -213,6 +218,12 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
                 .waitingNo(i.waitingNo())
                 .build()
         )
+        .payment(
+            Payment.builder()
+                .method(i.paymentMethod())
+                .pendingAt(i.paymentPendingAt())
+                .build()
+        )
         .review(
             Optional.ofNullable(i.reviewId())
                 .map(j -> Review.builder()
@@ -247,6 +258,9 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
       ReservationStatus reservationStatus,
       LocalDateTime reservedAt,
       Integer waitingNo,
+
+      PaymentMethod paymentMethod,
+      LocalDateTime paymentPendingAt,
 
       Long reviewId
   ) {

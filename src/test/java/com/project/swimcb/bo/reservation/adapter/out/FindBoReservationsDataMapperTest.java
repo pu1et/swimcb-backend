@@ -19,6 +19,7 @@ import com.project.swimcb.bo.reservation.domain.BoReservation.Payment;
 import com.project.swimcb.bo.reservation.domain.BoReservation.ReservationDetail;
 import com.project.swimcb.bo.reservation.domain.BoReservation.SwimmingClass;
 import com.project.swimcb.mypage.reservation.adapter.out.ClassDayOfWeek;
+import com.project.swimcb.swimmingpool.domain.enums.PaymentMethod;
 import com.project.swimcb.swimmingpool.domain.enums.ReservationStatus;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import com.querydsl.jpa.impl.JPAQueryFactory;
