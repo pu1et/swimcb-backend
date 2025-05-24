@@ -67,6 +67,7 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
             swimmingClass.startTime,
             swimmingClass.endTime,
             swimmingClass.isCanceled,
+            swimmingClass.cancelReason,
 
             swimmingClassTicket.id,
             swimmingClassTicket.name,
@@ -157,6 +158,7 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
                 .startTime(result.startTime())
                 .endTime(result.endTime())
                 .isCanceled(result.isCanceled())
+                .cancelledReason(result.cancelledReason())
                 .build()
         )
         .ticket(
@@ -234,6 +236,7 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
       LocalTime startTime,
       LocalTime endTime,
       boolean isCanceled,
+      String cancelledReason,
 
       long ticketId,
       String ticketName,

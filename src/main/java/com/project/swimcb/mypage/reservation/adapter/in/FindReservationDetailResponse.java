@@ -68,7 +68,10 @@ public record FindReservationDetailResponse(
       @NonNull LocalTime endTime,
 
       @Schema(example = "false")
-      @NonNull Boolean isCanceled
+      @NonNull Boolean isCanceled,
+
+      @Schema(example = "강사 개인 사정으로 인한 취소")
+      String cancelledReason
   ) {
 
   }
