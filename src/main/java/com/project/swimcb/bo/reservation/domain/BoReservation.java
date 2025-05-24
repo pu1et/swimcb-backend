@@ -12,12 +12,13 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import lombok.Builder;
 import lombok.NonNull;
+import lombok.With;
 
 @Builder
 public record BoReservation(
     @NonNull Member member,
     @NonNull SwimmingClass swimmingClass,
-    @NonNull ReservationDetail reservationDetail,
+    @With @NonNull ReservationDetail reservationDetail,
     @NonNull Payment payment,
     Cancel cancel,
     Refund refund
@@ -49,7 +50,7 @@ public record BoReservation(
       long id,
       @NonNull TicketType ticketType,
       @NonNull ReservationStatus status,
-      Integer waitingNo,
+      @With Integer waitingNo,
       @NonNull LocalDateTime reservedAt
   ) {
 
