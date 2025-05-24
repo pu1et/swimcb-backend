@@ -8,9 +8,11 @@ import static com.project.swimcb.bo.swimmingpool.domain.QSwimmingPool.swimmingPo
 import static com.project.swimcb.bo.swimmingpool.domain.QSwimmingPoolImage.swimmingPoolImage;
 import static com.project.swimcb.swimming_pool_review.domain.QSwimmingPoolReview.swimmingPoolReview;
 import static com.project.swimcb.swimmingpool.domain.QReservation.reservation;
+import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_PENDING;
 import static com.querydsl.core.types.Projections.constructor;
 
 import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
+import com.project.swimcb.mypage.reservation.adapter.out.FindReservationsDataMapper.WaitingReservation;
 import com.project.swimcb.mypage.reservation.application.port.out.FindReservationDetailGateway;
 import com.project.swimcb.mypage.reservation.domain.ReservationDetail;
 import com.project.swimcb.mypage.reservation.domain.ReservationDetail.Cancel;
@@ -28,7 +30,14 @@ import com.querydsl.core.annotations.QueryProjection;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -95,6 +104,39 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
       throw new NoSuchElementException("예약 상세 정보가 존재하지 않습니다 : " + reservationId);
     }
 
+    if (result.reservationStatus != ReservationStatus.RESERVATION_PENDING) {
+      return reservationDetail(reservationId, result, null);
+    }
+
+    // 대기 예약인 경우, 현재 대기 번호를 조회하여 설정
+    val waitingNo = findCurrentWaitingNo(result.swimmingClassId(), result.waitingNo());
+
+    return reservationDetail(reservationId, result, waitingNo.intValue());
+  }
+
+  private Long findCurrentWaitingNo(
+      @NonNull Long swimmingClassId,
+      @NonNull Integer waitingNo
+  ) {
+    val count = Optional.ofNullable(queryFactory.select(reservation.id.count())
+            .from(reservation)
+            .join(swimmingClassTicket).on(reservation.ticketId.eq(swimmingClassTicket.id))
+            .join(swimmingClass).on(swimmingClassTicket.swimmingClass.eq(swimmingClass))
+            .where(
+                swimmingClass.id.eq(swimmingClassId),
+                reservation.reservationStatus.eq(RESERVATION_PENDING),
+                reservation.waitingNo.lt(waitingNo) // 현재 예약의 waitingNo보다 큰 예약들만 조회
+            )
+            .fetchOne())
+        .orElse(0L);
+    return count + 1;
+  }
+
+  private ReservationDetail reservationDetail(
+      @NonNull Long reservationId,
+      @NonNull QueryReservationDetail result,
+      Integer waitingNo
+  ) {
     return ReservationDetail.builder()
         .swimmingPool(
             SwimmingPool.builder()
@@ -216,5 +258,7 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
     @QueryProjection
     public QueryReservationDetail {
     }
+
   }
+
 }
