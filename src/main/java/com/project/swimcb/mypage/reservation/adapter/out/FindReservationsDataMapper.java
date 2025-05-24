@@ -51,7 +51,7 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
 
   @Override
   public Page<Reservation> findReservations(long memberId, @NonNull Pageable pageable) {
-    val resultWithoutWaitingNo = queryFactory.select(constructor(QueryReservation.class,
+    val result = queryFactory.select(constructor(QueryReservation.class,
             swimmingPool.id,
             swimmingPool.name,
             swimmingPoolImage.path,
@@ -96,7 +96,15 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
         .map(this::reservation)
         .toList();
 
-    val resultWithWaitingNo = setCurrentWaitingNo(resultWithoutWaitingNo);
+    val waitingNoMap = getCurrentWaitingNoByReservation(result);
+
+    // 예약 상태가 "예약대기"인 경우에만 waitingNo를 설정
+    val resultWithWaitingNo = result.stream()
+        .filter(i -> i.reservationDetail().status() == RESERVATION_PENDING)
+        .map(i -> i.withReservationDetail(
+            i.reservationDetail().withWaitingNo(waitingNoMap.get(i.reservationDetail().id()))
+        ))
+        .toList();
 
     val count = queryFactory.select(swimmingPool.id.count())
         .from(reservation)
@@ -114,53 +122,44 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
     return new PageImpl<>(resultWithWaitingNo, pageable, count);
   }
 
-  List<Reservation> setCurrentWaitingNo(@NonNull List<Reservation> reservations) {
-    val swimmingClassIds = reservations
-        .stream()
-        .filter(i -> i.reservationDetail().status() == RESERVATION_PENDING)
-        .map(i -> i.swimmingClass().id())
-        .collect(Collectors.toSet());
-
-    if (swimmingClassIds.isEmpty()) {
-      return reservations;
-    }
-
-    val relatedReservations = findRelatedReservationPendingReservations(swimmingClassIds);
-
-    // 수업별 그룹핑 + 순번 부여
-    val waitingMap = relatedReservations.stream()
-        .collect(Collectors.groupingBy(
-            WaitingReservation::swimmingClassId,
-            LinkedHashMap::new, // 정렬 유지
-            Collectors.collectingAndThen(Collectors.toList(), list -> {
-              list.sort(Comparator.comparing(WaitingReservation::waitingNo));
-              return IntStream.range(0, list.size())
-                  .boxed()
-                  .collect(Collectors.toMap(
-                      i -> list.get(i).reservationId(),
-                      i -> i + 1
-                  ));
-            })
-        ))
-        .values().stream()
-        .flatMap(map -> map.entrySet().stream())
-        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
-
-    return reservations.stream()
-        .map(i -> {
-          val currentWaitingNo = waitingMap.get(i.reservationDetail().id());
-          return currentWaitingNo == null ? i :
-              i.withReservationDetail(i.reservationDetail().withWaitingNo(currentWaitingNo));
-        })
+  Map<Long, Integer> getCurrentWaitingNoByReservation(@NonNull List<Reservation> reservations) {
+    // 1. 예약 상태가 PENDING인 예약만 필터링
+    val resrvationPendingReservations = reservations.stream()
+        .filter(r -> r.reservationDetail().status() == RESERVATION_PENDING)
         .toList();
+
+    if (resrvationPendingReservations.isEmpty()) return Map.of();
+
+    // 2. 수영 클래스 ID 목록 추출
+    val classIds = resrvationPendingReservations.stream()
+        .map(r -> r.swimmingClass().id())
+        .toList();
+
+    // 3. 해당 클래스들의 전체 대기 예약 정보 조회
+    val groupedByClassId = findRelatedReservationPendingReservations(classIds).stream()
+        .collect(Collectors.groupingBy(WaitingReservation::swimmingClassId));
+
+    // 4. 각 예약에 대해 대기 순번 계산 후 Map으로 반환
+    return resrvationPendingReservations.stream()
+        .collect(Collectors.toMap(
+            i -> i.reservationDetail().id(),
+            i -> {
+              Long classId = i.swimmingClass().id();
+              int currentWaitingNo = Optional.ofNullable(groupedByClassId.get(classId))
+                  .orElse(List.of())
+                  .stream()
+                  .filter(wr -> wr.waitingNo() < i.reservationDetail().waitingNo())
+                  .mapToInt(x -> 1)
+                  .sum() + 1;
+              return currentWaitingNo;
+            }
+        ));
   }
 
-  List<WaitingReservation> findRelatedReservationPendingReservations(Set<Long> swimmingClassIds) {
+  List<WaitingReservation> findRelatedReservationPendingReservations(@NonNull List<Long> swimmingClassIds) {
     return queryFactory.select(constructor(WaitingReservation.class,
             reservation.id,
             reservation.waitingNo,
-            reservation.reservationStatus,
             swimmingClass.id
         ))
         .from(reservation)
@@ -258,7 +257,6 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
   protected record WaitingReservation(
       long reservationId,
       int waitingNo,
-      ReservationStatus reservationStatus,
       long swimmingClassId
   ) {
 

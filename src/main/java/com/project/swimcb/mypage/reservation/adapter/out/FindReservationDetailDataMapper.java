@@ -125,7 +125,7 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
             .where(
                 swimmingClass.id.eq(swimmingClassId),
                 reservation.reservationStatus.eq(RESERVATION_PENDING),
-                reservation.waitingNo.lt(waitingNo) // 현재 예약의 waitingNo보다 큰 예약들만 조회
+                reservation.waitingNo.lt(waitingNo) // 현재 예약의 waitingNo보다 작은 예약들만 조회
             )
             .fetchOne())
         .orElse(0L);
