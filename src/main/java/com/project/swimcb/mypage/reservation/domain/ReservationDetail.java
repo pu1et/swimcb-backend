@@ -42,7 +42,8 @@ public record ReservationDetail(
       @NonNull ClassDayOfWeek daysOfWeek,
       @NonNull LocalTime startTime,
       @NonNull LocalTime endTime,
-      @NonNull Boolean isCanceled
+      @NonNull Boolean isCanceled,
+      String cancelledReason
   ) {
 
   }

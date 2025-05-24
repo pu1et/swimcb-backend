@@ -46,6 +46,7 @@ public class FindReservationDetailResponseMapper {
                 .startTime(detail.swimmingClass().startTime())
                 .endTime(detail.swimmingClass().endTime())
                 .isCanceled(detail.swimmingClass().isCanceled())
+                .cancelledReason(detail.swimmingClass().cancelledReason())
                 .build()
         )
         .ticket(
