@@ -6,6 +6,7 @@ import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassTicket.sw
 import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassType.swimmingClassType;
 import static com.project.swimcb.member.domain.QMember.member;
 import static com.project.swimcb.swimmingpool.domain.QReservation.reservation;
+import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.*;
 import static com.querydsl.core.types.Projections.constructor;
 import static java.time.LocalTime.MAX;
 
@@ -33,6 +34,13 @@ import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.val;
@@ -107,6 +115,8 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
         .map(this::reservation)
         .toList();
 
+    val updatedResult = updateWithCurrentWaitingNo(result, condition.swimmingPoolId());
+
     val count = queryFactory.select(reservation.id.count())
         .from(reservation)
         .join(swimmingClassTicket).on(reservation.ticketId.eq(swimmingClassTicket.id))
@@ -125,7 +135,69 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
         )
         .fetchOne();
 
-    return new PageImpl<>(result, condition.pageable(), count);
+    return new PageImpl<>(updatedResult, condition.pageable(), count);
+  }
+
+  List<BoReservation> updateWithCurrentWaitingNo(
+      @NonNull List<BoReservation> reservations,
+      @NonNull Long swimmingPoolId
+  ) {
+    // 1. RESERVATION_PENDING 상태 필터링
+    List<BoReservation> pendingReservations = reservations.stream()
+        .filter(r -> r.reservationDetail().status() == RESERVATION_PENDING)
+        .toList();
+
+    if (pendingReservations.isEmpty()) return reservations;
+
+    // 2. 수영 클래스 ID 추출
+    Set<Long> classIds = pendingReservations.stream()
+        .map(r -> r.swimmingClass().id())
+        .collect(Collectors.toSet());
+
+    // 3. 관련 대기 예약 전체 조회 및 정렬
+    List<WaitingReservation> sortedWaitingReservations = findAllWaitingReservationsByClasses(swimmingPoolId, classIds).stream()
+        .sorted(Comparator.comparing(WaitingReservation::waitingNo))
+        .toList();
+
+    // 4. reservationId -> waitingNo 매핑 (1부터 시작)
+    Map<Long, Integer> waitingNoMap = IntStream.range(0, sortedWaitingReservations.size())
+        .boxed()
+        .collect(Collectors.toMap(
+            i -> sortedWaitingReservations.get(i).reservationId(),
+            i -> i + 1
+        ));
+
+    // 5. BoReservation 업데이트
+    return reservations.stream()
+        .map(r -> {
+          if (r.reservationDetail().status() != RESERVATION_PENDING) return r;
+          Long reservationId = r.reservationDetail().id();
+          Integer newNo = waitingNoMap.get(reservationId);
+          return (newNo != null)
+              ? r.withReservationDetail(r.reservationDetail().withWaitingNo(newNo))
+              : r;
+        })
+        .toList();
+  }
+
+  List<WaitingReservation> findAllWaitingReservationsByClasses(
+      @NonNull Long swimmingPoolId,
+      @NonNull Set<Long> classIds
+  ) {
+    return queryFactory.select(constructor(WaitingReservation.class,
+            reservation.id,
+            reservation.waitingNo,
+            swimmingClass.id
+        ))
+        .from(reservation)
+        .join(swimmingClassTicket).on(reservation.ticketId.eq(swimmingClassTicket.id))
+        .join(swimmingClass).on(swimmingClassTicket.swimmingClass.eq(swimmingClass))
+        .where(
+            swimmingClass.swimmingPool.id.eq(swimmingPoolId),
+            swimmingClass.id.in(classIds),
+            reservation.reservationStatus.eq(RESERVATION_PENDING)
+        )
+        .fetch();
   }
 
   private BooleanExpression programTypeEqIfExists(TicketType programType) {
@@ -199,7 +271,7 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
   }
 
   private Cancel cancel(@NonNull FindBoReservationsDataMapper.QueryReservation i) {
-    if (i.reservationStatus != ReservationStatus.RESERVATION_CANCELLED) {
+    if (i.reservationStatus != RESERVATION_CANCELLED) {
       return null;
     }
     return Cancel.builder()
@@ -209,7 +281,7 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
   }
 
   private Refund refund(@NonNull FindBoReservationsDataMapper.QueryReservation i) {
-    if (i.reservationStatus != ReservationStatus.REFUND_COMPLETED) {
+    if (i.reservationStatus != REFUND_COMPLETED) {
       return null;
     }
     return Refund.builder()
@@ -258,6 +330,18 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
 
     @QueryProjection
     public QueryReservation {
+    }
+  }
+
+  @Builder
+  protected record WaitingReservation(
+      long reservationId,
+      int waitingNo,
+      long classId
+  ) {
+
+    @QueryProjection
+    public WaitingReservation {
     }
   }
 }

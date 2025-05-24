@@ -100,10 +100,14 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
 
     // 예약 상태가 "예약대기"인 경우에만 waitingNo를 설정
     val resultWithWaitingNo = result.stream()
-        .filter(i -> i.reservationDetail().status() == RESERVATION_PENDING)
-        .map(i -> i.withReservationDetail(
-            i.reservationDetail().withWaitingNo(waitingNoMap.get(i.reservationDetail().id()))
-        ))
+        .map(i -> {
+          if (i.reservationDetail().status() != RESERVATION_PENDING) {
+            return i;
+          }
+          return i.withReservationDetail(
+              i.reservationDetail().withWaitingNo(waitingNoMap.get(i.reservationDetail().id()))
+          );
+        })
         .toList();
 
     val count = queryFactory.select(swimmingPool.id.count())
@@ -260,6 +264,9 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
       long swimmingClassId
   ) {
 
+    @QueryProjection
+    public WaitingReservation {
+    }
   }
 
 }
