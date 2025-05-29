@@ -139,7 +139,7 @@ public class Reservation extends BaseEntity {
         .ticketId(ticketId)
         .paymentMethod(paymentMethod)
         .reservedAt(LocalDateTime.now())
-        .reservationStatus(PAYMENT_PENDING)
+        .reservationStatus(RESERVATION_PENDING)
         .waitingNo(waitingNo)
         .paymentAmount(paymentAmount)
         .build();

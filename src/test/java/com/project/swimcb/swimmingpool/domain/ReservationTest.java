@@ -2,6 +2,7 @@ package com.project.swimcb.swimmingpool.domain;
 
 import static com.project.swimcb.swimmingpool.domain.enums.PaymentMethod.BANK_TRANSFER;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_PENDING;
+import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_PENDING;
 import static com.project.swimcb.swimmingpool.domain.enums.TicketType.SWIMMING_CLASS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -84,7 +85,7 @@ class ReservationTest {
     private final int waitingNo = 1;
 
     @Test
-    @DisplayName("수영 클래스 일반 예약을 성공적으로 생성한다.")
+    @DisplayName("수영 클래스 대기 예약을 성공적으로 생성한다.")
     void createSwimmingClassReservation() {
       // Given
       val beforeCreation = LocalDateTime.now();
@@ -100,7 +101,7 @@ class ReservationTest {
       assertThat(reservation.getTicketId()).isEqualTo(TICKET_ID);
       assertThat(reservation.getTicketType()).isEqualTo(SWIMMING_CLASS);
       assertThat(reservation.getPaymentMethod()).isEqualTo(PAYMENT_METHOD);
-      assertThat(reservation.getReservationStatus()).isEqualTo(PAYMENT_PENDING);
+      assertThat(reservation.getReservationStatus()).isEqualTo(RESERVATION_PENDING);
       assertThat(reservation.getReservedAt()).isAfterOrEqualTo(beforeCreation);
       assertThat(reservation.getWaitingNo()).isEqualTo(waitingNo);
     }
