@@ -7,7 +7,10 @@ import lombok.NonNull;
 
 public interface BoAutoCancelReservationsDsGateway {
 
-  List<PaymentExpiredReservation> findPaymentExpiredReservations(@NonNull Long swimmingPoolId);
+  List<PaymentExpiredReservation> findPaymentExpiredReservationsBySwimmingPoolId(
+      @NonNull Long swimmingPoolId);
+
+  List<PaymentExpiredReservation> findPaymentExpiredReservationsByMemberId(@NonNull Long memberId);
 
   void cancelExpiredReservations(@NonNull List<Long> reservationIds);
 

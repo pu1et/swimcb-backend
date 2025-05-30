@@ -1,4 +1,4 @@
-package com.project.swimcb.bo.reservation.adapter.in;
+package com.project.swimcb.mypage.reservation.adapter.in;
 
 import com.project.swimcb.bo.reservation.application.port.in.AutoCancelReservationsUseCase;
 import com.project.swimcb.token.domain.TokenInfo;
@@ -11,16 +11,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "BO - 완료")
+@Tag(name = "사용자 - 완료")
 @SecurityRequirement(name = "Bearer Authentication")
 @RestController
-@RequestMapping("/api/bo/swimming-pools/reservations/auto-cancel")
+@RequestMapping("/api/my-page/reservations/auto-cancel")
 @RequiredArgsConstructor
-public class AutoCancelReservationByAdminController {
+public class AutoCancelReservationByMemberController {
 
   private final AutoCancelReservationsUseCase useCase;
 
-  @Operation(summary = "[BO] 수영장별 결제대기 24시간 초과된 예약건 자동 취소 처리")
+  @Operation(summary = "마이페이지 - 결제대기 24시간 초과된 예약건 자동 취소 처리")
   @PostMapping
   public void autoCancel(
       @AuthenticationPrincipal TokenInfo tokenInfo

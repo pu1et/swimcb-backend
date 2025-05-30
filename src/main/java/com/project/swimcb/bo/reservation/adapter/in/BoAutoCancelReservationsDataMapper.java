@@ -10,8 +10,8 @@ import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RES
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_PENDING;
 import static com.querydsl.core.types.Projections.constructor;
 
-import com.project.swimcb.bo.reservation.application.port.out.BoAutoCancelReservationsDsGateway;
 import com.project.swimcb.bo.reservation.application.PaymentExpiredReservation;
+import com.project.swimcb.bo.reservation.application.port.out.BoAutoCancelReservationsDsGateway;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,17 +28,39 @@ public class BoAutoCancelReservationsDataMapper implements BoAutoCancelReservati
   private final JPAQueryFactory queryFactory;
 
   @Override
-  public List<PaymentExpiredReservation> findPaymentExpiredReservations(
+  public List<PaymentExpiredReservation> findPaymentExpiredReservationsBySwimmingPoolId(
       @NonNull Long swimmingPoolId) {
 
     val twentyFourHoursAgo = LocalDateTime.now().minusHours(24);
 
-    return queryFactory.select(constructor(PaymentExpiredReservation.class, reservation.id))
+    return queryFactory.select(constructor(PaymentExpiredReservation.class,
+            reservation.id,
+            swimmingClass.id
+        ))
         .from(reservation)
         .join(swimmingClass).on(reservation.swimmingClass.eq(swimmingClass))
         .join(swimmingPool).on(swimmingClass.swimmingPool.eq(swimmingPool))
         .where(
             swimmingPool.id.eq(swimmingPoolId),
+            reservation.reservationStatus.eq(PAYMENT_PENDING),
+            reservation.paymentPendingAt.lt(twentyFourHoursAgo)
+        )
+        .fetch();
+  }
+
+  @Override
+  public List<PaymentExpiredReservation> findPaymentExpiredReservationsByMemberId(
+      @NonNull Long memberId) {
+
+    val twentyFourHoursAgo = LocalDateTime.now().minusHours(24);
+
+    return queryFactory.select(constructor(PaymentExpiredReservation.class,
+            reservation.id,
+            reservation.swimmingClass.id
+        ))
+        .from(reservation)
+        .where(
+            reservation.member.id.eq(memberId),
             reservation.reservationStatus.eq(PAYMENT_PENDING),
             reservation.paymentPendingAt.lt(twentyFourHoursAgo)
         )

@@ -1,7 +1,8 @@
 package com.project.swimcb.bo.reservation.application;
 
-import com.project.swimcb.bo.reservation.application.port.in.BoAutoCancelReservationsUseCase;
+import com.project.swimcb.bo.reservation.application.port.in.AutoCancelReservationsUseCase;
 import com.project.swimcb.bo.reservation.application.port.out.BoAutoCancelReservationsDsGateway;
+import java.util.List;
 import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -12,17 +13,35 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-class BoAutoCancelReservationsInteractor implements BoAutoCancelReservationsUseCase {
+class AutoCancelReservationsInteractor implements AutoCancelReservationsUseCase {
 
   private final BoAutoCancelReservationsDsGateway gateway;
 
   @Override
-  public void cancelPaymentExpiredReservations(@NonNull Long swimmingPoolId) {
+  public void cancelPaymentExpiredReservationsBySwimmingPoolId(@NonNull Long swimmingPoolId) {
 
-    val paymentExpiredReservations = gateway.findPaymentExpiredReservations(swimmingPoolId);
+    val paymentExpiredReservations = gateway.findPaymentExpiredReservationsBySwimmingPoolId(
+        swimmingPoolId);
     if (paymentExpiredReservations.isEmpty()) {
       return;
     }
+
+    processExpiredReservations(paymentExpiredReservations);
+  }
+
+  @Override
+  public void cancelPaymentExpiredReservationsByMemberId(@NonNull Long memberId) {
+
+    val paymentExpiredReservations = gateway.findPaymentExpiredReservationsByMemberId(memberId);
+    if (paymentExpiredReservations.isEmpty()) {
+      return;
+    }
+
+    processExpiredReservations(paymentExpiredReservations);
+  }
+
+  private void processExpiredReservations(
+      @NonNull List<PaymentExpiredReservation> paymentExpiredReservations) {
 
     // 결제대기가 24시간 초과된 예약 자동 취소 처리
     val reservationIds = paymentExpiredReservations.stream()
