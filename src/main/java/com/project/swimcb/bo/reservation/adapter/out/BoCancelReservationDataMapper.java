@@ -67,6 +67,7 @@ class BoCancelReservationDataMapper implements BoCancelReservationDsGateway {
             reservation.id.gt(reservationId),
             reservation.reservationStatus.eq(RESERVATION_PENDING)
         )
+        .orderBy(reservation.reservedAt.asc())
         .fetchFirst());
   }
 
