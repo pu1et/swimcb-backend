@@ -4,20 +4,20 @@ import static com.project.swimcb.swimmingpool.domain.enums.CancellationReason.NO
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_PENDING;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_PENDING;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.project.swimcb.bo.reservation.application.port.out.BoCancelReservationDsGateway;
+import com.project.swimcb.bo.swimmingclass.domain.SwimmingClass;
 import com.project.swimcb.swimmingpool.domain.Reservation;
 import com.project.swimcb.swimmingpool.domain.ReservationRepository;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.val;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,17 +41,18 @@ class BoCancelReservationInteractorTest {
   private final Long SWIMMING_CLASS_ID = 10L;
 
   @Test
-  @DisplayName("결제대기 상태 예약이면 취소 처리 후 대기 예약을 결제대기로 변경한다")
+  @DisplayName("결제대기 상태 예약이면 취소 처리 후 대기 예약을 결제대기로 변경하고 예약수를 증가시킨다")
   void shouldCancelPaymentPendingReservationAndUpdateWaitingReservation() {
     // given
     val reservation = mock(Reservation.class);
+    val swimmingClass = mock(SwimmingClass.class);
+
     when(repository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
     when(reservation.canTransitionToCancelByAdmin()).thenReturn(true);
     when(reservation.getReservationStatus()).thenReturn(PAYMENT_PENDING);
     when(reservation.getId()).thenReturn(RESERVATION_ID);
-
-    when(boCancelReservationDsGateway.findSwimmingClassByReservationId(RESERVATION_ID))
-        .thenReturn(SWIMMING_CLASS_ID);
+    when(reservation.getSwimmingClass()).thenReturn(swimmingClass);
+    when(swimmingClass.getId()).thenReturn(SWIMMING_CLASS_ID);
 
     val waitingReservationId = 5L;
     when(boCancelReservationDsGateway.findFirstWaitingReservationId(RESERVATION_ID))
@@ -62,9 +63,13 @@ class BoCancelReservationInteractorTest {
 
     // then
     verify(reservation).cancel(NO_PAYMENT_RECEIVED);
-    verify(boCancelReservationDsGateway).updateSwimmingClassReservedCount(SWIMMING_CLASS_ID, -1);
-    verify(boCancelReservationDsGateway).findFirstWaitingReservationId(RESERVATION_ID);
-    verify(boCancelReservationDsGateway).updateReservationStatusToPaymentPending(waitingReservationId);
+    verify(boCancelReservationDsGateway, times(1)).updateSwimmingClassReservedCount(
+        SWIMMING_CLASS_ID, -1);
+    verify(boCancelReservationDsGateway, times(1)).findFirstWaitingReservationId(RESERVATION_ID);
+    verify(boCancelReservationDsGateway, times(1)).updateReservationStatusToPaymentPending(
+        waitingReservationId);
+    verify(boCancelReservationDsGateway, times(1)).updateSwimmingClassReservedCount(
+        SWIMMING_CLASS_ID, 1);
   }
 
   @Test
@@ -72,35 +77,39 @@ class BoCancelReservationInteractorTest {
   void shouldCancelReservationPendingAndNotUpdateWaitingReservation() {
     // given
     val reservation = mock(Reservation.class);
+    val swimmingClass = mock(SwimmingClass.class);
+
     when(repository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
     when(reservation.canTransitionToCancelByAdmin()).thenReturn(true);
     when(reservation.getReservationStatus()).thenReturn(RESERVATION_PENDING);
-
-    when(boCancelReservationDsGateway.findSwimmingClassByReservationId(RESERVATION_ID))
-        .thenReturn(SWIMMING_CLASS_ID);
+    when(reservation.getSwimmingClass()).thenReturn(swimmingClass);
+    when(swimmingClass.getId()).thenReturn(SWIMMING_CLASS_ID);
 
     // when
     interactor.cancelReservation(RESERVATION_ID);
 
     // then
     verify(reservation).cancel(NO_PAYMENT_RECEIVED);
-    verify(boCancelReservationDsGateway).updateSwimmingClassReservedCount(SWIMMING_CLASS_ID, -1);
-    verify(boCancelReservationDsGateway, never()).findFirstWaitingReservationId(RESERVATION_ID);
-    verify(boCancelReservationDsGateway, never()).updateReservationStatusToPaymentPending(RESERVATION_ID);
+    verify(boCancelReservationDsGateway, times(1)).updateSwimmingClassReservedCount(
+        SWIMMING_CLASS_ID, -1);
+    verify(boCancelReservationDsGateway, never()).findFirstWaitingReservationId(anyLong());
+    verify(boCancelReservationDsGateway, never()).updateReservationStatusToPaymentPending(
+        anyLong());
   }
 
   @Test
-  @DisplayName("결제대기 상태이지만 대기 예약이 없는 경우 예약만 취소된다")
+  @DisplayName("결제대기 상태이지만 대기 예약이 없는 경우 예약만 취소되고 예약수만 감소된다")
   void shouldCancelPaymentPendingReservationWhenNoWaitingReservation() {
     // given
     val reservation = mock(Reservation.class);
+    val swimmingClass = mock(SwimmingClass.class);
+
     when(repository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
     when(reservation.canTransitionToCancelByAdmin()).thenReturn(true);
     when(reservation.getReservationStatus()).thenReturn(PAYMENT_PENDING);
     when(reservation.getId()).thenReturn(RESERVATION_ID);
-
-    when(boCancelReservationDsGateway.findSwimmingClassByReservationId(RESERVATION_ID))
-        .thenReturn(SWIMMING_CLASS_ID);
+    when(reservation.getSwimmingClass()).thenReturn(swimmingClass);
+    when(swimmingClass.getId()).thenReturn(SWIMMING_CLASS_ID);
 
     when(boCancelReservationDsGateway.findFirstWaitingReservationId(RESERVATION_ID))
         .thenReturn(Optional.empty());
@@ -110,8 +119,10 @@ class BoCancelReservationInteractorTest {
 
     // then
     verify(reservation).cancel(NO_PAYMENT_RECEIVED);
-    verify(boCancelReservationDsGateway).updateSwimmingClassReservedCount(SWIMMING_CLASS_ID, -1);
-    verify(boCancelReservationDsGateway, never()).updateReservationStatusToPaymentPending(RESERVATION_ID);
+    verify(boCancelReservationDsGateway, times(1)).updateSwimmingClassReservedCount(
+        SWIMMING_CLASS_ID, -1);
+    verify(boCancelReservationDsGateway, never()).updateReservationStatusToPaymentPending(
+        anyLong());
   }
 
   @Test
@@ -147,4 +158,5 @@ class BoCancelReservationInteractorTest {
     assertThatThrownBy(() -> interactor.cancelReservation(null))
         .isInstanceOf(NullPointerException.class);
   }
+
 }
