@@ -3,7 +3,6 @@ package com.project.swimcb.bo.reservation.application;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_PENDING;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_PENDING;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -12,6 +11,7 @@ import static org.mockito.Mockito.when;
 
 import com.project.swimcb.bo.reservation.application.port.out.BoCancelReservationDsGateway;
 import com.project.swimcb.bo.reservation.domain.BoRefundReservationCommand;
+import com.project.swimcb.bo.swimmingclass.domain.SwimmingClass;
 import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
 import com.project.swimcb.swimmingpool.domain.Reservation;
 import com.project.swimcb.swimmingpool.domain.ReservationRepository;
@@ -58,14 +58,14 @@ class BoRefundReservationInteractorTest {
   void shouldRefundReservationAndUpdateWaitingReservation_WhenCanTransitionToRefund() {
     // given
     val reservation = mock(Reservation.class);
+    val swimmingClass = mock(SwimmingClass.class);
 
     when(repository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
     when(reservation.canTransitionToRefund()).thenReturn(true);
     when(reservation.getReservationStatus()).thenReturn(PAYMENT_PENDING);
     when(reservation.getId()).thenReturn(RESERVATION_ID);
-
-    when(boCancelReservationDsGateway.findSwimmingClassByReservationId(RESERVATION_ID))
-        .thenReturn(SWIMMING_CLASS_ID);
+    when(reservation.getSwimmingClass()).thenReturn(swimmingClass);
+    when(swimmingClass.getId()).thenReturn(SWIMMING_CLASS_ID);
 
     val waitingReservationId = 5L;
     when(boCancelReservationDsGateway.findFirstWaitingReservationId(RESERVATION_ID))
@@ -83,7 +83,9 @@ class BoRefundReservationInteractorTest {
     );
     verify(boCancelReservationDsGateway).updateSwimmingClassReservedCount(SWIMMING_CLASS_ID, -1);
     verify(boCancelReservationDsGateway).findFirstWaitingReservationId(RESERVATION_ID);
-    verify(boCancelReservationDsGateway).updateReservationStatusToPaymentPending(waitingReservationId);
+    verify(boCancelReservationDsGateway).updateReservationStatusToPaymentPending(
+        waitingReservationId);
+    verify(boCancelReservationDsGateway).updateSwimmingClassReservedCount(SWIMMING_CLASS_ID, 1);
   }
 
   @Test
@@ -91,13 +93,13 @@ class BoRefundReservationInteractorTest {
   void shouldRefundReservationWithoutUpdatingWaitingList_WhenReservationPending() {
     // given
     val reservation = mock(Reservation.class);
+    val swimmingClass = mock(SwimmingClass.class);
 
     when(repository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
     when(reservation.canTransitionToRefund()).thenReturn(true);
     when(reservation.getReservationStatus()).thenReturn(RESERVATION_PENDING);
-
-    when(boCancelReservationDsGateway.findSwimmingClassByReservationId(RESERVATION_ID))
-        .thenReturn(SWIMMING_CLASS_ID);
+    when(reservation.getSwimmingClass()).thenReturn(swimmingClass);
+    when(swimmingClass.getId()).thenReturn(SWIMMING_CLASS_ID);
 
     // when
     interactor.refundReservation(command);
@@ -111,7 +113,8 @@ class BoRefundReservationInteractorTest {
     );
     verify(boCancelReservationDsGateway).updateSwimmingClassReservedCount(SWIMMING_CLASS_ID, -1);
     verify(boCancelReservationDsGateway, never()).findFirstWaitingReservationId(anyLong());
-    verify(boCancelReservationDsGateway, never()).updateReservationStatusToPaymentPending(anyLong());
+    verify(boCancelReservationDsGateway, never()).updateReservationStatusToPaymentPending(
+        anyLong());
   }
 
   @Test
@@ -119,14 +122,14 @@ class BoRefundReservationInteractorTest {
   void shouldRefundReservationWithoutUpdatingWaitingList_WhenNoWaitingReservations() {
     // given
     val reservation = mock(Reservation.class);
+    val swimmingClass = mock(SwimmingClass.class);
 
     when(repository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
     when(reservation.canTransitionToRefund()).thenReturn(true);
     when(reservation.getReservationStatus()).thenReturn(PAYMENT_PENDING);
     when(reservation.getId()).thenReturn(RESERVATION_ID);
-
-    when(boCancelReservationDsGateway.findSwimmingClassByReservationId(RESERVATION_ID))
-        .thenReturn(SWIMMING_CLASS_ID);
+    when(reservation.getSwimmingClass()).thenReturn(swimmingClass);
+    when(swimmingClass.getId()).thenReturn(SWIMMING_CLASS_ID);
 
     when(boCancelReservationDsGateway.findFirstWaitingReservationId(RESERVATION_ID))
         .thenReturn(Optional.empty());
@@ -143,7 +146,8 @@ class BoRefundReservationInteractorTest {
     );
     verify(boCancelReservationDsGateway).updateSwimmingClassReservedCount(SWIMMING_CLASS_ID, -1);
     verify(boCancelReservationDsGateway).findFirstWaitingReservationId(RESERVATION_ID);
-    verify(boCancelReservationDsGateway, never()).updateReservationStatusToPaymentPending(anyLong());
+    verify(boCancelReservationDsGateway, never()).updateReservationStatusToPaymentPending(
+        anyLong());
   }
 
   @Test
@@ -183,4 +187,5 @@ class BoRefundReservationInteractorTest {
     assertThatThrownBy(() -> interactor.refundReservation(null))
         .isInstanceOf(NullPointerException.class);
   }
+
 }
