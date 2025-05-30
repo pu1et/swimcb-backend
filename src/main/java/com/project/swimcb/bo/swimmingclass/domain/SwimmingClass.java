@@ -95,6 +95,11 @@ public class SwimmingClass extends BaseEntity {
         this.reservedCount);
   }
 
+  public static int calculateWaitingNum(@NonNull Integer reservationLimitCount,
+      @NonNull Integer reservedCount) {
+    return reservedCount - reservationLimitCount + 1;
+  }
+
   public void increaseReservedCount() {
     this.reservedCount++;
   }

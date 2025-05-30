@@ -75,7 +75,6 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
             reservation.ticketType,
             reservation.reservationStatus,
             reservation.reservedAt,
-            reservation.waitingNo,
 
             reservation.paymentMethod,
             reservation.paymentPendingAt,
@@ -153,14 +152,13 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
         .collect(Collectors.toMap(
             i -> i.reservationDetail().id(),
             i -> {
-              Long classId = i.swimmingClass().id();
-              int currentWaitingNo = Optional.ofNullable(groupedByClassId.get(classId))
+              val classId = i.swimmingClass().id();
+              return Optional.ofNullable(groupedByClassId.get(classId))
                   .orElse(List.of())
                   .stream()
-                  .filter(wr -> wr.waitingNo() < i.reservationDetail().waitingNo())
+                  .filter(wr -> wr.reservedAt().isBefore(i.reservationDetail().reservedAt()))
                   .mapToInt(x -> 1)
                   .sum() + 1;
-              return currentWaitingNo;
             }
         ));
   }
@@ -168,7 +166,7 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
   List<WaitingReservation> findRelatedReservationPendingReservations(@NonNull List<Long> swimmingClassIds) {
     return queryFactory.select(constructor(WaitingReservation.class,
             reservation.id,
-            reservation.waitingNo,
+            reservation.reservedAt,
             swimmingClass.id
         ))
         .from(reservation)
@@ -274,7 +272,7 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
   @Builder
   protected record WaitingReservation(
       long reservationId,
-      int waitingNo,
+      LocalDateTime reservedAt,
       long swimmingClassId
   ) {
 

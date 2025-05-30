@@ -73,13 +73,14 @@ class FindBoReservationsDataMapperTest {
     val expectedClassIds = Set.of(1L, 2L);
 
     // findAllWaitingReservationsByClasses 메서드가 반환할 대기 예약 목록
+    val firstReservedAt = LocalDateTime.now();
     val waitingReservations = List.of(
-        new WaitingReservation(1L, 1, 1L),
-        new WaitingReservation(2L, 2, 1L),
-        new WaitingReservation(4L, 3, 1L),
+        new WaitingReservation(1L, firstReservedAt, 1L),
+        new WaitingReservation(2L, firstReservedAt.plusMinutes(1), 1L),
+        new WaitingReservation(4L, firstReservedAt.plusMinutes(2), 1L),
 
-        new WaitingReservation(5L, 1, 2L),
-        new WaitingReservation(6L, 2, 2L)
+        new WaitingReservation(5L, firstReservedAt, 2L),
+        new WaitingReservation(6L, firstReservedAt.plusMinutes(1), 2L)
     );
 
     // mock 메서드 설정

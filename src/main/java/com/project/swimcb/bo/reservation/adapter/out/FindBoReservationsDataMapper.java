@@ -74,7 +74,6 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
             reservation.id,
             reservation.ticketType,
             reservation.reservationStatus,
-            reservation.waitingNo,
             reservation.reservedAt,
             reservation.paymentPendingAt,
             reservation.paymentVerificationAt,
@@ -160,7 +159,7 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
             Collectors.collectingAndThen(
                 Collectors.toList(),
                 list -> list.stream()
-                    .sorted(Comparator.comparing(WaitingReservation::waitingNo))
+                    .sorted(Comparator.comparing(WaitingReservation::reservedAt))
                     .toList()
             )
         ));
@@ -192,7 +191,7 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
   ) {
     return queryFactory.select(constructor(WaitingReservation.class,
             reservation.id,
-            reservation.waitingNo,
+            reservation.reservedAt,
             swimmingClass.id
         ))
         .from(reservation)
@@ -343,7 +342,7 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
   @Builder
   protected record WaitingReservation(
       long reservationId,
-      int waitingNo,
+      LocalDateTime reservedAt,
       long classId
   ) {
 

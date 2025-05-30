@@ -72,6 +72,7 @@ class ReserveSwimmingClassInteractor implements ReserveSwimmingClassUseCase {
           .build();
     }
 
+    // 결제대기 예약 생성
     return Reservation.createClassNormalReservation()
         .member(member)
         .ticketId(command.ticketId())
@@ -82,10 +83,17 @@ class ReserveSwimmingClassInteractor implements ReserveSwimmingClassUseCase {
 
   private ReservationInfo reservationInfo(@NonNull Reservation createdReservation,
       @NonNull SwimmingClass swimmingClass) {
+    if (swimmingClass.getReservationStatus() == WAITING_RESERVABLE) {
+      return ReservationInfo.builder()
+          .id(createdReservation.getId())
+          .availabilityStatus(swimmingClass.getReservationStatus())
+          .waitingNo(swimmingClass.calculateWaitingNum())
+          .build();
+    }
+
     return ReservationInfo.builder()
         .id(createdReservation.getId())
         .availabilityStatus(swimmingClass.getReservationStatus())
-        .waitingNo(createdReservation.getWaitingNo())
         .build();
   }
 }

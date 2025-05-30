@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
 import com.project.swimcb.reservation.adapter.out.FindReservationDataMapper.QueryReservationInfo;
+import com.project.swimcb.swimmingpool.domain.enums.ReservationStatus;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Predicate;
@@ -74,7 +75,7 @@ class FindReservationDataMapperTest {
 
       // Reservation 검증
       assertThat(result.reservation().id()).isEqualTo(reservationId);
-      assertThat(result.reservation().waitingNo()).isEqualTo(queryResult.waitingNo());
+      assertThat(result.reservation().waitingNo()).isEqualTo(2);
     }
 
     @Test
@@ -113,6 +114,7 @@ class FindReservationDataMapperTest {
           1L,
           "DUMMY_POOL_NAME",
           AccountNo.of("DUMMY_ACCOUNT_NO"),
+
           2L,
           5,
           GROUP,
@@ -120,11 +122,15 @@ class FindReservationDataMapperTest {
           1,
           LocalTime.of(10, 0),
           LocalTime.of(11, 0),
+          10,
+          11,
+
           3L,
           "DUMMY_TICKET_NAME",
           50000,
+
           LocalDateTime.of(2025, 4, 1, 10, 0, 0),
-          null,
+          ReservationStatus.RESERVATION_PENDING,
           CASH_ON_SITE
       );
     }

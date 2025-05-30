@@ -103,7 +103,6 @@ class ReservationTest {
       assertThat(reservation.getPaymentMethod()).isEqualTo(PAYMENT_METHOD);
       assertThat(reservation.getReservationStatus()).isEqualTo(RESERVATION_PENDING);
       assertThat(reservation.getReservedAt()).isAfterOrEqualTo(beforeCreation);
-      assertThat(reservation.getWaitingNo()).isEqualTo(waitingNo);
     }
 
     @Test

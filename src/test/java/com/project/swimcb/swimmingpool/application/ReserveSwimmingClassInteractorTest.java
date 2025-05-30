@@ -98,7 +98,6 @@ class ReserveSwimmingClassInteractorTest {
       when(swimmingClass.getReservationStatus()).thenReturn(reservationStatus);
       when(reservationRepository.save(any())).thenReturn(createdReservation);
       when(createdReservation.getId()).thenReturn(reservationId);
-      when(createdReservation.getWaitingNo()).thenReturn(null);
 
       // when
       val result = interactor.reserveSwimmingClass(command);
@@ -135,7 +134,6 @@ class ReserveSwimmingClassInteractorTest {
       when(swimmingClass.calculateWaitingNum()).thenReturn(waitingNo);
       when(reservationRepository.save(any())).thenReturn(createdReservation);
       when(createdReservation.getId()).thenReturn(reservationId);
-      when(createdReservation.getWaitingNo()).thenReturn(waitingNo);
 
       // when
       val result = interactor.reserveSwimmingClass(command);
@@ -149,7 +147,6 @@ class ReserveSwimmingClassInteractorTest {
         assertThat(i.getMember()).isEqualTo(member);
         assertThat(i.getTicketId()).isEqualTo(command.ticketId());
         assertThat(i.getPaymentMethod()).isEqualTo(command.paymentMethod());
-        assertThat(i.getWaitingNo()).isEqualTo(waitingNo);
         assertThat(i.getPaymentAmount()).isEqualTo(ticket.getPrice());
       }));
       verify(swimmingClass, times(1)).increaseReservedCount();

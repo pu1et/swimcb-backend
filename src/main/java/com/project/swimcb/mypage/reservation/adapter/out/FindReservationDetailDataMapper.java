@@ -75,7 +75,6 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
 
             reservation.reservationStatus,
             reservation.reservedAt,
-            reservation.waitingNo,
             reservation.paymentMethod,
             reservation.paymentAmount,
             reservation.paymentPendingAt,
@@ -110,14 +109,14 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
     }
 
     // 대기 예약인 경우, 현재 대기 번호를 조회하여 설정
-    val waitingNo = findCurrentWaitingNo(result.swimmingClassId(), result.waitingNo());
+    val waitingNo = findCurrentWaitingNo(result.swimmingClassId(), result.reservedAt());
 
     return reservationDetail(reservationId, result, waitingNo.intValue());
   }
 
   private Long findCurrentWaitingNo(
       @NonNull Long swimmingClassId,
-      @NonNull Integer waitingNo
+      @NonNull LocalDateTime reservedAt
   ) {
     val count = Optional.ofNullable(queryFactory.select(reservation.id.count())
             .from(reservation)
@@ -126,7 +125,7 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
             .where(
                 swimmingClass.id.eq(swimmingClassId),
                 reservation.reservationStatus.eq(RESERVATION_PENDING),
-                reservation.waitingNo.lt(waitingNo) // 현재 예약의 waitingNo보다 작은 예약들만 조회
+                reservation.reservedAt.before(reservedAt) // 현재 예약보다 이전에 예약된 대기 예약들만 카운트
             )
             .fetchOne())
         .orElse(0L);

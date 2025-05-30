@@ -1,6 +1,6 @@
 package com.project.swimcb.mypage.reservation.adapter.out;
 
-import static com.project.swimcb.swimmingpool.domain.enums.PaymentMethod.*;
+import static com.project.swimcb.swimmingpool.domain.enums.PaymentMethod.BANK_TRANSFER;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_PENDING;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_PENDING;
 import static com.project.swimcb.swimmingpool.domain.enums.TicketType.SWIMMING_CLASS;
@@ -19,7 +19,6 @@ import com.project.swimcb.mypage.reservation.domain.Reservation.ReservationDetai
 import com.project.swimcb.mypage.reservation.domain.Reservation.SwimmingClass;
 import com.project.swimcb.mypage.reservation.domain.Reservation.SwimmingPool;
 import com.project.swimcb.mypage.reservation.domain.Reservation.Ticket;
-import com.project.swimcb.swimmingpool.domain.enums.PaymentMethod;
 import com.project.swimcb.swimmingpool.domain.enums.ReservationStatus;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -52,23 +51,24 @@ class FindReservationsDataMapperTest {
     @DisplayName("대기 예약 번호가 정상적으로 계산되어야 한다")
     void shouldCalculateCurrentWaitingNumbers() {
       // given
+      val firstReservedAt = LocalDateTime.now();
       val findReservationsDataMapper = spy(new FindReservationsDataMapper(queryFactory));
-      val reservation1 = create(3L, 1L, RESERVATION_PENDING, 5);
-      val reservation2 = create(5L, 2L, PAYMENT_PENDING, null);
-      val reservation3 = create(10L, 3L, RESERVATION_PENDING, 7);
+      val reservation1 = create(3L, 1L, RESERVATION_PENDING, firstReservedAt.plusMinutes(2));
+      val reservation2 = create(5L, 2L, PAYMENT_PENDING, LocalDateTime.MIN);
+      val reservation3 = create(10L, 3L, RESERVATION_PENDING, firstReservedAt.plusMinutes(4));
 
       val reservations = List.of(reservation1, reservation2, reservation3);
 
       val mockRelatedReservations = List.of(
-          new WaitingReservation(1L, 1, 1L),
-          new WaitingReservation(2L, 2, 1L),
-          new WaitingReservation(3L, 5, 1L),
+          new WaitingReservation(1L, firstReservedAt, 1L),
+          new WaitingReservation(2L, firstReservedAt.plusMinutes(1), 1L),
+          new WaitingReservation(3L, firstReservedAt.plusMinutes(2), 1L),
 
-          new WaitingReservation(6L, 1, 3L),
-          new WaitingReservation(7L, 2, 3L),
-          new WaitingReservation(8L, 3, 3L),
-          new WaitingReservation(9L, 4, 3L),
-          new WaitingReservation(10L, 7, 3L)
+          new WaitingReservation(6L, firstReservedAt, 3L),
+          new WaitingReservation(7L, firstReservedAt.plusMinutes(1), 3L),
+          new WaitingReservation(8L, firstReservedAt.plusMinutes(2), 3L),
+          new WaitingReservation(9L, firstReservedAt.plusMinutes(3), 3L),
+          new WaitingReservation(10L, firstReservedAt.plusMinutes(4), 3L)
       );
 
       doReturn(mockRelatedReservations)
@@ -94,8 +94,8 @@ class FindReservationsDataMapperTest {
     void shouldReturnOriginalListWhenNoWaitingReservations() {
       // given
       val findReservationsDataMapper = spy(new FindReservationsDataMapper(queryFactory));
-      val reservation1 = create(1L, 1L, PAYMENT_PENDING, null);
-      val reservation2 = create(2L, 1L, PAYMENT_PENDING, null);
+      val reservation1 = create(1L, 1L, PAYMENT_PENDING, LocalDateTime.MIN);
+      val reservation2 = create(2L, 1L, PAYMENT_PENDING, LocalDateTime.MIN);
 
       val reservations = List.of(reservation1, reservation2);
 
@@ -113,7 +113,8 @@ class FindReservationsDataMapperTest {
   }
 
   private static Reservation create(Long id, Long swimmingClassId, ReservationStatus status,
-      Integer waitingNo) {
+      LocalDateTime reservedAt) {
+
     return Reservation.builder()
         .swimmingPool(createSwimmingPool())
         .swimmingClass(createSwimmingClass(swimmingClassId))
@@ -122,8 +123,7 @@ class FindReservationsDataMapperTest {
             .id(id)
             .ticketType(SWIMMING_CLASS)
             .status(status)
-            .reservedAt(LocalDateTime.now())
-            .waitingNo(waitingNo)
+            .reservedAt(reservedAt)
             .build())
         .payment(Payment.builder()
             .method(BANK_TRANSFER)

@@ -77,9 +77,6 @@ public class Reservation extends BaseEntity {
   @Column(name = "payment_pending_at")
   private LocalDateTime paymentPendingAt;
 
-  @Column(name = "waiting_no")
-  private Integer waitingNo;
-
   @Enumerated(STRING)
   @Column(name = "payment_method", length = 20, nullable = false)
   private PaymentMethod paymentMethod;
@@ -145,7 +142,6 @@ public class Reservation extends BaseEntity {
         .paymentMethod(paymentMethod)
         .reservedAt(LocalDateTime.now())
         .reservationStatus(RESERVATION_PENDING)
-        .waitingNo(waitingNo)
         .paymentAmount(paymentAmount)
         .build();
   }
