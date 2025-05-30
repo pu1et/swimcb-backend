@@ -11,6 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import com.project.swimcb.bo.reservation.application.port.out.BoAutoCancelReservationsDsGateway;
 import java.util.Collections;
 import java.util.List;
 import lombok.val;

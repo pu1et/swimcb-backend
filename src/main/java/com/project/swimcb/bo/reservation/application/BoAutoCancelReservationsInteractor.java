@@ -1,6 +1,7 @@
 package com.project.swimcb.bo.reservation.application;
 
 import com.project.swimcb.bo.reservation.application.port.in.BoAutoCancelReservationsUseCase;
+import com.project.swimcb.bo.reservation.application.port.out.BoAutoCancelReservationsDsGateway;
 import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

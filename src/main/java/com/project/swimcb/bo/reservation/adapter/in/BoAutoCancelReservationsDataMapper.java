@@ -10,7 +10,7 @@ import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RES
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_PENDING;
 import static com.querydsl.core.types.Projections.constructor;
 
-import com.project.swimcb.bo.reservation.application.BoAutoCancelReservationsDsGateway;
+import com.project.swimcb.bo.reservation.application.port.out.BoAutoCancelReservationsDsGateway;
 import com.project.swimcb.bo.reservation.application.PaymentExpiredReservation;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;

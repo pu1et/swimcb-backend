@@ -1,5 +1,6 @@
-package com.project.swimcb.bo.reservation.application;
+package com.project.swimcb.bo.reservation.application.port.out;
 
+import com.project.swimcb.bo.reservation.application.PaymentExpiredReservation;
 import java.util.List;
 import java.util.Map;
 import lombok.NonNull;
