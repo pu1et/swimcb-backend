@@ -171,7 +171,7 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
             Reservation.builder()
                 .id(reservationId)
                 .status(result.reservationStatus())
-                .waitingNo(result.waitingNo())
+                .waitingNo(waitingNo)
                 .reservedAt(result.reservedAt())
                 .build()
         )
@@ -243,7 +243,6 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
 
       ReservationStatus reservationStatus,
       LocalDateTime reservedAt,
-      Integer waitingNo,
       PaymentMethod paymentMethod,
       int paymentAmount,
       LocalDateTime paymentPendingAt,

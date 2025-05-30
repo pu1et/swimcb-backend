@@ -59,6 +59,7 @@ public class BoAutoCancelReservationsDataMapper implements BoAutoCancelReservati
             reservation.swimmingClass.id
         ))
         .from(reservation)
+        .join(reservation.swimmingClass, swimmingClass)
         .where(
             reservation.member.id.eq(memberId),
             reservation.reservationStatus.eq(PAYMENT_PENDING),

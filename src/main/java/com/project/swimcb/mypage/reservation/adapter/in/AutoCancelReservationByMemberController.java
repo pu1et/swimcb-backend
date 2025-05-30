@@ -25,6 +25,6 @@ public class AutoCancelReservationByMemberController {
   public void autoCancel(
       @AuthenticationPrincipal TokenInfo tokenInfo
   ) {
-    useCase.cancelPaymentExpiredReservationsBySwimmingPoolId(tokenInfo.swimmingPoolId());
+    useCase.cancelPaymentExpiredReservationsByMemberId(tokenInfo.memberId());
   }
 }

@@ -213,7 +213,6 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
                 .ticketType(i.ticketType())
                 .status(i.reservationStatus())
                 .reservedAt(i.reservedAt())
-                .waitingNo(i.waitingNo())
                 .build()
         )
         .payment(
@@ -255,7 +254,6 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
       TicketType ticketType,
       ReservationStatus reservationStatus,
       LocalDateTime reservedAt,
-      Integer waitingNo,
 
       PaymentMethod paymentMethod,
       LocalDateTime paymentPendingAt,
