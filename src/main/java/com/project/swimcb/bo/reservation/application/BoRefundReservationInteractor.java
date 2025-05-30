@@ -33,17 +33,18 @@ class BoRefundReservationInteractor implements BoRefundReservationUseCase {
       throw new IllegalStateException("결제완료|취소완료 상태에서만 환불이 가능합니다 : " + command.reservationId());
     }
 
+    val swimmingClassId = reservation.getSwimmingClass().getId();
+
+    boCancelReservationDsGateway.updateSwimmingClassReservedCount(swimmingClassId, -1);
+    updateWaitingStatusAfterReservation(reservation.getReservationStatus(), swimmingClassId);
+
     reservation.refund(
         command.bankName(),
         new AccountNo(command.accountNo()),
         command.accountHolder(),
         command.amount()
     );
-    val swimmingClassId = reservation.getSwimmingClass().getId();
 
-    boCancelReservationDsGateway.updateSwimmingClassReservedCount(swimmingClassId, -1);
-
-    updateWaitingStatusAfterReservation(reservation.getReservationStatus(), swimmingClassId);
   }
 
   // 취소한 예약이 어떤 상태냐에 따라 처리가 다름
@@ -57,10 +58,7 @@ class BoRefundReservationInteractor implements BoRefundReservationUseCase {
       return;
     }
     boCancelReservationDsGateway.findFirstWaitingReservationIdBySwimmingClassId(swimmingClassId)
-        .ifPresent(i -> {
-          boCancelReservationDsGateway.updateReservationStatusToPaymentPending(i);
-          boCancelReservationDsGateway.updateSwimmingClassReservedCount(swimmingClassId, 1);
-        });
+        .ifPresent(boCancelReservationDsGateway::updateReservationStatusToPaymentPending);
   }
 
 }

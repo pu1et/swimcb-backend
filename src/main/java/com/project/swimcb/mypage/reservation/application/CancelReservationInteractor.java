@@ -30,12 +30,13 @@ public class CancelReservationInteractor implements CancelReservationUseCase {
     if (!reservation.canTransitionToCancelByUser()) {
       throw new IllegalStateException("예약을 취소할 수 없습니다 : " + reservation);
     }
-    reservation.cancel(USER_CANCELLED);
+
     val swimmingClassId = reservation.getSwimmingClass().getId();
 
     boCancelReservationDsGateway.updateSwimmingClassReservedCount(swimmingClassId, -1);
-
     updateWaitingStatusAfterReservation(reservation.getReservationStatus(), swimmingClassId);
+
+    reservation.cancel(USER_CANCELLED);
   }
 
   // 취소한 예약이 어떤 상태냐에 따라 처리가 다름
@@ -49,10 +50,7 @@ public class CancelReservationInteractor implements CancelReservationUseCase {
       return;
     }
     boCancelReservationDsGateway.findFirstWaitingReservationIdBySwimmingClassId(swimmingClassId)
-        .ifPresent(i -> {
-          boCancelReservationDsGateway.updateReservationStatusToPaymentPending(i);
-          boCancelReservationDsGateway.updateSwimmingClassReservedCount(swimmingClassId, 1);
-        });
+        .ifPresent(boCancelReservationDsGateway::updateReservationStatusToPaymentPending);
   }
 
 }

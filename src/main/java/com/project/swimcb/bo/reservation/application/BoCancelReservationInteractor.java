@@ -31,12 +31,12 @@ class BoCancelReservationInteractor implements BoCancelReservationUseCase {
       throw new IllegalStateException("입금 확인 중 상태만 취소할 수 있습니다 : " + reservation);
     }
 
-    reservation.cancel(NO_PAYMENT_RECEIVED);
     val swimmingClassId = reservation.getSwimmingClass().getId();
 
     boCancelReservationDsGateway.updateSwimmingClassReservedCount(swimmingClassId, -1);
-
     updateWaitingStatusAfterReservation(reservation.getReservationStatus(), swimmingClassId);
+
+    reservation.cancel(NO_PAYMENT_RECEIVED);
   }
 
   // 취소한 예약이 어떤 상태냐에 따라 처리가 다름
@@ -50,10 +50,7 @@ class BoCancelReservationInteractor implements BoCancelReservationUseCase {
       return;
     }
     boCancelReservationDsGateway.findFirstWaitingReservationIdBySwimmingClassId(swimmingClassId)
-        .ifPresent(i -> {
-          boCancelReservationDsGateway.updateReservationStatusToPaymentPending(i);
-          boCancelReservationDsGateway.updateSwimmingClassReservedCount(swimmingClassId, 1);
-        });
+        .ifPresent(boCancelReservationDsGateway::updateReservationStatusToPaymentPending);
   }
 
 }

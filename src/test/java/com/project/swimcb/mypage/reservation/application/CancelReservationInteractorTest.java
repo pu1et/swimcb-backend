@@ -7,6 +7,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -70,16 +71,17 @@ class CancelReservationInteractorTest {
       interactor.cancelReservation(MEMBER_ID, RESERVATION_ID);
 
       // then
-      verify(reservation).cancel(USER_CANCELLED);
-      verify(boCancelReservationDsGateway).updateSwimmingClassReservedCount(SWIMMING_CLASS_ID, -1);
-      verify(boCancelReservationDsGateway).findFirstWaitingReservationIdBySwimmingClassId(
+      val inOrder = inOrder(reservationRepository, reservation, boCancelReservationDsGateway,
+          reservation);
+
+      inOrder.verify(reservation).canTransitionToCancelByUser();
+      inOrder.verify(boCancelReservationDsGateway).updateSwimmingClassReservedCount(SWIMMING_CLASS_ID, -1);
+      inOrder.verify(boCancelReservationDsGateway).findFirstWaitingReservationIdBySwimmingClassId(
           SWIMMING_CLASS_ID);
-      verify(boCancelReservationDsGateway).updateReservationStatusToPaymentPending(
+      inOrder.verify(boCancelReservationDsGateway).updateReservationStatusToPaymentPending(
           waitingReservationId);
-      verify(boCancelReservationDsGateway).updateSwimmingClassReservedCount(SWIMMING_CLASS_ID, 1);
-      // 감소 1번, 증가 1번으로 총 2번 호출되어야 함
-      verify(boCancelReservationDsGateway, times(2)).updateSwimmingClassReservedCount(anyLong(),
-          anyInt());
+
+      verify(reservation).cancel(USER_CANCELLED);
     }
 
     @Test
@@ -100,15 +102,16 @@ class CancelReservationInteractorTest {
       interactor.cancelReservation(MEMBER_ID, RESERVATION_ID);
 
       // then
-      verify(reservation).cancel(USER_CANCELLED);
-      verify(boCancelReservationDsGateway).updateSwimmingClassReservedCount(SWIMMING_CLASS_ID, -1);
+      val inOrder = inOrder(reservationRepository, reservation, boCancelReservationDsGateway, reservation);
+
+      inOrder.verify(reservation).canTransitionToCancelByUser();
+      inOrder.verify(boCancelReservationDsGateway).updateSwimmingClassReservedCount(SWIMMING_CLASS_ID, -1);
+      inOrder.verify(reservation).cancel(USER_CANCELLED);
+
       verify(boCancelReservationDsGateway, never()).findFirstWaitingReservationIdBySwimmingClassId(
           anyLong());
       verify(boCancelReservationDsGateway, never()).updateReservationStatusToPaymentPending(
           anyLong());
-      // 예약수 감소만 1번 호출되어야 함
-      verify(boCancelReservationDsGateway, times(1)).updateSwimmingClassReservedCount(anyLong(),
-          anyInt());
     }
 
     @Test
@@ -132,10 +135,14 @@ class CancelReservationInteractorTest {
       interactor.cancelReservation(MEMBER_ID, RESERVATION_ID);
 
       // then
-      verify(reservation).cancel(USER_CANCELLED);
-      verify(boCancelReservationDsGateway).updateSwimmingClassReservedCount(SWIMMING_CLASS_ID, -1);
-      verify(boCancelReservationDsGateway).findFirstWaitingReservationIdBySwimmingClassId(
+      val inOrder = inOrder(reservationRepository, reservation, boCancelReservationDsGateway, reservation);
+
+      inOrder.verify(reservation).canTransitionToCancelByUser();
+      inOrder.verify(boCancelReservationDsGateway).updateSwimmingClassReservedCount(SWIMMING_CLASS_ID, -1);
+      inOrder.verify(boCancelReservationDsGateway).findFirstWaitingReservationIdBySwimmingClassId(
           SWIMMING_CLASS_ID);
+      inOrder.verify(reservation).cancel(USER_CANCELLED);
+
       verify(boCancelReservationDsGateway, never()).updateReservationStatusToPaymentPending(
           anyLong());
       // 예약수 감소만 1번 호출되어야 함

@@ -4,6 +4,7 @@ import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAY
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_PENDING;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -74,18 +75,21 @@ class BoRefundReservationInteractorTest {
     interactor.refundReservation(command);
 
     // then
-    verify(reservation).refund(
+    val inOrder = inOrder(repository, reservation, boCancelReservationDsGateway, reservation);
+
+    inOrder.verify(reservation).canTransitionToRefund();
+    inOrder.verify(boCancelReservationDsGateway)
+        .updateSwimmingClassReservedCount(SWIMMING_CLASS_ID, -1);
+    inOrder.verify(boCancelReservationDsGateway).findFirstWaitingReservationIdBySwimmingClassId(
+        SWIMMING_CLASS_ID);
+    inOrder.verify(boCancelReservationDsGateway).updateReservationStatusToPaymentPending(
+        waitingReservationId);
+    inOrder.verify(reservation).refund(
         command.bankName(),
         new AccountNo(command.accountNo()),
         command.accountHolder(),
         command.amount()
     );
-    verify(boCancelReservationDsGateway).updateSwimmingClassReservedCount(SWIMMING_CLASS_ID, -1);
-    verify(boCancelReservationDsGateway).findFirstWaitingReservationIdBySwimmingClassId(
-        SWIMMING_CLASS_ID);
-    verify(boCancelReservationDsGateway).updateReservationStatusToPaymentPending(
-        waitingReservationId);
-    verify(boCancelReservationDsGateway).updateSwimmingClassReservedCount(SWIMMING_CLASS_ID, 1);
   }
 
   @Test
@@ -105,15 +109,20 @@ class BoRefundReservationInteractorTest {
     interactor.refundReservation(command);
 
     // then
-    verify(reservation).refund(
+    val inOrder = inOrder(repository, reservation, boCancelReservationDsGateway, reservation);
+
+    inOrder.verify(reservation).canTransitionToRefund();
+    inOrder.verify(boCancelReservationDsGateway)
+        .updateSwimmingClassReservedCount(SWIMMING_CLASS_ID, -1);
+    inOrder.verify(reservation).refund(
         command.bankName(),
         new AccountNo(command.accountNo()),
         command.accountHolder(),
         command.amount()
     );
-    verify(boCancelReservationDsGateway).updateSwimmingClassReservedCount(SWIMMING_CLASS_ID, -1);
-    verify(boCancelReservationDsGateway, never()).findFirstWaitingReservationIdBySwimmingClassId(
-        anyLong());
+
+    verify(boCancelReservationDsGateway, never())
+        .findFirstWaitingReservationIdBySwimmingClassId(anyLong());
     verify(boCancelReservationDsGateway, never()).updateReservationStatusToPaymentPending(
         anyLong());
   }
@@ -138,15 +147,20 @@ class BoRefundReservationInteractorTest {
     interactor.refundReservation(command);
 
     // then
-    verify(reservation).refund(
+    val inOrder = inOrder(repository, reservation, boCancelReservationDsGateway, reservation);
+
+    inOrder.verify(reservation).canTransitionToRefund();
+    inOrder.verify(boCancelReservationDsGateway)
+        .updateSwimmingClassReservedCount(SWIMMING_CLASS_ID, -1);
+    inOrder.verify(boCancelReservationDsGateway).findFirstWaitingReservationIdBySwimmingClassId(
+        SWIMMING_CLASS_ID);
+    inOrder.verify(reservation).refund(
         command.bankName(),
         new AccountNo(command.accountNo()),
         command.accountHolder(),
         command.amount()
     );
-    verify(boCancelReservationDsGateway).updateSwimmingClassReservedCount(SWIMMING_CLASS_ID, -1);
-    verify(boCancelReservationDsGateway).findFirstWaitingReservationIdBySwimmingClassId(
-        SWIMMING_CLASS_ID);
+
     verify(boCancelReservationDsGateway, never()).updateReservationStatusToPaymentPending(
         anyLong());
   }
