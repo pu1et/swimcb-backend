@@ -1,0 +1,26 @@
+package com.project.swimcb.bo.reservation.adapter.in;
+
+import com.project.swimcb.bo.reservation.application.port.in.BoAutoCancelReservationsUseCase;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@Tag(name = "BO - 완료")
+@SecurityRequirement(name = "Bearer Authentication")
+@RestController
+@RequestMapping("/api/bo/swimming-pools/reservations/auto-cancel")
+@RequiredArgsConstructor
+public class AutoCancelReservationController {
+
+  private final BoAutoCancelReservationsUseCase useCase;
+
+  @Operation(summary = "[BO] 수영장별 24시간 초과 결제 자동 취소 처리")
+  @PostMapping
+  public void autoCancel() {
+//    useCase.cancelPaymentExpiredReservations();
+  }
+}
