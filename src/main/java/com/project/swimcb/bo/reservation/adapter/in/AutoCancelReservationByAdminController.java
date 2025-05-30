@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/bo/swimming-pools/reservations/auto-cancel")
 @RequiredArgsConstructor
-public class AutoCancelReservationController {
+public class AutoCancelReservationByAdminController {
 
   private final BoAutoCancelReservationsUseCase useCase;
 
-  @Operation(summary = "[BO] 수영장별 24시간 초과 결제 자동 취소 처리")
+  @Operation(summary = "[BO] 수영장별 결제대기 24시간 초과된 예약건 자동 취소 처리")
   @PostMapping
   public void autoCancel(
       @AuthenticationPrincipal TokenInfo tokenInfo
