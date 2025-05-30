@@ -8,7 +8,6 @@ import static com.project.swimcb.bo.swimmingpool.domain.QSwimmingPool.swimmingPo
 import static com.project.swimcb.swimmingpool.domain.QReservation.reservation;
 import static com.querydsl.core.types.Projections.constructor;
 
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClass;
 import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
 import com.project.swimcb.reservation.application.port.out.FindReservationGateway;
 import com.project.swimcb.reservation.domain.ReservationInfo;
@@ -20,6 +19,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -117,7 +117,19 @@ public class FindReservationDataMapper implements FindReservationGateway {
     if (result.reservationStatus() != ReservationStatus.RESERVATION_PENDING) {
       return null;
     }
-    return SwimmingClass.calculateWaitingNum(result.reservationLimitCount, result.reservedCount);
+
+    val previousPendingReservationCount = Optional.ofNullable(
+            queryFactory.select(reservation.id.count())
+                .from(reservation)
+                .where(
+                    reservation.swimmingClass.id.eq(result.swimmingClassId),
+                    reservation.reservationStatus.eq(ReservationStatus.RESERVATION_PENDING),
+                    reservation.reservedAt.lt(result.reservedAt) // 예약 시간 이전의 예약들만 고려
+                )
+                .fetchOne())
+        .orElse(0L)
+        .intValue();
+    return previousPendingReservationCount + 1;
   }
 
   @Builder
