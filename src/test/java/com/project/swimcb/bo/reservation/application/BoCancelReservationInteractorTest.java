@@ -50,13 +50,12 @@ class BoCancelReservationInteractorTest {
     when(repository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
     when(reservation.canTransitionToCancelByAdmin()).thenReturn(true);
     when(reservation.getReservationStatus()).thenReturn(PAYMENT_PENDING);
-    when(reservation.getId()).thenReturn(RESERVATION_ID);
     when(reservation.getSwimmingClass()).thenReturn(swimmingClass);
     when(swimmingClass.getId()).thenReturn(SWIMMING_CLASS_ID);
 
     val waitingReservationId = 5L;
-    when(boCancelReservationDsGateway.findFirstWaitingReservationId(RESERVATION_ID))
-        .thenReturn(Optional.of(waitingReservationId));
+    when(boCancelReservationDsGateway.findFirstWaitingReservationIdBySwimmingClassId(
+        SWIMMING_CLASS_ID)).thenReturn(Optional.of(waitingReservationId));
 
     // when
     interactor.cancelReservation(RESERVATION_ID);
@@ -65,7 +64,8 @@ class BoCancelReservationInteractorTest {
     verify(reservation).cancel(NO_PAYMENT_RECEIVED);
     verify(boCancelReservationDsGateway, times(1)).updateSwimmingClassReservedCount(
         SWIMMING_CLASS_ID, -1);
-    verify(boCancelReservationDsGateway, times(1)).findFirstWaitingReservationId(RESERVATION_ID);
+    verify(boCancelReservationDsGateway, times(1)).findFirstWaitingReservationIdBySwimmingClassId(
+        SWIMMING_CLASS_ID);
     verify(boCancelReservationDsGateway, times(1)).updateReservationStatusToPaymentPending(
         waitingReservationId);
     verify(boCancelReservationDsGateway, times(1)).updateSwimmingClassReservedCount(
@@ -92,7 +92,8 @@ class BoCancelReservationInteractorTest {
     verify(reservation).cancel(NO_PAYMENT_RECEIVED);
     verify(boCancelReservationDsGateway, times(1)).updateSwimmingClassReservedCount(
         SWIMMING_CLASS_ID, -1);
-    verify(boCancelReservationDsGateway, never()).findFirstWaitingReservationId(anyLong());
+    verify(boCancelReservationDsGateway, never()).findFirstWaitingReservationIdBySwimmingClassId(
+        anyLong());
     verify(boCancelReservationDsGateway, never()).updateReservationStatusToPaymentPending(
         anyLong());
   }
@@ -107,12 +108,11 @@ class BoCancelReservationInteractorTest {
     when(repository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
     when(reservation.canTransitionToCancelByAdmin()).thenReturn(true);
     when(reservation.getReservationStatus()).thenReturn(PAYMENT_PENDING);
-    when(reservation.getId()).thenReturn(RESERVATION_ID);
     when(reservation.getSwimmingClass()).thenReturn(swimmingClass);
     when(swimmingClass.getId()).thenReturn(SWIMMING_CLASS_ID);
 
-    when(boCancelReservationDsGateway.findFirstWaitingReservationId(RESERVATION_ID))
-        .thenReturn(Optional.empty());
+    when(boCancelReservationDsGateway.findFirstWaitingReservationIdBySwimmingClassId(
+        SWIMMING_CLASS_ID)).thenReturn(Optional.empty());
 
     // when
     interactor.cancelReservation(RESERVATION_ID);

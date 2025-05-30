@@ -5,8 +5,8 @@ import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RES
 
 import com.project.swimcb.bo.reservation.application.port.out.BoCancelReservationDsGateway;
 import com.project.swimcb.mypage.reservation.application.port.in.CancelReservationUseCase;
-import com.project.swimcb.swimmingpool.domain.Reservation;
 import com.project.swimcb.swimmingpool.domain.ReservationRepository;
+import com.project.swimcb.swimmingpool.domain.enums.ReservationStatus;
 import java.util.NoSuchElementException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -35,18 +35,20 @@ public class CancelReservationInteractor implements CancelReservationUseCase {
 
     boCancelReservationDsGateway.updateSwimmingClassReservedCount(swimmingClassId, -1);
 
-    updateWaitingStatusAfterReservation(reservation, swimmingClassId);
+    updateWaitingStatusAfterReservation(reservation.getReservationStatus(), swimmingClassId);
   }
 
   // 취소한 예약이 어떤 상태냐에 따라 처리가 다름
   // 1. 결제대기 상태 -> 가장 앞 순번인 예약대기를 결제대기로 변경
   // 2. 예약대기 상태 -> 아무것도 하지 않음
-  private void updateWaitingStatusAfterReservation(@NonNull Reservation reservation,
-      @NonNull Long swimmingClassId) {
-    if (reservation.getReservationStatus() == RESERVATION_PENDING) {
+  private void updateWaitingStatusAfterReservation(
+      @NonNull ReservationStatus reservationStatus,
+      @NonNull Long swimmingClassId
+  ) {
+    if (reservationStatus == RESERVATION_PENDING) {
       return;
     }
-    boCancelReservationDsGateway.findFirstWaitingReservationId(reservation.getId())
+    boCancelReservationDsGateway.findFirstWaitingReservationIdBySwimmingClassId(swimmingClassId)
         .ifPresent(i -> {
           boCancelReservationDsGateway.updateReservationStatusToPaymentPending(i);
           boCancelReservationDsGateway.updateSwimmingClassReservedCount(swimmingClassId, 1);

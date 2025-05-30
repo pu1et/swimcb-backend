@@ -60,11 +60,13 @@ class BoCancelReservationDataMapper implements BoCancelReservationDsGateway {
   }
 
   @Override
-  public Optional<Long> findFirstWaitingReservationId(@NonNull Long reservationId) {
+  public Optional<Long> findFirstWaitingReservationIdBySwimmingClassId(
+      @NonNull Long swimmingClassId) {
+
     return Optional.ofNullable(queryFactory.select(reservation.id)
         .from(reservation)
         .where(
-            reservation.id.gt(reservationId),
+            reservation.swimmingClass.id.eq(swimmingClassId),
             reservation.reservationStatus.eq(RESERVATION_PENDING)
         )
         .orderBy(reservation.reservedAt.asc())

@@ -12,7 +12,7 @@ public interface BoCancelReservationDsGateway {
       int count
   );
 
-  Optional<Long> findFirstWaitingReservationId(@NonNull Long reservationId);
+  Optional<Long> findFirstWaitingReservationIdBySwimmingClassId(@NonNull Long swimmingClassId);
 
   void updateReservationStatusToPaymentPending(@NonNull Long reservationId);
 
