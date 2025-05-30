@@ -12,6 +12,7 @@ import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PRIVATE;
 import static lombok.AccessLevel.PROTECTED;
 
+import com.project.swimcb.bo.swimmingclass.domain.SwimmingClass;
 import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
 import com.project.swimcb.bo.swimmingpool.domain.AccountNoConverter;
 import com.project.swimcb.common.entity.BaseEntity;
@@ -54,6 +55,10 @@ public class Reservation extends BaseEntity {
   @ManyToOne(fetch = LAZY)
   @JoinColumn(name = "member_id", nullable = false)
   private Member member;
+
+  @ManyToOne(fetch = LAZY)
+  @JoinColumn(name = "swimming_class_id")
+  private SwimmingClass swimmingClass;
 
   @Enumerated(STRING)
   @Column(name = "ticket_type", length = 20, nullable = false)
@@ -210,6 +215,7 @@ public class Reservation extends BaseEntity {
   public void changePaymentMethod(@NonNull PaymentMethod paymentMethod) {
     this.paymentMethod = paymentMethod;
   }
+
 }
 
 
