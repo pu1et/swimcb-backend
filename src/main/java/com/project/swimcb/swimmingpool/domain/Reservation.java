@@ -114,13 +114,16 @@ public class Reservation extends BaseEntity {
   private LocalDateTime refundedAt;
 
   @Builder(builderClassName = "createClassNormalReservation", builderMethodName = "createClassNormalReservation")
-  private static Reservation create(@NonNull Member member, long ticketId,
-      @NonNull PaymentMethod paymentMethod, int paymentAmount) {
+  private static Reservation createClassNormal(@NonNull Member member,
+      @NonNull SwimmingClass swimmingClass, @NonNull Long ticketId,
+      @NonNull PaymentMethod paymentMethod,
+      int paymentAmount) {
 
     val now = LocalDateTime.now();
 
     return Reservation.builder()
         .member(member)
+        .swimmingClass(swimmingClass)
         .ticketType(SWIMMING_CLASS)
         .ticketId(ticketId)
         .paymentMethod(paymentMethod)
@@ -132,11 +135,13 @@ public class Reservation extends BaseEntity {
   }
 
   @Builder(builderClassName = "createClassWaitingReservation", builderMethodName = "createClassWaitingReservation")
-  private static Reservation create(@NonNull Member member, long ticketId,
-      @NonNull PaymentMethod paymentMethod, int waitingNo, int paymentAmount) {
+  private static Reservation createClassWaiting(@NonNull Member member,
+      @NonNull SwimmingClass swimmingClass, @NonNull Long ticketId,
+      @NonNull PaymentMethod paymentMethod, int paymentAmount) {
 
     return Reservation.builder()
         .member(member)
+        .swimmingClass(swimmingClass)
         .ticketType(SWIMMING_CLASS)
         .ticketId(ticketId)
         .paymentMethod(paymentMethod)

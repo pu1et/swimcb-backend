@@ -47,9 +47,11 @@ class ReserveSwimmingClassInteractor implements ReserveSwimmingClassUseCase {
 
     val createdReservation = reservationRepository.save(reservation);
 
+    val reservationInfo = reservationInfo(createdReservation, swimmingClass);
+
     swimmingClass.increaseReservedCount();
 
-    return reservationInfo(createdReservation, swimmingClass);
+    return reservationInfo;
   }
 
   private Reservation createClassReservation(@NonNull ReserveSwimmingClassCommand command,
@@ -65,9 +67,9 @@ class ReserveSwimmingClassInteractor implements ReserveSwimmingClassUseCase {
     if (reservationStatus == WAITING_RESERVABLE) {
       return Reservation.createClassWaitingReservation()
           .member(member)
+          .swimmingClass(swimmingClass)
           .ticketId(command.ticketId())
           .paymentMethod(command.paymentMethod())
-          .waitingNo(swimmingClass.calculateWaitingNum())
           .paymentAmount(ticket.getPrice())
           .build();
     }
@@ -75,6 +77,7 @@ class ReserveSwimmingClassInteractor implements ReserveSwimmingClassUseCase {
     // 결제대기 예약 생성
     return Reservation.createClassNormalReservation()
         .member(member)
+        .swimmingClass(swimmingClass)
         .ticketId(command.ticketId())
         .paymentMethod(command.paymentMethod())
         .paymentAmount(ticket.getPrice())

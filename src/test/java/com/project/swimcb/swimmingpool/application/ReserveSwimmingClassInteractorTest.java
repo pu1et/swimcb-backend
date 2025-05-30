@@ -112,6 +112,7 @@ class ReserveSwimmingClassInteractorTest {
       verify(ticketRepository, only()).findById(command.ticketId());
       verify(reservationRepository, only()).save(assertArg(i -> {
         assertThat(i.getMember()).isEqualTo(member);
+        assertThat(i.getSwimmingClass()).isEqualTo(swimmingClass);
         assertThat(i.getTicketId()).isEqualTo(command.ticketId());
         assertThat(i.getPaymentMethod()).isEqualTo(command.paymentMethod());
         assertThat(i.getPaymentAmount()).isEqualTo(ticket.getPrice());
@@ -145,6 +146,7 @@ class ReserveSwimmingClassInteractorTest {
 
       verify(reservationRepository, only()).save(assertArg(i -> {
         assertThat(i.getMember()).isEqualTo(member);
+        assertThat(i.getSwimmingClass()).isEqualTo(swimmingClass);
         assertThat(i.getTicketId()).isEqualTo(command.ticketId());
         assertThat(i.getPaymentMethod()).isEqualTo(command.paymentMethod());
         assertThat(i.getPaymentAmount()).isEqualTo(ticket.getPrice());

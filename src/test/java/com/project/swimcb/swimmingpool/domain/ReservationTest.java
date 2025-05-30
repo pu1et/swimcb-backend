@@ -8,6 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 
+import com.project.swimcb.bo.swimmingclass.domain.SwimmingClass;
 import com.project.swimcb.member.domain.Member;
 import com.project.swimcb.swimmingpool.domain.enums.PaymentMethod;
 import java.time.LocalDateTime;
@@ -25,6 +26,7 @@ class ReservationTest {
     private final long TICKET_ID = 1L;
     private final PaymentMethod PAYMENT_METHOD = BANK_TRANSFER;
     private Member member = mock(Member.class);
+    private final SwimmingClass swimmingClass = mock(SwimmingClass.class);
 
     @Test
     @DisplayName("수영 클래스 일반 예약을 성공적으로 생성한다.")
@@ -34,11 +36,13 @@ class ReservationTest {
       // When
       val reservation = Reservation.createClassNormalReservation()
           .member(member)
+          .swimmingClass(swimmingClass)
           .ticketId(TICKET_ID)
           .paymentMethod(PAYMENT_METHOD)
           .build();
       // Then
       assertThat(reservation.getMember()).isEqualTo(member);
+      assertThat(reservation.getSwimmingClass()).isEqualTo(swimmingClass);
       assertThat(reservation.getTicketId()).isEqualTo(TICKET_ID);
       assertThat(reservation.getTicketType()).isEqualTo(SWIMMING_CLASS);
       assertThat(reservation.getPaymentMethod()).isEqualTo(PAYMENT_METHOD);
@@ -54,6 +58,7 @@ class ReservationTest {
       // then
       assertThatThrownBy(() -> Reservation.createClassNormalReservation()
           .member(null)
+          .swimmingClass(swimmingClass)
           .ticketId(TICKET_ID)
           .paymentMethod(PAYMENT_METHOD)
           .build())
@@ -68,8 +73,24 @@ class ReservationTest {
       // then
       assertThatThrownBy(() -> Reservation.createClassNormalReservation()
           .member(member)
+          .swimmingClass(swimmingClass)
           .ticketId(TICKET_ID)
           .paymentMethod(null)
+          .build())
+          .isInstanceOf(NullPointerException.class);
+    }
+
+    @Test
+    @DisplayName("수영장 ID가 null이면 NPE가 발생한다.")
+    void createSwimmingClassReservationWithNullSwimmingClassId() {
+      // given
+      // when
+      // then
+      assertThatThrownBy(() -> Reservation.createClassNormalReservation()
+          .member(member)
+          .swimmingClass(null)
+          .ticketId(TICKET_ID)
+          .paymentMethod(PAYMENT_METHOD)
           .build())
           .isInstanceOf(NullPointerException.class);
     }
@@ -82,7 +103,7 @@ class ReservationTest {
     private final long TICKET_ID = 1L;
     private final PaymentMethod PAYMENT_METHOD = BANK_TRANSFER;
     private final Member member = mock(Member.class);
-    private final int waitingNo = 1;
+    private final SwimmingClass swimmingClass = mock(SwimmingClass.class);
 
     @Test
     @DisplayName("수영 클래스 대기 예약을 성공적으로 생성한다.")
@@ -92,12 +113,13 @@ class ReservationTest {
       // When
       val reservation = Reservation.createClassWaitingReservation()
           .member(member)
+          .swimmingClass(swimmingClass)
           .ticketId(TICKET_ID)
           .paymentMethod(PAYMENT_METHOD)
-          .waitingNo(waitingNo)
           .build();
       // Then
       assertThat(reservation.getMember()).isEqualTo(member);
+      assertThat(reservation.getSwimmingClass()).isEqualTo(swimmingClass);
       assertThat(reservation.getTicketId()).isEqualTo(TICKET_ID);
       assertThat(reservation.getTicketType()).isEqualTo(SWIMMING_CLASS);
       assertThat(reservation.getPaymentMethod()).isEqualTo(PAYMENT_METHOD);
@@ -111,8 +133,9 @@ class ReservationTest {
       // given
       // when
       // then
-      assertThatThrownBy(() -> Reservation.createClassNormalReservation()
+      assertThatThrownBy(() -> Reservation.createClassWaitingReservation()
           .member(null)
+          .swimmingClass(swimmingClass)
           .ticketId(TICKET_ID)
           .paymentMethod(PAYMENT_METHOD)
           .build())
@@ -125,10 +148,26 @@ class ReservationTest {
       // given
       // when
       // then
-      assertThatThrownBy(() -> Reservation.createClassNormalReservation()
+      assertThatThrownBy(() -> Reservation.createClassWaitingReservation()
           .member(member)
+          .swimmingClass(swimmingClass)
           .ticketId(TICKET_ID)
           .paymentMethod(null)
+          .build())
+          .isInstanceOf(NullPointerException.class);
+    }
+
+    @Test
+    @DisplayName("수영장 ID가 null이면 NPE가 발생한다.")
+    void createSwimmingClassReservationWithNullSwimmingClassId() {
+      // given
+      // when
+      // then
+      assertThatThrownBy(() -> Reservation.createClassWaitingReservation()
+          .member(member)
+          .swimmingClass(null)
+          .ticketId(TICKET_ID)
+          .paymentMethod(PAYMENT_METHOD)
           .build())
           .isInstanceOf(NullPointerException.class);
     }
