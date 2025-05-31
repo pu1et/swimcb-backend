@@ -20,7 +20,7 @@ public enum SwimmingClassAvailabilityStatus {
       return RESERVABLE;
     }
 
-    if (reservableCount > -4) {
+    if (reservableCount > -5) {
       return WAITING_RESERVABLE;
     }
 

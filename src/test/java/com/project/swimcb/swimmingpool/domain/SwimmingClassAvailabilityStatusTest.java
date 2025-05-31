@@ -64,11 +64,11 @@ class SwimmingClassAvailabilityStatusTest {
     }
 
     @Test
-    @DisplayName("수강 정원도 꽉 차고 대기자도 4명이 차면 '예약 불가' 상태이다")
+    @DisplayName("수강 정원도 꽉 차고 대기자도 5명이 차면 '예약 불가' 상태이다")
     void notReservableWhenClassIsFullAndWaitlistIsFull() {
       // given
       val reservationLimitCount = 20;
-      val reservedCount = 24; // 정원(20명) + 대기자 최대(4명)
+      val reservedCount = 25; // 정원(20명) + 대기자 최대(5명)
 
       // when
       val status = SwimmingClassAvailabilityStatus.calculateStatus(reservationLimitCount,
@@ -85,8 +85,8 @@ class SwimmingClassAvailabilityStatusTest {
         "20, 19, RESERVABLE",    // 1자리 남음
         "20, 20, WAITING_RESERVABLE", // 정원 꽉 참 (대기 가능)
         "20, 21, WAITING_RESERVABLE", // 대기 1명
-        "20, 23, WAITING_RESERVABLE", // 대기 3명 (경계값)
-        "20, 24, NOT_RESERVABLE",    // 대기 불가
+        "20, 24, WAITING_RESERVABLE", // 대기 4명 (경계값)
+        "20, 25, NOT_RESERVABLE",    // 대기 불가
         "20, 30, NOT_RESERVABLE"     // 대기 불가 (초과)
     })
     void reservationStatusByEnrollmentCount(int capacity, int enrolled,
