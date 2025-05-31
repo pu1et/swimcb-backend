@@ -22,6 +22,7 @@ import com.project.swimcb.swimmingpool.adapter.in.FindSwimmingPoolDetailClassesR
 import com.project.swimcb.swimmingpool.adapter.in.FindSwimmingPoolDetailClassesResponse.SwimmingClass;
 import com.project.swimcb.swimmingpool.adapter.in.FindSwimmingPoolDetailClassesResponse.SwimmingClassTicket;
 import com.project.swimcb.swimmingpool.application.out.FindSwimmingPoolDetailClassesGateway;
+import com.project.swimcb.swimmingpool.domain.SwimmingClassAvailabilityStatus;
 import com.project.swimcb.swimmingpool.domain.enums.GroupFixedClassSubTypeName;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import com.querydsl.core.BooleanBuilder;
@@ -64,9 +65,12 @@ class FindSwimmingPoolDetailClassesDataMapper implements
             swimmingClass.startTime,
             swimmingClass.endTime,
             swimmingClassTicket.price.min(),
+
             favorite.id.count().gt(0),
-            swimmingClass.totalCapacity,
+
             swimmingClass.reservationLimitCount,
+            swimmingClass.reservedCount,
+
             swimmingClassTicket.id,
             swimmingClassTicket.name,
             swimmingClassTicket.price
@@ -236,7 +240,9 @@ class FindSwimmingPoolDetailClassesDataMapper implements
   }
 
   private boolean isReservable(int reservationLimitCount, int reservedCount) {
-    return reservationLimitCount - reservedCount > 0;
+    val availabilityStatus = SwimmingClassAvailabilityStatus.calculateStatus(
+        reservationLimitCount, reservedCount);
+    return availabilityStatus != SwimmingClassAvailabilityStatus.NOT_RESERVABLE;
   }
 
   @Builder

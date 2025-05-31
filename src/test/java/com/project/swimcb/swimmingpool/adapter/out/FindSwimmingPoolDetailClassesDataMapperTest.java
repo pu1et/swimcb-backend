@@ -101,14 +101,14 @@ class FindSwimmingPoolDetailClassesDataMapperTest {
               LocalTime.of(8, 0), 20000, false, 20, 19, 3L, "DUMMY_TICKET3", 20000),
 
           new QuerySwimmingPoolDetailClass(3L, KIDS_SWIMMING, "DUMMY_SUB_TYPE3", 84,
-              LocalTime.of(17, 0), LocalTime.of(18, 0), 30000, false, 40, 20, 4L, "DUMMY_TICKET4",
+              LocalTime.of(17, 0), LocalTime.of(18, 0), 30000, false, 25, 20, 4L, "DUMMY_TICKET4",
               30000),
           new QuerySwimmingPoolDetailClass(3L, KIDS_SWIMMING, "DUMMY_SUB_TYPE3", 84,
-              LocalTime.of(17, 0), LocalTime.of(18, 0), 30000, false, 40, 20, 5L, "DUMMY_TICKET5",
+              LocalTime.of(17, 0), LocalTime.of(18, 0), 30000, false, 25, 20, 5L, "DUMMY_TICKET5",
               30000),
 
           new QuerySwimmingPoolDetailClass(4L, KIDS_SWIMMING, "DUMMY_SUB_TYPE4", 5,
-              LocalTime.of(18, 0), LocalTime.of(19, 0), 40000, true, 40, 40, 6L, "DUMMY_TICKET6",
+              LocalTime.of(18, 0), LocalTime.of(19, 0), 40000, true, 44, 40, 6L, "DUMMY_TICKET6",
               40000)
       );
 
@@ -161,7 +161,7 @@ class FindSwimmingPoolDetailClassesDataMapperTest {
       assertThat(class4.type()).isEqualTo(KIDS_SWIMMING.getDescription());
       assertThat(class4.subType()).isEqualTo("DUMMY_SUB_TYPE4");
       assertThat(class4.days()).containsExactly("금", "일");
-      assertThat(class4.isReservable()).isFalse();
+      assertThat(class4.isReservable()).isTrue();
       assertThat(class4.tickets()).hasSize(1);
       assertThat(class4.tickets()).extracting(SwimmingClassTicket::swimmingClassTicketId).containsExactly(6L);
 
