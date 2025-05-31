@@ -89,5 +89,6 @@ public class SwimmingPool extends BaseEntity {
     this.operatingDays = request.operatingDays();
     this.closedDays = request.closedDays();
     this.accountNo = request.accountNo();
+    this.usageAgreementPath = request.usageAgreementPath();
   }
 }
