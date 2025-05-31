@@ -40,10 +40,15 @@ public class FindSwimmingPoolBasicInfoInteractor implements FindSwimmingPoolBasi
         .closedDays(swimmingPool.getClosedDays())
         .representativeImageUrls(swimmingPoolImageUrls)
         .usageAgreementUrl(getImageUrl(swimmingPool.getUsageAgreementPath()))
+        .accountNo(swimmingPool.getAccountNo() == null ? null : swimmingPool.getAccountNo().value())
         .build();
   }
 
   private String getImageUrl(String imagePath) {
+    if (imagePath == null) {
+      return null;
+    }
     return imageUrlPort.getImageUrl(imagePath);
   }
+
 }

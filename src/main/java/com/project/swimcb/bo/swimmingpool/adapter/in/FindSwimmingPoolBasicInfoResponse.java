@@ -43,7 +43,10 @@ public record FindSwimmingPoolBasicInfoResponse(
     @NonNull List<String> representativeImageUrls,
 
     @Schema(description = "이용약관 URL", example = "http://host.com/usage-agreement.txt")
-    String usageAgreementUrl
+    String usageAgreementUrl,
+
+    @Schema(description = "계좌번호", example = "1234567890")
+    String accountNo
 ) {
 
 }

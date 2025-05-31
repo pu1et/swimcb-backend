@@ -11,6 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.project.swimcb.bo.swimmingpool.application.out.ImageUrlPort;
+import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
 import com.project.swimcb.bo.swimmingpool.domain.SwimmingPool;
 import com.project.swimcb.bo.swimmingpool.domain.SwimmingPoolImage;
 import com.project.swimcb.bo.swimmingpool.domain.SwimmingPoolImageRepository;
@@ -121,6 +122,8 @@ class FindSwimmingPoolBasicInfoInteractorTest {
       when(swimmingPool.getNewRegistrationPeriodEndDay()).thenReturn(2);
       when(swimmingPool.getReRegistrationPeriodStartDay()).thenReturn(3);
       when(swimmingPool.getReRegistrationPeriodEndDay()).thenReturn(4);
+      when(swimmingPool.getUsageAgreementPath()).thenReturn("DUMMY_USAGE_AGREEMENT_PATH");
+      when(swimmingPool.getAccountNo()).thenReturn(mock(AccountNo.class));
       return swimmingPool;
     }
   }
