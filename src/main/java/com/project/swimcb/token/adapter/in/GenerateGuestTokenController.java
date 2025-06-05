@@ -6,6 +6,7 @@ import com.project.swimcb.token.application.in.GenerateGuestTokenUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,7 +30,15 @@ public class GenerateGuestTokenController {
   @Operation(summary = "회원-고객 토큰 생성")
   @PostMapping("/customer")
   public String generateCustomerToken() {
-    return generateCustomerTokenUseCase.generateCustomerToken();
+    return generateCustomerTokenUseCase.generateCustomerToken(1L);
+  }
+
+  @Operation(summary = "회원-고객 토큰 생성")
+  @PostMapping("/member/{memberId}")
+  public String generateMemberToken(
+      @PathVariable(value = "memberId", required = true) Long memberId
+  ) {
+    return generateCustomerTokenUseCase.generateCustomerToken(memberId);
   }
 
   @Operation(summary = "회원-관리자 토큰 생성")
