@@ -1,9 +1,13 @@
 package com.project.swimcb.token.application;
 
+import com.project.swimcb.bo.admin.domain.AdminRepository;
+import com.project.swimcb.bo.swimmingpool.domain.SwimmingPoolRepository;
 import com.project.swimcb.token.application.in.GenerateAdminTokenUseCase;
 import com.project.swimcb.token.application.in.JwtPort;
 import com.project.swimcb.token.domain.TokenInfo;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,9 +15,16 @@ import org.springframework.stereotype.Service;
 public class GenerateAdminTokenInteractor implements GenerateAdminTokenUseCase {
 
   private final JwtPort jwtPort;
+  private final AdminRepository adminRepository;
+  private final SwimmingPoolRepository swimmingPoolRepository;
 
   @Override
-  public String generateAdminToken() {
-    return jwtPort.generateToken(TokenInfo.admin(1L, 1L));
+  public String generateAdminToken(@NonNull String loginId, @NonNull String password) {
+    val admin = adminRepository.findByLoginId(loginId)
+        .orElseThrow(() -> new IllegalArgumentException("계정이 존재하지 않습니다."));
+    val swimmingPool = swimmingPoolRepository.findByAdmin_Id(admin.getId())
+        .orElseThrow(() -> new IllegalArgumentException("수영장이 존재하지 않습니다."));
+    return jwtPort.generateToken(TokenInfo.admin(admin.getId(), swimmingPool.getId()));
   }
+
 }

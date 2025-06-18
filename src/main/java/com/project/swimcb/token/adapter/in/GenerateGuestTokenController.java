@@ -4,10 +4,14 @@ import com.project.swimcb.token.application.in.GenerateAdminTokenUseCase;
 import com.project.swimcb.token.application.in.GenerateCustomerTokenUseCase;
 import com.project.swimcb.token.application.in.GenerateGuestTokenUseCase;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,7 +47,22 @@ public class GenerateGuestTokenController {
 
   @Operation(summary = "회원-관리자 토큰 생성")
   @PostMapping("/admin")
-  public String generateAdminToken() {
-    return generateAdminTokenUseCase.generateAdminToken();
+  public String generateAdminToken(@Valid @RequestBody Body body) {
+    return generateAdminTokenUseCase.generateAdminToken(
+        body.loginId(),
+        body.password()
+    );
   }
+
+  @Schema(name = "GenerateAdminTokenBody")
+  private record Body(
+      @NotNull
+      String loginId,
+
+      @NotNull
+      String password
+  ) {
+
+  }
+
 }
