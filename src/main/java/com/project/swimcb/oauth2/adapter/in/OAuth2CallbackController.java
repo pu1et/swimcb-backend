@@ -16,7 +16,7 @@ import org.springframework.web.servlet.view.RedirectView;
 @Tag(name = "회원")
 @SecurityRequirement(name = "Bearer Authentication")
 @RestController
-@RequestMapping("/login/oauth2/kakao/{providerType}")
+@RequestMapping("/login/oauth2/kakao")
 @RequiredArgsConstructor
 public class OAuth2CallbackController {
 
@@ -25,13 +25,11 @@ public class OAuth2CallbackController {
   @Operation(summary = "카카오 콜백 처리")
   @GetMapping
   public RedirectView success(
-      @PathVariable(value = "providerType") String providerType,
       @RequestParam(value = "code") String code
   ) {
 
     return oAuth2Adapter.success(
         OAuth2Request.builder()
-            .providerType(OAuth2ProviderType.from(providerType))
             .code(code)
             .build()
     ).redirectView();

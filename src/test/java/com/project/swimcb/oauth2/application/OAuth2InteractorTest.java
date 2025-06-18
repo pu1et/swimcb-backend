@@ -1,6 +1,5 @@
 package com.project.swimcb.oauth2.application;
 
-import static com.project.swimcb.oauth2.domain.enums.OAuth2ProviderType.KAKAO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,7 +51,7 @@ class OAuth2InteractorTest {
   class ValidOAuth2Request {
 
     private final String code = "valid_code";
-    private final OAuth2Request request = new OAuth2Request(KAKAO, code);
+    private final OAuth2Request request = new OAuth2Request(code);
     private final OAuth2Member oAuth2Member = OAuth2Member.builder()
         .name("테스트 사용자")
         .email("test@example.com")
@@ -138,7 +137,7 @@ class OAuth2InteractorTest {
   class InvalidOAuth2Request {
 
     private final String invalidCode = "invalid_code";
-    private final OAuth2Request request = new OAuth2Request(KAKAO, invalidCode);
+    private final OAuth2Request request = new OAuth2Request(invalidCode);
 
     @Test
     @DisplayName("OAuth2 게이트웨이에서 예외가 발생하면 그대로 전파되어야 한다")
