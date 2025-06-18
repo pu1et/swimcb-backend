@@ -10,9 +10,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.project.swimcb.bo.instructor.domain.CreateBoInstructorCommand;
-import com.project.swimcb.bo.instructor.domain.SwimmingInstructorRepository;
-import com.project.swimcb.bo.swimmingpool.domain.SwimmingPool;
-import com.project.swimcb.bo.swimmingpool.domain.SwimmingPoolRepository;
+import com.project.swimcb.db.repository.SwimmingInstructorRepository;
+import com.project.swimcb.db.entity.SwimmingPoolEntity;
+import com.project.swimcb.db.repository.SwimmingPoolRepository;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.val;
@@ -40,7 +40,7 @@ class CreateBoInstructorInteractorTest {
   void shouldCreateInstructorSuccessfully() {
     // given
     val request = TestCreateBoInstructorCommandFactory.create();
-    val swimmingPool = mock(SwimmingPool.class);
+    val swimmingPool = mock(SwimmingPoolEntity.class);
 
     when(swimmingPoolRepository.findById(anyLong())).thenReturn(Optional.of(swimmingPool));
     // when

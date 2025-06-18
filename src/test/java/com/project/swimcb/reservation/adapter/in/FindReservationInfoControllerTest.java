@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
+import com.project.swimcb.db.entity.AccountNo;
 import com.project.swimcb.common.WebMvcTestWithoutSecurity;
 import com.project.swimcb.reservation.application.port.in.FindReservationUseCase;
 import com.project.swimcb.reservation.domain.ReservationInfo;

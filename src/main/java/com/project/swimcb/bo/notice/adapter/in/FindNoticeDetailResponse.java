@@ -1,8 +1,7 @@
 package com.project.swimcb.bo.notice.adapter.in;
 
-import com.project.swimcb.bo.notice.domain.Notice;
+import com.project.swimcb.db.entity.NoticeEntity;
 import java.time.LocalDate;
-import java.util.List;
 import lombok.Builder;
 import lombok.NonNull;
 
@@ -15,7 +14,7 @@ public record FindNoticeDetailResponse(
     @NonNull LocalDate createdAt
 ) {
 
-  public static FindNoticeDetailResponse from(@NonNull Notice notice) {
+  public static FindNoticeDetailResponse from(@NonNull NoticeEntity notice) {
     return FindNoticeDetailResponse.builder()
         .createdBy(notice.getCreatedBy())
         .title(notice.getTitle())

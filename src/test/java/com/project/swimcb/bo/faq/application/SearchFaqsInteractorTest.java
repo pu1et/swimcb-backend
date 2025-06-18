@@ -8,8 +8,8 @@ import static org.mockito.Mockito.when;
 
 import com.project.swimcb.bo.faq.adapter.in.FindFaqsResponse;
 import com.project.swimcb.bo.faq.application.out.SearchFaqsDsGateway;
-import com.project.swimcb.bo.faq.domain.Faq;
-import com.project.swimcb.bo.faq.domain.TestFaqFactory;
+import com.project.swimcb.db.entity.FaqEntity;
+import com.project.swimcb.db.entity.TestFaqFactory;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.val;
@@ -71,7 +71,7 @@ class SearchFaqsInteractorTest {
 
   private static class FaqFactory {
 
-    private static List<Faq> create() {
+    private static List<FaqEntity> create() {
       return List.of(TestFaqFactory.create(1L, "title1", "content1", true,
               LocalDateTime.of(2025, 1, 1, 1, 1, 1), "createdBy1",
               LocalDateTime.of(2025, 1, 2, 1, 1, 1),

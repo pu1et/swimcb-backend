@@ -1,7 +1,7 @@
 package com.project.swimcb.token.application;
 
-import com.project.swimcb.bo.admin.domain.AdminRepository;
-import com.project.swimcb.bo.swimmingpool.domain.SwimmingPoolRepository;
+import com.project.swimcb.db.repository.AdminRepository;
+import com.project.swimcb.db.repository.SwimmingPoolRepository;
 import com.project.swimcb.token.application.in.GenerateAdminTokenUseCase;
 import com.project.swimcb.token.application.in.JwtPort;
 import com.project.swimcb.token.domain.TokenInfo;

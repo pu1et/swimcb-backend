@@ -10,8 +10,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.project.swimcb.bo.reservation.domain.CompleteReservationCommand;
-import com.project.swimcb.swimmingpool.domain.Reservation;
-import com.project.swimcb.swimmingpool.domain.ReservationRepository;
+import com.project.swimcb.db.entity.ReservationEntity;
+import com.project.swimcb.db.repository.ReservationRepository;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.val;
@@ -46,7 +46,7 @@ class CompleteReservationInteractorTest {
   @DisplayName("예약이 존재하는 경우 예약 완료를 성공적으로 처리한다")
   void shouldCompleteReservationSuccessfully() {
     // given
-    val reservation = mock(Reservation.class);
+    val reservation = mock(ReservationEntity.class);
 
     when(reservationRepository.findById(anyLong())).thenReturn(Optional.of(reservation));
     when(reservation.canTransitionToComplete()).thenReturn(true);
@@ -81,7 +81,7 @@ class CompleteReservationInteractorTest {
   @DisplayName("예약이 이미 완료된 경우 예외가 발생한다")
   void shouldThrowException_WhenReservationAlreadyCompleted() {
     // given
-    val reservation = mock(Reservation.class);
+    val reservation = mock(ReservationEntity.class);
 
     when(reservationRepository.findById(anyLong())).thenReturn(Optional.of(reservation));
     when(reservation.canTransitionToComplete()).thenReturn(false);

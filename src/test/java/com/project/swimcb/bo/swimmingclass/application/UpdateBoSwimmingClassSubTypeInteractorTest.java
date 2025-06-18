@@ -7,8 +7,8 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassSubType;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassSubTypeRepository;
+import com.project.swimcb.db.entity.SwimmingClassSubTypeEntity;
+import com.project.swimcb.db.repository.SwimmingClassSubTypeRepository;
 import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassSubTypeCommand;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -34,7 +34,7 @@ class UpdateBoSwimmingClassSubTypeInteractorTest {
   void shouldUpdateSwimmingClassSubTypeSuccessfully() {
     // given
     val command = TestUpdateBoSwimmingClassSubTypeCommandFactory.create();
-    val subType = mock(SwimmingClassSubType.class);
+    val subType = mock(SwimmingClassSubTypeEntity.class);
 
     when(swimmingClassSubTypeRepository.findBySwimmingClassType_IdAndId(anyLong(), anyLong()))
         .thenReturn(Optional.of(subType));

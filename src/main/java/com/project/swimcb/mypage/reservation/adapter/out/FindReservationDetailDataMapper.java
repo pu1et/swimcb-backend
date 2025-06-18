@@ -1,18 +1,17 @@
 package com.project.swimcb.mypage.reservation.adapter.out;
 
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClass.swimmingClass;
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassSubType.swimmingClassSubType;
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassTicket.swimmingClassTicket;
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassType.swimmingClassType;
-import static com.project.swimcb.bo.swimmingpool.domain.QSwimmingPool.swimmingPool;
-import static com.project.swimcb.bo.swimmingpool.domain.QSwimmingPoolImage.swimmingPoolImage;
-import static com.project.swimcb.swimming_pool_review.domain.QSwimmingPoolReview.swimmingPoolReview;
-import static com.project.swimcb.swimmingpool.domain.QReservation.reservation;
+import static com.project.swimcb.db.entity.QReservationEntity.reservationEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassEntity.swimmingClassEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassSubTypeEntity.swimmingClassSubTypeEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassTicketEntity.swimmingClassTicketEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassTypeEntity.swimmingClassTypeEntity;
+import static com.project.swimcb.db.entity.QSwimmingPoolEntity.swimmingPoolEntity;
+import static com.project.swimcb.db.entity.QSwimmingPoolImageEntity.swimmingPoolImageEntity;
+import static com.project.swimcb.db.entity.QSwimmingPoolReviewEntity.swimmingPoolReviewEntity;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_PENDING;
 import static com.querydsl.core.types.Projections.constructor;
 
-import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
-import com.project.swimcb.mypage.reservation.adapter.out.FindReservationsDataMapper.WaitingReservation;
+import com.project.swimcb.db.entity.AccountNo;
 import com.project.swimcb.mypage.reservation.application.port.out.FindReservationDetailGateway;
 import com.project.swimcb.mypage.reservation.domain.ReservationDetail;
 import com.project.swimcb.mypage.reservation.domain.ReservationDetail.Cancel;
@@ -30,14 +29,8 @@ import com.querydsl.core.annotations.QueryProjection;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -53,50 +46,55 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
   @Override
   public ReservationDetail findReservationDetail(long reservationId) {
     val result = queryFactory.select(constructor(QueryReservationDetail.class,
-            swimmingPool.id,
-            swimmingPool.name,
-            swimmingPool.phone,
-            swimmingPoolImage.path,
-            swimmingPool.accountNo,
+            swimmingPoolEntity.id,
+            swimmingPoolEntity.name,
+            swimmingPoolEntity.phone,
+            swimmingPoolImageEntity.path,
+            swimmingPoolEntity.accountNo,
 
-            swimmingClass.id,
-            swimmingClass.month,
-            swimmingClassType.name,
-            swimmingClassSubType.name,
-            swimmingClass.daysOfWeek,
-            swimmingClass.startTime,
-            swimmingClass.endTime,
-            swimmingClass.isCanceled,
-            swimmingClass.cancelReason,
+            swimmingClassEntity.id,
+            swimmingClassEntity.month,
+            swimmingClassTypeEntity.name,
+            swimmingClassSubTypeEntity.name,
+            swimmingClassEntity.daysOfWeek,
+            swimmingClassEntity.startTime,
+            swimmingClassEntity.endTime,
+            swimmingClassEntity.isCanceled,
+            swimmingClassEntity.cancelReason,
 
-            swimmingClassTicket.id,
-            swimmingClassTicket.name,
-            swimmingClassTicket.price,
+            swimmingClassTicketEntity.id,
+            swimmingClassTicketEntity.name,
+            swimmingClassTicketEntity.price,
 
-            reservation.reservationStatus,
-            reservation.reservedAt,
-            reservation.paymentMethod,
-            reservation.paymentAmount,
-            reservation.paymentPendingAt,
-            reservation.paymentApprovedAt,
-            reservation.canceledAt,
-            reservation.refundAmount,
-            reservation.refundAccountNo,
-            reservation.refundBankName,
-            reservation.refundedAt,
+            reservationEntity.reservationStatus,
+            reservationEntity.reservedAt,
+            reservationEntity.paymentMethod,
+            reservationEntity.paymentAmount,
+            reservationEntity.paymentPendingAt,
+            reservationEntity.paymentApprovedAt,
+            reservationEntity.canceledAt,
+            reservationEntity.refundAmount,
+            reservationEntity.refundAccountNo,
+            reservationEntity.refundBankName,
+            reservationEntity.refundedAt,
 
-            swimmingPoolReview.id
+            swimmingPoolReviewEntity.id
         ))
-        .from(reservation)
-        .join(swimmingClassTicket).on(reservation.ticketId.eq(swimmingClassTicket.id))
-        .join(swimmingClass).on(swimmingClassTicket.swimmingClass.eq(swimmingClass))
-        .join(swimmingClassType).on(swimmingClass.type.eq(swimmingClassType))
-        .join(swimmingClassSubType).on(swimmingClass.subType.eq(swimmingClassSubType))
-        .join(swimmingPool).on(swimmingClass.swimmingPool.eq(swimmingPool))
-        .join(swimmingPoolImage).on(swimmingPool.eq(swimmingPoolImage.swimmingPool))
-        .leftJoin(swimmingPoolReview).on(swimmingPool.eq(swimmingPoolReview.swimmingPool))
+        .from(reservationEntity)
+        .join(swimmingClassTicketEntity)
+        .on(reservationEntity.ticketId.eq(swimmingClassTicketEntity.id))
+        .join(swimmingClassEntity)
+        .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
+        .join(swimmingClassTypeEntity).on(swimmingClassEntity.type.eq(swimmingClassTypeEntity))
+        .join(swimmingClassSubTypeEntity)
+        .on(swimmingClassEntity.subType.eq(swimmingClassSubTypeEntity))
+        .join(swimmingPoolEntity).on(swimmingClassEntity.swimmingPool.eq(swimmingPoolEntity))
+        .join(swimmingPoolImageEntity)
+        .on(swimmingPoolEntity.eq(swimmingPoolImageEntity.swimmingPool))
+        .leftJoin(swimmingPoolReviewEntity)
+        .on(swimmingPoolEntity.eq(swimmingPoolReviewEntity.swimmingPool))
         .where(
-            reservation.id.eq(reservationId)
+            reservationEntity.id.eq(reservationId)
         )
         .fetchFirst();
 
@@ -118,14 +116,16 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
       @NonNull Long swimmingClassId,
       @NonNull LocalDateTime reservedAt
   ) {
-    val count = Optional.ofNullable(queryFactory.select(reservation.id.count())
-            .from(reservation)
-            .join(swimmingClassTicket).on(reservation.ticketId.eq(swimmingClassTicket.id))
-            .join(swimmingClass).on(swimmingClassTicket.swimmingClass.eq(swimmingClass))
+    val count = Optional.ofNullable(queryFactory.select(reservationEntity.id.count())
+            .from(reservationEntity)
+            .join(swimmingClassTicketEntity)
+            .on(reservationEntity.ticketId.eq(swimmingClassTicketEntity.id))
+            .join(swimmingClassEntity)
+            .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
             .where(
-                swimmingClass.id.eq(swimmingClassId),
-                reservation.reservationStatus.eq(RESERVATION_PENDING),
-                reservation.reservedAt.before(reservedAt) // 현재 예약보다 이전에 예약된 대기 예약들만 카운트
+                swimmingClassEntity.id.eq(swimmingClassId),
+                reservationEntity.reservationStatus.eq(RESERVATION_PENDING),
+                reservationEntity.reservedAt.before(reservedAt) // 현재 예약보다 이전에 예약된 대기 예약들만 카운트
             )
             .fetchOne())
         .orElse(0L);

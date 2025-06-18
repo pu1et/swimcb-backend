@@ -11,7 +11,7 @@ import com.project.swimcb.bo.reservation.domain.BoReservation.Payment;
 import com.project.swimcb.bo.reservation.domain.BoReservation.Refund;
 import com.project.swimcb.bo.reservation.domain.BoReservation.ReservationDetail;
 import com.project.swimcb.bo.reservation.domain.BoReservation.SwimmingClass;
-import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
+import com.project.swimcb.db.entity.AccountNo;
 import com.project.swimcb.mypage.reservation.adapter.out.ClassDayOfWeek;
 import com.project.swimcb.swimmingpool.domain.enums.CancellationReason;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;

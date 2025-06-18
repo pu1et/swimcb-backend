@@ -1,9 +1,9 @@
 package com.project.swimcb.swimmingpool.adapter.out;
 
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClass.swimmingClass;
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassSubType.swimmingClassSubType;
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassTicket.swimmingClassTicket;
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassType.swimmingClassType;
+import static com.project.swimcb.db.entity.QSwimmingClassEntity.swimmingClassEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassSubTypeEntity.swimmingClassSubTypeEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassTicketEntity.swimmingClassTicketEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassTypeEntity.swimmingClassTypeEntity;
 import static com.querydsl.core.types.Projections.constructor;
 import static java.time.DayOfWeek.FRIDAY;
 import static java.time.DayOfWeek.MONDAY;
@@ -40,24 +40,26 @@ class FindSwimmingClassTicketDataMapper implements FindSwimmingClassTicketGatewa
   @Override
   public SwimmingClassTicketInfo findSwimmingClassTicket(long ticketId) {
     val ticket = queryFactory.select(constructor(QuerySwimmingClassTicketInfo.class,
-            swimmingClass.id,
-            swimmingClass.month,
-            swimmingClass.reservationLimitCount,
-            swimmingClass.reservedCount,
-            swimmingClassType.name,
-            swimmingClassSubType.name,
-            swimmingClass.daysOfWeek,
-            swimmingClass.startTime,
-            swimmingClass.endTime,
-            swimmingClassTicket.name,
-            swimmingClassTicket.price
+            swimmingClassEntity.id,
+            swimmingClassEntity.month,
+            swimmingClassEntity.reservationLimitCount,
+            swimmingClassEntity.reservedCount,
+            swimmingClassTypeEntity.name,
+            swimmingClassSubTypeEntity.name,
+            swimmingClassEntity.daysOfWeek,
+            swimmingClassEntity.startTime,
+            swimmingClassEntity.endTime,
+            swimmingClassTicketEntity.name,
+            swimmingClassTicketEntity.price
         ))
-        .from(swimmingClass)
-        .join(swimmingClassType).on(swimmingClass.type.eq(swimmingClassType))
-        .join(swimmingClassSubType).on(swimmingClass.subType.eq(swimmingClassSubType))
-        .join(swimmingClassTicket).on(swimmingClassTicket.swimmingClass.eq(swimmingClass))
+        .from(swimmingClassEntity)
+        .join(swimmingClassTypeEntity).on(swimmingClassEntity.type.eq(swimmingClassTypeEntity))
+        .join(swimmingClassSubTypeEntity)
+        .on(swimmingClassEntity.subType.eq(swimmingClassSubTypeEntity))
+        .join(swimmingClassTicketEntity)
+        .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
         .where(
-            swimmingClassTicket.id.eq(ticketId)
+            swimmingClassTicketEntity.id.eq(ticketId)
         )
         .fetchFirst();
 
@@ -125,5 +127,7 @@ class FindSwimmingClassTicketDataMapper implements FindSwimmingClassTicketGatewa
     @QueryProjection
     public QuerySwimmingClassTicketInfo {
     }
+
   }
+
 }

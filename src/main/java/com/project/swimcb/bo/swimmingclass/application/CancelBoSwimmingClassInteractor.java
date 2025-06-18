@@ -9,7 +9,7 @@ import com.project.swimcb.bo.swimmingclass.application.in.CancelBoSwimmingClassU
 import com.project.swimcb.bo.swimmingclass.application.out.CancelBoSwimmingClassDsGateway;
 import com.project.swimcb.bo.swimmingclass.application.out.UpdateBoSwimmingClassDsGateway;
 import com.project.swimcb.bo.swimmingclass.domain.CancelBoSwimmingClassCommand;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassRepository;
+import com.project.swimcb.db.repository.SwimmingClassRepository;
 import com.project.swimcb.swimmingpool.domain.enums.CancellationReason;
 import jakarta.transaction.Transactional;
 import java.util.List;

@@ -4,8 +4,7 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
-import com.project.swimcb.bo.faq.application.DeleteFaqsInteractor;
-import com.project.swimcb.bo.faq.domain.FaqRepository;
+import com.project.swimcb.db.repository.FaqRepository;
 import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;

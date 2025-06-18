@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
+import com.project.swimcb.db.entity.AccountNo;
 import com.project.swimcb.mypage.reservation.adapter.out.ClassDayOfWeek;
 import com.project.swimcb.mypage.reservation.application.port.out.FindReservationDetailGateway;
 import com.project.swimcb.mypage.reservation.domain.ReservationDetail;

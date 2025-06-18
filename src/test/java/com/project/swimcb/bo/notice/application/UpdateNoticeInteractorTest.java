@@ -7,8 +7,8 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.project.swimcb.bo.notice.domain.Notice;
-import com.project.swimcb.bo.notice.domain.NoticeRepository;
+import com.project.swimcb.db.entity.NoticeEntity;
+import com.project.swimcb.db.repository.NoticeRepository;
 import com.project.swimcb.bo.notice.domain.UpdateNoticeCommand;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -33,7 +33,7 @@ class UpdateNoticeInteractorTest {
   @DisplayName("공지사항이 존재하면 제목, 내용, 공개여부를 수정한다.")
   void shouldUpdateNoticeAndUpdateImages() {
     // given
-    val existingNotice = mock(Notice.class);
+    val existingNotice = mock(NoticeEntity.class);
     val command = UpdateNoticeCommandFactory.create();
 
     when(noticeRepository.findById(any())).thenReturn(Optional.of(existingNotice));

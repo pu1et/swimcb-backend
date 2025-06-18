@@ -1,6 +1,6 @@
 package com.project.swimcb.bo.notice.application;
 
-import com.project.swimcb.bo.notice.domain.NoticeRepository;
+import com.project.swimcb.db.repository.NoticeRepository;
 import com.project.swimcb.bo.notice.application.in.UpdateNoticeIsVisibleUseCase;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;

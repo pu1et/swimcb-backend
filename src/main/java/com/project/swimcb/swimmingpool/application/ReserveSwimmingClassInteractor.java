@@ -3,16 +3,16 @@ package com.project.swimcb.swimmingpool.application;
 import static com.project.swimcb.swimmingpool.domain.SwimmingClassAvailabilityStatus.NOT_RESERVABLE;
 import static com.project.swimcb.swimmingpool.domain.SwimmingClassAvailabilityStatus.WAITING_RESERVABLE;
 
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClass;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassRepository;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassTicket;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassTicketRepository;
-import com.project.swimcb.member.MemberRepository;
-import com.project.swimcb.member.domain.Member;
+import com.project.swimcb.db.entity.ReservationEntity;
+import com.project.swimcb.db.entity.SwimmingClassEntity;
+import com.project.swimcb.db.repository.SwimmingClassRepository;
+import com.project.swimcb.db.entity.SwimmingClassTicketEntity;
+import com.project.swimcb.db.repository.SwimmingClassTicketRepository;
+import com.project.swimcb.db.repository.MemberRepository;
+import com.project.swimcb.db.entity.MemberEntity;
 import com.project.swimcb.swimmingpool.application.in.ReserveSwimmingClassUseCase;
-import com.project.swimcb.swimmingpool.domain.Reservation;
 import com.project.swimcb.swimmingpool.domain.ReservationInfo;
-import com.project.swimcb.swimmingpool.domain.ReservationRepository;
+import com.project.swimcb.db.repository.ReservationRepository;
 import com.project.swimcb.swimmingpool.domain.ReserveSwimmingClassCommand;
 import java.util.NoSuchElementException;
 import lombok.NonNull;
@@ -54,9 +54,9 @@ class ReserveSwimmingClassInteractor implements ReserveSwimmingClassUseCase {
     return reservationInfo;
   }
 
-  private Reservation createClassReservation(@NonNull ReserveSwimmingClassCommand command,
-      @NonNull SwimmingClass swimmingClass, @NonNull SwimmingClassTicket ticket,
-      @NonNull Member member) {
+  private ReservationEntity createClassReservation(@NonNull ReserveSwimmingClassCommand command,
+      @NonNull SwimmingClassEntity swimmingClass, @NonNull SwimmingClassTicketEntity ticket,
+      @NonNull MemberEntity member) {
 
     val reservationStatus = swimmingClass.getReservationStatus();
 
@@ -65,7 +65,7 @@ class ReserveSwimmingClassInteractor implements ReserveSwimmingClassUseCase {
     }
 
     if (reservationStatus == WAITING_RESERVABLE) {
-      return Reservation.createClassWaitingReservation()
+      return ReservationEntity.createClassWaitingReservation()
           .member(member)
           .swimmingClass(swimmingClass)
           .ticketId(command.ticketId())
@@ -75,7 +75,7 @@ class ReserveSwimmingClassInteractor implements ReserveSwimmingClassUseCase {
     }
 
     // 결제대기 예약 생성
-    return Reservation.createClassNormalReservation()
+    return ReservationEntity.createClassNormalReservation()
         .member(member)
         .swimmingClass(swimmingClass)
         .ticketId(command.ticketId())
@@ -84,8 +84,8 @@ class ReserveSwimmingClassInteractor implements ReserveSwimmingClassUseCase {
         .build();
   }
 
-  private ReservationInfo reservationInfo(@NonNull Reservation createdReservation,
-      @NonNull SwimmingClass swimmingClass) {
+  private ReservationInfo reservationInfo(@NonNull ReservationEntity createdReservation,
+      @NonNull SwimmingClassEntity swimmingClass) {
     if (swimmingClass.getReservationStatus() == WAITING_RESERVABLE) {
       return ReservationInfo.builder()
           .id(createdReservation.getId())

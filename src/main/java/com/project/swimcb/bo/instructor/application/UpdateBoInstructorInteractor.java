@@ -1,7 +1,7 @@
 package com.project.swimcb.bo.instructor.application;
 
 import com.project.swimcb.bo.instructor.application.in.UpdateBoInstructorUseCase;
-import com.project.swimcb.bo.instructor.domain.SwimmingInstructorRepository;
+import com.project.swimcb.db.repository.SwimmingInstructorRepository;
 import com.project.swimcb.bo.instructor.domain.UpdateBoInstructorCommand;
 import java.util.NoSuchElementException;
 import lombok.NonNull;

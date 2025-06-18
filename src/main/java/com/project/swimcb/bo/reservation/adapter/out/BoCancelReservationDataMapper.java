@@ -1,7 +1,7 @@
 package com.project.swimcb.bo.reservation.adapter.out;
 
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClass.swimmingClass;
-import static com.project.swimcb.swimmingpool.domain.QReservation.reservation;
+import static com.project.swimcb.db.entity.QReservationEntity.reservationEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassEntity.swimmingClassEntity;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_PENDING;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_PENDING;
 
@@ -27,11 +27,11 @@ class BoCancelReservationDataMapper implements BoCancelReservationDsGateway {
 
   @Override
   public void updateSwimmingClassReservedCount(@NonNull Long swimmingClassId, int count) {
-    val result = queryFactory.update(swimmingClass)
-        .set(swimmingClass.reservedCount, swimmingClass.reservedCount.add(count))
-        .set(swimmingClass.updatedAt, LocalDateTime.now())
+    val result = queryFactory.update(swimmingClassEntity)
+        .set(swimmingClassEntity.reservedCount, swimmingClassEntity.reservedCount.add(count))
+        .set(swimmingClassEntity.updatedAt, LocalDateTime.now())
         .where(
-            swimmingClass.id.eq(swimmingClassId)
+            swimmingClassEntity.id.eq(swimmingClassId)
         )
         .execute();
 
@@ -44,13 +44,13 @@ class BoCancelReservationDataMapper implements BoCancelReservationDsGateway {
   public Optional<Long> findFirstWaitingReservationIdBySwimmingClassId(
       @NonNull Long swimmingClassId) {
 
-    return Optional.ofNullable(queryFactory.select(reservation.id)
-        .from(reservation)
+    return Optional.ofNullable(queryFactory.select(reservationEntity.id)
+        .from(reservationEntity)
         .where(
-            reservation.swimmingClass.id.eq(swimmingClassId),
-            reservation.reservationStatus.eq(RESERVATION_PENDING)
+            reservationEntity.swimmingClass.id.eq(swimmingClassId),
+            reservationEntity.reservationStatus.eq(RESERVATION_PENDING)
         )
-        .orderBy(reservation.reservedAt.asc())
+        .orderBy(reservationEntity.reservedAt.asc())
         .fetchFirst());
   }
 
@@ -58,13 +58,13 @@ class BoCancelReservationDataMapper implements BoCancelReservationDsGateway {
   public List<Long> findWaitingReservationIdsBySwimmingClassIdLimit(@NonNull Long swimmingClassId,
       @NonNull Integer limit) {
 
-    return queryFactory.select(reservation.id)
-        .from(reservation)
+    return queryFactory.select(reservationEntity.id)
+        .from(reservationEntity)
         .where(
-            reservation.swimmingClass.id.eq(swimmingClassId),
-            reservation.reservationStatus.eq(RESERVATION_PENDING)
+            reservationEntity.swimmingClass.id.eq(swimmingClassId),
+            reservationEntity.reservationStatus.eq(RESERVATION_PENDING)
         )
-        .orderBy(reservation.reservedAt.asc())
+        .orderBy(reservationEntity.reservedAt.asc())
         .limit(limit)
         .fetch();
   }
@@ -72,12 +72,12 @@ class BoCancelReservationDataMapper implements BoCancelReservationDsGateway {
   @Override
   public void updateReservationStatusToPaymentPending(@NonNull Long reservationId) {
     val now = LocalDateTime.now();
-    queryFactory.update(reservation)
-        .set(reservation.reservationStatus, PAYMENT_PENDING)
-        .set(reservation.paymentPendingAt, now)
-        .set(reservation.updatedAt, now)
+    queryFactory.update(reservationEntity)
+        .set(reservationEntity.reservationStatus, PAYMENT_PENDING)
+        .set(reservationEntity.paymentPendingAt, now)
+        .set(reservationEntity.updatedAt, now)
         .where(
-            reservation.id.eq(reservationId)
+            reservationEntity.id.eq(reservationId)
         )
         .execute();
   }
@@ -85,12 +85,12 @@ class BoCancelReservationDataMapper implements BoCancelReservationDsGateway {
   @Override
   public void updateReservationStatusToPaymentPending(@NonNull List<Long> reservationIds) {
     val now = LocalDateTime.now();
-    queryFactory.update(reservation)
-        .set(reservation.reservationStatus, PAYMENT_PENDING)
-        .set(reservation.paymentPendingAt, now)
-        .set(reservation.updatedAt, now)
+    queryFactory.update(reservationEntity)
+        .set(reservationEntity.reservationStatus, PAYMENT_PENDING)
+        .set(reservationEntity.paymentPendingAt, now)
+        .set(reservationEntity.updatedAt, now)
         .where(
-            reservation.id.in(reservationIds)
+            reservationEntity.id.in(reservationIds)
         )
         .execute();
   }

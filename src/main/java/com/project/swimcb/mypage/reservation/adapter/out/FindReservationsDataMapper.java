@@ -1,14 +1,13 @@
 package com.project.swimcb.mypage.reservation.adapter.out;
 
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClass.swimmingClass;
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassSubType.swimmingClassSubType;
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassTicket.swimmingClassTicket;
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassType.swimmingClassType;
-import static com.project.swimcb.bo.swimmingpool.domain.QSwimmingPool.swimmingPool;
-import static com.project.swimcb.bo.swimmingpool.domain.QSwimmingPoolImage.swimmingPoolImage;
-import static com.project.swimcb.swimming_pool_review.domain.QSwimmingPoolReview.swimmingPoolReview;
-import static com.project.swimcb.swimmingpool.domain.QReservation.reservation;
-import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.*;
+import static com.project.swimcb.db.entity.QReservationEntity.reservationEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassEntity.swimmingClassEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassSubTypeEntity.swimmingClassSubTypeEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassTicketEntity.swimmingClassTicketEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassTypeEntity.swimmingClassTypeEntity;
+import static com.project.swimcb.db.entity.QSwimmingPoolEntity.swimmingPoolEntity;
+import static com.project.swimcb.db.entity.QSwimmingPoolImageEntity.swimmingPoolImageEntity;
+import static com.project.swimcb.db.entity.QSwimmingPoolReviewEntity.swimmingPoolReviewEntity;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_PENDING;
 import static com.querydsl.core.types.Projections.constructor;
 
@@ -28,14 +27,10 @@ import com.querydsl.core.annotations.QueryProjection;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -54,45 +49,50 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
   @Override
   public Page<Reservation> findReservations(long memberId, @NonNull Pageable pageable) {
     val result = queryFactory.select(constructor(QueryReservation.class,
-            swimmingPool.id,
-            swimmingPool.name,
-            swimmingPoolImage.path,
+            swimmingPoolEntity.id,
+            swimmingPoolEntity.name,
+            swimmingPoolImageEntity.path,
 
-            swimmingClass.id,
-            swimmingClass.month,
-            swimmingClassType.name,
-            swimmingClassSubType.name,
-            swimmingClass.daysOfWeek,
-            swimmingClass.startTime,
-            swimmingClass.endTime,
-            swimmingClass.isCanceled,
+            swimmingClassEntity.id,
+            swimmingClassEntity.month,
+            swimmingClassTypeEntity.name,
+            swimmingClassSubTypeEntity.name,
+            swimmingClassEntity.daysOfWeek,
+            swimmingClassEntity.startTime,
+            swimmingClassEntity.endTime,
+            swimmingClassEntity.isCanceled,
 
-            swimmingClassTicket.id,
-            swimmingClassTicket.name,
-            swimmingClassTicket.price,
+            swimmingClassTicketEntity.id,
+            swimmingClassTicketEntity.name,
+            swimmingClassTicketEntity.price,
 
-            reservation.id,
-            reservation.ticketType,
-            reservation.reservationStatus,
-            reservation.reservedAt,
+            reservationEntity.id,
+            reservationEntity.ticketType,
+            reservationEntity.reservationStatus,
+            reservationEntity.reservedAt,
 
-            reservation.paymentMethod,
-            reservation.paymentPendingAt,
+            reservationEntity.paymentMethod,
+            reservationEntity.paymentPendingAt,
 
-            swimmingPoolReview.id
+            swimmingPoolReviewEntity.id
         ))
-        .from(reservation)
-        .join(swimmingClassTicket).on(reservation.ticketId.eq(swimmingClassTicket.id))
-        .join(swimmingClass).on(swimmingClassTicket.swimmingClass.eq(swimmingClass))
-        .join(swimmingClassType).on(swimmingClass.type.eq(swimmingClassType))
-        .join(swimmingClassSubType).on(swimmingClass.subType.eq(swimmingClassSubType))
-        .join(swimmingPool).on(swimmingClass.swimmingPool.eq(swimmingPool))
-        .join(swimmingPoolImage).on(swimmingPool.eq(swimmingPoolImage.swimmingPool))
-        .leftJoin(swimmingPoolReview).on(swimmingPool.eq(swimmingPoolReview.swimmingPool))
+        .from(reservationEntity)
+        .join(swimmingClassTicketEntity)
+        .on(reservationEntity.ticketId.eq(swimmingClassTicketEntity.id))
+        .join(swimmingClassEntity)
+        .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
+        .join(swimmingClassTypeEntity).on(swimmingClassEntity.type.eq(swimmingClassTypeEntity))
+        .join(swimmingClassSubTypeEntity)
+        .on(swimmingClassEntity.subType.eq(swimmingClassSubTypeEntity))
+        .join(swimmingPoolEntity).on(swimmingClassEntity.swimmingPool.eq(swimmingPoolEntity))
+        .join(swimmingPoolImageEntity)
+        .on(swimmingPoolEntity.eq(swimmingPoolImageEntity.swimmingPool))
+        .leftJoin(swimmingPoolReviewEntity)
+        .on(swimmingPoolEntity.eq(swimmingPoolReviewEntity.swimmingPool))
         .where(
-            reservation.member.id.eq(memberId)
+            reservationEntity.member.id.eq(memberId)
         )
-        .orderBy(reservation.reservedAt.desc())
+        .orderBy(reservationEntity.reservedAt.desc())
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
         .fetch()
@@ -114,16 +114,20 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
         })
         .toList();
 
-    val count = queryFactory.select(swimmingPool.id.count())
-        .from(reservation)
-        .join(swimmingClassTicket).on(reservation.ticketId.eq(swimmingClassTicket.id))
-        .join(swimmingClass).on(swimmingClassTicket.swimmingClass.eq(swimmingClass))
-        .join(swimmingClassType).on(swimmingClass.type.eq(swimmingClassType))
-        .join(swimmingClassSubType).on(swimmingClass.subType.eq(swimmingClassSubType))
-        .join(swimmingPool).on(swimmingClass.swimmingPool.eq(swimmingPool))
-        .join(swimmingPoolImage).on(swimmingPool.eq(swimmingPoolImage.swimmingPool))
+    val count = queryFactory.select(swimmingPoolEntity.id.count())
+        .from(reservationEntity)
+        .join(swimmingClassTicketEntity)
+        .on(reservationEntity.ticketId.eq(swimmingClassTicketEntity.id))
+        .join(swimmingClassEntity)
+        .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
+        .join(swimmingClassTypeEntity).on(swimmingClassEntity.type.eq(swimmingClassTypeEntity))
+        .join(swimmingClassSubTypeEntity)
+        .on(swimmingClassEntity.subType.eq(swimmingClassSubTypeEntity))
+        .join(swimmingPoolEntity).on(swimmingClassEntity.swimmingPool.eq(swimmingPoolEntity))
+        .join(swimmingPoolImageEntity)
+        .on(swimmingPoolEntity.eq(swimmingPoolImageEntity.swimmingPool))
         .where(
-            reservation.member.id.eq(memberId)
+            reservationEntity.member.id.eq(memberId)
         )
         .fetchOne();
 
@@ -136,7 +140,9 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
         .filter(r -> r.reservationDetail().status() == RESERVATION_PENDING)
         .toList();
 
-    if (resrvationPendingReservations.isEmpty()) return Map.of();
+    if (resrvationPendingReservations.isEmpty()) {
+      return Map.of();
+    }
 
     // 2. 수영 클래스 ID 목록 추출
     val classIds = resrvationPendingReservations.stream()
@@ -163,18 +169,21 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
         ));
   }
 
-  List<WaitingReservation> findRelatedReservationPendingReservations(@NonNull List<Long> swimmingClassIds) {
+  List<WaitingReservation> findRelatedReservationPendingReservations(
+      @NonNull List<Long> swimmingClassIds) {
     return queryFactory.select(constructor(WaitingReservation.class,
-            reservation.id,
-            reservation.reservedAt,
-            swimmingClass.id
+            reservationEntity.id,
+            reservationEntity.reservedAt,
+            swimmingClassEntity.id
         ))
-        .from(reservation)
-        .join(swimmingClassTicket).on(reservation.ticketId.eq(swimmingClassTicket.id))
-        .join(swimmingClass).on(swimmingClassTicket.swimmingClass.eq(swimmingClass))
+        .from(reservationEntity)
+        .join(swimmingClassTicketEntity)
+        .on(reservationEntity.ticketId.eq(swimmingClassTicketEntity.id))
+        .join(swimmingClassEntity)
+        .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
         .where(
-            swimmingClass.id.in(swimmingClassIds),
-            reservation.reservationStatus.eq(RESERVATION_PENDING)
+            swimmingClassEntity.id.in(swimmingClassIds),
+            reservationEntity.reservationStatus.eq(RESERVATION_PENDING)
         )
         .fetch();
   }
@@ -277,6 +286,7 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
     @QueryProjection
     public WaitingReservation {
     }
+
   }
 
 }

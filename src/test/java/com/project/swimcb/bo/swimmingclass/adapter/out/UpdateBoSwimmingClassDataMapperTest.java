@@ -1,6 +1,6 @@
 package com.project.swimcb.bo.swimmingclass.adapter.out;
 
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClass.swimmingClass;
+import static com.project.swimcb.db.entity.QSwimmingClassEntity.swimmingClassEntity;
 import static java.time.DayOfWeek.FRIDAY;
 import static java.time.DayOfWeek.MONDAY;
 import static java.time.DayOfWeek.WEDNESDAY;
@@ -15,12 +15,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.project.swimcb.bo.instructor.domain.SwimmingInstructor;
-import com.project.swimcb.bo.instructor.domain.SwimmingInstructorRepository;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassSubType;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassSubTypeRepository;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassType;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassTypeRepository;
+import com.project.swimcb.db.entity.SwimmingClassTypeEntity;
+import com.project.swimcb.db.entity.SwimmingInstructorEntity;
+import com.project.swimcb.db.repository.SwimmingInstructorRepository;
+import com.project.swimcb.db.entity.SwimmingClassSubTypeEntity;
+import com.project.swimcb.db.repository.SwimmingClassSubTypeRepository;
+import com.project.swimcb.db.repository.SwimmingClassTypeRepository;
 import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand;
 import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand.RegistrationCapacity;
 import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand.Ticket;
@@ -108,19 +108,21 @@ class UpdateBoSwimmingClassDataMapperTest {
         verify(swimmingClassSubTypeRepository, only()).findById(request.type().subTypeId());
         verify(instructorRepository, only()).findById(request.instructorId());
 
-        verify(updateClause, times(1)).set(swimmingClass.type, existingClassType);
-        verify(updateClause, times(1)).set(swimmingClass.subType, existingClassSubType);
-        verify(updateClause, times(1)).set(swimmingClass.daysOfWeek, 84);
-        verify(updateClause, times(1)).set(swimmingClass.startTime, request.time().startTime());
-        verify(updateClause, times(1)).set(swimmingClass.endTime, request.time().endTime());
-        verify(updateClause, times(1)).set(swimmingClass.instructor, existingInstructor);
-        verify(updateClause, times(1)).set(swimmingClass.totalCapacity,
+        verify(updateClause, times(1)).set(swimmingClassEntity.type, existingClassType);
+        verify(updateClause, times(1)).set(swimmingClassEntity.subType, existingClassSubType);
+        verify(updateClause, times(1)).set(swimmingClassEntity.daysOfWeek, 84);
+        verify(updateClause, times(1)).set(swimmingClassEntity.startTime,
+            request.time().startTime());
+        verify(updateClause, times(1)).set(swimmingClassEntity.endTime, request.time().endTime());
+        verify(updateClause, times(1)).set(swimmingClassEntity.instructor, existingInstructor);
+        verify(updateClause, times(1)).set(swimmingClassEntity.totalCapacity,
             request.registrationCapacity().totalCapacity());
-        verify(updateClause, times(1)).set(swimmingClass.reservationLimitCount,
+        verify(updateClause, times(1)).set(swimmingClassEntity.reservationLimitCount,
             request.registrationCapacity().reservationLimitCount());
-        verify(updateClause, times(1)).set(swimmingClass.isVisible, request.isExposed());
+        verify(updateClause, times(1)).set(swimmingClassEntity.isVisible, request.isExposed());
         verify(updateClause, times(1)).execute();
       }
+
     }
 
     @Nested
@@ -150,6 +152,7 @@ class UpdateBoSwimmingClassDataMapperTest {
 
         verify(updateClause, never()).where(any());
       }
+
     }
 
     @Nested
@@ -170,6 +173,7 @@ class UpdateBoSwimmingClassDataMapperTest {
             .isInstanceOf(NoSuchElementException.class)
             .hasMessage("강습형태가 존재하지 않습니다.");
       }
+
     }
 
     @Nested
@@ -193,6 +197,7 @@ class UpdateBoSwimmingClassDataMapperTest {
             .isInstanceOf(NoSuchElementException.class)
             .hasMessage("강습구분이 존재하지 않습니다.");
       }
+
     }
 
     @Nested
@@ -218,7 +223,9 @@ class UpdateBoSwimmingClassDataMapperTest {
             .isInstanceOf(NoSuchElementException.class)
             .hasMessage("강사가 존재하지 않습니다.");
       }
+
     }
+
   }
 
   private static class TestUpdateBoSwimmingClassCommandFactory {
@@ -254,38 +261,43 @@ class UpdateBoSwimmingClassDataMapperTest {
           .isExposed(true)
           .build();
     }
+
   }
 
   private static class TestSwimmingTypeFactory {
 
-    private static SwimmingClassType create() throws Exception {
-      val swimmingClassTypeConstructor = SwimmingClassType.class.getDeclaredConstructor();
+    private static SwimmingClassTypeEntity create() throws Exception {
+      val swimmingClassTypeConstructor = SwimmingClassTypeEntity.class.getDeclaredConstructor();
       swimmingClassTypeConstructor.setAccessible(true);
       val swimmingClassType = swimmingClassTypeConstructor.newInstance();
       ReflectionTestUtils.setField(swimmingClassType, "id", 1L);
       return swimmingClassType;
     }
+
   }
 
   private static class TestSwimmingSubTypeFactory {
 
-    private static SwimmingClassSubType create() throws Exception {
-      val swimmingClassSubTypeConstructor = SwimmingClassSubType.class.getDeclaredConstructor();
+    private static SwimmingClassSubTypeEntity create() throws Exception {
+      val swimmingClassSubTypeConstructor = SwimmingClassSubTypeEntity.class.getDeclaredConstructor();
       swimmingClassSubTypeConstructor.setAccessible(true);
       val swimmingClassSubType = swimmingClassSubTypeConstructor.newInstance();
       ReflectionTestUtils.setField(swimmingClassSubType, "id", 1L);
       return swimmingClassSubType;
     }
+
   }
 
   private static class TestSwimmingInstructorFactory {
 
-    private static SwimmingInstructor create() throws Exception {
-      val swimmingInstructorConstructor = SwimmingInstructor.class.getDeclaredConstructor();
+    private static SwimmingInstructorEntity create() throws Exception {
+      val swimmingInstructorConstructor = SwimmingInstructorEntity.class.getDeclaredConstructor();
       swimmingInstructorConstructor.setAccessible(true);
       val swimmingClassInstructor = swimmingInstructorConstructor.newInstance();
       ReflectionTestUtils.setField(swimmingClassInstructor, "id", 1L);
       return swimmingClassInstructor;
     }
+
   }
+
 }

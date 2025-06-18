@@ -15,14 +15,14 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClass;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassRepository;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassTicket;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassTicketRepository;
-import com.project.swimcb.member.MemberRepository;
-import com.project.swimcb.member.domain.Member;
-import com.project.swimcb.swimmingpool.domain.Reservation;
-import com.project.swimcb.swimmingpool.domain.ReservationRepository;
+import com.project.swimcb.db.entity.SwimmingClassEntity;
+import com.project.swimcb.db.repository.SwimmingClassRepository;
+import com.project.swimcb.db.entity.SwimmingClassTicketEntity;
+import com.project.swimcb.db.repository.SwimmingClassTicketRepository;
+import com.project.swimcb.db.repository.MemberRepository;
+import com.project.swimcb.db.entity.MemberEntity;
+import com.project.swimcb.db.entity.ReservationEntity;
+import com.project.swimcb.db.repository.ReservationRepository;
 import com.project.swimcb.swimmingpool.domain.ReserveSwimmingClassCommand;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -64,10 +64,10 @@ class ReserveSwimmingClassInteractorTest {
     private final int TICKET_PRICE = 10000;
 
     private ReserveSwimmingClassCommand command;
-    private SwimmingClass swimmingClass;
-    private Member member;
-    private Reservation createdReservation;
-    private SwimmingClassTicket ticket;
+    private SwimmingClassEntity swimmingClass;
+    private MemberEntity member;
+    private ReservationEntity createdReservation;
+    private SwimmingClassTicketEntity ticket;
 
     @BeforeEach
     void setUp() {
@@ -78,10 +78,10 @@ class ReserveSwimmingClassInteractorTest {
           .paymentMethod(BANK_TRANSFER)
           .build();
 
-      swimmingClass = mock(SwimmingClass.class);
-      member = mock(Member.class);
-      createdReservation = mock(Reservation.class);
-      ticket = mock(SwimmingClassTicket.class);
+      swimmingClass = mock(SwimmingClassEntity.class);
+      member = mock(MemberEntity.class);
+      createdReservation = mock(ReservationEntity.class);
+      ticket = mock(SwimmingClassTicketEntity.class);
     }
 
     @Test

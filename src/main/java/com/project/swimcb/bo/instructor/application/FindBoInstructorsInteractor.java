@@ -3,7 +3,7 @@ package com.project.swimcb.bo.instructor.application;
 import com.project.swimcb.bo.instructor.adapter.in.FindBoInstructorsResponse;
 import com.project.swimcb.bo.instructor.adapter.in.FindBoInstructorsResponse.Instructor;
 import com.project.swimcb.bo.instructor.application.in.FindBoInstructorsUseCase;
-import com.project.swimcb.bo.instructor.domain.SwimmingInstructorRepository;
+import com.project.swimcb.db.repository.SwimmingInstructorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;

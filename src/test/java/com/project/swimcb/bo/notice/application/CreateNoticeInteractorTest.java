@@ -8,9 +8,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.project.swimcb.bo.notice.domain.CreateNoticeCommand;
-import com.project.swimcb.bo.notice.domain.Notice;
-import com.project.swimcb.bo.notice.domain.NoticeRepository;
-import com.project.swimcb.bo.notice.domain.TestNoticeFactory;
+import com.project.swimcb.db.entity.NoticeEntity;
+import com.project.swimcb.db.repository.NoticeRepository;
+import com.project.swimcb.db.entity.TestNoticeFactory;
 import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
@@ -34,7 +34,7 @@ class CreateNoticeInteractorTest {
   void shouldCreateNooticeAndSaveIamges() {
     // given
     val command = CreateNoticeCommandFactory.createWithImages();
-    val notice = Notice.create(command.title(), command.content(), command.isVisible());
+    val notice = NoticeEntity.create(command.title(), command.content(), command.isVisible());
     val savedNotice = TestNoticeFactory.create(1L, notice.getTitle(), notice.getContent(),
         notice.isVisible());
 

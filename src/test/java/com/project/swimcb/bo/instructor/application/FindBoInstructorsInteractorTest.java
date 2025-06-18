@@ -7,9 +7,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.project.swimcb.bo.instructor.adapter.in.FindBoInstructorsResponse.Instructor;
-import com.project.swimcb.bo.instructor.domain.SwimmingInstructor;
-import com.project.swimcb.bo.instructor.domain.SwimmingInstructorRepository;
-import com.project.swimcb.bo.swimmingpool.domain.SwimmingPool;
+import com.project.swimcb.db.entity.SwimmingInstructorEntity;
+import com.project.swimcb.db.repository.SwimmingInstructorRepository;
+import com.project.swimcb.db.entity.SwimmingPoolEntity;
 import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
@@ -35,8 +35,8 @@ class FindBoInstructorsInteractorTest {
     // given
     val swimmingPoolId = 1L;
     val instructors = TestInstructorFactory.create(swimmingPoolId);
-    val expectedInstructorIds = instructors.stream().map(SwimmingInstructor::getId).toList();
-    val expectedInstructorNames = instructors.stream().map(SwimmingInstructor::getName).toList();
+    val expectedInstructorIds = instructors.stream().map(SwimmingInstructorEntity::getId).toList();
+    val expectedInstructorNames = instructors.stream().map(SwimmingInstructorEntity::getName).toList();
 
     when(swimmingInstructorRepository.findAllBySwimmingPool_Id(anyLong())).thenReturn(instructors);
     // when
@@ -53,13 +53,13 @@ class FindBoInstructorsInteractorTest {
 
   private static class TestInstructorFactory {
 
-    private static List<SwimmingInstructor> create(long swimmingPoolId) throws Exception {
-      val swimmingPoolConstructor = SwimmingPool.class.getDeclaredConstructor();
+    private static List<SwimmingInstructorEntity> create(long swimmingPoolId) throws Exception {
+      val swimmingPoolConstructor = SwimmingPoolEntity.class.getDeclaredConstructor();
       swimmingPoolConstructor.setAccessible(true);
       val swimmingPool = swimmingPoolConstructor.newInstance();
       ReflectionTestUtils.setField(swimmingPool, "id", swimmingPoolId);
 
-      val instructorConstructor = SwimmingInstructor.class.getDeclaredConstructor();
+      val instructorConstructor = SwimmingInstructorEntity.class.getDeclaredConstructor();
       instructorConstructor.setAccessible(true);
 
       val instructor1 = instructorConstructor.newInstance();

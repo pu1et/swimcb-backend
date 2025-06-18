@@ -7,8 +7,8 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.project.swimcb.bo.instructor.domain.SwimmingInstructor;
-import com.project.swimcb.bo.instructor.domain.SwimmingInstructorRepository;
+import com.project.swimcb.db.entity.SwimmingInstructorEntity;
+import com.project.swimcb.db.repository.SwimmingInstructorRepository;
 import com.project.swimcb.bo.instructor.domain.UpdateBoInstructorCommand;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -34,7 +34,7 @@ class UpdateBoInstructorInteractorTest {
   void shouldUpdateInstructorSuccessfully() {
     // given
     val command = TestUpdateBoInstructorCommandFactory.create();
-    val instructor = mock(SwimmingInstructor.class);
+    val instructor = mock(SwimmingInstructorEntity.class);
 
     when(swimmingInstructorRepository.findBySwimmingPool_IdAndId(anyLong(), anyLong()))
         .thenReturn(Optional.of(instructor));

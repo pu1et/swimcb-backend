@@ -10,8 +10,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.project.swimcb.swimmingpool.domain.Reservation;
-import com.project.swimcb.swimmingpool.domain.ReservationRepository;
+import com.project.swimcb.db.entity.ReservationEntity;
+import com.project.swimcb.db.repository.ReservationRepository;
 import com.project.swimcb.swimmingpool.domain.enums.PaymentMethod;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -36,14 +36,14 @@ class ChangeReservationPaymentMethodInteractorTest {
   private static Long MEMBER_ID;
   private static Long RESERVATION_ID;
   private static PaymentMethod NEW_PAYMENT_METHOD;
-  private static Reservation RESERVATION;
+  private static ReservationEntity RESERVATION;
 
   @BeforeEach
   void setUp() {
     MEMBER_ID = 1L;
     RESERVATION_ID = 2L;
     NEW_PAYMENT_METHOD = CASH_ON_SITE;
-    RESERVATION = mock(Reservation.class);
+    RESERVATION = mock(ReservationEntity.class);
   }
 
   @Nested

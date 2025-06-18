@@ -1,13 +1,12 @@
 package com.project.swimcb.bo.swimmingpool.application;
 
 import com.project.swimcb.bo.swimmingpool.application.in.UpdateSwimmingPoolBasicInfoUseCase;
-import com.project.swimcb.bo.swimmingpool.domain.SwimmingPool;
-import com.project.swimcb.bo.swimmingpool.domain.SwimmingPoolImage;
-import com.project.swimcb.bo.swimmingpool.domain.SwimmingPoolImageRepository;
-import com.project.swimcb.bo.swimmingpool.domain.SwimmingPoolRepository;
+import com.project.swimcb.db.entity.SwimmingPoolEntity;
+import com.project.swimcb.db.entity.SwimmingPoolImageEntity;
+import com.project.swimcb.db.repository.SwimmingPoolImageRepository;
+import com.project.swimcb.db.repository.SwimmingPoolRepository;
 import com.project.swimcb.bo.swimmingpool.domain.UpdateSwimmingPoolBasicInfoCommand;
 import java.util.List;
-import java.util.Optional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -34,7 +33,7 @@ public class UpdateSwimmingPoolBasicInfoInteractor implements UpdateSwimmingPool
     updateSwimmingPoolImages(swimmingPool, request.imagePaths());
   }
 
-  private void updateSwimmingPoolImages(SwimmingPool swimmingPool,
+  private void updateSwimmingPoolImages(SwimmingPoolEntity swimmingPool,
       @NonNull List<String> imagePaths) {
 
     swimmingPoolImageRepository.deleteAllBySwimmingPoolId(swimmingPool.getId());
@@ -44,7 +43,7 @@ public class UpdateSwimmingPoolBasicInfoInteractor implements UpdateSwimmingPool
     }
 
     val swimmingPoolImages = imagePaths.stream()
-        .map(i -> SwimmingPoolImage.create(swimmingPool, i)).toList();
+        .map(i -> SwimmingPoolImageEntity.create(swimmingPool, i)).toList();
 
     swimmingPoolImageRepository.saveAll(swimmingPoolImages);
   }

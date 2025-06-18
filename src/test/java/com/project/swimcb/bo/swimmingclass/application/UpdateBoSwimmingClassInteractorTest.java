@@ -20,10 +20,10 @@ import static org.mockito.Mockito.when;
 
 import com.project.swimcb.bo.reservation.application.port.out.BoCancelReservationDsGateway;
 import com.project.swimcb.bo.swimmingclass.application.out.UpdateBoSwimmingClassDsGateway;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClass;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassRepository;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassTicket;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassTicketRepository;
+import com.project.swimcb.db.entity.SwimmingClassEntity;
+import com.project.swimcb.db.repository.SwimmingClassRepository;
+import com.project.swimcb.db.entity.SwimmingClassTicketEntity;
+import com.project.swimcb.db.repository.SwimmingClassTicketRepository;
 import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand;
 import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand.RegistrationCapacity;
 import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand.Ticket;
@@ -84,9 +84,9 @@ class UpdateBoSwimmingClassInteractorTest {
         assertThat(i).hasSize(2);
         assertThat(i).extracting(j -> j.getSwimmingClass().getId())
             .containsOnly(swimmingClass.getId());
-        assertThat(i).extracting(SwimmingClassTicket::getName)
+        assertThat(i).extracting(SwimmingClassTicketEntity::getName)
             .containsExactly("DUMMY_TICKET_NAME1", "DUMMY_TICKET_NAME2");
-        assertThat(i).extracting(SwimmingClassTicket::getPrice)
+        assertThat(i).extracting(SwimmingClassTicketEntity::getPrice)
             .containsExactly(10000, 20000);
       }));
     }
@@ -480,20 +480,20 @@ class UpdateBoSwimmingClassInteractorTest {
 
   private static class TestSwimmingClassFactory {
 
-    private static SwimmingClass common() {
-      val swimmingClass = mock(SwimmingClass.class);
+    private static SwimmingClassEntity common() {
+      val swimmingClass = mock(SwimmingClassEntity.class);
       lenient().when(swimmingClass.getId()).thenReturn(2L);
       return swimmingClass;
     }
 
-    private static SwimmingClass create(int reservationLimitCount, int reservedCount) {
+    private static SwimmingClassEntity create(int reservationLimitCount, int reservedCount) {
       val swimmingClass = common();
       when(swimmingClass.getReservedCount()).thenReturn(reservedCount);
       when(swimmingClass.getReservationLimitCount()).thenReturn(reservationLimitCount);
       return swimmingClass;
     }
 
-    private static SwimmingClass createWithReservedCount(int reservedCount) {
+    private static SwimmingClassEntity createWithReservedCount(int reservedCount) {
       val swimmingClass = common();
       when(swimmingClass.getReservedCount()).thenReturn(reservedCount);
       return swimmingClass;

@@ -7,8 +7,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.project.swimcb.swimmingpool.domain.Reservation;
-import com.project.swimcb.swimmingpool.domain.ReservationRepository;
+import com.project.swimcb.db.entity.ReservationEntity;
+import com.project.swimcb.db.repository.ReservationRepository;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,14 +31,14 @@ class UpdateReservationToPaymentVerificationInteractorTest {
 
   private Long memberId;
   private Long reservationId;
-  private Reservation reservation;
+  private ReservationEntity reservation;
 
   @BeforeEach
   void setUp() {
     memberId = 1L;
     reservationId = 2L;
 
-    reservation = mock(Reservation.class);
+    reservation = mock(ReservationEntity.class);
   }
 
   @Nested

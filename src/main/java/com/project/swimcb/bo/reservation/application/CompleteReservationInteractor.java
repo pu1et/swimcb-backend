@@ -2,7 +2,7 @@ package com.project.swimcb.bo.reservation.application;
 
 import com.project.swimcb.bo.reservation.application.port.in.CompleteReservationUseCase;
 import com.project.swimcb.bo.reservation.domain.CompleteReservationCommand;
-import com.project.swimcb.swimmingpool.domain.ReservationRepository;
+import com.project.swimcb.db.repository.ReservationRepository;
 import java.util.NoSuchElementException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

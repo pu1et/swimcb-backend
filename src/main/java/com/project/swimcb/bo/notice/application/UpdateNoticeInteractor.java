@@ -1,7 +1,7 @@
 package com.project.swimcb.bo.notice.application;
 
 import com.project.swimcb.bo.notice.application.in.UpdateNoticeUseCase;
-import com.project.swimcb.bo.notice.domain.NoticeRepository;
+import com.project.swimcb.db.repository.NoticeRepository;
 import com.project.swimcb.bo.notice.domain.UpdateNoticeCommand;
 import java.util.NoSuchElementException;
 import lombok.NonNull;

@@ -1,9 +1,9 @@
 package com.project.swimcb.bo.faq.application.in;
 
-import com.project.swimcb.bo.faq.domain.Faq;
+import com.project.swimcb.db.entity.FaqEntity;
 import lombok.NonNull;
 
 public interface CreateFaqUseCase {
 
-  void createFaq(@NonNull Faq faq);
+  void createFaq(@NonNull FaqEntity faq);
 }

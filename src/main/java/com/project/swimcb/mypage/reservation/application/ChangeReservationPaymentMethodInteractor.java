@@ -1,7 +1,7 @@
 package com.project.swimcb.mypage.reservation.application;
 
 import com.project.swimcb.mypage.reservation.application.port.in.ChangeReservationPaymentMethodUseCase;
-import com.project.swimcb.swimmingpool.domain.ReservationRepository;
+import com.project.swimcb.db.repository.ReservationRepository;
 import com.project.swimcb.swimmingpool.domain.enums.PaymentMethod;
 import java.util.NoSuchElementException;
 import lombok.NonNull;

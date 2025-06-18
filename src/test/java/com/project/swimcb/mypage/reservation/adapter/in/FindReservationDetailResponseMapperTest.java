@@ -13,7 +13,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.project.swimcb.bo.swimmingpool.application.out.ImageUrlPort;
-import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
+import com.project.swimcb.db.entity.AccountNo;
 import com.project.swimcb.mypage.reservation.adapter.out.ClassDayOfWeek;
 import com.project.swimcb.mypage.reservation.domain.ReservationDetail;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;

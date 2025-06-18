@@ -1,7 +1,7 @@
 package com.project.swimcb.bo.faq.application;
 
 import com.project.swimcb.bo.faq.application.in.DeleteFaqsUseCase;
-import com.project.swimcb.bo.faq.domain.FaqRepository;
+import com.project.swimcb.db.repository.FaqRepository;
 import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

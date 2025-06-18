@@ -2,7 +2,7 @@ package com.project.swimcb.bo.notice.application;
 
 import com.project.swimcb.bo.notice.adapter.in.FindNoticesResponse;
 import com.project.swimcb.bo.notice.application.in.FindNoticesUseCase;
-import com.project.swimcb.bo.notice.domain.NoticeRepository;
+import com.project.swimcb.db.repository.NoticeRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

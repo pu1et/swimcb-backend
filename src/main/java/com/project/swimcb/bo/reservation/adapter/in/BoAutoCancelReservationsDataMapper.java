@@ -1,9 +1,9 @@
 package com.project.swimcb.bo.reservation.adapter.in;
 
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClass.swimmingClass;
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassTicket.swimmingClassTicket;
-import static com.project.swimcb.bo.swimmingpool.domain.QSwimmingPool.swimmingPool;
-import static com.project.swimcb.swimmingpool.domain.QReservation.reservation;
+import static com.project.swimcb.db.entity.QReservationEntity.reservationEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassEntity.swimmingClassEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassTicketEntity.swimmingClassTicketEntity;
+import static com.project.swimcb.db.entity.QSwimmingPoolEntity.swimmingPoolEntity;
 import static com.project.swimcb.swimmingpool.domain.enums.CancellationReason.PAYMENT_DEADLINE_EXPIRED;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_PENDING;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_CANCELLED;
@@ -34,16 +34,16 @@ public class BoAutoCancelReservationsDataMapper implements BoAutoCancelReservati
     val twentyFourHoursAgo = LocalDateTime.now().minusHours(24);
 
     return queryFactory.select(constructor(PaymentExpiredReservation.class,
-            reservation.id,
-            swimmingClass.id
+            reservationEntity.id,
+            swimmingClassEntity.id
         ))
-        .from(reservation)
-        .join(swimmingClass).on(reservation.swimmingClass.eq(swimmingClass))
-        .join(swimmingPool).on(swimmingClass.swimmingPool.eq(swimmingPool))
+        .from(reservationEntity)
+        .join(swimmingClassEntity).on(reservationEntity.swimmingClass.eq(swimmingClassEntity))
+        .join(swimmingPoolEntity).on(swimmingClassEntity.swimmingPool.eq(swimmingPoolEntity))
         .where(
-            swimmingPool.id.eq(swimmingPoolId),
-            reservation.reservationStatus.eq(PAYMENT_PENDING),
-            reservation.paymentPendingAt.lt(twentyFourHoursAgo)
+            swimmingPoolEntity.id.eq(swimmingPoolId),
+            reservationEntity.reservationStatus.eq(PAYMENT_PENDING),
+            reservationEntity.paymentPendingAt.lt(twentyFourHoursAgo)
         )
         .fetch();
   }
@@ -55,15 +55,15 @@ public class BoAutoCancelReservationsDataMapper implements BoAutoCancelReservati
     val twentyFourHoursAgo = LocalDateTime.now().minusHours(24);
 
     return queryFactory.select(constructor(PaymentExpiredReservation.class,
-            reservation.id,
-            reservation.swimmingClass.id
+            reservationEntity.id,
+            reservationEntity.swimmingClass.id
         ))
-        .from(reservation)
-        .join(reservation.swimmingClass, swimmingClass)
+        .from(reservationEntity)
+        .join(reservationEntity.swimmingClass, swimmingClassEntity)
         .where(
-            reservation.member.id.eq(memberId),
-            reservation.reservationStatus.eq(PAYMENT_PENDING),
-            reservation.paymentPendingAt.lt(twentyFourHoursAgo)
+            reservationEntity.member.id.eq(memberId),
+            reservationEntity.reservationStatus.eq(PAYMENT_PENDING),
+            reservationEntity.paymentPendingAt.lt(twentyFourHoursAgo)
         )
         .fetch();
   }
@@ -73,13 +73,13 @@ public class BoAutoCancelReservationsDataMapper implements BoAutoCancelReservati
 
     val now = LocalDateTime.now();
 
-    queryFactory.update(reservation)
-        .set(reservation.reservationStatus, RESERVATION_CANCELLED)
-        .set(reservation.cancellationReason, PAYMENT_DEADLINE_EXPIRED)
-        .set(reservation.canceledAt, now)
-        .set(reservation.updatedAt, now)
+    queryFactory.update(reservationEntity)
+        .set(reservationEntity.reservationStatus, RESERVATION_CANCELLED)
+        .set(reservationEntity.cancellationReason, PAYMENT_DEADLINE_EXPIRED)
+        .set(reservationEntity.canceledAt, now)
+        .set(reservationEntity.updatedAt, now)
         .where(
-            reservation.id.in(reservationIds)
+            reservationEntity.id.in(reservationIds)
         )
         .execute();
   }
@@ -87,11 +87,11 @@ public class BoAutoCancelReservationsDataMapper implements BoAutoCancelReservati
   @Override
   public void reduceSwimmingClassReservedCount(@NonNull List<Long> swimmingClassIds) {
 
-    queryFactory.update(swimmingClass)
-        .set(swimmingClass.reservedCount, swimmingClass.reservedCount.subtract(1))
-        .set(swimmingClass.updatedAt, LocalDateTime.now())
+    queryFactory.update(swimmingClassEntity)
+        .set(swimmingClassEntity.reservedCount, swimmingClassEntity.reservedCount.subtract(1))
+        .set(swimmingClassEntity.updatedAt, LocalDateTime.now())
         .where(
-            swimmingClass.id.in(swimmingClassIds)
+            swimmingClassEntity.id.in(swimmingClassIds)
         )
         .execute();
   }
@@ -105,15 +105,17 @@ public class BoAutoCancelReservationsDataMapper implements BoAutoCancelReservati
           val swimmingClassId = entry.getKey();
           val count = entry.getValue();
 
-          return queryFactory.select(reservation.id)
-              .from(reservation)
-              .join(swimmingClassTicket).on(reservation.ticketId.eq(swimmingClassTicket.id))
-              .join(swimmingClass).on(swimmingClassTicket.swimmingClass.eq(swimmingClass))
+          return queryFactory.select(reservationEntity.id)
+              .from(reservationEntity)
+              .join(swimmingClassTicketEntity)
+              .on(reservationEntity.ticketId.eq(swimmingClassTicketEntity.id))
+              .join(swimmingClassEntity)
+              .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
               .where(
-                  swimmingClass.id.eq(swimmingClassId),
-                  reservation.reservationStatus.eq(RESERVATION_PENDING)
+                  swimmingClassEntity.id.eq(swimmingClassId),
+                  reservationEntity.reservationStatus.eq(RESERVATION_PENDING)
               )
-              .orderBy(reservation.reservedAt.asc())
+              .orderBy(reservationEntity.reservedAt.asc())
               .limit(count)
               .fetch()
               .stream();
@@ -127,12 +129,12 @@ public class BoAutoCancelReservationsDataMapper implements BoAutoCancelReservati
 
     val now = LocalDateTime.now();
 
-    queryFactory.update(reservation)
-        .set(reservation.reservationStatus, PAYMENT_PENDING)
-        .set(reservation.paymentPendingAt, now)
-        .set(reservation.updatedAt, now)
+    queryFactory.update(reservationEntity)
+        .set(reservationEntity.reservationStatus, PAYMENT_PENDING)
+        .set(reservationEntity.paymentPendingAt, now)
+        .set(reservationEntity.updatedAt, now)
         .where(
-            reservation.id.in(pendingReservationIds)
+            reservationEntity.id.in(pendingReservationIds)
         )
         .execute();
   }

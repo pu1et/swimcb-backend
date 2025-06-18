@@ -7,7 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.project.swimcb.bo.instructor.domain.DeleteBoInstructorCommand;
-import com.project.swimcb.bo.instructor.domain.SwimmingInstructorRepository;
+import com.project.swimcb.db.repository.SwimmingInstructorRepository;
 import java.util.NoSuchElementException;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;

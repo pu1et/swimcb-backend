@@ -12,20 +12,20 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.project.swimcb.bo.instructor.domain.SwimmingInstructor;
-import com.project.swimcb.bo.instructor.domain.SwimmingInstructorRepository;
+import com.project.swimcb.db.entity.SwimmingClassEntity;
+import com.project.swimcb.db.entity.SwimmingClassSubTypeEntity;
+import com.project.swimcb.db.entity.SwimmingClassTicketEntity;
+import com.project.swimcb.db.entity.SwimmingClassTypeEntity;
+import com.project.swimcb.db.entity.SwimmingInstructorEntity;
+import com.project.swimcb.db.entity.SwimmingPoolEntity;
+import com.project.swimcb.db.repository.SwimmingInstructorRepository;
 import com.project.swimcb.bo.swimmingclass.domain.CreateBoSwimmingClassCommand;
 import com.project.swimcb.bo.swimmingclass.domain.CreateBoSwimmingClassCommand.Ticket;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClass;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassRepository;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassSubType;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassSubTypeRepository;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassTicket;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassTicketRepository;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassType;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassTypeRepository;
-import com.project.swimcb.bo.swimmingpool.domain.SwimmingPool;
-import com.project.swimcb.bo.swimmingpool.domain.SwimmingPoolRepository;
+import com.project.swimcb.db.repository.SwimmingClassRepository;
+import com.project.swimcb.db.repository.SwimmingClassSubTypeRepository;
+import com.project.swimcb.db.repository.SwimmingClassTicketRepository;
+import com.project.swimcb.db.repository.SwimmingClassTypeRepository;
+import com.project.swimcb.db.repository.SwimmingPoolRepository;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -65,37 +65,37 @@ class CreateBoSwimmingClassInteractorTest {
   private SwimmingClassTicketRepository swimmingClassTicketRepository;
 
   private CreateBoSwimmingClassCommand command;
-  private SwimmingPool swimmingPool;
-  private SwimmingClassType swimmingClassType;
-  private SwimmingClassSubType swimmingClassSubType;
-  private SwimmingInstructor swimmingInstructor;
-  private SwimmingClass savedSwimmingClass;
+  private SwimmingPoolEntity swimmingPool;
+  private SwimmingClassTypeEntity swimmingClassType;
+  private SwimmingClassSubTypeEntity swimmingClassSubType;
+  private SwimmingInstructorEntity swimmingInstructor;
+  private SwimmingClassEntity savedSwimmingClass;
 
   @BeforeEach
   void setUp() throws Exception {
     command = CreateBoSwimmingClassCommandFactory.create();
 
-    val swimmingPoolConstructor = SwimmingPool.class.getDeclaredConstructor();
+    val swimmingPoolConstructor = SwimmingPoolEntity.class.getDeclaredConstructor();
     swimmingPoolConstructor.setAccessible(true);
     swimmingPool = swimmingPoolConstructor.newInstance();
     ReflectionTestUtils.setField(swimmingPool, "id", 1L);
 
-    val swimmingClassTypeConstructor = SwimmingClassType.class.getDeclaredConstructor();
+    val swimmingClassTypeConstructor = SwimmingClassTypeEntity.class.getDeclaredConstructor();
     swimmingClassTypeConstructor.setAccessible(true);
     swimmingClassType = swimmingClassTypeConstructor.newInstance();
     ReflectionTestUtils.setField(swimmingClassType, "id", 1L);
 
-    val swimmingClassSubTypeConstructor = SwimmingClassSubType.class.getDeclaredConstructor();
+    val swimmingClassSubTypeConstructor = SwimmingClassSubTypeEntity.class.getDeclaredConstructor();
     swimmingClassSubTypeConstructor.setAccessible(true);
     swimmingClassSubType = swimmingClassSubTypeConstructor.newInstance();
     ReflectionTestUtils.setField(swimmingClassSubType, "id", 1L);
 
-    val swimmingInstructorConstructor = SwimmingInstructor.class.getDeclaredConstructor();
+    val swimmingInstructorConstructor = SwimmingInstructorEntity.class.getDeclaredConstructor();
     swimmingInstructorConstructor.setAccessible(true);
     swimmingInstructor = swimmingInstructorConstructor.newInstance();
     ReflectionTestUtils.setField(swimmingInstructor, "id", 1L);
 
-    val swimmingClassConstructor = SwimmingClass.class.getDeclaredConstructor();
+    val swimmingClassConstructor = SwimmingClassEntity.class.getDeclaredConstructor();
     swimmingClassConstructor.setAccessible(true);
     savedSwimmingClass = swimmingClassConstructor.newInstance();
     ReflectionTestUtils.setField(savedSwimmingClass, "id", 1L);
@@ -130,9 +130,9 @@ class CreateBoSwimmingClassInteractorTest {
 
     verify(swimmingClassTicketRepository, only()).saveAll(assertArg(i -> {
       assertThat(i).hasSize(2);
-      assertThat(i).extracting(SwimmingClassTicket::getSwimmingClass)
+      assertThat(i).extracting(SwimmingClassTicketEntity::getSwimmingClass)
           .containsOnly(savedSwimmingClass);
-      assertThat(i).extracting(SwimmingClassTicket::getName).containsExactlyElementsOf(
+      assertThat(i).extracting(SwimmingClassTicketEntity::getName).containsExactlyElementsOf(
           command.tickets().stream().map(Ticket::name).toList());
     }));
   }

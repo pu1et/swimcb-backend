@@ -3,10 +3,10 @@ package com.project.swimcb.bo.swimmingclass.application;
 import com.project.swimcb.bo.reservation.application.port.out.BoCancelReservationDsGateway;
 import com.project.swimcb.bo.swimmingclass.application.in.UpdateBoSwimmingClassUseCase;
 import com.project.swimcb.bo.swimmingclass.application.out.UpdateBoSwimmingClassDsGateway;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClass;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassRepository;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassTicket;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassTicketRepository;
+import com.project.swimcb.db.entity.SwimmingClassEntity;
+import com.project.swimcb.db.repository.SwimmingClassRepository;
+import com.project.swimcb.db.entity.SwimmingClassTicketEntity;
+import com.project.swimcb.db.repository.SwimmingClassTicketRepository;
 import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand;
 import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand.Ticket;
 import jakarta.transaction.Transactional;
@@ -46,7 +46,7 @@ public class UpdateBoSwimmingClassInteractor implements UpdateBoSwimmingClassUse
     );
   }
 
-  private SwimmingClass findSwimmingClass(@NonNull Long swimmingPoolId,
+  private SwimmingClassEntity findSwimmingClass(@NonNull Long swimmingPoolId,
       @NonNull Long swimmingClassId) {
     return classRepository.findBySwimmingPool_IdAndId(swimmingPoolId, swimmingClassId)
         .orElseThrow(() -> new NoSuchElementException("클래스가 존재하지 않습니다."));
@@ -106,14 +106,14 @@ public class UpdateBoSwimmingClassInteractor implements UpdateBoSwimmingClassUse
   }
 
   private void updateTickets(
-      @NonNull SwimmingClass swimmingClass,
+      @NonNull SwimmingClassEntity swimmingClass,
       @NonNull List<Ticket> tickets
   ) {
 
     gateway.deleteAllTicketsBySwimmingClassId(swimmingClass.getId());
 
     val newTickets = tickets.stream()
-        .map(i -> SwimmingClassTicket.create(swimmingClass, i.name(), i.price()))
+        .map(i -> SwimmingClassTicketEntity.create(swimmingClass, i.name(), i.price()))
         .toList();
     ticketRepository.saveAll(newTickets);
   }

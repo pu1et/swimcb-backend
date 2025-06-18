@@ -1,16 +1,16 @@
 package com.project.swimcb.bo.swimmingclass.adapter.out;
 
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClass.swimmingClass;
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassTicket.swimmingClassTicket;
+import static com.project.swimcb.db.entity.QSwimmingClassEntity.swimmingClassEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassTicketEntity.swimmingClassTicketEntity;
 
-import com.project.swimcb.bo.instructor.domain.SwimmingInstructor;
-import com.project.swimcb.bo.instructor.domain.SwimmingInstructorRepository;
 import com.project.swimcb.bo.swimmingclass.application.out.UpdateBoSwimmingClassDsGateway;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassSubType;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassSubTypeRepository;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassType;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassTypeRepository;
 import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand;
+import com.project.swimcb.db.entity.SwimmingClassSubTypeEntity;
+import com.project.swimcb.db.entity.SwimmingClassTypeEntity;
+import com.project.swimcb.db.entity.SwimmingInstructorEntity;
+import com.project.swimcb.db.repository.SwimmingClassSubTypeRepository;
+import com.project.swimcb.db.repository.SwimmingClassTypeRepository;
+import com.project.swimcb.db.repository.SwimmingInstructorRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import java.time.DayOfWeek;
@@ -38,20 +38,20 @@ public class UpdateBoSwimmingClassDataMapper implements UpdateBoSwimmingClassDsG
     val instructor = findInstructor(request.instructorId());
     val days = days(request.days());
 
-    val count = queryFactory.update(swimmingClass)
-        .set(swimmingClass.type, classType)
-        .set(swimmingClass.subType, classSubType)
-        .set(swimmingClass.daysOfWeek, days)
-        .set(swimmingClass.startTime, request.time().startTime())
-        .set(swimmingClass.endTime, request.time().endTime())
-        .set(swimmingClass.instructor, instructor)
-        .set(swimmingClass.totalCapacity, request.registrationCapacity().totalCapacity())
-        .set(swimmingClass.reservationLimitCount,
+    val count = queryFactory.update(swimmingClassEntity)
+        .set(swimmingClassEntity.type, classType)
+        .set(swimmingClassEntity.subType, classSubType)
+        .set(swimmingClassEntity.daysOfWeek, days)
+        .set(swimmingClassEntity.startTime, request.time().startTime())
+        .set(swimmingClassEntity.endTime, request.time().endTime())
+        .set(swimmingClassEntity.instructor, instructor)
+        .set(swimmingClassEntity.totalCapacity, request.registrationCapacity().totalCapacity())
+        .set(swimmingClassEntity.reservationLimitCount,
             request.registrationCapacity().reservationLimitCount())
-        .set(swimmingClass.isVisible, request.isExposed())
+        .set(swimmingClassEntity.isVisible, request.isExposed())
         .where(
-            swimmingClass.swimmingPool.id.eq(request.swimmingPoolId()),
-            swimmingClass.id.eq(request.swimmingClassId())
+            swimmingClassEntity.swimmingPool.id.eq(request.swimmingPoolId()),
+            swimmingClassEntity.id.eq(request.swimmingClassId())
         )
         .execute();
 
@@ -62,26 +62,26 @@ public class UpdateBoSwimmingClassDataMapper implements UpdateBoSwimmingClassDsG
 
   @Override
   public void deleteAllTicketsBySwimmingClassId(@NonNull Long swimmingClassId) {
-    queryFactory.update(swimmingClassTicket)
-        .set(swimmingClassTicket.isDeleted, true)
-        .where(swimmingClassTicket.swimmingClass.id.eq(swimmingClassId))
+    queryFactory.update(swimmingClassTicketEntity)
+        .set(swimmingClassTicketEntity.isDeleted, true)
+        .where(swimmingClassTicketEntity.swimmingClass.id.eq(swimmingClassId))
         .execute();
 
     entityManager.flush();
     entityManager.clear();
   }
 
-  private SwimmingClassType findClassType(long classTypeId) {
+  private SwimmingClassTypeEntity findClassType(long classTypeId) {
     return swimmingClassTypeRepository.findById(classTypeId)
         .orElseThrow(() -> new NoSuchElementException("강습형태가 존재하지 않습니다."));
   }
 
-  private SwimmingClassSubType findClassSubType(long classSubTypeId) {
+  private SwimmingClassSubTypeEntity findClassSubType(long classSubTypeId) {
     return swimmingClassSubTypeRepository.findById(classSubTypeId)
         .orElseThrow(() -> new NoSuchElementException("강습구분이 존재하지 않습니다."));
   }
 
-  private SwimmingInstructor findInstructor(long instructorId) {
+  private SwimmingInstructorEntity findInstructor(long instructorId) {
     return swimmingInstructorRepository.findById(instructorId)
         .orElseThrow(() -> new NoSuchElementException("강사가 존재하지 않습니다."));
   }
@@ -89,4 +89,5 @@ public class UpdateBoSwimmingClassDataMapper implements UpdateBoSwimmingClassDsG
   private int days(@NonNull List<DayOfWeek> days) {
     return days.stream().map(i -> 1 << (6 - (i.getValue() - 1))).reduce(0, Integer::sum);
   }
+
 }

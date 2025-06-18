@@ -1,9 +1,9 @@
 package com.project.swimcb.bo.notice.adapter.out;
 
-import static com.project.swimcb.bo.notice.domain.QNotice.notice;
+import static com.project.swimcb.db.entity.QNoticeEntity.noticeEntity;
 
 import com.project.swimcb.bo.notice.application.out.SearchNoticesDsGateway;
-import com.project.swimcb.bo.notice.domain.Notice;
+import com.project.swimcb.db.entity.NoticeEntity;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -20,19 +20,20 @@ public class SearchNoticesDataMapper implements SearchNoticesDsGateway {
   private final JPAQueryFactory queryFactory;
 
   @Override
-  public Page<Notice> searchNotices(@NonNull String keyword, @NonNull Pageable pageable) {
+  public Page<NoticeEntity> searchNotices(@NonNull String keyword, @NonNull Pageable pageable) {
 
-    val notices = queryFactory.selectFrom(notice)
-        .where(notice.title.like(keyword))
+    val notices = queryFactory.selectFrom(noticeEntity)
+        .where(noticeEntity.title.like(keyword))
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
         .fetch();
 
-    val totalCount = queryFactory.select(notice.count())
-        .from(notice)
-        .where(notice.title.like(keyword))
+    val totalCount = queryFactory.select(noticeEntity.count())
+        .from(noticeEntity)
+        .where(noticeEntity.title.like(keyword))
         .fetchOne();
 
     return new PageImpl<>(notices, pageable, totalCount != null ? totalCount : 0);
   }
+
 }

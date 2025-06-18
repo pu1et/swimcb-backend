@@ -211,9 +211,9 @@ class FindSwimmingClassesDataMapperTest {
       // then
       val resultString = result.toString();
       assertThat(resultString)
-          .contains("favorite.member.id = 1")
-          .contains("favorite.targetId = swimmingPool.id")
-          .contains("favorite.targetType = SWIMMING_POOL");
+          .contains("favoriteEntity.member.id = 1")
+          .contains("favoriteEntity.targetId = swimmingPoolEntity.id")
+          .contains("favoriteEntity.targetType = SWIMMING_POOL");
     }
   }
 
@@ -241,9 +241,9 @@ class FindSwimmingClassesDataMapperTest {
       // then
       val resultString = result.toString();
       assertThat(resultString)
-          .contains("swimmingPool.name", "MOCK_KEYWORD")
+          .contains("swimmingPoolEntity.name", "MOCK_KEYWORD")
           .contains("||")
-          .contains("swimmingPool.address", "MOCK_KEYWORD");
+          .contains("swimmingPoolEntity.address", "MOCK_KEYWORD");
     }
   }
 
@@ -317,7 +317,7 @@ class FindSwimmingClassesDataMapperTest {
       // then
       val resultString = result.toString();
 
-      assertThat(resultString).contains("swimmingClassTicket.price ASC");
+      assertThat(resultString).contains("swimmingClassTicketEntity.price ASC");
     }
   }
 
@@ -407,7 +407,7 @@ class FindSwimmingClassesDataMapperTest {
       // then
       // 월(64), 수(16), 금(4)의 합인 84와 비교해야 한다.
       assertThat(expression.toString())
-          .contains("bitand(swimmingClass.daysOfWeek, 84) > 0");
+          .contains("bitand(swimmingClassEntity.daysOfWeek, 84) > 0");
     }
   }
 

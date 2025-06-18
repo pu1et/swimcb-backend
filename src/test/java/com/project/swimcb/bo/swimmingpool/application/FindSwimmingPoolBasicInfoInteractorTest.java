@@ -11,11 +11,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.project.swimcb.bo.swimmingpool.application.out.ImageUrlPort;
-import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
-import com.project.swimcb.bo.swimmingpool.domain.SwimmingPool;
-import com.project.swimcb.bo.swimmingpool.domain.SwimmingPoolImage;
-import com.project.swimcb.bo.swimmingpool.domain.SwimmingPoolImageRepository;
-import com.project.swimcb.bo.swimmingpool.domain.SwimmingPoolRepository;
+import com.project.swimcb.db.entity.AccountNo;
+import com.project.swimcb.db.entity.SwimmingPoolImageEntity;
+import com.project.swimcb.db.entity.SwimmingPoolEntity;
+import com.project.swimcb.db.repository.SwimmingPoolImageRepository;
+import com.project.swimcb.db.repository.SwimmingPoolRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.val;
@@ -113,8 +113,8 @@ class FindSwimmingPoolBasicInfoInteractorTest {
 
   private static class SwimmingPoolFactory {
 
-    private static SwimmingPool create() {
-      val swimmingPool = mock(SwimmingPool.class);
+    private static SwimmingPoolEntity create() {
+      val swimmingPool = mock(SwimmingPoolEntity.class);
       when(swimmingPool.getName()).thenReturn("DUMMY_NAME");
       when(swimmingPool.getPhone()).thenReturn("DUMMY_PHONE");
       when(swimmingPool.getAddress()).thenReturn("DUMMY_ADDRESS");
@@ -130,9 +130,9 @@ class FindSwimmingPoolBasicInfoInteractorTest {
 
   private static class SwimmingPoolImageFactory {
 
-    private static List<SwimmingPoolImage> create() {
-      val swimmingPoolImage1 = mock(SwimmingPoolImage.class);
-      val swimmingPoolImage2 = mock(SwimmingPoolImage.class);
+    private static List<SwimmingPoolImageEntity> create() {
+      val swimmingPoolImage1 = mock(SwimmingPoolImageEntity.class);
+      val swimmingPoolImage2 = mock(SwimmingPoolImageEntity.class);
       when(swimmingPoolImage1.getPath()).thenReturn("DUMMY_PATH1");
       when(swimmingPoolImage2.getPath()).thenReturn("DUMMY_PATH2");
       return List.of(swimmingPoolImage1, swimmingPoolImage2);

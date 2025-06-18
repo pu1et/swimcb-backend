@@ -7,9 +7,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.project.swimcb.bo.faq.adapter.in.FindFaqsResponse;
-import com.project.swimcb.bo.faq.domain.Faq;
-import com.project.swimcb.bo.faq.domain.FaqRepository;
-import com.project.swimcb.bo.faq.domain.TestFaqFactory;
+import com.project.swimcb.db.entity.FaqEntity;
+import com.project.swimcb.db.repository.FaqRepository;
+import com.project.swimcb.db.entity.TestFaqFactory;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -80,7 +80,7 @@ class FindFaqsInteractorTest {
   void shouldReturnEmptyPageWhenNoData() {
     // given
     val pageable = PageRequest.of(0, 10);
-    final Page<Faq> emptyPage = Page.empty();
+    final Page<FaqEntity> emptyPage = Page.empty();
 
     when(faqRepository.findAll(any(Pageable.class))).thenReturn(emptyPage);
 
@@ -97,7 +97,7 @@ class FindFaqsInteractorTest {
 
   private static class FaqFactory {
 
-    private static List<Faq> create() {
+    private static List<FaqEntity> create() {
       return List.of(TestFaqFactory.create(1L, "title1", "content1", true,
               LocalDateTime.of(2025, 1, 1, 1, 1, 1), "createdBy1",
               LocalDateTime.of(2025, 1, 2, 1, 1, 1),

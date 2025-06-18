@@ -8,8 +8,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.project.swimcb.bo.faq.application.UpdateFaqInteractor;
-import com.project.swimcb.bo.faq.domain.Faq;
-import com.project.swimcb.bo.faq.domain.FaqRepository;
+import com.project.swimcb.db.entity.FaqEntity;
+import com.project.swimcb.db.repository.FaqRepository;
 import com.project.swimcb.bo.faq.domain.UpdateFaqCommand;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -36,7 +36,7 @@ class UpdateFaqInteractorTest {
   void shouldUpdateFaqSuccessfully() {
     // given
     val command = UpdateFaqCommandFactory.create();
-    val existingFaq = mock(Faq.class);
+    val existingFaq = mock(FaqEntity.class);
 
     when(faqRepository.findById(anyLong())).thenReturn(Optional.of(existingFaq));
     // when

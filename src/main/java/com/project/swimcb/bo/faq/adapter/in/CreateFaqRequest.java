@@ -1,6 +1,6 @@
 package com.project.swimcb.bo.faq.adapter.in;
 
-import com.project.swimcb.bo.faq.domain.Faq;
+import com.project.swimcb.db.entity.FaqEntity;
 import java.util.List;
 import lombok.NonNull;
 
@@ -12,8 +12,8 @@ public record CreateFaqRequest(
     boolean isVisible
 ) {
 
-  public Faq toDomain() {
-    return Faq.builder()
+  public FaqEntity toDomain() {
+    return FaqEntity.builder()
         .title(this.title)
         .content(this.content)
         .isVisible(this.isVisible)

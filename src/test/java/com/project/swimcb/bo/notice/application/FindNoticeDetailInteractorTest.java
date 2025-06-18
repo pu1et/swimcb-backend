@@ -7,9 +7,9 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.project.swimcb.bo.notice.domain.Notice;
-import com.project.swimcb.bo.notice.domain.NoticeRepository;
-import com.project.swimcb.bo.notice.domain.TestNoticeFactory;
+import com.project.swimcb.db.entity.NoticeEntity;
+import com.project.swimcb.db.repository.NoticeRepository;
+import com.project.swimcb.db.entity.TestNoticeFactory;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
@@ -67,7 +67,7 @@ class FindNoticeDetailInteractorTest {
 
   private static class NoticeFactory {
 
-    private static Notice create() {
+    private static NoticeEntity create() {
       return TestNoticeFactory.create(1L, "title1", "content1", true,
           LocalDateTime.of(2025, 1, 1, 1, 1, 1), "createdBy1",
           LocalDateTime.of(2025, 1, 2, 1, 1, 1),

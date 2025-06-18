@@ -8,8 +8,8 @@ import static org.mockito.Mockito.when;
 
 import com.project.swimcb.bo.notice.adapter.in.FindNoticesResponse;
 import com.project.swimcb.bo.notice.application.out.SearchNoticesDsGateway;
-import com.project.swimcb.bo.notice.domain.Notice;
-import com.project.swimcb.bo.notice.domain.TestNoticeFactory;
+import com.project.swimcb.db.entity.NoticeEntity;
+import com.project.swimcb.db.entity.TestNoticeFactory;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.val;
@@ -71,7 +71,7 @@ class SearchNoticesInteractorTest {
 
   private static class NoticeFactory {
 
-    private static List<Notice> create() {
+    private static List<NoticeEntity> create() {
       return List.of(TestNoticeFactory.create(1L, "title1", "content1", true,
               LocalDateTime.of(2025, 1, 1, 1, 1, 1), "createdBy1",
               LocalDateTime.of(2025, 1, 2, 1, 1, 1),

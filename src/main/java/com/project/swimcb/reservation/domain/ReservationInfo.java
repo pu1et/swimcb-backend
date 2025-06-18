@@ -1,6 +1,6 @@
 package com.project.swimcb.reservation.domain;
 
-import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
+import com.project.swimcb.db.entity.AccountNo;
 import com.project.swimcb.swimmingpool.domain.enums.PaymentMethod;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import java.time.LocalDateTime;

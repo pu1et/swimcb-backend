@@ -18,8 +18,8 @@ import static org.mockito.Mockito.when;
 import com.project.swimcb.bo.swimmingclass.application.out.CancelBoSwimmingClassDsGateway;
 import com.project.swimcb.bo.swimmingclass.application.out.UpdateBoSwimmingClassDsGateway;
 import com.project.swimcb.bo.swimmingclass.domain.CancelBoSwimmingClassCommand;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClass;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassRepository;
+import com.project.swimcb.db.entity.SwimmingClassEntity;
+import com.project.swimcb.db.repository.SwimmingClassRepository;
 import com.project.swimcb.swimmingpool.domain.enums.CancellationReason;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -71,7 +71,7 @@ class CancelBoSwimmingClassInteractorTest {
     @DisplayName("클래스가 존재하고 결제완료/입금확인중인 예약이 없으면 클래스를 취소하고 예약을 취소 상태로 변경한다")
     void shouldCancelClassAndReservationsWhenNoCompletedPayments() {
       // given
-      val swimmingClass = mock(SwimmingClass.class);
+      val swimmingClass = mock(SwimmingClassEntity.class);
       when(swimmingClassRepository.findBySwimmingPool_IdAndId(anyLong(), anyLong()))
           .thenReturn(Optional.of(swimmingClass));
       when(cancelBoSwimmingClassDsGateway.existsReservationBySwimmingClassIdReservationStatusIn(
@@ -98,7 +98,7 @@ class CancelBoSwimmingClassInteractorTest {
     @DisplayName("결제완료 또는 입금확인중인 예약이 있으면 예외를 발생시킨다")
     void shouldThrowExceptionWhenCompletedPaymentsExist() {
       // given
-      val swimmingClass = mock(SwimmingClass.class);
+      val swimmingClass = mock(SwimmingClassEntity.class);
       when(swimmingClassRepository.findBySwimmingPool_IdAndId(anyLong(), anyLong()))
           .thenReturn(Optional.of(swimmingClass));
       when(cancelBoSwimmingClassDsGateway.existsReservationBySwimmingClassIdReservationStatusIn(

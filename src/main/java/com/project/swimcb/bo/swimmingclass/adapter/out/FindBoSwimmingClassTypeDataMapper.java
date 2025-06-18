@@ -1,8 +1,8 @@
 package com.project.swimcb.bo.swimmingclass.adapter.out;
 
 import static com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassTypesResponse.ClassSubType;
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassSubType.swimmingClassSubType;
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassType.swimmingClassType;
+import static com.project.swimcb.db.entity.QSwimmingClassSubTypeEntity.swimmingClassSubTypeEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassTypeEntity.swimmingClassTypeEntity;
 import static com.querydsl.core.types.Projections.constructor;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toMap;
@@ -56,9 +56,9 @@ public class FindBoSwimmingClassTypeDataMapper implements FindBoSwimmingClassTyp
                       .filter(k -> k.swimmingClassSubTypeId != null)
                       .map(
                           k -> ClassSubType.builder()
-                                .classSubTypeId(k.swimmingClassSubTypeId)
-                                .name(k.swimmingClassSubTypeName)
-                                .build()
+                              .classSubTypeId(k.swimmingClassSubTypeId)
+                              .name(k.swimmingClassSubTypeName)
+                              .build()
                       )
                       .distinct()
                       .toList()
@@ -72,16 +72,16 @@ public class FindBoSwimmingClassTypeDataMapper implements FindBoSwimmingClassTyp
   List<SwimmingClassTypeWithSubType> findClassTypeWithSubTypes(long swimmingPoolId) {
     return queryFactory.select(
             constructor(SwimmingClassTypeWithSubType.class,
-                swimmingClassType.id,
-                swimmingClassType.name,
-                swimmingClassSubType.id,
-                swimmingClassSubType.name
+                swimmingClassTypeEntity.id,
+                swimmingClassTypeEntity.name,
+                swimmingClassSubTypeEntity.id,
+                swimmingClassSubTypeEntity.name
             ))
-        .from(swimmingClassType)
-        .leftJoin(swimmingClassSubType)
-        .on(swimmingClassSubType.swimmingClassType.eq(swimmingClassType))
+        .from(swimmingClassTypeEntity)
+        .leftJoin(swimmingClassSubTypeEntity)
+        .on(swimmingClassSubTypeEntity.swimmingClassType.eq(swimmingClassTypeEntity))
         .where(
-            swimmingClassType.swimmingPool.id.eq(swimmingPoolId)
+            swimmingClassTypeEntity.swimmingPool.id.eq(swimmingPoolId)
         )
         .fetch();
   }
@@ -97,5 +97,7 @@ public class FindBoSwimmingClassTypeDataMapper implements FindBoSwimmingClassTyp
     @QueryProjection
     public SwimmingClassTypeWithSubType {
     }
+
   }
+
 }

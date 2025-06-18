@@ -2,9 +2,9 @@ package com.project.swimcb.bo.instructor.application;
 
 import com.project.swimcb.bo.instructor.application.in.CreateBoInstructorUseCase;
 import com.project.swimcb.bo.instructor.domain.CreateBoInstructorCommand;
-import com.project.swimcb.bo.instructor.domain.SwimmingInstructor;
-import com.project.swimcb.bo.instructor.domain.SwimmingInstructorRepository;
-import com.project.swimcb.bo.swimmingpool.domain.SwimmingPoolRepository;
+import com.project.swimcb.db.entity.SwimmingInstructorEntity;
+import com.project.swimcb.db.repository.SwimmingInstructorRepository;
+import com.project.swimcb.db.repository.SwimmingPoolRepository;
 import java.util.NoSuchElementException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class CreateBoInstructorInteractor implements CreateBoInstructorUseCase {
     val swimmingPool = swimmingPoolRepository.findById(request.swimmingPoolId())
         .orElseThrow(() -> new NoSuchElementException("수영장이 존재하지 않습니다."));
 
-    val instructor = SwimmingInstructor.create(swimmingPool, request.name());
+    val instructor = SwimmingInstructorEntity.create(swimmingPool, request.name());
     swimmingInstructorRepository.save(instructor);
   }
 }

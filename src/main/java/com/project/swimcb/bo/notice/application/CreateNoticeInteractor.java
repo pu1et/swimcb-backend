@@ -2,8 +2,8 @@ package com.project.swimcb.bo.notice.application;
 
 import com.project.swimcb.bo.notice.application.in.CreateNoticeUseCase;
 import com.project.swimcb.bo.notice.domain.CreateNoticeCommand;
-import com.project.swimcb.bo.notice.domain.Notice;
-import com.project.swimcb.bo.notice.domain.NoticeRepository;
+import com.project.swimcb.db.entity.NoticeEntity;
+import com.project.swimcb.db.repository.NoticeRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -19,7 +19,7 @@ public class CreateNoticeInteractor implements CreateNoticeUseCase {
 
   @Override
   public void createNotice(@NonNull CreateNoticeCommand command) {
-    val notice = Notice.create(command.title(), command.content(), command.isVisible());
+    val notice = NoticeEntity.create(command.title(), command.content(), command.isVisible());
     noticeRepository.save(notice);
   }
 }

@@ -2,7 +2,7 @@ package com.project.swimcb.bo.faq.application;
 
 import com.project.swimcb.bo.faq.adapter.in.FindFaqDetailResponse;
 import com.project.swimcb.bo.faq.application.in.FindFaqDetailUseCase;
-import com.project.swimcb.bo.faq.domain.FaqRepository;
+import com.project.swimcb.db.repository.FaqRepository;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

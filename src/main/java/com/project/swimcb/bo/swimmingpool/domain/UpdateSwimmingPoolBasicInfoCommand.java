@@ -1,9 +1,9 @@
 package com.project.swimcb.bo.swimmingpool.domain;
 
+import com.project.swimcb.db.entity.AccountNo;
 import java.util.List;
 import lombok.Builder;
 import lombok.NonNull;
-import lombok.With;
 
 @Builder
 public record UpdateSwimmingPoolBasicInfoCommand(

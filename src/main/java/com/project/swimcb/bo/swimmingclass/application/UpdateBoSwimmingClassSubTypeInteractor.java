@@ -1,8 +1,7 @@
 package com.project.swimcb.bo.swimmingclass.application;
 
 import com.project.swimcb.bo.swimmingclass.application.in.UpdateBoSwimmingClassSubTypeUseCase;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassSubType;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassSubTypeRepository;
+import com.project.swimcb.db.repository.SwimmingClassSubTypeRepository;
 import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassSubTypeCommand;
 import jakarta.transaction.Transactional;
 import java.util.NoSuchElementException;

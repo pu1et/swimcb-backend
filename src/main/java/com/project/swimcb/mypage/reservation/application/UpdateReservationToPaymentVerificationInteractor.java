@@ -1,7 +1,7 @@
 package com.project.swimcb.mypage.reservation.application;
 
 import com.project.swimcb.mypage.reservation.application.port.in.UpdateReservationToPaymentVerificationUseCase;
-import com.project.swimcb.swimmingpool.domain.ReservationRepository;
+import com.project.swimcb.db.repository.ReservationRepository;
 import java.util.NoSuchElementException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

@@ -4,7 +4,7 @@ import static com.project.swimcb.swimmingpool.domain.enums.PaymentMethod.CASH_ON
 import static com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName.GROUP;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
+import com.project.swimcb.db.entity.AccountNo;
 import com.project.swimcb.reservation.domain.ReservationInfo;
 import java.time.LocalDateTime;
 import java.time.LocalTime;

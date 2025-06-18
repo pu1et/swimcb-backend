@@ -1,6 +1,6 @@
 package com.project.swimcb.bo.faq.adapter.in;
 
-import com.project.swimcb.bo.faq.domain.Faq;
+import com.project.swimcb.db.entity.FaqEntity;
 import lombok.Builder;
 import lombok.NonNull;
 
@@ -12,7 +12,7 @@ public record FindFaqDetailResponse(
 ) {
 
 
-  public static FindFaqDetailResponse from(@NonNull Faq faq) {
+  public static FindFaqDetailResponse from(@NonNull FaqEntity faq) {
     return FindFaqDetailResponse.builder()
         .title(faq.getTitle())
         .content(faq.getContent())

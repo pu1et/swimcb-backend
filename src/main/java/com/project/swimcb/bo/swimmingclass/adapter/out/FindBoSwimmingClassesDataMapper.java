@@ -1,11 +1,11 @@
 package com.project.swimcb.bo.swimmingclass.adapter.out;
 
-import static com.project.swimcb.bo.instructor.domain.QSwimmingInstructor.swimmingInstructor;
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClass.swimmingClass;
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassSubType.swimmingClassSubType;
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassTicket.swimmingClassTicket;
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassType.swimmingClassType;
-import static com.project.swimcb.swimmingpool.domain.QReservation.reservation;
+import static com.project.swimcb.db.entity.QReservationEntity.reservationEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassEntity.swimmingClassEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassSubTypeEntity.swimmingClassSubTypeEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassTicketEntity.swimmingClassTicketEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassTypeEntity.swimmingClassTypeEntity;
+import static com.project.swimcb.db.entity.QSwimmingInstructorEntity.swimmingInstructorEntity;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_COMPLETED;
 import static com.project.swimcb.swimmingpool.domain.enums.TicketType.SWIMMING_CLASS;
 import static com.querydsl.core.types.Projections.constructor;
@@ -120,35 +120,36 @@ class FindBoSwimmingClassesDataMapper implements FindBoSwimmingClassesDsGateway 
   List<BoSwimmingClass> findSwimmingClasses(long swimmingPoolId, int month) {
     return queryFactory.select(
             constructor(BoSwimmingClass.class,
-                swimmingClass.id,
-                swimmingClassType.id,
-                swimmingClassType.name,
-                swimmingClassSubType.id,
-                swimmingClassSubType.name,
-                swimmingClass.daysOfWeek,
-                swimmingClass.startTime,
-                swimmingClass.endTime,
-                swimmingInstructor.id,
-                swimmingInstructor.name,
-                swimmingClassTicket.id,
-                swimmingClassTicket.name,
-                swimmingClassTicket.price,
-                swimmingClass.totalCapacity,
-                swimmingClass.reservationLimitCount,
-                swimmingClass.isVisible
+                swimmingClassEntity.id,
+                swimmingClassTypeEntity.id,
+                swimmingClassTypeEntity.name,
+                swimmingClassSubTypeEntity.id,
+                swimmingClassSubTypeEntity.name,
+                swimmingClassEntity.daysOfWeek,
+                swimmingClassEntity.startTime,
+                swimmingClassEntity.endTime,
+                swimmingInstructorEntity.id,
+                swimmingInstructorEntity.name,
+                swimmingClassTicketEntity.id,
+                swimmingClassTicketEntity.name,
+                swimmingClassTicketEntity.price,
+                swimmingClassEntity.totalCapacity,
+                swimmingClassEntity.reservationLimitCount,
+                swimmingClassEntity.isVisible
             ))
-        .from(swimmingClass)
-        .join(swimmingClass.type, swimmingClassType)
-        .join(swimmingClass.subType, swimmingClassSubType)
-        .join(swimmingClass.instructor, swimmingInstructor)
-        .join(swimmingClassTicket).on(swimmingClassTicket.swimmingClass.eq(swimmingClass))
+        .from(swimmingClassEntity)
+        .join(swimmingClassEntity.type, swimmingClassTypeEntity)
+        .join(swimmingClassEntity.subType, swimmingClassSubTypeEntity)
+        .join(swimmingClassEntity.instructor, swimmingInstructorEntity)
+        .join(swimmingClassTicketEntity)
+        .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
         .where(
-            swimmingClass.swimmingPool.id.eq(swimmingPoolId),
-            swimmingClass.month.eq(month),
-            swimmingClassTicket.isDeleted.isFalse(),
-            swimmingClass.isCanceled.isFalse()
+            swimmingClassEntity.swimmingPool.id.eq(swimmingPoolId),
+            swimmingClassEntity.month.eq(month),
+            swimmingClassTicketEntity.isDeleted.isFalse(),
+            swimmingClassEntity.isCanceled.isFalse()
         )
-        .orderBy(swimmingClass.createdAt.asc())
+        .orderBy(swimmingClassEntity.createdAt.asc())
         .fetch();
   }
 
@@ -157,20 +158,20 @@ class FindBoSwimmingClassesDataMapper implements FindBoSwimmingClassesDsGateway 
 
     return queryFactory.select(
             constructor(BoCompletedReservationCount.class,
-                swimmingClass.id,
-                reservation.id.count()
+                swimmingClassEntity.id,
+                reservationEntity.id.count()
             ))
-        .from(reservation)
-        .join(swimmingClassTicket).on(
-            reservation.ticketType.eq(SWIMMING_CLASS),
-            reservation.ticketId.eq(swimmingClassTicket.id)
+        .from(reservationEntity)
+        .join(swimmingClassTicketEntity).on(
+            reservationEntity.ticketType.eq(SWIMMING_CLASS),
+            reservationEntity.ticketId.eq(swimmingClassTicketEntity.id)
         )
-        .join(swimmingClassTicket.swimmingClass, swimmingClass)
+        .join(swimmingClassTicketEntity.swimmingClass, swimmingClassEntity)
         .where(
-            swimmingClass.id.in(swimmingClassIds),
-            reservation.reservationStatus.in(PAYMENT_COMPLETED)
+            swimmingClassEntity.id.in(swimmingClassIds),
+            reservationEntity.reservationStatus.in(PAYMENT_COMPLETED)
         )
-        .groupBy(swimmingClass.id)
+        .groupBy(swimmingClassEntity.id)
         .fetch();
   }
 

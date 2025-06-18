@@ -15,9 +15,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.project.swimcb.bo.reservation.application.port.out.BoCancelReservationDsGateway;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClass;
-import com.project.swimcb.swimmingpool.domain.Reservation;
-import com.project.swimcb.swimmingpool.domain.ReservationRepository;
+import com.project.swimcb.db.entity.ReservationEntity;
+import com.project.swimcb.db.entity.SwimmingClassEntity;
+import com.project.swimcb.db.repository.ReservationRepository;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.val;
@@ -53,8 +53,8 @@ class CancelReservationInteractorTest {
     @DisplayName("결제대기 상태인 경우 예약이 취소되고 대기 예약을 결제대기로 변경하고 예약수가 유지된다")
     void shouldCancelPaymentPendingReservationAndUpdateWaitingReservation() {
       // given
-      val reservation = mock(Reservation.class);
-      val swimmingClass = mock(SwimmingClass.class);
+      val reservation = mock(ReservationEntity.class);
+      val swimmingClass = mock(SwimmingClassEntity.class);
 
       when(reservationRepository.findByIdAndMemberId(RESERVATION_ID, MEMBER_ID))
           .thenReturn(Optional.of(reservation));
@@ -88,8 +88,8 @@ class CancelReservationInteractorTest {
     @DisplayName("예약대기 상태인 경우 예약이 취소되고 대기 예약은 업데이트하지 않으며 예약수만 감소된다")
     void shouldCancelReservationPendingAndNotUpdateWaitingReservation() {
       // given
-      val reservation = mock(Reservation.class);
-      val swimmingClass = mock(SwimmingClass.class);
+      val reservation = mock(ReservationEntity.class);
+      val swimmingClass = mock(SwimmingClassEntity.class);
 
       when(reservationRepository.findByIdAndMemberId(RESERVATION_ID, MEMBER_ID))
           .thenReturn(Optional.of(reservation));
@@ -118,8 +118,8 @@ class CancelReservationInteractorTest {
     @DisplayName("결제대기 상태이지만 대기 예약이 없는 경우 예약만 취소되고 예약수만 감소된다")
     void shouldCancelPaymentPendingReservationWhenNoWaitingReservation() {
       // given
-      val reservation = mock(Reservation.class);
-      val swimmingClass = mock(SwimmingClass.class);
+      val reservation = mock(ReservationEntity.class);
+      val swimmingClass = mock(SwimmingClassEntity.class);
 
       when(reservationRepository.findByIdAndMemberId(RESERVATION_ID, MEMBER_ID))
           .thenReturn(Optional.of(reservation));
@@ -174,7 +174,7 @@ class CancelReservationInteractorTest {
     @DisplayName("취소할 수 없는 상태면 IllegalStateException 예외를 발생시킨다")
     void shouldThrowIllegalStateExceptionWhenCannotCancel() {
       // given
-      val reservation = mock(Reservation.class);
+      val reservation = mock(ReservationEntity.class);
       when(reservationRepository.findByIdAndMemberId(RESERVATION_ID, MEMBER_ID))
           .thenReturn(Optional.of(reservation));
       when(reservation.canTransitionToCancelByUser()).thenReturn(false);

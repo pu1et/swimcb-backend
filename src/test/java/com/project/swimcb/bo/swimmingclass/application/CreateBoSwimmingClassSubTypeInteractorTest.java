@@ -9,9 +9,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.project.swimcb.bo.swimmingclass.domain.CreateBoSwimmingClassSubTypeCommand;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassSubTypeRepository;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassType;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassTypeRepository;
+import com.project.swimcb.db.entity.SwimmingClassTypeEntity;
+import com.project.swimcb.db.repository.SwimmingClassSubTypeRepository;
+import com.project.swimcb.db.repository.SwimmingClassTypeRepository;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.val;
@@ -39,7 +39,7 @@ class CreateBoSwimmingClassSubTypeInteractorTest {
   void shouldCreateSwimmingClassSubTypeSuccessfully() {
     // given
     val command = TestCreateBoSwimmingClassSubTypeCommandFactory.create();
-    val classType = mock(SwimmingClassType.class);
+    val classType = mock(SwimmingClassTypeEntity.class);
 
     when(swimmingClassTypeRepository.findById(command.swimmingClassTypeId()))
         .thenReturn(Optional.of(classType));

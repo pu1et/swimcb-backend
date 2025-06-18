@@ -2,7 +2,7 @@ package com.project.swimcb.bo.swimmingclass.application;
 
 import com.project.swimcb.bo.swimmingclass.application.in.DeleteBoSwimmingClassSubTypeUseCase;
 import com.project.swimcb.bo.swimmingclass.domain.DeleteBoSwimmingClassSubTypeCommand;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassSubTypeRepository;
+import com.project.swimcb.db.repository.SwimmingClassSubTypeRepository;
 import jakarta.transaction.Transactional;
 import java.util.NoSuchElementException;
 import lombok.NonNull;

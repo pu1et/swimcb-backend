@@ -2,7 +2,7 @@ package com.project.swimcb.bo.notice.application;
 
 import com.project.swimcb.bo.notice.adapter.in.FindNoticeDetailResponse;
 import com.project.swimcb.bo.notice.application.in.FindNoticeDetailUseCase;
-import com.project.swimcb.bo.notice.domain.NoticeRepository;
+import com.project.swimcb.db.repository.NoticeRepository;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.val;

@@ -2,9 +2,9 @@ package com.project.swimcb.bo.swimmingclass.application;
 
 import com.project.swimcb.bo.swimmingclass.application.in.CreateBoSwimmingClassSubTypeUseCase;
 import com.project.swimcb.bo.swimmingclass.domain.CreateBoSwimmingClassSubTypeCommand;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassSubType;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassSubTypeRepository;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClassTypeRepository;
+import com.project.swimcb.db.entity.SwimmingClassSubTypeEntity;
+import com.project.swimcb.db.repository.SwimmingClassSubTypeRepository;
+import com.project.swimcb.db.repository.SwimmingClassTypeRepository;
 import jakarta.transaction.Transactional;
 import java.util.NoSuchElementException;
 import lombok.NonNull;
@@ -25,7 +25,7 @@ class CreateBoSwimmingClassSubTypeInteractor implements CreateBoSwimmingClassSub
     val classType = swimmingClassTypeRepository.findById(request.swimmingClassTypeId())
         .orElseThrow(() -> new NoSuchElementException("강습형태를 찾을 수 없습니다."));
 
-    val subType = SwimmingClassSubType.create(classType, request.name());
+    val subType = SwimmingClassSubTypeEntity.create(classType, request.name());
 
     swimmingClassSubTypeRepository.save(subType);
   }

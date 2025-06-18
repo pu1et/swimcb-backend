@@ -7,9 +7,8 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.project.swimcb.bo.notice.application.UpdateNoticeIsVisibleInteractor;
-import com.project.swimcb.bo.notice.domain.Notice;
-import com.project.swimcb.bo.notice.domain.NoticeRepository;
+import com.project.swimcb.db.entity.NoticeEntity;
+import com.project.swimcb.db.repository.NoticeRepository;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.val;
@@ -35,7 +34,7 @@ class UpdateNoticeIsVisibleInteractorTest {
     // given
     val noticeId = 1L;
     val isVisible = true;
-    val existingNotice = mock(Notice.class);
+    val existingNotice = mock(NoticeEntity.class);
 
     when(noticeRepository.findById(anyLong())).thenReturn(Optional.of(existingNotice));
     // when

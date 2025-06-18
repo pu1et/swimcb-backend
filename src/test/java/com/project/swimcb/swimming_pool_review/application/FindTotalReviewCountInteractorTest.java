@@ -5,7 +5,7 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.project.swimcb.swimming_pool_review.domain.SwimmingPoolReviewRepository;
+import com.project.swimcb.db.repository.SwimmingPoolReviewRepository;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -12,10 +12,10 @@ import static org.mockito.Mockito.when;
 
 import com.project.swimcb.bo.reservation.application.port.out.BoCancelReservationDsGateway;
 import com.project.swimcb.bo.reservation.domain.BoRefundReservationCommand;
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClass;
-import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
-import com.project.swimcb.swimmingpool.domain.Reservation;
-import com.project.swimcb.swimmingpool.domain.ReservationRepository;
+import com.project.swimcb.db.entity.ReservationEntity;
+import com.project.swimcb.db.entity.SwimmingClassEntity;
+import com.project.swimcb.db.entity.AccountNo;
+import com.project.swimcb.db.repository.ReservationRepository;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.val;
@@ -58,8 +58,8 @@ class BoRefundReservationInteractorTest {
   @DisplayName("환불로 변경이 가능하고 결제대기 상태의 예약이면, 환불 처리하고 대기 예약을 결제대기로 변경한다")
   void shouldRefundReservationAndUpdateWaitingReservation_WhenCanTransitionToRefund() {
     // given
-    val reservation = mock(Reservation.class);
-    val swimmingClass = mock(SwimmingClass.class);
+    val reservation = mock(ReservationEntity.class);
+    val swimmingClass = mock(SwimmingClassEntity.class);
 
     when(repository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
     when(reservation.canTransitionToRefund()).thenReturn(true);
@@ -96,8 +96,8 @@ class BoRefundReservationInteractorTest {
   @DisplayName("환불로 변경이 가능하고 예약대기 상태의 예약이면, 환불 처리하고 대기 예약은 업데이트하지 않는다")
   void shouldRefundReservationWithoutUpdatingWaitingList_WhenReservationPending() {
     // given
-    val reservation = mock(Reservation.class);
-    val swimmingClass = mock(SwimmingClass.class);
+    val reservation = mock(ReservationEntity.class);
+    val swimmingClass = mock(SwimmingClassEntity.class);
 
     when(repository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
     when(reservation.canTransitionToRefund()).thenReturn(true);
@@ -131,8 +131,8 @@ class BoRefundReservationInteractorTest {
   @DisplayName("환불 가능하고 결제대기 상태이지만 대기 예약이 없는 경우 환불만 처리한다")
   void shouldRefundReservationWithoutUpdatingWaitingList_WhenNoWaitingReservations() {
     // given
-    val reservation = mock(Reservation.class);
-    val swimmingClass = mock(SwimmingClass.class);
+    val reservation = mock(ReservationEntity.class);
+    val swimmingClass = mock(SwimmingClassEntity.class);
 
     when(repository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
     when(reservation.canTransitionToRefund()).thenReturn(true);
@@ -182,7 +182,7 @@ class BoRefundReservationInteractorTest {
   @DisplayName("환불로 변경이 불가능한 예약이면, 예외가 발생한다")
   void shouldThrowException_WhenCannotTransitionToRefund() {
     // given
-    val reservation = mock(Reservation.class);
+    val reservation = mock(ReservationEntity.class);
 
     when(repository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
     when(reservation.canTransitionToRefund()).thenReturn(false);

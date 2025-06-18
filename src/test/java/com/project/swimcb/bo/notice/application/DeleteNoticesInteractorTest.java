@@ -5,8 +5,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 
-import com.project.swimcb.bo.notice.application.DeleteNoticesInteractor;
-import com.project.swimcb.bo.notice.domain.NoticeRepository;
+import com.project.swimcb.db.repository.NoticeRepository;
 import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;

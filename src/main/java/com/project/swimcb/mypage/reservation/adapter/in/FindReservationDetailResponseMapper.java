@@ -7,7 +7,7 @@ import static com.project.swimcb.mypage.reservation.adapter.in.FindReservationDe
 import static com.project.swimcb.mypage.reservation.adapter.in.FindReservationDetailResponse.Ticket;
 
 import com.project.swimcb.bo.swimmingpool.application.out.ImageUrlPort;
-import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
+import com.project.swimcb.db.entity.AccountNo;
 import com.project.swimcb.mypage.reservation.adapter.in.FindReservationDetailResponse.Cancel;
 import com.project.swimcb.mypage.reservation.adapter.in.FindReservationDetailResponse.Refund;
 import com.project.swimcb.mypage.reservation.adapter.in.FindReservationDetailResponse.Review;

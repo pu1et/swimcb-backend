@@ -1,6 +1,6 @@
 package com.project.swimcb.bo.notice.adapter.in;
 
-import com.project.swimcb.bo.notice.domain.Notice;
+import com.project.swimcb.db.entity.NoticeEntity;
 import java.time.LocalDate;
 import lombok.Builder;
 import lombok.NonNull;
@@ -14,7 +14,7 @@ public record FindNoticesResponse(
     boolean isVisible
 ) {
 
-  public static FindNoticesResponse from(@NonNull Notice notice) {
+  public static FindNoticesResponse from(@NonNull NoticeEntity notice) {
     return FindNoticesResponse.builder()
         .noticeId(notice.getId())
         .title(notice.getTitle())

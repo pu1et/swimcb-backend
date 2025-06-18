@@ -1,15 +1,15 @@
 package com.project.swimcb.swimmingpool.adapter.out;
 
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClass.swimmingClass;
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassSubType.swimmingClassSubType;
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassTicket.swimmingClassTicket;
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassType.swimmingClassType;
-import static com.project.swimcb.bo.swimmingpool.domain.QSwimmingPool.swimmingPool;
-import static com.project.swimcb.bo.swimmingpool.domain.QSwimmingPoolImage.swimmingPoolImage;
-import static com.project.swimcb.favorite.domain.QFavorite.favorite;
+import static com.project.swimcb.db.entity.QFavoriteEntity.favoriteEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassEntity.swimmingClassEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassSubTypeEntity.swimmingClassSubTypeEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassTicketEntity.swimmingClassTicketEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassTypeEntity.swimmingClassTypeEntity;
+import static com.project.swimcb.db.entity.QSwimmingPoolEntity.swimmingPoolEntity;
+import static com.project.swimcb.db.entity.QSwimmingPoolImageEntity.swimmingPoolImageEntity;
+import static com.project.swimcb.db.entity.QSwimmingPoolRatingEntity.swimmingPoolRatingEntity;
+import static com.project.swimcb.db.entity.QSwimmingPoolReviewEntity.swimmingPoolReviewEntity;
 import static com.project.swimcb.favorite.domain.enums.FavoriteTargetType.SWIMMING_POOL;
-import static com.project.swimcb.swimming_pool_rating.application.in.QSwimmingPoolRating.swimmingPoolRating;
-import static com.project.swimcb.swimming_pool_review.domain.QSwimmingPoolReview.swimmingPoolReview;
 import static com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName.GROUP;
 import static com.querydsl.core.types.Projections.constructor;
 
@@ -54,51 +54,56 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
     val swimmingClassDaysOfWeek = swimmingClassDaysOfWeek(condition.days());
 
     val swimmingClasses = queryFactory.select(constructor(SwimmingPoolWithClass.class,
-            swimmingPool.id,
-            swimmingPoolImage.path,
-            favorite.id.count().gt(0),
+            swimmingPoolEntity.id,
+            swimmingPoolImageEntity.path,
+            favoriteEntity.id.count().gt(0),
             distanceBetweenMemberAndSwimmingPool,
-            swimmingPool.name,
-            swimmingPool.address,
-            swimmingPoolRating.rating.avg(),
-            swimmingPoolReview.id.sum()
+            swimmingPoolEntity.name,
+            swimmingPoolEntity.address,
+            swimmingPoolRatingEntity.rating.avg(),
+            swimmingPoolReviewEntity.id.sum()
         ))
-        .from(swimmingPool)
-        .join(swimmingPoolImage).on(swimmingPoolImage.swimmingPool.eq(swimmingPool))
-        .join(swimmingClass).on(swimmingClass.swimmingPool.eq(swimmingPool))
-        .join(swimmingClassType).on(swimmingClass.type.eq(swimmingClassType))
-        .join(swimmingClassSubType).on(swimmingClass.subType.eq(swimmingClassSubType))
-        .join(swimmingClassTicket).on(swimmingClassTicket.swimmingClass.eq(swimmingClass))
-        .leftJoin(favorite).on(favoriteJoinIfMemberIdExist(condition.memberId()))
-        .leftJoin(swimmingPoolRating).on(swimmingPoolRating.swimmingPool.eq(swimmingPool))
-        .leftJoin(swimmingPoolReview).on(swimmingPoolReview.swimmingPool.eq(swimmingPool))
+        .from(swimmingPoolEntity)
+        .join(swimmingPoolImageEntity)
+        .on(swimmingPoolImageEntity.swimmingPool.eq(swimmingPoolEntity))
+        .join(swimmingClassEntity).on(swimmingClassEntity.swimmingPool.eq(swimmingPoolEntity))
+        .join(swimmingClassTypeEntity).on(swimmingClassEntity.type.eq(swimmingClassTypeEntity))
+        .join(swimmingClassSubTypeEntity)
+        .on(swimmingClassEntity.subType.eq(swimmingClassSubTypeEntity))
+        .join(swimmingClassTicketEntity)
+        .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
+        .leftJoin(favoriteEntity).on(favoriteJoinIfMemberIdExist(condition.memberId()))
+        .leftJoin(swimmingPoolRatingEntity)
+        .on(swimmingPoolRatingEntity.swimmingPool.eq(swimmingPoolEntity))
+        .leftJoin(swimmingPoolReviewEntity)
+        .on(swimmingPoolReviewEntity.swimmingPool.eq(swimmingPoolEntity))
         .where(
-            swimmingPool.name.isNotNull(),
-            swimmingPool.address.isNotNull(),
+            swimmingPoolEntity.name.isNotNull(),
+            swimmingPoolEntity.address.isNotNull(),
             // TODO. 폰번호 조건 추가
-            swimmingPool.latitude.isNotNull(),
-            swimmingPool.longitude.isNotNull(),
+            swimmingPoolEntity.latitude.isNotNull(),
+            swimmingPoolEntity.longitude.isNotNull(),
             swimmingPoolNameAndAddressContains(condition.keyword()),
 
-            swimmingClass.isVisible.isTrue(),
-            swimmingClass.isCanceled.isFalse(),
-            swimmingClass.year.between(condition.startDate().getYear(),
+            swimmingClassEntity.isVisible.isTrue(),
+            swimmingClassEntity.isCanceled.isFalse(),
+            swimmingClassEntity.year.between(condition.startDate().getYear(),
                 condition.endDate().getYear()),
-            swimmingClass.month.between(condition.startDate().getMonthValue(),
+            swimmingClassEntity.month.between(condition.startDate().getMonthValue(),
                 condition.endDate().getMonthValue()),
             classTimeBetweenStartTimes(condition.startTimes()),
             swimmingClassDaysOfWeek,
             classTypeAndSubTypeIn(condition.classTypes(), condition.classSubTypes()),
 
-            swimmingClassTicket.isDeleted.isFalse()
+            swimmingClassTicketEntity.isDeleted.isFalse()
         )
         .groupBy(
-            swimmingPool.id,
-            swimmingPoolImage.path,
-            swimmingPool.longitude,
-            swimmingPool.latitude,
-            swimmingPool.name,
-            swimmingPool.address
+            swimmingPoolEntity.id,
+            swimmingPoolImageEntity.path,
+            swimmingPoolEntity.longitude,
+            swimmingPoolEntity.latitude,
+            swimmingPoolEntity.name,
+            swimmingPoolEntity.address
         )
         .orderBy(sort(condition.sort(), distanceBetweenMemberAndSwimmingPool))
         .offset(condition.pageable().getOffset())
@@ -119,25 +124,28 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
         .toList();
 
     val count = Optional.ofNullable(
-            queryFactory.select(swimmingPool.id.countDistinct())
-                .from(swimmingPool)
-                .join(swimmingPoolImage).on(swimmingPoolImage.swimmingPool.eq(swimmingPool))
-                .join(swimmingClass).on(swimmingClass.swimmingPool.eq(swimmingPool))
-                .join(swimmingClassType).on(swimmingClass.type.eq(swimmingClassType))
-                .join(swimmingClassSubType).on(swimmingClass.subType.eq(swimmingClassSubType))
-                .join(swimmingClassTicket).on(swimmingClassTicket.swimmingClass.eq(swimmingClass))
+            queryFactory.select(swimmingPoolEntity.id.countDistinct())
+                .from(swimmingPoolEntity)
+                .join(swimmingPoolImageEntity)
+                .on(swimmingPoolImageEntity.swimmingPool.eq(swimmingPoolEntity))
+                .join(swimmingClassEntity).on(swimmingClassEntity.swimmingPool.eq(swimmingPoolEntity))
+                .join(swimmingClassTypeEntity).on(swimmingClassEntity.type.eq(swimmingClassTypeEntity))
+                .join(swimmingClassSubTypeEntity)
+                .on(swimmingClassEntity.subType.eq(swimmingClassSubTypeEntity))
+                .join(swimmingClassTicketEntity)
+                .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
                 .where(
-                    swimmingPool.name.isNotNull(),
-                    swimmingPool.address.isNotNull(),
-                    swimmingPool.latitude.isNotNull(),
-                    swimmingPool.longitude.isNotNull(),
-                    swimmingClass.isVisible.eq(true),
+                    swimmingPoolEntity.name.isNotNull(),
+                    swimmingPoolEntity.address.isNotNull(),
+                    swimmingPoolEntity.latitude.isNotNull(),
+                    swimmingPoolEntity.longitude.isNotNull(),
+                    swimmingClassEntity.isVisible.eq(true),
 
                     swimmingPoolNameAndAddressContains(condition.keyword()),
 
-                    swimmingClass.year.between(condition.startDate().getYear(),
+                    swimmingClassEntity.year.between(condition.startDate().getYear(),
                         condition.endDate().getYear()),
-                    swimmingClass.month.between(condition.startDate().getMonthValue(),
+                    swimmingClassEntity.month.between(condition.startDate().getMonthValue(),
                         condition.endDate().getMonthValue()),
                     classTimeBetweenStartTimes(condition.startTimes()),
                     swimmingClassDaysOfWeek,
@@ -155,24 +163,24 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
     return Expressions.numberTemplate(Double.class,
         "(6371 * acos(cos(radians({0})) * cos(radians({1})) * " +
             "cos(radians({2}) - radians({3})) + sin(radians({0})) * sin(radians({1}))))",
-        memberLatitude, swimmingPool.latitude, swimmingPool.longitude, memberLongitude);
+        memberLatitude, swimmingPoolEntity.latitude, swimmingPoolEntity.longitude, memberLongitude);
   }
 
   BooleanExpression favoriteJoinIfMemberIdExist(Long memberId) {
     if (memberId == null) {
       return Expressions.FALSE;
     }
-    return favorite.member.id.eq(memberId)
-        .and(favorite.targetId.eq(swimmingPool.id))
-        .and(favorite.targetType.eq(SWIMMING_POOL));
+    return favoriteEntity.member.id.eq(memberId)
+        .and(favoriteEntity.targetId.eq(swimmingPoolEntity.id))
+        .and(favoriteEntity.targetType.eq(SWIMMING_POOL));
   }
 
   Predicate swimmingPoolNameAndAddressContains(String keyword) {
     if (keyword == null) {
       return null;
     }
-    return swimmingPool.name.containsIgnoreCase(keyword)
-        .or(swimmingPool.address.containsIgnoreCase(keyword));
+    return swimmingPoolEntity.name.containsIgnoreCase(keyword)
+        .or(swimmingPoolEntity.address.containsIgnoreCase(keyword));
   }
 
   BooleanBuilder classTimeBetweenStartTimes(@NonNull List<LocalTime> startTimes) {
@@ -183,7 +191,8 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
 
     startTimes.forEach(i -> {
       val endTime = i.plusHours(1);
-      builder.or(swimmingClass.startTime.goe(i).and(swimmingClass.startTime.lt(endTime)));
+      builder.or(
+          swimmingClassEntity.startTime.goe(i).and(swimmingClassEntity.startTime.lt(endTime)));
     });
 
     return builder;
@@ -193,7 +202,7 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
     if (sort == Sort.DISTANCE_ASC) {
       return distanceExpression.asc();
     }
-    return swimmingClassTicket.price.asc();
+    return swimmingClassTicketEntity.price.asc();
   }
 
   Predicate classTypeAndSubTypeIn(
@@ -213,11 +222,12 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
     if (!groupFixedClassSubTypeNames.isEmpty() && swimmingClassTypeNames.contains(GROUP)) {
       val subTypeNames = groupFixedClassSubTypeNames.stream().map(Enum::name).toList();
       booleanBuilder.or(
-          swimmingClassType.name.eq(GROUP).and(swimmingClassSubType.name.in(subTypeNames)));
+          swimmingClassTypeEntity.name.eq(GROUP)
+              .and(swimmingClassSubTypeEntity.name.in(subTypeNames)));
     }
 
     val classTypesExceptGroup = swimmingClassTypeNames.stream().filter(i -> i != GROUP).toList();
-    booleanBuilder.or(swimmingClassType.name.in(classTypesExceptGroup));
+    booleanBuilder.or(swimmingClassTypeEntity.name.in(classTypesExceptGroup));
 
     return booleanBuilder;
   }
@@ -228,7 +238,7 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
     }
     val dayBitVector = daysToBitVector(days);
     return Expressions.numberTemplate(Integer.class, "bitand({0}, {1})",
-        swimmingClass.daysOfWeek, dayBitVector).gt(0);
+        swimmingClassEntity.daysOfWeek, dayBitVector).gt(0);
   }
 
   int daysToBitVector(@NonNull List<DayOfWeek> days) {
@@ -250,5 +260,7 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
     @QueryProjection
     public SwimmingPoolWithClass {
     }
+
   }
+
 }

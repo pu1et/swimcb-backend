@@ -7,9 +7,8 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.project.swimcb.bo.faq.application.UpdateFaqIsVisibleInteractor;
-import com.project.swimcb.bo.faq.domain.Faq;
-import com.project.swimcb.bo.faq.domain.FaqRepository;
+import com.project.swimcb.db.entity.FaqEntity;
+import com.project.swimcb.db.repository.FaqRepository;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.val;
@@ -35,7 +34,7 @@ class UpdateFaqIsVisibleInteractorTest {
     // given
     val faqId = 1L;
     val isVisible = true;
-    val existingFaq = mock(Faq.class);
+    val existingFaq = mock(FaqEntity.class);
 
     when(faqRepository.findById(anyLong())).thenReturn(Optional.of(existingFaq));
     // when

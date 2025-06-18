@@ -1,11 +1,11 @@
 package com.project.swimcb.bo.reservation.adapter.out;
 
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClass.swimmingClass;
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassSubType.swimmingClassSubType;
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassTicket.swimmingClassTicket;
-import static com.project.swimcb.bo.swimmingclass.domain.QSwimmingClassType.swimmingClassType;
-import static com.project.swimcb.member.domain.QMember.member;
-import static com.project.swimcb.swimmingpool.domain.QReservation.reservation;
+import static com.project.swimcb.db.entity.QMemberEntity.memberEntity;
+import static com.project.swimcb.db.entity.QReservationEntity.reservationEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassEntity.swimmingClassEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassSubTypeEntity.swimmingClassSubTypeEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassTicketEntity.swimmingClassTicketEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassTypeEntity.swimmingClassTypeEntity;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.REFUND_COMPLETED;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_CANCELLED;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_PENDING;
@@ -21,7 +21,7 @@ import com.project.swimcb.bo.reservation.domain.BoReservation.Refund;
 import com.project.swimcb.bo.reservation.domain.BoReservation.ReservationDetail;
 import com.project.swimcb.bo.reservation.domain.BoReservation.SwimmingClass;
 import com.project.swimcb.bo.reservation.domain.FindBoReservationsCondition;
-import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
+import com.project.swimcb.db.entity.AccountNo;
 import com.project.swimcb.mypage.reservation.adapter.out.ClassDayOfWeek;
 import com.project.swimcb.swimmingpool.domain.enums.CancellationReason;
 import com.project.swimcb.swimmingpool.domain.enums.PaymentMethod;
@@ -60,53 +60,56 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
   @Override
   public Page<BoReservation> findBoReservations(@NonNull FindBoReservationsCondition condition) {
     val result = queryFactory.select(constructor(QueryReservation.class,
-            member.id,
-            member.name,
-            member.birthDate,
+            memberEntity.id,
+            memberEntity.name,
+            memberEntity.birthDate,
 
-            swimmingClass.id,
-            swimmingClassType.name,
-            swimmingClassSubType.name,
-            swimmingClass.daysOfWeek,
-            swimmingClass.startTime,
-            swimmingClass.endTime,
+            swimmingClassEntity.id,
+            swimmingClassTypeEntity.name,
+            swimmingClassSubTypeEntity.name,
+            swimmingClassEntity.daysOfWeek,
+            swimmingClassEntity.startTime,
+            swimmingClassEntity.endTime,
 
-            reservation.id,
-            reservation.ticketType,
-            reservation.reservationStatus,
-            reservation.reservedAt,
-            reservation.paymentPendingAt,
-            reservation.paymentVerificationAt,
-            reservation.paymentApprovedAt,
-            reservation.canceledAt,
-            reservation.refundedAt,
+            reservationEntity.id,
+            reservationEntity.ticketType,
+            reservationEntity.reservationStatus,
+            reservationEntity.reservedAt,
+            reservationEntity.paymentPendingAt,
+            reservationEntity.paymentVerificationAt,
+            reservationEntity.paymentApprovedAt,
+            reservationEntity.canceledAt,
+            reservationEntity.refundedAt,
 
-            reservation.paymentMethod,
-            reservation.paymentAmount,
+            reservationEntity.paymentMethod,
+            reservationEntity.paymentAmount,
 
-            reservation.cancellationReason,
+            reservationEntity.cancellationReason,
 
-            reservation.refundAmount,
-            reservation.refundAccountNo,
-            reservation.refundBankName,
-            reservation.refundAccountHolder
+            reservationEntity.refundAmount,
+            reservationEntity.refundAccountNo,
+            reservationEntity.refundBankName,
+            reservationEntity.refundAccountHolder
         ))
-        .from(reservation)
-        .join(swimmingClassTicket).on(reservation.ticketId.eq(swimmingClassTicket.id))
-        .join(swimmingClass).on(swimmingClassTicket.swimmingClass.eq(swimmingClass))
-        .join(swimmingClassType).on(swimmingClass.type.eq(swimmingClassType))
-        .join(swimmingClassSubType).on(swimmingClass.subType.eq(swimmingClassSubType))
-        .join(reservation.member, member)
+        .from(reservationEntity)
+        .join(swimmingClassTicketEntity)
+        .on(reservationEntity.ticketId.eq(swimmingClassTicketEntity.id))
+        .join(swimmingClassEntity)
+        .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
+        .join(swimmingClassTypeEntity).on(swimmingClassEntity.type.eq(swimmingClassTypeEntity))
+        .join(swimmingClassSubTypeEntity)
+        .on(swimmingClassEntity.subType.eq(swimmingClassSubTypeEntity))
+        .join(reservationEntity.member, memberEntity)
         .where(
-            swimmingClass.swimmingPool.id.eq(condition.swimmingPoolId()),
-            reservation.reservedAt.between(
+            swimmingClassEntity.swimmingPool.id.eq(condition.swimmingPoolId()),
+            reservationEntity.reservedAt.between(
                 condition.startDate().atStartOfDay(), condition.endDate().atTime(MAX)),
             programTypeEqIfExists(condition.programType()),
             swimmingClassIdEqIfExists(condition.swimmingClassId()),
             reservationStatusEqIfExists(condition.reservationStatus()),
             paymentMethodEqIfExists(condition.paymentMethod())
         )
-        .orderBy(reservation.reservedAt.desc())
+        .orderBy(reservationEntity.reservedAt.desc())
         .offset(condition.pageable().getOffset())
         .limit(condition.pageable().getPageSize())
         .fetch()
@@ -116,16 +119,19 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
 
     val updatedResult = updateWithCurrentWaitingNo(result, condition.swimmingPoolId());
 
-    val count = queryFactory.select(reservation.id.count())
-        .from(reservation)
-        .join(swimmingClassTicket).on(reservation.ticketId.eq(swimmingClassTicket.id))
-        .join(swimmingClass).on(swimmingClassTicket.swimmingClass.eq(swimmingClass))
-        .join(swimmingClassType).on(swimmingClass.type.eq(swimmingClassType))
-        .join(swimmingClassSubType).on(swimmingClass.subType.eq(swimmingClassSubType))
-        .join(reservation.member, member)
+    val count = queryFactory.select(reservationEntity.id.count())
+        .from(reservationEntity)
+        .join(swimmingClassTicketEntity)
+        .on(reservationEntity.ticketId.eq(swimmingClassTicketEntity.id))
+        .join(swimmingClassEntity)
+        .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
+        .join(swimmingClassTypeEntity).on(swimmingClassEntity.type.eq(swimmingClassTypeEntity))
+        .join(swimmingClassSubTypeEntity)
+        .on(swimmingClassEntity.subType.eq(swimmingClassSubTypeEntity))
+        .join(reservationEntity.member, memberEntity)
         .where(
-            swimmingClass.swimmingPool.id.eq(condition.swimmingPoolId()),
-            reservation.reservedAt.between(
+            swimmingClassEntity.swimmingPool.id.eq(condition.swimmingPoolId()),
+            reservationEntity.reservedAt.between(
                 condition.startDate().atStartOfDay(), condition.endDate().atTime(MAX)),
             programTypeEqIfExists(condition.programType()),
             swimmingClassIdEqIfExists(condition.swimmingClassId()),
@@ -190,17 +196,19 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
       @NonNull Set<Long> classIds
   ) {
     return queryFactory.select(constructor(WaitingReservation.class,
-            reservation.id,
-            reservation.reservedAt,
-            swimmingClass.id
+            reservationEntity.id,
+            reservationEntity.reservedAt,
+            swimmingClassEntity.id
         ))
-        .from(reservation)
-        .join(swimmingClassTicket).on(reservation.ticketId.eq(swimmingClassTicket.id))
-        .join(swimmingClass).on(swimmingClassTicket.swimmingClass.eq(swimmingClass))
+        .from(reservationEntity)
+        .join(swimmingClassTicketEntity)
+        .on(reservationEntity.ticketId.eq(swimmingClassTicketEntity.id))
+        .join(swimmingClassEntity)
+        .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
         .where(
-            swimmingClass.swimmingPool.id.eq(swimmingPoolId),
-            swimmingClass.id.in(classIds),
-            reservation.reservationStatus.eq(RESERVATION_PENDING)
+            swimmingClassEntity.swimmingPool.id.eq(swimmingPoolId),
+            swimmingClassEntity.id.in(classIds),
+            reservationEntity.reservationStatus.eq(RESERVATION_PENDING)
         )
         .fetch();
   }
@@ -209,28 +217,28 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
     if (programType == null) {
       return null;
     }
-    return reservation.ticketType.eq(programType);
+    return reservationEntity.ticketType.eq(programType);
   }
 
   private BooleanExpression swimmingClassIdEqIfExists(Long swimmingClassId) {
     if (swimmingClassId == null) {
       return null;
     }
-    return swimmingClass.id.eq(swimmingClassId);
+    return swimmingClassEntity.id.eq(swimmingClassId);
   }
 
   private BooleanExpression reservationStatusEqIfExists(ReservationStatus reservationStatus) {
     if (reservationStatus == null) {
       return null;
     }
-    return reservation.reservationStatus.eq(reservationStatus);
+    return reservationEntity.reservationStatus.eq(reservationStatus);
   }
 
   private BooleanExpression paymentMethodEqIfExists(PaymentMethod paymentMethod) {
     if (paymentMethod == null) {
       return null;
     }
-    return reservation.paymentMethod.eq(paymentMethod);
+    return reservationEntity.paymentMethod.eq(paymentMethod);
   }
 
   private BoReservation reservation(@NonNull QueryReservation i) {

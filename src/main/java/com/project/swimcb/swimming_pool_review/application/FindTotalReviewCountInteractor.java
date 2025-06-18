@@ -1,7 +1,7 @@
 package com.project.swimcb.swimming_pool_review.application;
 
 import com.project.swimcb.swimming_pool_review.application.in.FindTotalReviewCountPort;
-import com.project.swimcb.swimming_pool_review.domain.SwimmingPoolReviewRepository;
+import com.project.swimcb.db.repository.SwimmingPoolReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

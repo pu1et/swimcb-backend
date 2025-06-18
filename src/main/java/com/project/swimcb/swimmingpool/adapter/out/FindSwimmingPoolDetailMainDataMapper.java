@@ -1,12 +1,11 @@
 package com.project.swimcb.swimmingpool.adapter.out;
 
-
-import static com.project.swimcb.bo.swimmingpool.domain.QSwimmingPool.swimmingPool;
-import static com.project.swimcb.bo.swimmingpool.domain.QSwimmingPoolImage.swimmingPoolImage;
-import static com.project.swimcb.favorite.domain.QFavorite.favorite;
+import static com.project.swimcb.db.entity.QFavoriteEntity.favoriteEntity;
+import static com.project.swimcb.db.entity.QSwimmingPoolEntity.swimmingPoolEntity;
+import static com.project.swimcb.db.entity.QSwimmingPoolImageEntity.swimmingPoolImageEntity;
+import static com.project.swimcb.db.entity.QSwimmingPoolRatingEntity.swimmingPoolRatingEntity;
+import static com.project.swimcb.db.entity.QSwimmingPoolReviewEntity.swimmingPoolReviewEntity;
 import static com.project.swimcb.favorite.domain.enums.FavoriteTargetType.SWIMMING_POOL;
-import static com.project.swimcb.swimming_pool_rating.application.in.QSwimmingPoolRating.swimmingPoolRating;
-import static com.project.swimcb.swimming_pool_review.domain.QSwimmingPoolReview.swimmingPoolReview;
 import static com.querydsl.core.types.Projections.constructor;
 import static com.querydsl.core.types.Projections.list;
 
@@ -31,25 +30,28 @@ public class FindSwimmingPoolDetailMainDataMapper implements FindSwimmingPoolDet
   @Override
   public SwimmingPoolDetailMain findSwimmingPoolDetailMain(long swimmingPoolId, Long memberId) {
     val pool = queryFactory.select(constructor(SwimmingPool.class,
-            list(swimmingPoolImage.path),
-            swimmingPool.name,
-            favorite.id.count().gt(0),
-            swimmingPoolRating.rating.avg(),
-            swimmingPoolReview.id.sum(),
-            swimmingPool.address,
-            swimmingPool.phone
+            list(swimmingPoolImageEntity.path),
+            swimmingPoolEntity.name,
+            favoriteEntity.id.count().gt(0),
+            swimmingPoolRatingEntity.rating.avg(),
+            swimmingPoolReviewEntity.id.sum(),
+            swimmingPoolEntity.address,
+            swimmingPoolEntity.phone
         ))
-        .from(swimmingPool)
-        .join(swimmingPoolImage).on(swimmingPoolImage.swimmingPool.eq(swimmingPool))
-        .leftJoin(favorite).on(favoriteJoinIfMemberIdExist(memberId))
-        .leftJoin(swimmingPoolRating).on(swimmingPoolRating.swimmingPool.eq(swimmingPool))
-        .leftJoin(swimmingPoolReview).on(swimmingPoolReview.swimmingPool.eq(swimmingPool))
-        .where(swimmingPool.id.eq(swimmingPoolId))
+        .from(swimmingPoolEntity)
+        .join(swimmingPoolImageEntity)
+        .on(swimmingPoolImageEntity.swimmingPool.eq(swimmingPoolEntity))
+        .leftJoin(favoriteEntity).on(favoriteJoinIfMemberIdExist(memberId))
+        .leftJoin(swimmingPoolRatingEntity)
+        .on(swimmingPoolRatingEntity.swimmingPool.eq(swimmingPoolEntity))
+        .leftJoin(swimmingPoolReviewEntity)
+        .on(swimmingPoolReviewEntity.swimmingPool.eq(swimmingPoolEntity))
+        .where(swimmingPoolEntity.id.eq(swimmingPoolId))
         .groupBy(
-            swimmingPool.name,
-            swimmingPool.address,
-            swimmingPool.phone,
-            swimmingPoolImage.path
+            swimmingPoolEntity.name,
+            swimmingPoolEntity.address,
+            swimmingPoolEntity.phone,
+            swimmingPoolImageEntity.path
         )
         .fetchFirst();
 
@@ -72,9 +74,9 @@ public class FindSwimmingPoolDetailMainDataMapper implements FindSwimmingPoolDet
     if (memberId == null) {
       return Expressions.FALSE;
     }
-    return favorite.member.id.eq(memberId)
-        .and(favorite.targetId.eq(swimmingPool.id))
-        .and(favorite.targetType.eq(SWIMMING_POOL));
+    return favoriteEntity.member.id.eq(memberId)
+        .and(favoriteEntity.targetId.eq(swimmingPoolEntity.id))
+        .and(favoriteEntity.targetType.eq(SWIMMING_POOL));
   }
 
   public record SwimmingPool(
@@ -88,4 +90,5 @@ public class FindSwimmingPoolDetailMainDataMapper implements FindSwimmingPoolDet
   ) {
 
   }
+
 }

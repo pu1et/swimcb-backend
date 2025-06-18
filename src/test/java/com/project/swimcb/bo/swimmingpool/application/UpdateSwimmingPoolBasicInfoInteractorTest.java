@@ -11,11 +11,11 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
-import com.project.swimcb.bo.swimmingpool.domain.AccountNo;
-import com.project.swimcb.bo.swimmingpool.domain.SwimmingPool;
-import com.project.swimcb.bo.swimmingpool.domain.SwimmingPoolImage;
-import com.project.swimcb.bo.swimmingpool.domain.SwimmingPoolImageRepository;
-import com.project.swimcb.bo.swimmingpool.domain.SwimmingPoolRepository;
+import com.project.swimcb.db.entity.AccountNo;
+import com.project.swimcb.db.entity.SwimmingPoolImageEntity;
+import com.project.swimcb.db.entity.SwimmingPoolEntity;
+import com.project.swimcb.db.repository.SwimmingPoolImageRepository;
+import com.project.swimcb.db.repository.SwimmingPoolRepository;
 import com.project.swimcb.bo.swimmingpool.domain.UpdateSwimmingPoolBasicInfoCommand;
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +44,7 @@ class UpdateSwimmingPoolBasicInfoInteractorTest {
   void shouldUpdateBasicInfoAndImagesWhenSwimmingPoolIdIsValid() {
     // given
     val swimmingPoolId = 1L;
-    val existingSwimmingPool = mock(SwimmingPool.class);
+    val existingSwimmingPool = mock(SwimmingPoolEntity.class);
     val request = UpdateSwimmingPoolBasicInfoCommand.builder()
         .name("DUMMY_NAME")
         .address("DUMMY_ADDRESS")
@@ -68,9 +68,9 @@ class UpdateSwimmingPoolBasicInfoInteractorTest {
 
     inOrder.verify(swimmingPoolImageRepository, times(1)).saveAll(assertArg(i -> {
       assertThat(i).hasSize(2);
-      assertThat(i).extracting(SwimmingPoolImage::getPath)
+      assertThat(i).extracting(SwimmingPoolImageEntity::getPath)
           .containsExactly("DUMMY_IMAGE_PATH1", "DUMMY_IMAGE_PATH2");
-      assertThat(i).extracting(SwimmingPoolImage::getSwimmingPool)
+      assertThat(i).extracting(SwimmingPoolImageEntity::getSwimmingPool)
           .containsOnly(existingSwimmingPool);
     }));
   }
@@ -80,7 +80,7 @@ class UpdateSwimmingPoolBasicInfoInteractorTest {
   void shouldDeleteImagesWhenImagesIsEmpty() {
     // given
     val swimmingPoolId = 1L;
-    val existingSwimmingPool = mock(SwimmingPool.class);
+    val existingSwimmingPool = mock(SwimmingPoolEntity.class);
     val request = UpdateSwimmingPoolBasicInfoCommand.builder()
         .name("DUMMY_NAME")
         .address("DUMMY_ADDRESS")

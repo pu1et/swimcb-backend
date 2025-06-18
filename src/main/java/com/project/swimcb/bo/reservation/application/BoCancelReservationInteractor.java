@@ -5,7 +5,7 @@ import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RES
 
 import com.project.swimcb.bo.reservation.application.port.in.BoCancelReservationUseCase;
 import com.project.swimcb.bo.reservation.application.port.out.BoCancelReservationDsGateway;
-import com.project.swimcb.swimmingpool.domain.ReservationRepository;
+import com.project.swimcb.db.repository.ReservationRepository;
 import com.project.swimcb.swimmingpool.domain.enums.ReservationStatus;
 import java.util.NoSuchElementException;
 import lombok.NonNull;

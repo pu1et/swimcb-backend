@@ -8,8 +8,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 
-import com.project.swimcb.bo.swimmingclass.domain.SwimmingClass;
-import com.project.swimcb.member.domain.Member;
+import com.project.swimcb.db.entity.ReservationEntity;
+import com.project.swimcb.db.entity.SwimmingClassEntity;
+import com.project.swimcb.db.entity.MemberEntity;
 import com.project.swimcb.swimmingpool.domain.enums.PaymentMethod;
 import java.time.LocalDateTime;
 import lombok.val;
@@ -25,8 +26,8 @@ class ReservationTest {
 
     private final long TICKET_ID = 1L;
     private final PaymentMethod PAYMENT_METHOD = BANK_TRANSFER;
-    private Member member = mock(Member.class);
-    private final SwimmingClass swimmingClass = mock(SwimmingClass.class);
+    private MemberEntity member = mock(MemberEntity.class);
+    private final SwimmingClassEntity swimmingClass = mock(SwimmingClassEntity.class);
 
     @Test
     @DisplayName("수영 클래스 일반 예약을 성공적으로 생성한다.")
@@ -34,7 +35,7 @@ class ReservationTest {
       // Given
       val beforeCreation = LocalDateTime.now();
       // When
-      val reservation = Reservation.createClassNormalReservation()
+      val reservation = ReservationEntity.createClassNormalReservation()
           .member(member)
           .swimmingClass(swimmingClass)
           .ticketId(TICKET_ID)
@@ -56,7 +57,7 @@ class ReservationTest {
       // given
       // when
       // then
-      assertThatThrownBy(() -> Reservation.createClassNormalReservation()
+      assertThatThrownBy(() -> ReservationEntity.createClassNormalReservation()
           .member(null)
           .swimmingClass(swimmingClass)
           .ticketId(TICKET_ID)
@@ -71,7 +72,7 @@ class ReservationTest {
       // given
       // when
       // then
-      assertThatThrownBy(() -> Reservation.createClassNormalReservation()
+      assertThatThrownBy(() -> ReservationEntity.createClassNormalReservation()
           .member(member)
           .swimmingClass(swimmingClass)
           .ticketId(TICKET_ID)
@@ -86,7 +87,7 @@ class ReservationTest {
       // given
       // when
       // then
-      assertThatThrownBy(() -> Reservation.createClassNormalReservation()
+      assertThatThrownBy(() -> ReservationEntity.createClassNormalReservation()
           .member(member)
           .swimmingClass(null)
           .ticketId(TICKET_ID)
@@ -102,8 +103,8 @@ class ReservationTest {
 
     private final long TICKET_ID = 1L;
     private final PaymentMethod PAYMENT_METHOD = BANK_TRANSFER;
-    private final Member member = mock(Member.class);
-    private final SwimmingClass swimmingClass = mock(SwimmingClass.class);
+    private final MemberEntity member = mock(MemberEntity.class);
+    private final SwimmingClassEntity swimmingClass = mock(SwimmingClassEntity.class);
 
     @Test
     @DisplayName("수영 클래스 대기 예약을 성공적으로 생성한다.")
@@ -111,7 +112,7 @@ class ReservationTest {
       // Given
       val beforeCreation = LocalDateTime.now();
       // When
-      val reservation = Reservation.createClassWaitingReservation()
+      val reservation = ReservationEntity.createClassWaitingReservation()
           .member(member)
           .swimmingClass(swimmingClass)
           .ticketId(TICKET_ID)
@@ -133,7 +134,7 @@ class ReservationTest {
       // given
       // when
       // then
-      assertThatThrownBy(() -> Reservation.createClassWaitingReservation()
+      assertThatThrownBy(() -> ReservationEntity.createClassWaitingReservation()
           .member(null)
           .swimmingClass(swimmingClass)
           .ticketId(TICKET_ID)
@@ -148,7 +149,7 @@ class ReservationTest {
       // given
       // when
       // then
-      assertThatThrownBy(() -> Reservation.createClassWaitingReservation()
+      assertThatThrownBy(() -> ReservationEntity.createClassWaitingReservation()
           .member(member)
           .swimmingClass(swimmingClass)
           .ticketId(TICKET_ID)
@@ -163,7 +164,7 @@ class ReservationTest {
       // given
       // when
       // then
-      assertThatThrownBy(() -> Reservation.createClassWaitingReservation()
+      assertThatThrownBy(() -> ReservationEntity.createClassWaitingReservation()
           .member(member)
           .swimmingClass(null)
           .ticketId(TICKET_ID)
