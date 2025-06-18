@@ -27,6 +27,12 @@ class KakaoOAuth2ClientInfoProvider implements OAuth2ClientInfoProvider {
   @Value("${spring.security.oauth2.client.provider.kakao.authorization-uri}")
   private String authorizationUri;
 
+  @Value("${spring.security.oauth2.client.provider.kakao.token-uri}")
+  private String tokenUri;
+
+  @Value("${spring.security.oauth2.client.provider.kakao.user-info-uri}")
+  private String memberInfoUri;
+
   @Override
   public OAuth2ClientInfo getOAuth2ClientInfo() {
     return OAuth2ClientInfo.builder()
@@ -42,6 +48,8 @@ class KakaoOAuth2ClientInfoProvider implements OAuth2ClientInfoProvider {
         .provider(
             OAuth2ClientInfo.Provider.builder()
                 .authorizationUri(authorizationUri)
+                .tokenUri(tokenUri)
+                .memberInfoUri(memberInfoUri)
                 .build()
         )
         .build();

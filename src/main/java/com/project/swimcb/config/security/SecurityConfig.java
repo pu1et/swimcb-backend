@@ -28,7 +28,11 @@ public class SecurityConfig {
             .requestMatchers(
                 "/swagger-ui/**",
                 "/v3/api-docs/**",
-                "/api/token/**"
+                "/api/token/**",
+
+                // OAuth2 로그인
+                "/api/oauth2/authorization/kakao",
+                "/login/oauth2/kakao"
             ).permitAll()
             .anyRequest().authenticated())
         .headers(i -> i.frameOptions(FrameOptionsConfig::disable))

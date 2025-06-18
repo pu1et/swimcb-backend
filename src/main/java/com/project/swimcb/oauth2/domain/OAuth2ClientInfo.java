@@ -22,7 +22,9 @@ public record OAuth2ClientInfo(
 
   @Builder
   public record Provider(
-      @NonNull String authorizationUri
+      @NonNull String authorizationUri,
+      @NonNull String tokenUri,
+      @NonNull String memberInfoUri
   ) {
   }
 }

@@ -16,7 +16,7 @@ import org.springframework.web.servlet.view.RedirectView;
 @Tag(name = "회원")
 @SecurityRequirement(name = "Bearer Authentication")
 @RestController
-@RequestMapping("/login/oauth2/kakao/{providerType}")
+@RequestMapping("/login/oauth2/{providerType}")
 @RequiredArgsConstructor
 public class OAuth2CallbackController {
 

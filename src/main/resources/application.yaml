@@ -31,6 +31,7 @@ spring:
   config:
     activate:
       on-profile: local
+    import: classpath:/config/application-oauth2-dev.yaml
 
   h2:
     console:
@@ -54,6 +55,7 @@ spring:
   config:
     activate:
       on-profile: dev
+    import: classpath:/config/application-oauth2-dev.yaml
 
   jpa:
     hibernate:
