@@ -9,7 +9,6 @@ public interface SignupPort {
    * 회원가입을 처리하는 메소드입니다.
    *
    * @param signupRequest 회원가입 요청 정보
-   * @return 회원가입 성공 여부
    */
-  boolean signup(@NonNull SignupRequest signupRequest);
+  void signup(@NonNull SignupRequest signupRequest);
 }

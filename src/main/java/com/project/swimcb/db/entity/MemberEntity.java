@@ -1,6 +1,6 @@
 package com.project.swimcb.db.entity;
 
-import static jakarta.persistence.EnumType.*;
+import static jakarta.persistence.EnumType.STRING;
 import static lombok.AccessLevel.PROTECTED;
 
 import com.project.swimcb.db.entity.enums.Gender;
@@ -12,8 +12,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Getter
 @Table(name = "member")
@@ -44,4 +46,18 @@ public class MemberEntity extends BaseEntity {
 
   @Column(name = "nickname", length = 100)
   private String nickname;
+
+  @Builder(toBuilder = true)
+  public MemberEntity(
+      @NonNull String name,
+      @NonNull String phone,
+      @NonNull String email,
+      @NonNull String nickname
+  ) {
+    this.name = name;
+    this.phone = phone;
+    this.email = email;
+    this.nickname = nickname;
+  }
+
 }
