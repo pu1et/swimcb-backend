@@ -57,7 +57,7 @@ class OAuth2InteractorTest {
         .email("test@example.com")
         .phoneNumber("010-1234-5678")
         .build();
-    private final Member member = new Member();
+    private final Member member = mock(Member.class);
 
     @Nested
     @DisplayName("이미 가입된 회원인 경우")
