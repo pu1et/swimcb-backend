@@ -29,17 +29,17 @@ public class MemberEntity extends BaseEntity {
   @Column(name = "name", length = 100, nullable = false)
   private String name;
 
-  @Column(name = "birth_date", nullable = false)
+  @Column(name = "birth_date")
   private LocalDate birthDate;
 
   @Column(name = "phone", length = 20, nullable = false)
   private String phone;
 
   @Enumerated(STRING)
-  @Column(name = "gender", length = 10, nullable = false)
+  @Column(name = "gender", length = 10)
   private Gender gender;
 
-  @Column(name = "email", length = 255)
+  @Column(name = "email", length = 255, nullable = false, unique = true)
   private String email;
 
   @Column(name = "nickname", length = 100)
