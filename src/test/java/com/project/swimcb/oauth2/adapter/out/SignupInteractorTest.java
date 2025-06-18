@@ -4,9 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.assertArg;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import com.project.swimcb.db.entity.MemberEntity;
 import com.project.swimcb.db.repository.MemberRepository;
 import com.project.swimcb.oauth2.domain.SignupRequest;
 import lombok.val;
@@ -41,10 +44,16 @@ class SignupInteractorTest {
           .phoneNumber("010-1234-5678")
           .build();
 
+      val savedMember = mock(MemberEntity.class);
+      when(savedMember.getId()).thenReturn(1L);
+      when(memberRepository.save(any(MemberEntity.class))).thenReturn(savedMember);
+
       // when
-      signupInteractor.signup(request);
+      val memberId = signupInteractor.signup(request);
 
       // then
+      assertThat(memberId).isEqualTo(savedMember.getId());
+
       verify(memberRepository).save(assertArg(i -> {
         assertThat(i.getName()).isEqualTo(request.name());
         assertThat(i.getEmail()).isEqualTo(request.email());

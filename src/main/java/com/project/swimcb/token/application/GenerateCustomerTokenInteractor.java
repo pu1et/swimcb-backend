@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class GenerateCustomerTokenInteractor implements GenerateCustomerTokenUseCase {
+class GenerateCustomerTokenInteractor implements GenerateCustomerTokenUseCase {
 
   private final JwtPort jwtPort;
 

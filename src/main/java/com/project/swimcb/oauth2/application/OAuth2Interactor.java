@@ -9,6 +9,7 @@ import com.project.swimcb.oauth2.application.port.out.OAuth2Presenter;
 import com.project.swimcb.oauth2.application.port.out.SignupPort;
 import com.project.swimcb.oauth2.domain.OAuth2Member;
 import com.project.swimcb.oauth2.domain.SignupRequest;
+import com.project.swimcb.token.application.in.GenerateCustomerTokenUseCase;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -24,6 +25,7 @@ class OAuth2Interactor implements OAuth2Adapter {
   private final FindMemberPort findMemberPort;
   private final SignupPort signupPort;
   private final OAuth2Presenter oAuth2Presenter;
+  private final GenerateCustomerTokenUseCase generateCustomerTokenUseCase;
 
   @Override
   public OAuth2Response success(@NonNull OAuth2Request request) {
@@ -33,18 +35,24 @@ class OAuth2Interactor implements OAuth2Adapter {
     if (member.isEmpty()) {
       return signup(oAuth2Member);
     }
-    return oAuth2Presenter.login();
+    return login(member.get().id());
   }
 
   private OAuth2Response signup(@NonNull OAuth2Member oAuth2Member) {
-    signupPort.signup(
+    val memberId = signupPort.signup(
         SignupRequest.builder()
             .email(oAuth2Member.email())
             .name(oAuth2Member.name())
             .phoneNumber(oAuth2Member.phoneNumber())
             .build()
     );
-    return oAuth2Presenter.signup();
+    val token = generateCustomerTokenUseCase.generateCustomerToken(memberId);
+    return oAuth2Presenter.signup(token);
+  }
+
+  private OAuth2Response login(@NonNull Long memberId) {
+    val token = generateCustomerTokenUseCase.generateCustomerToken(memberId);
+    return oAuth2Presenter.login(token);
   }
 
 }

@@ -3,6 +3,8 @@ package com.project.swimcb.oauth2.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -18,8 +20,10 @@ import com.project.swimcb.oauth2.application.port.out.SignupPort;
 import com.project.swimcb.oauth2.domain.Member;
 import com.project.swimcb.oauth2.domain.OAuth2Member;
 import com.project.swimcb.oauth2.domain.SignupRequest;
+import com.project.swimcb.token.application.in.GenerateCustomerTokenUseCase;
 import java.util.Optional;
 import lombok.val;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -46,6 +50,9 @@ class OAuth2InteractorTest {
   @Mock
   private OAuth2Presenter oAuth2Presenter;
 
+  @Mock
+  private GenerateCustomerTokenUseCase generateCustomerTokenUseCase;
+
   @Nested
   @DisplayName("유효한 OAuth2 요청이 주어졌을 때")
   class ValidOAuth2Request {
@@ -57,7 +64,18 @@ class OAuth2InteractorTest {
         .email("test@example.com")
         .phoneNumber("010-1234-5678")
         .build();
-    private final Member member = mock(Member.class);
+    private Member member;
+    private final String accessToken = "access_token";
+
+    @BeforeEach
+    void setUp() {
+      member = Member.builder()
+          .id(1L)
+          .email(oAuth2Member.email())
+          .name(oAuth2Member.name())
+          .phoneNumber(oAuth2Member.phoneNumber())
+          .build();
+    }
 
     @Nested
     @DisplayName("이미 가입된 회원인 경우")
@@ -68,10 +86,13 @@ class OAuth2InteractorTest {
       void shouldReturnLoginResponse() {
         // given
         when(oAuth2MemberGateway.resolve(code)).thenReturn(oAuth2Member);
-        when(findMemberPort.findByEmail(oAuth2Member.email())).thenReturn(Optional.of(member)); // 회원이 존재함
+        when(findMemberPort.findByEmail(oAuth2Member.email())).thenReturn(
+            Optional.of(member)); // 회원이 존재함
+        when(generateCustomerTokenUseCase.generateCustomerToken(member.id()))
+            .thenReturn(accessToken);
 
         val expectedResponse = mock(OAuth2Response.class);
-        when(oAuth2Presenter.login()).thenReturn(expectedResponse);
+        when(oAuth2Presenter.login(accessToken)).thenReturn(expectedResponse);
 
         // when
         val response = oAuth2Interactor.success(request);
@@ -80,9 +101,11 @@ class OAuth2InteractorTest {
         assertThat(response).isEqualTo(expectedResponse);
         verify(oAuth2MemberGateway).resolve(code);
         verify(findMemberPort).findByEmail(oAuth2Member.email());
-        verify(oAuth2Presenter).login();
+        verify(generateCustomerTokenUseCase).generateCustomerToken(member.id());
+        verify(oAuth2Presenter).login(accessToken);
         verify(signupPort, never()).signup(any());
       }
+
     }
 
     @Nested
@@ -93,11 +116,16 @@ class OAuth2InteractorTest {
       @DisplayName("회원가입 후 가입 응답을 반환해야 한다")
       void shouldSignupAndReturnSignupResponse() {
         // given
+        val savedMemberId = 1L;
+
         when(oAuth2MemberGateway.resolve(code)).thenReturn(oAuth2Member);
-        when(findMemberPort.findByEmail(oAuth2Member.email())).thenReturn(Optional.empty()); // 회원이 존재하지 않음
+        when(findMemberPort.findByEmail(oAuth2Member.email())).thenReturn(
+            Optional.empty()); // 회원이 존재하지 않음
+        when(signupPort.signup(any(SignupRequest.class))).thenReturn(savedMemberId); // 회원가입 성공
+        when(generateCustomerTokenUseCase.generateCustomerToken(anyLong())).thenReturn(accessToken);
 
         val expectedResponse = mock(OAuth2Response.class);
-        when(oAuth2Presenter.signup()).thenReturn(expectedResponse);
+        when(oAuth2Presenter.signup(accessToken)).thenReturn(expectedResponse);
 
         // when
         val response = oAuth2Interactor.success(request);
@@ -107,8 +135,9 @@ class OAuth2InteractorTest {
         verify(oAuth2MemberGateway).resolve(code);
         verify(findMemberPort).findByEmail(oAuth2Member.email());
         verify(signupPort).signup(any(SignupRequest.class));
-        verify(oAuth2Presenter).signup();
-        verify(oAuth2Presenter, never()).login();
+        verify(generateCustomerTokenUseCase).generateCustomerToken(savedMemberId);
+        verify(oAuth2Presenter).signup(accessToken);
+        verify(oAuth2Presenter, never()).login(anyString());
       }
 
       @Test
@@ -117,7 +146,9 @@ class OAuth2InteractorTest {
         // given
         when(oAuth2MemberGateway.resolve(code)).thenReturn(oAuth2Member);
         when(findMemberPort.findByEmail(oAuth2Member.email())).thenReturn(Optional.empty());
-        when(oAuth2Presenter.signup()).thenReturn(mock(OAuth2Response.class));
+        when(signupPort.signup(any(SignupRequest.class))).thenReturn(1L);
+        when(generateCustomerTokenUseCase.generateCustomerToken(anyLong())).thenReturn(accessToken);
+        when(oAuth2Presenter.signup(accessToken)).thenReturn(mock(OAuth2Response.class));
 
         // when
         oAuth2Interactor.success(request);
@@ -129,7 +160,9 @@ class OAuth2InteractorTest {
                 signupRequest.phoneNumber().equals(oAuth2Member.phoneNumber())
         ));
       }
+
     }
+
   }
 
   @Nested
@@ -153,8 +186,10 @@ class OAuth2InteractorTest {
 
       verify(findMemberPort, never()).findByEmail(any());
       verify(signupPort, never()).signup(any());
-      verify(oAuth2Presenter, never()).login();
-      verify(oAuth2Presenter, never()).signup();
+      verify(oAuth2Presenter, never()).login(anyString());
+      verify(oAuth2Presenter, never()).signup(anyString());
     }
+
   }
+
 }

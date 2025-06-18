@@ -22,7 +22,7 @@ public class GenerateAdminTokenInteractor implements GenerateAdminTokenUseCase {
   public String generateAdminToken(@NonNull String loginId, @NonNull String password) {
     val admin = adminRepository.findByLoginId(loginId)
         .orElseThrow(() -> new IllegalArgumentException("계정이 존재하지 않습니다."));
-    val swimmingPool = swimmingPoolRepository.findByAdmin_Id(admin.getId())
+    val swimmingPool = swimmingPoolRepository.findByAdminEntity_Id(admin.getId())
         .orElseThrow(() -> new IllegalArgumentException("수영장이 존재하지 않습니다."));
     return jwtPort.generateToken(TokenInfo.admin(admin.getId(), swimmingPool.getId()));
   }

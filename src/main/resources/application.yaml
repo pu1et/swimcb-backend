@@ -25,6 +25,9 @@ springdoc:
 jwt:
   secret: ${JWT_SECRET}
 
+url:
+  front: https://cb-user.vercel.app
+
 ---
 
 spring:

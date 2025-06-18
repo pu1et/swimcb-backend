@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SwimmingPoolRepository extends JpaRepository<SwimmingPoolEntity, Long> {
 
-  Optional<SwimmingPoolEntity> findByAdmin_Id(@NonNull Long adminId);
+  Optional<SwimmingPoolEntity> findByAdminEntity_Id(@NonNull Long adminId);
 
 }
