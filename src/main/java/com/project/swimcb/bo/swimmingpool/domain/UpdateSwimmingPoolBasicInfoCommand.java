@@ -19,7 +19,9 @@ public record UpdateSwimmingPoolBasicInfoCommand(
     String closedDays,
     @NonNull List<String> imagePaths,
     String usageAgreementPath,
-    @NonNull AccountNo accountNo
+    @NonNull AccountNo accountNo,
+    Double latitude,
+    Double longitude
 ) {
 
 }

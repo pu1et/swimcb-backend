@@ -46,7 +46,13 @@ public record FindSwimmingPoolBasicInfoResponse(
     String usageAgreementUrl,
 
     @Schema(description = "계좌번호", example = "1234567890")
-    String accountNo
+    String accountNo,
+
+    @Schema(description = "위도", example = "37.5665")
+    Double latitude,
+
+    @Schema(description = "경도", example = "126.9789")
+    Double longitude
 ) {
 
 }

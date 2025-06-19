@@ -88,5 +88,7 @@ public class SwimmingPoolEntity extends BaseEntity {
     this.closedDays = request.closedDays();
     this.accountNo = request.accountNo();
     this.usageAgreementPath = request.usageAgreementPath();
+    this.latitude = request.latitude();
+    this.longitude = request.longitude();
   }
 }

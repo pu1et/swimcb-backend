@@ -41,6 +41,8 @@ public class FindSwimmingPoolBasicInfoInteractor implements FindSwimmingPoolBasi
         .representativeImageUrls(swimmingPoolImageUrls)
         .usageAgreementUrl(getImageUrl(swimmingPool.getUsageAgreementPath()))
         .accountNo(swimmingPool.getAccountNo() == null ? null : swimmingPool.getAccountNo().value())
+        .latitude(swimmingPool.getLatitude())
+        .longitude(swimmingPool.getLongitude())
         .build();
   }
 

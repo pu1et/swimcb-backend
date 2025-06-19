@@ -51,7 +51,13 @@ public record UpdateSwimmingPoolBasicInfoRequest(
     String usageAgreementPath,
 
     @Schema(description = "계좌번호", example = "123456789012")
-    String accountNo
+    String accountNo,
+
+    @Schema(description = "위도", example = "37.5665")
+    Double latitude,
+
+    @Schema(description = "경도", example = "126.9789")
+    Double longitude
 ) {
 
   public UpdateSwimmingPoolBasicInfoCommand toCommand() {
@@ -69,6 +75,8 @@ public record UpdateSwimmingPoolBasicInfoRequest(
         .imagePaths(this.imagePaths)
         .usageAgreementPath(this.usageAgreementPath)
         .accountNo(AccountNo.of(this.accountNo))
+        .latitude(this.latitude)
+        .longitude(this.longitude)
         .build();
   }
 }
