@@ -1,5 +1,6 @@
 package com.project.swimcb.bo.swimmingclass.application;
 
+import com.project.swimcb.db.entity.SwimmingInstructorEntity;
 import com.project.swimcb.db.repository.SwimmingInstructorRepository;
 import com.project.swimcb.bo.swimmingclass.application.in.CreateBoSwimmingClassUseCase;
 import com.project.swimcb.bo.swimmingclass.domain.CreateBoSwimmingClassCommand;
@@ -42,8 +43,7 @@ public class CreateBoSwimmingClassInteractor implements CreateBoSwimmingClassUse
     val classSubType = swimmingClassSubTypeRepository.findById(command.type().classSubTypeId())
         .orElseThrow(() -> new IllegalArgumentException("강습구분이 존재하지 않습니다."));
 
-    val instructor = instructorRepository.findById(command.instructorId())
-        .orElseThrow(() -> new IllegalArgumentException("강사가 존재하지 않습니다."));
+    val instructor = findInstructor(command.instructorId());
 
     val swimmingClass = SwimmingClassEntity.builder()
         .swimmingPool(pool)
@@ -67,6 +67,15 @@ public class CreateBoSwimmingClassInteractor implements CreateBoSwimmingClassUse
         .map(i -> SwimmingClassTicketEntity.create(savedSwimmingClass, i.name(), i.price())).toList();
 
     swimmingClassTicketRepository.saveAll(tickets);
+  }
+
+  private SwimmingInstructorEntity findInstructor(Long instructorId) {
+    if (instructorId == null) {
+      return null;
+    }
+
+    return instructorRepository.findById(instructorId)
+        .orElseThrow(() -> new IllegalArgumentException("강사가 존재하지 않습니다."));
   }
 
   private int daysOfWeek(@NonNull List<DayOfWeek> days) {

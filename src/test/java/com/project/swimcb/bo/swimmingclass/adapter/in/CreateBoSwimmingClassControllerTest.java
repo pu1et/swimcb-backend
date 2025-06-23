@@ -59,6 +59,29 @@ class CreateBoSwimmingClassControllerTest {
   }
 
   @Test
+  @DisplayName("담당강사 ID가 null이어도 클래스 추가 성공")
+  void shouldCreateSuccessfullyWhenInstructorIdIsNull() throws Exception {
+    // given
+    val request = CreateBoSwimmingClassRequest.builder()
+        .month(1)
+        .days(List.of())
+        .time(CreateBoSwimmingClassRequestFactory.time())
+        .type(CreateBoSwimmingClassRequestFactory.type())
+        .instructorId(null)
+        .tickets(CreateBoSwimmingClassRequestFactory.tickets())
+        .registrationCapacity(CreateBoSwimmingClassRequestFactory.registrationCapacity())
+        .build();
+    // when
+    // then
+    mockMvc.perform(post(PATH)
+            .contentType(APPLICATION_JSON_VALUE)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().isOk());
+
+    verify(useCase, only()).createBoSwimmingClass(request.toCommand(SWIMMING_POOL_ID));
+  }
+
+  @Test
   @DisplayName("강습 월이 1 미만인 경우 400 반환")
   void shouldReturn400WhenMonthIsLessThan1() throws Exception {
     // given
@@ -251,28 +274,6 @@ class CreateBoSwimmingClassControllerTest {
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isBadRequest())
         .andExpect(content().string(containsString("강습구분ID는 0 이상이어야 합니다.")));
-  }
-
-  @Test
-  @DisplayName("담당강사 ID가 0 미만인 경우 400 반환")
-  void shouldReturn400WhenInstructorIdIsLessThan0() throws Exception {
-    // given
-    val request = CreateBoSwimmingClassRequest.builder()
-        .month(1)
-        .days(List.of())
-        .time(CreateBoSwimmingClassRequestFactory.time())
-        .type(CreateBoSwimmingClassRequestFactory.type())
-        .instructorId(-1L)
-        .tickets(CreateBoSwimmingClassRequestFactory.tickets())
-        .registrationCapacity(CreateBoSwimmingClassRequestFactory.registrationCapacity())
-        .build();
-    // when
-    // then
-    mockMvc.perform(post(PATH)
-            .contentType(APPLICATION_JSON_VALUE)
-            .content(objectMapper.writeValueAsString(request)))
-        .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("담당강사ID는 0 이상이어야 합니다.")));
   }
 
   @Test

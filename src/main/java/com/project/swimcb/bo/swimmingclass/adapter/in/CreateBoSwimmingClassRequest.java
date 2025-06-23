@@ -33,9 +33,8 @@ public record CreateBoSwimmingClassRequest(
     @Schema(description = "강습형태ID/강습구분ID")
     Type type,
 
-    @Min(value = 0, message = "담당강사ID는 0 이상이어야 합니다.")
     @Schema(description = "담당강사", example = "1")
-    long instructorId,
+    Long instructorId,
 
     @Valid
     @NotNull(message = "강습 티켓 리스트는 null이 될 수 없습니다.")

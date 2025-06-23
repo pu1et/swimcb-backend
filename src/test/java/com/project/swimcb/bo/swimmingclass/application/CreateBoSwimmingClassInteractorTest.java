@@ -8,23 +8,24 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.assertArg;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.project.swimcb.bo.swimmingclass.domain.CreateBoSwimmingClassCommand;
+import com.project.swimcb.bo.swimmingclass.domain.CreateBoSwimmingClassCommand.Ticket;
 import com.project.swimcb.db.entity.SwimmingClassEntity;
 import com.project.swimcb.db.entity.SwimmingClassSubTypeEntity;
 import com.project.swimcb.db.entity.SwimmingClassTicketEntity;
 import com.project.swimcb.db.entity.SwimmingClassTypeEntity;
 import com.project.swimcb.db.entity.SwimmingInstructorEntity;
 import com.project.swimcb.db.entity.SwimmingPoolEntity;
-import com.project.swimcb.db.repository.SwimmingInstructorRepository;
-import com.project.swimcb.bo.swimmingclass.domain.CreateBoSwimmingClassCommand;
-import com.project.swimcb.bo.swimmingclass.domain.CreateBoSwimmingClassCommand.Ticket;
 import com.project.swimcb.db.repository.SwimmingClassRepository;
 import com.project.swimcb.db.repository.SwimmingClassSubTypeRepository;
 import com.project.swimcb.db.repository.SwimmingClassTicketRepository;
 import com.project.swimcb.db.repository.SwimmingClassTypeRepository;
+import com.project.swimcb.db.repository.SwimmingInstructorRepository;
 import com.project.swimcb.db.repository.SwimmingPoolRepository;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -110,7 +111,7 @@ class CreateBoSwimmingClassInteractorTest {
         Optional.of(swimmingClassType));
     when(swimmingClassSubTypeRepository.findById(anyLong())).thenReturn(
         Optional.of(swimmingClassSubType));
-    when(instructorRepository.findById(anyLong())).thenReturn(Optional.of(swimmingInstructor));
+    when(instructorRepository.findById(command.instructorId())).thenReturn(Optional.of(swimmingInstructor));
     when(swimmingClassRepository.save(any())).thenReturn(savedSwimmingClass);
     // when
     interactor.createBoSwimmingClass(command);
@@ -135,6 +136,25 @@ class CreateBoSwimmingClassInteractorTest {
       assertThat(i).extracting(SwimmingClassTicketEntity::getName).containsExactlyElementsOf(
           command.tickets().stream().map(Ticket::name).toList());
     }));
+  }
+
+  @Test
+  @DisplayName("강사가 존재하지 않아도 수영 클래스가 성공적으로 생성된다.")
+  void shouldCreateSwimmingClassWithoutInstructorSuccessfully() {
+    // given
+    val command = CreateBoSwimmingClassCommandFactory.createWithoutInstructor();
+
+    when(swimmingPoolRepository.findById(anyLong())).thenReturn(Optional.of(swimmingPool));
+    when(swimmingClassTypeRepository.findById(anyLong())).thenReturn(
+        Optional.of(swimmingClassType));
+    when(swimmingClassSubTypeRepository.findById(anyLong())).thenReturn(
+        Optional.of(swimmingClassSubType));
+    when(swimmingClassRepository.save(any())).thenReturn(savedSwimmingClass);
+    // when
+    interactor.createBoSwimmingClass(command);
+    // then
+    verify(instructorRepository, never()).findAllBySwimmingPool_Id(anyLong());
+    verify(swimmingClassRepository, only()).save(any());
   }
 
   @Test
@@ -177,26 +197,21 @@ class CreateBoSwimmingClassInteractorTest {
         .hasMessage("강습구분이 존재하지 않습니다.");
   }
 
-  @Test
-  @DisplayName("강사가 존재하지 않으면 IllegalArgumentException을 던진다.")
-  void shouldThrowIllegalArgumentExceptionWhenInstructorDoesNotExist() {
-    // given
-    when(swimmingPoolRepository.findById(anyLong())).thenReturn(Optional.of(swimmingPool));
-    when(swimmingClassTypeRepository.findById(anyLong())).thenReturn(
-        Optional.of(swimmingClassType));
-    when(swimmingClassSubTypeRepository.findById(anyLong())).thenReturn(
-        Optional.of(swimmingClassSubType));
-    when(instructorRepository.findById(anyLong())).thenReturn(Optional.empty());
-    // when
-    // then
-    assertThatThrownBy(() -> interactor.createBoSwimmingClass(command))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("강사가 존재하지 않습니다.");
-  }
-
   private static class CreateBoSwimmingClassCommandFactory {
 
     private static CreateBoSwimmingClassCommand create() {
+      return common()
+          .instructorId(1L)
+          .build();
+    }
+
+    private static CreateBoSwimmingClassCommand createWithoutInstructor() {
+      return common()
+          .instructorId(null)
+          .build();
+    }
+
+    private static CreateBoSwimmingClassCommand.CreateBoSwimmingClassCommandBuilder common() {
       return CreateBoSwimmingClassCommand.builder()
           .swimmingPoolId(1L)
           .month(1)
@@ -209,7 +224,6 @@ class CreateBoSwimmingClassInteractorTest {
               .classTypeId(1L)
               .classSubTypeId(1L)
               .build())
-          .instructorId(1L)
           .tickets(List.of(
               CreateBoSwimmingClassCommand.Ticket.builder()
                   .name("티켓1")
@@ -224,8 +238,9 @@ class CreateBoSwimmingClassInteractorTest {
               .totalCapacity(10)
               .reservationLimitCount(5)
               .build())
-          .isExposed(true)
-          .build();
+          .isExposed(true);
     }
+
   }
+
 }
