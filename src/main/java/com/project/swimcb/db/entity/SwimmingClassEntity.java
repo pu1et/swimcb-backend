@@ -63,7 +63,7 @@ public class SwimmingClassEntity extends BaseEntity {
   private LocalTime endTime;
 
   @OneToOne(fetch = LAZY)
-  @JoinColumn(name = "swimming_instructor_id", nullable = false)
+  @JoinColumn(name = "swimming_instructor_id")
   private SwimmingInstructorEntity instructor;
 
   @Column(name = "total_capacity", nullable = false)
