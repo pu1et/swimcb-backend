@@ -81,7 +81,10 @@ public class UpdateBoSwimmingClassDataMapper implements UpdateBoSwimmingClassDsG
         .orElseThrow(() -> new NoSuchElementException("강습구분이 존재하지 않습니다."));
   }
 
-  private SwimmingInstructorEntity findInstructor(long instructorId) {
+  private SwimmingInstructorEntity findInstructor(Long instructorId) {
+    if (instructorId == null) {
+      return null;
+    }
     return swimmingInstructorRepository.findById(instructorId)
         .orElseThrow(() -> new NoSuchElementException("강사가 존재하지 않습니다."));
   }

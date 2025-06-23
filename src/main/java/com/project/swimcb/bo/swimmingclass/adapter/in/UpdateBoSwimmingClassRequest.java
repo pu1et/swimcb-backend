@@ -34,9 +34,8 @@ public record UpdateBoSwimmingClassRequest(
       @Schema(description = "강습 형태/구분")
       Type type,
 
-      @NotNull(message = "담당강사는 null이 될 수 없습니다.")
       @Schema(description = "담당강사 ID", example = "1")
-      long instructorId,
+      Long instructorId,
 
       @Valid
       @NotNull(message = "강습 티켓 리스트는 null이 될 수 없습니다.")

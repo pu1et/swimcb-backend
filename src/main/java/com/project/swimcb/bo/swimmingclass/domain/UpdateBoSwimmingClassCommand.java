@@ -13,7 +13,7 @@ public record UpdateBoSwimmingClassCommand(
     @NonNull List<DayOfWeek> days,
     @NonNull Time time,
     @NonNull Type type,
-    long instructorId,
+    Long instructorId,
     @NonNull List<Ticket> tickets,
     @NonNull RegistrationCapacity registrationCapacity,
     boolean isExposed

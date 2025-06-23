@@ -7,6 +7,8 @@ import static java.time.DayOfWeek.WEDNESDAY;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
@@ -15,17 +17,17 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.project.swimcb.db.entity.SwimmingClassTypeEntity;
-import com.project.swimcb.db.entity.SwimmingInstructorEntity;
-import com.project.swimcb.db.repository.SwimmingInstructorRepository;
-import com.project.swimcb.db.entity.SwimmingClassSubTypeEntity;
-import com.project.swimcb.db.repository.SwimmingClassSubTypeRepository;
-import com.project.swimcb.db.repository.SwimmingClassTypeRepository;
 import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand;
 import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand.RegistrationCapacity;
 import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand.Ticket;
 import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand.Time;
 import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand.Type;
+import com.project.swimcb.db.entity.SwimmingClassSubTypeEntity;
+import com.project.swimcb.db.entity.SwimmingClassTypeEntity;
+import com.project.swimcb.db.entity.SwimmingInstructorEntity;
+import com.project.swimcb.db.repository.SwimmingClassSubTypeRepository;
+import com.project.swimcb.db.repository.SwimmingClassTypeRepository;
+import com.project.swimcb.db.repository.SwimmingInstructorRepository;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.querydsl.jpa.impl.JPAUpdateClause;
@@ -71,7 +73,7 @@ class UpdateBoSwimmingClassDataMapperTest {
   void setUp() {
     lenient().when(queryFactory.update(any())).thenReturn(updateClause);
     lenient().when(queryFactory.update(any())).thenReturn(updateClause);
-    lenient().when(updateClause.set(any(), any(Object.class))).thenReturn(updateClause);
+    lenient().when(updateClause.set(any(), nullable(Object.class))).thenReturn(updateClause);
     lenient().when(updateClause.where(any(Predicate[].class))).thenReturn(updateClause);
 
     mapper = spy(new UpdateBoSwimmingClassDataMapper(queryFactory, swimmingClassTypeRepository,
@@ -99,7 +101,8 @@ class UpdateBoSwimmingClassDataMapperTest {
             Optional.of(existingClassType));
         when(swimmingClassSubTypeRepository.findById(anyLong())).thenReturn(
             Optional.of(existingClassSubType));
-        when(instructorRepository.findById(anyLong())).thenReturn(Optional.of(existingInstructor));
+        when(instructorRepository.findById(any(Long.class))).thenReturn(
+            Optional.of(existingInstructor));
         when(updateClause.execute()).thenReturn(1L);
         // when
         mapper.updateSwimmingClass(request);
@@ -126,6 +129,32 @@ class UpdateBoSwimmingClassDataMapperTest {
     }
 
     @Nested
+    @DisplayName("업데이트할 강사가 null이더라도")
+    class WhenClassInstructorIsNull {
+
+      @Test
+      @DisplayName("수영 클래스를 성공적으로 업데이트한다.")
+      void shouldThrowNoSuchElementExceptionWhenClassInstructorNotFound() throws Exception {
+        // given
+        val request = TestUpdateBoSwimmingClassCommandFactory.createWithoutInstructor();
+        val existingClassType = TestSwimmingTypeFactory.create();
+        val existingClassSubType = TestSwimmingSubTypeFactory.create();
+
+        when(swimmingClassTypeRepository.findById(anyLong())).thenReturn(
+            Optional.of(existingClassType));
+        when(swimmingClassSubTypeRepository.findById(anyLong())).thenReturn(
+            Optional.of(existingClassSubType));
+        when(updateClause.execute()).thenReturn(1L);
+        // when
+        mapper.updateSwimmingClass(request);
+        // then
+        verify(instructorRepository, never()).findById(any(Long.class));
+        verify(updateClause, times(1)).execute();
+      }
+
+    }
+
+    @Nested
     @DisplayName("업데이트 대상 클래스가 존재하지 않으면")
     class WhenClassDoesNotExists {
 
@@ -142,7 +171,8 @@ class UpdateBoSwimmingClassDataMapperTest {
             Optional.of(existingClassType));
         when(swimmingClassSubTypeRepository.findById(anyLong())).thenReturn(
             Optional.of(existingClassSubType));
-        when(instructorRepository.findById(anyLong())).thenReturn(Optional.of(existingInstructor));
+        when(instructorRepository.findById(any(Long.class))).thenReturn(
+            Optional.of(existingInstructor));
         when(updateClause.execute()).thenReturn(0L);
         // when
         // then
@@ -201,7 +231,7 @@ class UpdateBoSwimmingClassDataMapperTest {
     }
 
     @Nested
-    @DisplayName("업데이트할 강사가 존재하지 않으면")
+    @DisplayName("업데이트할 강사가 조회시 존재하지 않으면")
     class WhenClassInstructorDoesNotExists {
 
       @Test
@@ -216,7 +246,7 @@ class UpdateBoSwimmingClassDataMapperTest {
             Optional.of(existingClassType));
         when(swimmingClassSubTypeRepository.findById(anyLong())).thenReturn(
             Optional.of(existingClassSubType));
-        when(instructorRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(instructorRepository.findById(any(Long.class))).thenReturn(Optional.empty());
         // when
         // then
         assertThatThrownBy(() -> mapper.updateSwimmingClass(request))
@@ -231,6 +261,18 @@ class UpdateBoSwimmingClassDataMapperTest {
   private static class TestUpdateBoSwimmingClassCommandFactory {
 
     private static UpdateBoSwimmingClassCommand create() {
+      return common()
+          .instructorId(5L)
+          .build();
+    }
+
+    private static UpdateBoSwimmingClassCommand createWithoutInstructor() {
+      return common()
+          .instructorId(null)
+          .build();
+    }
+
+    private static UpdateBoSwimmingClassCommand.UpdateBoSwimmingClassCommandBuilder common() {
       return UpdateBoSwimmingClassCommand.builder()
           .swimmingPoolId(1L)
           .swimmingClassId(2L)
@@ -258,8 +300,7 @@ class UpdateBoSwimmingClassDataMapperTest {
               .totalCapacity(10)
               .reservationLimitCount(5)
               .build())
-          .isExposed(true)
-          .build();
+          .isExposed(true);
     }
 
   }
