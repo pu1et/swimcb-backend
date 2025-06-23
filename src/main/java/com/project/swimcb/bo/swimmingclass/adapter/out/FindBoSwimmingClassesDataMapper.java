@@ -87,10 +87,7 @@ class FindBoSwimmingClassesDataMapper implements FindBoSwimmingClassesDsGateway 
                   .startTime(value.startTime())
                   .endTime(value.endTime())
                   .build())
-              .instructor(Instructor.builder()
-                  .id(value.instructorId())
-                  .name(value.instructorName())
-                  .build())
+              .instructor(instructor(value.instructorId(), value.instructorName()))
               .ticketPriceRange(TicketPriceRange.builder()
                   .minimumPrice(minimumTicketPrice)
                   .maximumPrice(maximumTicketPrice)
@@ -140,7 +137,7 @@ class FindBoSwimmingClassesDataMapper implements FindBoSwimmingClassesDsGateway 
         .from(swimmingClassEntity)
         .join(swimmingClassEntity.type, swimmingClassTypeEntity)
         .join(swimmingClassEntity.subType, swimmingClassSubTypeEntity)
-        .join(swimmingClassEntity.instructor, swimmingInstructorEntity)
+        .leftJoin(swimmingClassEntity.instructor, swimmingInstructorEntity)
         .join(swimmingClassTicketEntity)
         .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
         .where(
@@ -182,6 +179,16 @@ class FindBoSwimmingClassesDataMapper implements FindBoSwimmingClassesDsGateway 
         .toList();
   }
 
+  private Instructor instructor(Long instructorId, String instructorName) {
+    if (instructorId == null) {
+      return null;
+    }
+    return Instructor.builder()
+        .id(instructorId)
+        .name(instructorName)
+        .build();
+  }
+
   @Builder
   public record BoSwimmingClass(
       long swimmingClassId,
@@ -192,7 +199,7 @@ class FindBoSwimmingClassesDataMapper implements FindBoSwimmingClassesDsGateway 
       int daysOfWeek,
       LocalTime startTime,
       LocalTime endTime,
-      long instructorId,
+      Long instructorId,
       String instructorName,
       long ticketId,
       String ticketName,

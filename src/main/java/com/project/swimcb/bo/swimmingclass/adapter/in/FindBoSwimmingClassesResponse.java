@@ -17,7 +17,7 @@ public record FindBoSwimmingClassesResponse(
       @NonNull Type type,
       @NonNull List<DayOfWeek> days,
       @NonNull Time time,
-      @NonNull Instructor instructor,
+      Instructor instructor,
       @NonNull TicketPriceRange ticketPriceRange,
       @NonNull List<Ticket> tickets,
       @NonNull RegistrationCapacity registrationCapacity,
@@ -46,7 +46,7 @@ public record FindBoSwimmingClassesResponse(
 
   @Builder
   public record Instructor(
-      long id,
+      @NonNull Long id,
       @NonNull String name
   ) {
 
