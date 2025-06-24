@@ -3,6 +3,7 @@ package com.project.swimcb.oauth2.adapter.in;
 import static com.project.swimcb.oauth2.domain.enums.OAuth2ProviderType.KAKAO;
 
 import com.project.swimcb.oauth2.adapter.out.OAuth2ClientInfoProviderFactory;
+import com.project.swimcb.oauth2.domain.enums.Environment;
 import com.project.swimcb.oauth2.domain.enums.OAuth2ProviderType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -27,12 +29,14 @@ public class OAuth2AuthorizationController {
 
   @Operation(summary = "카카오 회원가입/로그인")
   @GetMapping
-  public RedirectView kakao() {
-    val redirectUri = redirectUri(KAKAO);
+  public RedirectView kakao(
+      @RequestParam(value = "env", required = false) Environment env
+  ) {
+    val redirectUri = redirectUri(KAKAO, env);
     return new RedirectView(redirectUri);
   }
 
-  private String redirectUri(@NonNull OAuth2ProviderType type) {
+  private String redirectUri(@NonNull OAuth2ProviderType type, Environment env) {
     val info = oAuth2ClientInfoProviderFactory.getProvider(type).getOAuth2ClientInfo();
 
     return UriComponentsBuilder
@@ -41,6 +45,7 @@ public class OAuth2AuthorizationController {
         .queryParam("client_id", info.registration().clientId())
         .queryParam("redirect_uri", info.registration().redirectUri())
         .queryParam("scope", String.join(",", info.registration().scope()))
+        .queryParam("state", env)
         .build()
         .toUriString();
   }

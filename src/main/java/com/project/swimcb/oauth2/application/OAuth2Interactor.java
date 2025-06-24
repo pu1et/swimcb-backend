@@ -1,5 +1,6 @@
 package com.project.swimcb.oauth2.application;
 
+import com.project.swimcb.oauth2.domain.enums.Environment;
 import com.project.swimcb.oauth2.adapter.in.OAuth2Request;
 import com.project.swimcb.oauth2.adapter.in.OAuth2Response;
 import com.project.swimcb.oauth2.application.port.in.OAuth2Adapter;
@@ -33,12 +34,12 @@ class OAuth2Interactor implements OAuth2Adapter {
     val member = findMemberPort.findByEmail(oAuth2Member.email());
 
     if (member.isEmpty()) {
-      return signup(oAuth2Member);
+      return signup(oAuth2Member, request.env());
     }
-    return login(member.get().id());
+    return login(member.get().id(), request.env());
   }
 
-  private OAuth2Response signup(@NonNull OAuth2Member oAuth2Member) {
+  private OAuth2Response signup(@NonNull OAuth2Member oAuth2Member, Environment env) {
     val memberId = signupPort.signup(
         SignupRequest.builder()
             .email(oAuth2Member.email())
@@ -47,12 +48,12 @@ class OAuth2Interactor implements OAuth2Adapter {
             .build()
     );
     val token = generateCustomerTokenUseCase.generateCustomerToken(memberId);
-    return oAuth2Presenter.signup(token);
+    return oAuth2Presenter.signup(token, env);
   }
 
-  private OAuth2Response login(@NonNull Long memberId) {
+  private OAuth2Response login(@NonNull Long memberId, Environment env) {
     val token = generateCustomerTokenUseCase.generateCustomerToken(memberId);
-    return oAuth2Presenter.login(token);
+    return oAuth2Presenter.login(token, env);
   }
 
 }

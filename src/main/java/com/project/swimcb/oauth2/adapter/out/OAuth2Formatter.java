@@ -1,5 +1,6 @@
 package com.project.swimcb.oauth2.adapter.out;
 
+import com.project.swimcb.oauth2.domain.enums.Environment;
 import com.project.swimcb.oauth2.adapter.in.OAuth2Response;
 import com.project.swimcb.oauth2.application.port.out.FrontUrlGateway;
 import com.project.swimcb.oauth2.application.port.out.OAuth2Presenter;
@@ -17,8 +18,8 @@ class OAuth2Formatter implements OAuth2Presenter {
   private final FrontUrlGateway frontUrlGateway;
 
   @Override
-  public OAuth2Response signup(@NonNull String accessToken) {
-    val frontUrl = frontUrlGateway.getUrl();
+  public OAuth2Response signup(@NonNull String accessToken, Environment env) {
+    val frontUrl = frontUrlGateway.getUrl(env);
     val uri = UriComponentsBuilder.fromUriString(frontUrl)
         .queryParam("accessToken", accessToken)
         .build()
@@ -27,8 +28,8 @@ class OAuth2Formatter implements OAuth2Presenter {
   }
 
   @Override
-  public OAuth2Response login(@NonNull String accessToken) {
-    val frontUrl = frontUrlGateway.getUrl();
+  public OAuth2Response login(@NonNull String accessToken, Environment env) {
+    val frontUrl = frontUrlGateway.getUrl(env);
     val uri = UriComponentsBuilder.fromUriString(frontUrl)
         .queryParam("accessToken", accessToken)
         .build()
