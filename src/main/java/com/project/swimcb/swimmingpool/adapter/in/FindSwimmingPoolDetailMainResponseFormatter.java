@@ -27,6 +27,8 @@ public class FindSwimmingPoolDetailMainResponseFormatter implements
         .reviewCount(pool.reviewCount())
         .address(pool.address())
         .phone(pool.phone())
+        .latitude(pool.latitude())
+        .longitude(pool.longitude())
         .build();
   }
 }

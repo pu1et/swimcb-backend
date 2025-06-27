@@ -12,7 +12,9 @@ public record SwimmingPoolDetailMain(
     double rating,
     int reviewCount,
     @NonNull String address,
-    @NonNull String phone
+    @NonNull String phone,
+    Double latitude,
+    Double longitude
 ) {
 
 }

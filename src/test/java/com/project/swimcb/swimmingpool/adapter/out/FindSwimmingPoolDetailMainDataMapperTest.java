@@ -81,6 +81,7 @@ class FindSwimmingPoolDetailMainDataMapperTest {
         assertThat(poolMainInfo.address()).isEqualTo(result.address());
         assertThat(poolMainInfo.phone()).isEqualTo(result.phone());
       }
+
     }
 
     @Nested
@@ -97,6 +98,7 @@ class FindSwimmingPoolDetailMainDataMapperTest {
         assertThatThrownBy(() -> mapper.findSwimmingPoolDetailMain(swimmingPoolId, null))
             .isInstanceOf(NoSuchElementException.class);
       }
+
     }
 
     @Nested
@@ -116,6 +118,7 @@ class FindSwimmingPoolDetailMainDataMapperTest {
           // then
           assertThat(result).isEqualTo(Expressions.FALSE);
         }
+
       }
 
 
@@ -135,15 +138,29 @@ class FindSwimmingPoolDetailMainDataMapperTest {
               .isNotNull()
               .isNotEqualTo(Expressions.FALSE);
         }
+
       }
+
     }
+
   }
 
   private static class TestSwimmingPoolFactory {
 
     private static SwimmingPool create() {
-      return new SwimmingPool(List.of("DUMMY_PATH1", "DUMMY_PATH2"), "DUMMY_NAME", true,
-          4.5, 31, "DUMMY_ADDRESS", "DUMMY_PHONE");
+      return new SwimmingPool(
+          List.of("DUMMY_PATH1", "DUMMY_PATH2"),
+          "DUMMY_NAME",
+          true,
+          4.5,
+          31,
+          "DUMMY_ADDRESS",
+          "DUMMY_PHONE",
+          37.5665,
+          126.9780
+      );
     }
+
   }
+
 }

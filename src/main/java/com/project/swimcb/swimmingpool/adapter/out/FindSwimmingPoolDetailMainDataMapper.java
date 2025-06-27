@@ -36,7 +36,9 @@ public class FindSwimmingPoolDetailMainDataMapper implements FindSwimmingPoolDet
             swimmingPoolRatingEntity.rating.avg(),
             swimmingPoolReviewEntity.id.sum(),
             swimmingPoolEntity.address,
-            swimmingPoolEntity.phone
+            swimmingPoolEntity.phone,
+            swimmingPoolEntity.latitude,
+            swimmingPoolEntity.longitude
         ))
         .from(swimmingPoolEntity)
         .join(swimmingPoolImageEntity)
@@ -51,7 +53,9 @@ public class FindSwimmingPoolDetailMainDataMapper implements FindSwimmingPoolDet
             swimmingPoolEntity.name,
             swimmingPoolEntity.address,
             swimmingPoolEntity.phone,
-            swimmingPoolImageEntity.path
+            swimmingPoolImageEntity.path,
+            swimmingPoolEntity.latitude,
+            swimmingPoolEntity.longitude
         )
         .fetchFirst();
 
@@ -67,6 +71,8 @@ public class FindSwimmingPoolDetailMainDataMapper implements FindSwimmingPoolDet
         .reviewCount((int) pool.reviewCount())
         .address(pool.address())
         .phone(pool.phone())
+        .latitude(pool.latitude())
+        .longitude(pool.longitude())
         .build();
   }
 
@@ -86,7 +92,9 @@ public class FindSwimmingPoolDetailMainDataMapper implements FindSwimmingPoolDet
       double rating,
       long reviewCount,
       @NonNull String address,
-      @NonNull String phone
+      @NonNull String phone,
+      Double latitude,
+      Double longitude
   ) {
 
   }

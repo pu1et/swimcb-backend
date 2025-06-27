@@ -55,6 +55,8 @@ class FindSwimmingPoolDetailMainResponseFormatterTest {
       assertThat(response.isFavorite()).isEqualTo(pool.isFavorite());
       assertThat(response.rating()).isEqualTo(pool.rating());
       assertThat(response.reviewCount()).isEqualTo(pool.reviewCount());
+      assertThat(response.latitude()).isEqualTo(pool.latitude());
+      assertThat(response.longitude()).isEqualTo(pool.longitude());
     }
 
     @Test
@@ -84,6 +86,8 @@ class FindSwimmingPoolDetailMainResponseFormatterTest {
           .reviewCount(10)
           .address("DUMMY_ADDRESS")
           .phone("DUMMY_PHONE")
+          .latitude(37.5665)
+          .longitude(126.978)
           .build();
     }
   }
