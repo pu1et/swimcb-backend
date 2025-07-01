@@ -9,12 +9,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.swimcb.bo.freeswimming.adapter.in.CreateBoFreeSwimmingRequest.RegistrationCapacity;
 import com.project.swimcb.bo.freeswimming.adapter.in.CreateBoFreeSwimmingRequest.Ticket;
 import com.project.swimcb.bo.freeswimming.adapter.in.CreateBoFreeSwimmingRequest.Time;
 import com.project.swimcb.common.WebMvcTestWithoutSecurity;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
@@ -47,17 +47,16 @@ class CreateBoFreeSwimmingControllerTest {
   }
 
   @Test
-  @DisplayName("담당강사 ID가 null이어도 자유수영 추가 성공")
+  @DisplayName("안전근무 ID가 null이어도 자유수영 추가 성공")
   void shouldCreateSuccessfullyWithNullInstructorId() throws Exception {
     // given
     val request = CreateBoFreeSwimmingRequest.builder()
-        .month(CreateBoFreeSwimmingRequestFactory.month())
+        .yearMonth(CreateBoFreeSwimmingRequestFactory.yearMonth())
         .days(CreateBoFreeSwimmingRequestFactory.days())
         .time(CreateBoFreeSwimmingRequestFactory.time())
-        .instructorId(null) // 담당강사 이름이 null인 경우
+        .lifeguardId(null) // 담당강사 이름이 null인 경우
         .tickets(CreateBoFreeSwimmingRequestFactory.tickets())
-        .registrationCapacity(
-            CreateBoFreeSwimmingRequestFactory.registrationCapacity())
+        .capacity(CreateBoFreeSwimmingRequestFactory.capacity())
         .isExposed(CreateBoFreeSwimmingRequestFactory.isExposed())
         .build();
     // when
@@ -73,12 +72,11 @@ class CreateBoFreeSwimmingControllerTest {
   void shouldReturn400WhenDayIsNull() throws Exception {
     // given
     val request = CreateBoFreeSwimmingRequest.builder()
-        .month(CreateBoFreeSwimmingRequestFactory.month())
+        .yearMonth(CreateBoFreeSwimmingRequestFactory.yearMonth())
         .days(null) // 요일이 null인 경우
         .time(CreateBoFreeSwimmingRequestFactory.time())
         .tickets(CreateBoFreeSwimmingRequestFactory.tickets())
-        .registrationCapacity(
-            CreateBoFreeSwimmingRequestFactory.registrationCapacity())
+        .capacity(CreateBoFreeSwimmingRequestFactory.capacity())
         .isExposed(CreateBoFreeSwimmingRequestFactory.isExposed())
         .build();
     // when
@@ -95,12 +93,11 @@ class CreateBoFreeSwimmingControllerTest {
   void shouldReturn400WhenTimeIsNull() throws Exception {
     // given
     val request = CreateBoFreeSwimmingRequest.builder()
-        .month(CreateBoFreeSwimmingRequestFactory.month())
+        .yearMonth(CreateBoFreeSwimmingRequestFactory.yearMonth())
         .days(CreateBoFreeSwimmingRequestFactory.days())
         .time(null) // 시간이 null인 경우
         .tickets(CreateBoFreeSwimmingRequestFactory.tickets())
-        .registrationCapacity(
-            CreateBoFreeSwimmingRequestFactory.registrationCapacity())
+        .capacity(CreateBoFreeSwimmingRequestFactory.capacity())
         .isExposed(CreateBoFreeSwimmingRequestFactory.isExposed())
         .build();
     // when
@@ -117,12 +114,11 @@ class CreateBoFreeSwimmingControllerTest {
   void shouldReturn400WhenStartTimeIsNull() throws Exception {
     // given
     val request = CreateBoFreeSwimmingRequest.builder()
-        .month(CreateBoFreeSwimmingRequestFactory.month())
+        .yearMonth(CreateBoFreeSwimmingRequestFactory.yearMonth())
         .days(CreateBoFreeSwimmingRequestFactory.days())
         .time(Time.builder().endTime(LocalTime.of(6, 50)).build())
         .tickets(CreateBoFreeSwimmingRequestFactory.tickets())
-        .registrationCapacity(
-            CreateBoFreeSwimmingRequestFactory.registrationCapacity())
+        .capacity(CreateBoFreeSwimmingRequestFactory.capacity())
         .isExposed(CreateBoFreeSwimmingRequestFactory.isExposed())
         .build();
     // when
@@ -139,12 +135,11 @@ class CreateBoFreeSwimmingControllerTest {
   void shouldReturn400WhenEndTimeIsNull() throws Exception {
     // given
     val request = CreateBoFreeSwimmingRequest.builder()
-        .month(CreateBoFreeSwimmingRequestFactory.month())
+        .yearMonth(CreateBoFreeSwimmingRequestFactory.yearMonth())
         .days(CreateBoFreeSwimmingRequestFactory.days())
         .time(Time.builder().startTime(LocalTime.of(6, 0)).build())
         .tickets(CreateBoFreeSwimmingRequestFactory.tickets())
-        .registrationCapacity(
-            CreateBoFreeSwimmingRequestFactory.registrationCapacity())
+        .capacity(CreateBoFreeSwimmingRequestFactory.capacity())
         .isExposed(CreateBoFreeSwimmingRequestFactory.isExposed())
         .build();
     // when
@@ -161,12 +156,11 @@ class CreateBoFreeSwimmingControllerTest {
   void shouldReturn400WhenTicketsIsNull() throws Exception {
     // given
     val request = CreateBoFreeSwimmingRequest.builder()
-        .month(CreateBoFreeSwimmingRequestFactory.month())
+        .yearMonth(CreateBoFreeSwimmingRequestFactory.yearMonth())
         .days(CreateBoFreeSwimmingRequestFactory.days())
         .time(CreateBoFreeSwimmingRequestFactory.time())
         .tickets(null) // 티켓 리스트가 null인 경우
-        .registrationCapacity(
-            CreateBoFreeSwimmingRequestFactory.registrationCapacity())
+        .capacity(CreateBoFreeSwimmingRequestFactory.capacity())
         .isExposed(CreateBoFreeSwimmingRequestFactory.isExposed())
         .build();
     // when
@@ -183,12 +177,11 @@ class CreateBoFreeSwimmingControllerTest {
   void shouldReturn400WhenTicketNameIsNull() throws Exception {
     // given
     val request = CreateBoFreeSwimmingRequest.builder()
-        .month(CreateBoFreeSwimmingRequestFactory.month())
+        .yearMonth(CreateBoFreeSwimmingRequestFactory.yearMonth())
         .days(CreateBoFreeSwimmingRequestFactory.days())
         .time(CreateBoFreeSwimmingRequestFactory.time())
         .tickets(List.of(Ticket.builder().price(100000).build()))
-        .registrationCapacity(
-            CreateBoFreeSwimmingRequestFactory.registrationCapacity())
+        .capacity(CreateBoFreeSwimmingRequestFactory.capacity())
         .isExposed(CreateBoFreeSwimmingRequestFactory.isExposed())
         .build();
     // when
@@ -205,12 +198,11 @@ class CreateBoFreeSwimmingControllerTest {
   void shouldReturn400WhenTicketPriceIsNull() throws Exception {
     // given
     val request = CreateBoFreeSwimmingRequest.builder()
-        .month(CreateBoFreeSwimmingRequestFactory.month())
+        .yearMonth(CreateBoFreeSwimmingRequestFactory.yearMonth())
         .days(CreateBoFreeSwimmingRequestFactory.days())
         .time(CreateBoFreeSwimmingRequestFactory.time())
         .tickets(List.of(Ticket.builder().price(100000).build()))
-        .registrationCapacity(
-            CreateBoFreeSwimmingRequestFactory.registrationCapacity())
+        .capacity(CreateBoFreeSwimmingRequestFactory.capacity())
         .isExposed(CreateBoFreeSwimmingRequestFactory.isExposed())
         .build();
     // when
@@ -227,11 +219,11 @@ class CreateBoFreeSwimmingControllerTest {
   void shouldReturn400WhenRegistrationCapacityIsNull() throws Exception {
     // given
     val request = CreateBoFreeSwimmingRequest.builder()
-        .month(CreateBoFreeSwimmingRequestFactory.month())
+        .yearMonth(CreateBoFreeSwimmingRequestFactory.yearMonth())
         .days(CreateBoFreeSwimmingRequestFactory.days())
         .time(CreateBoFreeSwimmingRequestFactory.time())
         .tickets(CreateBoFreeSwimmingRequestFactory.tickets())
-        .registrationCapacity(null) // 정원 정보가 null인 경우
+        .capacity(null) // 정원 정보가 null인 경우
         .isExposed(CreateBoFreeSwimmingRequestFactory.isExposed())
         .build();
     // when
@@ -244,66 +236,14 @@ class CreateBoFreeSwimmingControllerTest {
   }
 
   @Test
-  @DisplayName("총 정원이 null인 경우 400 반환")
-  void shouldReturn400WhenTotalCapacityIsNull() throws Exception {
-    // given
-    val request = CreateBoFreeSwimmingRequest.builder()
-        .month(CreateBoFreeSwimmingRequestFactory.month())
-        .days(CreateBoFreeSwimmingRequestFactory.days())
-        .time(CreateBoFreeSwimmingRequestFactory.time())
-        .tickets(CreateBoFreeSwimmingRequestFactory.tickets())
-        .registrationCapacity(
-            RegistrationCapacity.builder()
-                .totalCapacity(null)
-                .reservationLimitCount(11) // 총 정원이 null인 경우
-                .build()
-        )
-        .isExposed(CreateBoFreeSwimmingRequestFactory.isExposed())
-        .build();
-    // when
-    // then
-    mockMvc.perform(post(PATH)
-            .contentType(APPLICATION_JSON_VALUE)
-            .content(objectMapper.writeValueAsString(request)))
-        .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("총 정원은 null이 될 수 없습니다.")));
-  }
-
-  @Test
-  @DisplayName("예약 허용 정원이 null인 경우 400 반환")
-  void shouldReturn400WhenReservationLimitCountIsNull() throws Exception {
-    // given
-    val request = CreateBoFreeSwimmingRequest.builder()
-        .month(CreateBoFreeSwimmingRequestFactory.month())
-        .days(CreateBoFreeSwimmingRequestFactory.days())
-        .time(CreateBoFreeSwimmingRequestFactory.time())
-        .tickets(CreateBoFreeSwimmingRequestFactory.tickets())
-        .registrationCapacity(
-            RegistrationCapacity.builder()
-                .totalCapacity(20)
-                .reservationLimitCount(null) // 예약 허용 정원이 null인 경우
-                .build()
-        )
-        .isExposed(CreateBoFreeSwimmingRequestFactory.isExposed())
-        .build();
-    // when
-    // then
-    mockMvc.perform(post(PATH)
-            .contentType(APPLICATION_JSON_VALUE)
-            .content(objectMapper.writeValueAsString(request)))
-        .andExpect(status().isBadRequest())
-        .andExpect(content().string(containsString("예약 허용 인원은 null이 될 수 없습니다.")));
-  }
-
-  @Test
   @DisplayName("사용자 노출 여부가 null인 경우 400 반환")
   void shouldReturn400WhenIsExposedIsNull() throws Exception {
     // given
     val request = CreateBoFreeSwimmingRequest.builder()
-        .month(CreateBoFreeSwimmingRequestFactory.month())
+        .yearMonth(CreateBoFreeSwimmingRequestFactory.yearMonth())
         .days(CreateBoFreeSwimmingRequestFactory.days())
         .time(CreateBoFreeSwimmingRequestFactory.time())
-        .registrationCapacity(CreateBoFreeSwimmingRequestFactory.registrationCapacity())
+        .capacity(CreateBoFreeSwimmingRequestFactory.capacity())
         .tickets(CreateBoFreeSwimmingRequestFactory.tickets())
         .isExposed(null) // 사용자 노출 여부가 null인 경우
         .build();
@@ -321,18 +261,18 @@ class CreateBoFreeSwimmingControllerTest {
 
     private static CreateBoFreeSwimmingRequest create() {
       return CreateBoFreeSwimmingRequest.builder()
-          .month(month())
+          .yearMonth(yearMonth())
           .days(days())
           .time(time())
-          .instructorId(instructorId())
+          .lifeguardId(lifeguardId())
           .tickets(tickets())
-          .registrationCapacity(registrationCapacity())
+          .capacity(capacity())
           .isExposed(isExposed())
           .build();
     }
 
-    private static int month() {
-      return 1;
+    private static YearMonth yearMonth() {
+      return YearMonth.of(2025, 6);
     }
 
     private static List<DayOfWeek> days() {
@@ -346,7 +286,7 @@ class CreateBoFreeSwimmingControllerTest {
           .build();
     }
 
-    private static Long instructorId() {
+    private static Long lifeguardId() {
       return 1L;
     }
 
@@ -359,11 +299,8 @@ class CreateBoFreeSwimmingControllerTest {
       );
     }
 
-    private static RegistrationCapacity registrationCapacity() {
-      return RegistrationCapacity.builder()
-          .totalCapacity(20)
-          .reservationLimitCount(11)
-          .build();
+    private static int capacity() {
+      return 20;
     }
 
     private static Boolean isExposed() {
