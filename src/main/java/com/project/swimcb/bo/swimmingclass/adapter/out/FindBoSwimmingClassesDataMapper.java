@@ -166,8 +166,7 @@ class FindBoSwimmingClassesDataMapper implements FindBoSwimmingClassesDsGateway 
             reservationEntity.ticketType.eq(SWIMMING_CLASS),
             reservationEntity.ticketId.eq(ticketEntity.id)
         )
-        .join(ticketEntity)
-        .on(ticketEntity.targetId.eq(swimmingClassEntity.id))
+        .join(swimmingClassEntity).on(swimmingClassEntity.id.eq(ticketEntity.targetId))
         .where(
             swimmingClassEntity.id.in(swimmingClassIds),
             ticketEntity.targetType.eq(TicketTargetType.SWIMMING_CLASS),
