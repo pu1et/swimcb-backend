@@ -54,4 +54,15 @@ public class TicketEntity extends BaseEntity {
     return swimmingClassTicket;
   }
 
+  public static TicketEntity createFreeSwimmingTicket(@NonNull FreeSwimmingEntity freeSwimming,
+      @NonNull String name, int price) {
+    val swimmingClassTicket = new TicketEntity();
+    swimmingClassTicket.targetType = FREE_SWIMMING;
+    swimmingClassTicket.targetId = freeSwimming.getId();
+    swimmingClassTicket.name = name;
+    swimmingClassTicket.price = price;
+    swimmingClassTicket.isDeleted = false;
+    return swimmingClassTicket;
+  }
+
 }

@@ -1,8 +1,11 @@
 package com.project.swimcb.bo.freeswimming.adapter.in;
 
+import static com.project.swimcb.bo.freeswimming.adapter.in.CreateBoFreeSwimmingControllerTest.SWIMMING_POOL_ID;
 import static java.time.DayOfWeek.MONDAY;
 import static java.time.DayOfWeek.WEDNESDAY;
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.verify;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -11,7 +14,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.swimcb.bo.freeswimming.adapter.in.CreateBoFreeSwimmingRequest.Ticket;
 import com.project.swimcb.bo.freeswimming.adapter.in.CreateBoFreeSwimmingRequest.Time;
+import com.project.swimcb.bo.freeswimming.application.port.in.CreateBoFreeSwimmingUseCase;
 import com.project.swimcb.common.WebMvcTestWithoutSecurity;
+import com.project.swimcb.common.WithMockTokenInfo;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.time.YearMonth;
@@ -20,9 +25,11 @@ import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTestWithoutSecurity(controllers = CreateBoFreeSwimmingController.class)
+@WithMockTokenInfo(swimmingPoolId = SWIMMING_POOL_ID)
 class CreateBoFreeSwimmingControllerTest {
 
   @Autowired
@@ -30,6 +37,11 @@ class CreateBoFreeSwimmingControllerTest {
 
   @Autowired
   private ObjectMapper objectMapper;
+
+  @MockitoBean
+  private CreateBoFreeSwimmingUseCase useCase;
+
+  static final long SWIMMING_POOL_ID = 1L;
 
   private static final String PATH = "/api/bo/free-swimming";
 
@@ -44,6 +56,8 @@ class CreateBoFreeSwimmingControllerTest {
             .contentType(APPLICATION_JSON_VALUE)
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isOk());
+
+    verify(useCase, only()).createBoFreeSwimming(request.toCommand(SWIMMING_POOL_ID));
   }
 
   @Test

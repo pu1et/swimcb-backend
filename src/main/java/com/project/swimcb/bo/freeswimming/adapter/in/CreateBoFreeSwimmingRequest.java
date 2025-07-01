@@ -1,5 +1,6 @@
 package com.project.swimcb.bo.freeswimming.adapter.in;
 
+import com.project.swimcb.bo.freeswimming.domain.CreateBoFreeSwimmingCommand;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -70,6 +71,30 @@ public record CreateBoFreeSwimmingRequest(
       Integer price
   ) {
 
+  }
+
+  public CreateBoFreeSwimmingCommand toCommand(long swimmingPoolId) {
+    return CreateBoFreeSwimmingCommand.builder()
+        .swimmingPoolId(swimmingPoolId)
+        .yearMonth(this.yearMonth)
+        .days(this.days)
+        .time(
+            CreateBoFreeSwimmingCommand.Time.builder()
+                .startTime(this.time.startTime)
+                .endTime(this.time.endTime)
+                .build()
+        )
+        .lifeguardId(this.lifeguardId)
+        .tickets(this.tickets.stream()
+            .map(ticket ->
+                CreateBoFreeSwimmingCommand.Ticket.builder()
+                    .name(ticket.name())
+                    .price(ticket.price())
+                    .build())
+            .toList())
+        .capacity(this.capacity)
+        .isExposed(this.isExposed)
+        .build();
   }
 
 }
