@@ -3,9 +3,9 @@ package com.project.swimcb.bo.swimmingclass.adapter.out;
 import static com.project.swimcb.db.entity.QReservationEntity.reservationEntity;
 import static com.project.swimcb.db.entity.QSwimmingClassEntity.swimmingClassEntity;
 import static com.project.swimcb.db.entity.QSwimmingClassSubTypeEntity.swimmingClassSubTypeEntity;
-import static com.project.swimcb.db.entity.QSwimmingClassTicketEntity.swimmingClassTicketEntity;
 import static com.project.swimcb.db.entity.QSwimmingClassTypeEntity.swimmingClassTypeEntity;
 import static com.project.swimcb.db.entity.QSwimmingInstructorEntity.swimmingInstructorEntity;
+import static com.project.swimcb.db.entity.QTicketEntity.ticketEntity;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_COMPLETED;
 import static com.project.swimcb.swimmingpool.domain.enums.TicketType.SWIMMING_CLASS;
 import static com.querydsl.core.types.Projections.constructor;
@@ -21,6 +21,7 @@ import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesRespo
 import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesResponse.Time;
 import com.project.swimcb.bo.swimmingclass.adapter.in.FindBoSwimmingClassesResponse.Type;
 import com.project.swimcb.bo.swimmingclass.application.out.FindBoSwimmingClassesDsGateway;
+import com.project.swimcb.db.entity.TicketTargetType;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -127,9 +128,9 @@ class FindBoSwimmingClassesDataMapper implements FindBoSwimmingClassesDsGateway 
                 swimmingClassEntity.endTime,
                 swimmingInstructorEntity.id,
                 swimmingInstructorEntity.name,
-                swimmingClassTicketEntity.id,
-                swimmingClassTicketEntity.name,
-                swimmingClassTicketEntity.price,
+                ticketEntity.id,
+                ticketEntity.name,
+                ticketEntity.price,
                 swimmingClassEntity.totalCapacity,
                 swimmingClassEntity.reservationLimitCount,
                 swimmingClassEntity.isVisible
@@ -138,12 +139,13 @@ class FindBoSwimmingClassesDataMapper implements FindBoSwimmingClassesDsGateway 
         .join(swimmingClassEntity.type, swimmingClassTypeEntity)
         .join(swimmingClassEntity.subType, swimmingClassSubTypeEntity)
         .leftJoin(swimmingClassEntity.instructor, swimmingInstructorEntity)
-        .join(swimmingClassTicketEntity)
-        .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
+        .join(ticketEntity)
+        .on(ticketEntity.targetId.eq(swimmingClassEntity.id))
         .where(
             swimmingClassEntity.swimmingPool.id.eq(swimmingPoolId),
             swimmingClassEntity.month.eq(month),
-            swimmingClassTicketEntity.isDeleted.isFalse(),
+            ticketEntity.targetType.eq(TicketTargetType.SWIMMING_CLASS),
+            ticketEntity.isDeleted.isFalse(),
             swimmingClassEntity.isCanceled.isFalse()
         )
         .orderBy(swimmingClassEntity.createdAt.asc())
@@ -159,13 +161,16 @@ class FindBoSwimmingClassesDataMapper implements FindBoSwimmingClassesDsGateway 
                 reservationEntity.id.count()
             ))
         .from(reservationEntity)
-        .join(swimmingClassTicketEntity).on(
+        .join(ticketEntity)
+        .on(
             reservationEntity.ticketType.eq(SWIMMING_CLASS),
-            reservationEntity.ticketId.eq(swimmingClassTicketEntity.id)
+            reservationEntity.ticketId.eq(ticketEntity.id)
         )
-        .join(swimmingClassTicketEntity.swimmingClass, swimmingClassEntity)
+        .join(ticketEntity)
+        .on(ticketEntity.targetId.eq(swimmingClassEntity.id))
         .where(
             swimmingClassEntity.id.in(swimmingClassIds),
+            ticketEntity.targetType.eq(TicketTargetType.SWIMMING_CLASS),
             reservationEntity.reservationStatus.in(PAYMENT_COMPLETED)
         )
         .groupBy(swimmingClassEntity.id)

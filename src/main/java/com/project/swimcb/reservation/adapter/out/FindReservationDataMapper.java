@@ -3,9 +3,10 @@ package com.project.swimcb.reservation.adapter.out;
 import static com.project.swimcb.db.entity.QReservationEntity.reservationEntity;
 import static com.project.swimcb.db.entity.QSwimmingClassEntity.swimmingClassEntity;
 import static com.project.swimcb.db.entity.QSwimmingClassSubTypeEntity.swimmingClassSubTypeEntity;
-import static com.project.swimcb.db.entity.QSwimmingClassTicketEntity.swimmingClassTicketEntity;
 import static com.project.swimcb.db.entity.QSwimmingClassTypeEntity.swimmingClassTypeEntity;
 import static com.project.swimcb.db.entity.QSwimmingPoolEntity.swimmingPoolEntity;
+import static com.project.swimcb.db.entity.QTicketEntity.ticketEntity;
+import static com.project.swimcb.db.entity.TicketTargetType.SWIMMING_CLASS;
 import static com.querydsl.core.types.Projections.constructor;
 
 import com.project.swimcb.db.entity.AccountNo;
@@ -49,25 +50,26 @@ public class FindReservationDataMapper implements FindReservationGateway {
             swimmingClassEntity.reservationLimitCount,
             swimmingClassEntity.reservedCount,
 
-            swimmingClassTicketEntity.id,
-            swimmingClassTicketEntity.name,
-            swimmingClassTicketEntity.price,
+            ticketEntity.id,
+            ticketEntity.name,
+            ticketEntity.price,
 
             reservationEntity.reservedAt,
             reservationEntity.reservationStatus,
             reservationEntity.paymentMethod
         ))
         .from(reservationEntity)
-        .join(swimmingClassTicketEntity)
-        .on(reservationEntity.ticketId.eq(swimmingClassTicketEntity.id))
+        .join(ticketEntity)
+        .on(reservationEntity.ticketId.eq(ticketEntity.id))
         .join(swimmingClassEntity)
-        .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
+        .on(ticketEntity.targetId.eq(swimmingClassEntity.id))
         .join(swimmingClassTypeEntity).on(swimmingClassEntity.type.eq(swimmingClassTypeEntity))
         .join(swimmingClassSubTypeEntity)
         .on(swimmingClassEntity.subType.eq(swimmingClassSubTypeEntity))
         .join(swimmingPoolEntity).on(swimmingClassEntity.swimmingPool.eq(swimmingPoolEntity))
         .where(
-            reservationEntity.id.eq(reservationId)
+            reservationEntity.id.eq(reservationId),
+            ticketEntity.targetType.eq(SWIMMING_CLASS)
         )
         .fetchFirst();
 

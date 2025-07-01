@@ -4,8 +4,9 @@ import static com.project.swimcb.db.entity.QMemberEntity.memberEntity;
 import static com.project.swimcb.db.entity.QReservationEntity.reservationEntity;
 import static com.project.swimcb.db.entity.QSwimmingClassEntity.swimmingClassEntity;
 import static com.project.swimcb.db.entity.QSwimmingClassSubTypeEntity.swimmingClassSubTypeEntity;
-import static com.project.swimcb.db.entity.QSwimmingClassTicketEntity.swimmingClassTicketEntity;
 import static com.project.swimcb.db.entity.QSwimmingClassTypeEntity.swimmingClassTypeEntity;
+import static com.project.swimcb.db.entity.QTicketEntity.ticketEntity;
+import static com.project.swimcb.db.entity.TicketTargetType.SWIMMING_CLASS;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.REFUND_COMPLETED;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_CANCELLED;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_PENDING;
@@ -92,16 +93,17 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
             reservationEntity.refundAccountHolder
         ))
         .from(reservationEntity)
-        .join(swimmingClassTicketEntity)
-        .on(reservationEntity.ticketId.eq(swimmingClassTicketEntity.id))
+        .join(ticketEntity)
+        .on(reservationEntity.ticketId.eq(ticketEntity.id))
         .join(swimmingClassEntity)
-        .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
+        .on(ticketEntity.targetId.eq(swimmingClassEntity.id))
         .join(swimmingClassTypeEntity).on(swimmingClassEntity.type.eq(swimmingClassTypeEntity))
         .join(swimmingClassSubTypeEntity)
         .on(swimmingClassEntity.subType.eq(swimmingClassSubTypeEntity))
         .join(reservationEntity.member, memberEntity)
         .where(
             swimmingClassEntity.swimmingPool.id.eq(condition.swimmingPoolId()),
+            ticketEntity.targetType.eq(SWIMMING_CLASS),
             reservationEntity.reservedAt.between(
                 condition.startDate().atStartOfDay(), condition.endDate().atTime(MAX)),
             programTypeEqIfExists(condition.programType()),
@@ -121,16 +123,17 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
 
     val count = queryFactory.select(reservationEntity.id.count())
         .from(reservationEntity)
-        .join(swimmingClassTicketEntity)
-        .on(reservationEntity.ticketId.eq(swimmingClassTicketEntity.id))
+        .join(ticketEntity)
+        .on(reservationEntity.ticketId.eq(ticketEntity.id))
         .join(swimmingClassEntity)
-        .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
+        .on(ticketEntity.targetId.eq(swimmingClassEntity.id))
         .join(swimmingClassTypeEntity).on(swimmingClassEntity.type.eq(swimmingClassTypeEntity))
         .join(swimmingClassSubTypeEntity)
         .on(swimmingClassEntity.subType.eq(swimmingClassSubTypeEntity))
         .join(reservationEntity.member, memberEntity)
         .where(
             swimmingClassEntity.swimmingPool.id.eq(condition.swimmingPoolId()),
+            ticketEntity.targetType.eq(SWIMMING_CLASS),
             reservationEntity.reservedAt.between(
                 condition.startDate().atStartOfDay(), condition.endDate().atTime(MAX)),
             programTypeEqIfExists(condition.programType()),
@@ -201,13 +204,14 @@ class FindBoReservationsDataMapper implements FindBoReservationsDsGateway {
             swimmingClassEntity.id
         ))
         .from(reservationEntity)
-        .join(swimmingClassTicketEntity)
-        .on(reservationEntity.ticketId.eq(swimmingClassTicketEntity.id))
+        .join(ticketEntity)
+        .on(reservationEntity.ticketId.eq(ticketEntity.id))
         .join(swimmingClassEntity)
-        .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
+        .on(ticketEntity.targetId.eq(swimmingClassEntity.id))
         .where(
             swimmingClassEntity.swimmingPool.id.eq(swimmingPoolId),
             swimmingClassEntity.id.in(classIds),
+            ticketEntity.targetType.eq(SWIMMING_CLASS),
             reservationEntity.reservationStatus.eq(RESERVATION_PENDING)
         )
         .fetch();

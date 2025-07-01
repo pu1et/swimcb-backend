@@ -1,7 +1,8 @@
 package com.project.swimcb.bo.swimmingclass.adapter.out;
 
 import static com.project.swimcb.db.entity.QSwimmingClassEntity.swimmingClassEntity;
-import static com.project.swimcb.db.entity.QSwimmingClassTicketEntity.swimmingClassTicketEntity;
+import static com.project.swimcb.db.entity.QTicketEntity.ticketEntity;
+import static com.project.swimcb.db.entity.TicketTargetType.SWIMMING_CLASS;
 
 import com.project.swimcb.bo.swimmingclass.application.out.UpdateBoSwimmingClassDsGateway;
 import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand;
@@ -62,9 +63,12 @@ public class UpdateBoSwimmingClassDataMapper implements UpdateBoSwimmingClassDsG
 
   @Override
   public void deleteAllTicketsBySwimmingClassId(@NonNull Long swimmingClassId) {
-    queryFactory.update(swimmingClassTicketEntity)
-        .set(swimmingClassTicketEntity.isDeleted, true)
-        .where(swimmingClassTicketEntity.swimmingClass.id.eq(swimmingClassId))
+    queryFactory.update(ticketEntity)
+        .set(ticketEntity.isDeleted, true)
+        .where(
+            ticketEntity.targetId.eq(swimmingClassId),
+            ticketEntity.targetType.eq(SWIMMING_CLASS)
+        )
         .execute();
 
     entityManager.flush();

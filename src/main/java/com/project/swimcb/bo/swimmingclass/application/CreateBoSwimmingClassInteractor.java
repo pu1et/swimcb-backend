@@ -1,13 +1,13 @@
 package com.project.swimcb.bo.swimmingclass.application;
 
 import com.project.swimcb.db.entity.SwimmingInstructorEntity;
+import com.project.swimcb.db.entity.TicketEntity;
 import com.project.swimcb.db.repository.SwimmingInstructorRepository;
 import com.project.swimcb.bo.swimmingclass.application.in.CreateBoSwimmingClassUseCase;
 import com.project.swimcb.bo.swimmingclass.domain.CreateBoSwimmingClassCommand;
 import com.project.swimcb.db.entity.SwimmingClassEntity;
 import com.project.swimcb.db.repository.SwimmingClassRepository;
 import com.project.swimcb.db.repository.SwimmingClassSubTypeRepository;
-import com.project.swimcb.db.entity.SwimmingClassTicketEntity;
 import com.project.swimcb.db.repository.SwimmingClassTicketRepository;
 import com.project.swimcb.db.repository.SwimmingClassTypeRepository;
 import com.project.swimcb.db.repository.SwimmingPoolRepository;
@@ -64,7 +64,7 @@ public class CreateBoSwimmingClassInteractor implements CreateBoSwimmingClassUse
     val savedSwimmingClass = swimmingClassRepository.save(swimmingClass);
 
     val tickets = command.tickets().stream()
-        .map(i -> SwimmingClassTicketEntity.create(savedSwimmingClass, i.name(), i.price())).toList();
+        .map(i -> TicketEntity.create(savedSwimmingClass, i.name(), i.price())).toList();
 
     swimmingClassTicketRepository.saveAll(tickets);
   }

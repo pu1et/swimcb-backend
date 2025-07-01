@@ -5,7 +5,7 @@ import com.project.swimcb.bo.swimmingclass.application.in.UpdateBoSwimmingClassU
 import com.project.swimcb.bo.swimmingclass.application.out.UpdateBoSwimmingClassDsGateway;
 import com.project.swimcb.db.entity.SwimmingClassEntity;
 import com.project.swimcb.db.repository.SwimmingClassRepository;
-import com.project.swimcb.db.entity.SwimmingClassTicketEntity;
+import com.project.swimcb.db.entity.TicketEntity;
 import com.project.swimcb.db.repository.SwimmingClassTicketRepository;
 import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand;
 import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand.Ticket;
@@ -113,7 +113,7 @@ public class UpdateBoSwimmingClassInteractor implements UpdateBoSwimmingClassUse
     gateway.deleteAllTicketsBySwimmingClassId(swimmingClass.getId());
 
     val newTickets = tickets.stream()
-        .map(i -> SwimmingClassTicketEntity.create(swimmingClass, i.name(), i.price()))
+        .map(i -> TicketEntity.create(swimmingClass, i.name(), i.price()))
         .toList();
     ticketRepository.saveAll(newTickets);
   }

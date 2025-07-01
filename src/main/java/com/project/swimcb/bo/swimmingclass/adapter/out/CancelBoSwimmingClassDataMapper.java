@@ -1,7 +1,8 @@
 package com.project.swimcb.bo.swimmingclass.adapter.out;
 
 import static com.project.swimcb.db.entity.QReservationEntity.reservationEntity;
-import static com.project.swimcb.db.entity.QSwimmingClassTicketEntity.swimmingClassTicketEntity;
+import static com.project.swimcb.db.entity.QTicketEntity.ticketEntity;
+import static com.project.swimcb.db.entity.TicketTargetType.SWIMMING_CLASS;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_CANCELLED;
 
 import com.project.swimcb.bo.swimmingclass.application.out.CancelBoSwimmingClassDsGateway;
@@ -36,10 +37,11 @@ class CancelBoSwimmingClassDataMapper implements CancelBoSwimmingClassDsGateway 
 
     val reservationIds = queryFactory.select(reservationEntity.id)
         .from(reservationEntity)
-        .join(swimmingClassTicketEntity)
-        .on(reservationEntity.ticketId.eq(swimmingClassTicketEntity.id))
+        .join(ticketEntity)
+        .on(reservationEntity.ticketId.eq(ticketEntity.id))
         .where(
-            swimmingClassTicketEntity.swimmingClass.id.eq(swimmingClassId),
+            ticketEntity.targetId.eq(swimmingClassId),
+            ticketEntity.targetType.eq(SWIMMING_CLASS),
             reservationEntity.reservationStatus.in(reservationStatuses)
         )
         .fetch();
@@ -61,10 +63,11 @@ class CancelBoSwimmingClassDataMapper implements CancelBoSwimmingClassDsGateway 
 
     val count = queryFactory.select(reservationEntity.count())
         .from(reservationEntity)
-        .join(swimmingClassTicketEntity)
-        .on(reservationEntity.ticketId.eq(swimmingClassTicketEntity.id))
+        .join(ticketEntity)
+        .on(reservationEntity.ticketId.eq(ticketEntity.id))
         .where(
-            swimmingClassTicketEntity.swimmingClass.id.eq(swimmingClassId),
+            ticketEntity.targetId.eq(swimmingClassId),
+            ticketEntity.targetType.eq(SWIMMING_CLASS),
             reservationEntity.reservationStatus.in(reservationStatuses)
         )
         .fetchOne();

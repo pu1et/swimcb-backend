@@ -47,7 +47,7 @@ class FindSwimmingClassTicketDataMapperTest {
     lenient().when(query.from(any(EntityPath.class))).thenReturn(query);
     lenient().when(query.join(any(EntityPath.class))).thenReturn(query);
     lenient().when(query.on(any(Predicate.class))).thenReturn(query);
-    lenient().when(query.where(any(Predicate.class))).thenReturn(query);
+    lenient().when(query.where(any(Predicate[].class))).thenReturn(query);
   }
 
   @Nested

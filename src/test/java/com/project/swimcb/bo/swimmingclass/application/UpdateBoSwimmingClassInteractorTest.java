@@ -21,8 +21,8 @@ import static org.mockito.Mockito.when;
 import com.project.swimcb.bo.reservation.application.port.out.BoCancelReservationDsGateway;
 import com.project.swimcb.bo.swimmingclass.application.out.UpdateBoSwimmingClassDsGateway;
 import com.project.swimcb.db.entity.SwimmingClassEntity;
+import com.project.swimcb.db.entity.TicketEntity;
 import com.project.swimcb.db.repository.SwimmingClassRepository;
-import com.project.swimcb.db.entity.SwimmingClassTicketEntity;
 import com.project.swimcb.db.repository.SwimmingClassTicketRepository;
 import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand;
 import com.project.swimcb.bo.swimmingclass.domain.UpdateBoSwimmingClassCommand.RegistrationCapacity;
@@ -82,11 +82,11 @@ class UpdateBoSwimmingClassInteractorTest {
       verify(gateway, times(1)).deleteAllTicketsBySwimmingClassId(request.swimmingClassId());
       verify(ticketRepository, times(1)).saveAll(assertArg(i -> {
         assertThat(i).hasSize(2);
-        assertThat(i).extracting(j -> j.getSwimmingClass().getId())
+        assertThat(i).extracting(TicketEntity::getTargetId)
             .containsOnly(swimmingClass.getId());
-        assertThat(i).extracting(SwimmingClassTicketEntity::getName)
+        assertThat(i).extracting(TicketEntity::getName)
             .containsExactly("DUMMY_TICKET_NAME1", "DUMMY_TICKET_NAME2");
-        assertThat(i).extracting(SwimmingClassTicketEntity::getPrice)
+        assertThat(i).extracting(TicketEntity::getPrice)
             .containsExactly(10000, 20000);
       }));
     }

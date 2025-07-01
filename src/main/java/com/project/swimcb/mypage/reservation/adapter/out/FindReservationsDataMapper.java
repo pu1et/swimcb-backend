@@ -3,11 +3,12 @@ package com.project.swimcb.mypage.reservation.adapter.out;
 import static com.project.swimcb.db.entity.QReservationEntity.reservationEntity;
 import static com.project.swimcb.db.entity.QSwimmingClassEntity.swimmingClassEntity;
 import static com.project.swimcb.db.entity.QSwimmingClassSubTypeEntity.swimmingClassSubTypeEntity;
-import static com.project.swimcb.db.entity.QSwimmingClassTicketEntity.swimmingClassTicketEntity;
 import static com.project.swimcb.db.entity.QSwimmingClassTypeEntity.swimmingClassTypeEntity;
 import static com.project.swimcb.db.entity.QSwimmingPoolEntity.swimmingPoolEntity;
 import static com.project.swimcb.db.entity.QSwimmingPoolImageEntity.swimmingPoolImageEntity;
 import static com.project.swimcb.db.entity.QSwimmingPoolReviewEntity.swimmingPoolReviewEntity;
+import static com.project.swimcb.db.entity.QTicketEntity.ticketEntity;
+import static com.project.swimcb.db.entity.TicketTargetType.SWIMMING_CLASS;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_PENDING;
 import static com.querydsl.core.types.Projections.constructor;
 
@@ -62,9 +63,9 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
             swimmingClassEntity.endTime,
             swimmingClassEntity.isCanceled,
 
-            swimmingClassTicketEntity.id,
-            swimmingClassTicketEntity.name,
-            swimmingClassTicketEntity.price,
+            ticketEntity.id,
+            ticketEntity.name,
+            ticketEntity.price,
 
             reservationEntity.id,
             reservationEntity.ticketType,
@@ -77,10 +78,10 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
             swimmingPoolReviewEntity.id
         ))
         .from(reservationEntity)
-        .join(swimmingClassTicketEntity)
-        .on(reservationEntity.ticketId.eq(swimmingClassTicketEntity.id))
+        .join(ticketEntity)
+        .on(reservationEntity.ticketId.eq(ticketEntity.id))
         .join(swimmingClassEntity)
-        .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
+        .on(ticketEntity.targetId.eq(swimmingClassEntity.id))
         .join(swimmingClassTypeEntity).on(swimmingClassEntity.type.eq(swimmingClassTypeEntity))
         .join(swimmingClassSubTypeEntity)
         .on(swimmingClassEntity.subType.eq(swimmingClassSubTypeEntity))
@@ -90,7 +91,8 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
         .leftJoin(swimmingPoolReviewEntity)
         .on(swimmingPoolEntity.eq(swimmingPoolReviewEntity.swimmingPool))
         .where(
-            reservationEntity.member.id.eq(memberId)
+            reservationEntity.member.id.eq(memberId),
+            ticketEntity.targetType.eq(SWIMMING_CLASS)
         )
         .orderBy(reservationEntity.reservedAt.desc())
         .offset(pageable.getOffset())
@@ -116,10 +118,10 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
 
     val count = queryFactory.select(swimmingPoolEntity.id.count())
         .from(reservationEntity)
-        .join(swimmingClassTicketEntity)
-        .on(reservationEntity.ticketId.eq(swimmingClassTicketEntity.id))
+        .join(ticketEntity)
+        .on(reservationEntity.ticketId.eq(ticketEntity.id))
         .join(swimmingClassEntity)
-        .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
+        .on(ticketEntity.targetId.eq(swimmingClassEntity.id))
         .join(swimmingClassTypeEntity).on(swimmingClassEntity.type.eq(swimmingClassTypeEntity))
         .join(swimmingClassSubTypeEntity)
         .on(swimmingClassEntity.subType.eq(swimmingClassSubTypeEntity))
@@ -127,7 +129,8 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
         .join(swimmingPoolImageEntity)
         .on(swimmingPoolEntity.eq(swimmingPoolImageEntity.swimmingPool))
         .where(
-            reservationEntity.member.id.eq(memberId)
+            reservationEntity.member.id.eq(memberId),
+            ticketEntity.targetType.eq(SWIMMING_CLASS)
         )
         .fetchOne();
 
@@ -177,13 +180,14 @@ public class FindReservationsDataMapper implements FindReservationsDsGateway {
             swimmingClassEntity.id
         ))
         .from(reservationEntity)
-        .join(swimmingClassTicketEntity)
-        .on(reservationEntity.ticketId.eq(swimmingClassTicketEntity.id))
+        .join(ticketEntity)
+        .on(reservationEntity.ticketId.eq(ticketEntity.id))
         .join(swimmingClassEntity)
-        .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
+        .on(ticketEntity.targetId.eq(swimmingClassEntity.id))
         .where(
             swimmingClassEntity.id.in(swimmingClassIds),
-            reservationEntity.reservationStatus.eq(RESERVATION_PENDING)
+            reservationEntity.reservationStatus.eq(RESERVATION_PENDING),
+            ticketEntity.targetType.eq(SWIMMING_CLASS)
         )
         .fetch();
   }

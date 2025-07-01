@@ -3,16 +3,18 @@ package com.project.swimcb.swimmingpool.adapter.out;
 import static com.project.swimcb.db.entity.QFavoriteEntity.favoriteEntity;
 import static com.project.swimcb.db.entity.QSwimmingClassEntity.swimmingClassEntity;
 import static com.project.swimcb.db.entity.QSwimmingClassSubTypeEntity.swimmingClassSubTypeEntity;
-import static com.project.swimcb.db.entity.QSwimmingClassTicketEntity.swimmingClassTicketEntity;
 import static com.project.swimcb.db.entity.QSwimmingClassTypeEntity.swimmingClassTypeEntity;
 import static com.project.swimcb.db.entity.QSwimmingPoolEntity.swimmingPoolEntity;
 import static com.project.swimcb.db.entity.QSwimmingPoolImageEntity.swimmingPoolImageEntity;
 import static com.project.swimcb.db.entity.QSwimmingPoolRatingEntity.swimmingPoolRatingEntity;
 import static com.project.swimcb.db.entity.QSwimmingPoolReviewEntity.swimmingPoolReviewEntity;
+import static com.project.swimcb.db.entity.QTicketEntity.ticketEntity;
+import static com.project.swimcb.db.entity.TicketTargetType.*;
 import static com.project.swimcb.favorite.domain.enums.FavoriteTargetType.SWIMMING_POOL;
 import static com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName.GROUP;
 import static com.querydsl.core.types.Projections.constructor;
 
+import com.project.swimcb.db.entity.TicketTargetType;
 import com.project.swimcb.swimmingpool.adapter.in.FindSwimmingClassesResponse;
 import com.project.swimcb.swimmingpool.adapter.in.FindSwimmingClassesResponse.SwimmingClass;
 import com.project.swimcb.swimmingpool.application.out.FindSwimmingClassesDsGateway;
@@ -70,8 +72,7 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
         .join(swimmingClassTypeEntity).on(swimmingClassEntity.type.eq(swimmingClassTypeEntity))
         .join(swimmingClassSubTypeEntity)
         .on(swimmingClassEntity.subType.eq(swimmingClassSubTypeEntity))
-        .join(swimmingClassTicketEntity)
-        .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
+        .join(ticketEntity).on(ticketEntity.targetId.eq(swimmingClassEntity.id))
         .leftJoin(favoriteEntity).on(favoriteJoinIfMemberIdExist(condition.memberId()))
         .leftJoin(swimmingPoolRatingEntity)
         .on(swimmingPoolRatingEntity.swimmingPool.eq(swimmingPoolEntity))
@@ -95,7 +96,8 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
             swimmingClassDaysOfWeek,
             classTypeAndSubTypeIn(condition.classTypes(), condition.classSubTypes()),
 
-            swimmingClassTicketEntity.isDeleted.isFalse()
+            ticketEntity.targetType.eq(SWIMMING_CLASS),
+            ticketEntity.isDeleted.isFalse()
         )
         .groupBy(
             swimmingPoolEntity.id,
@@ -132,24 +134,27 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
                 .join(swimmingClassTypeEntity).on(swimmingClassEntity.type.eq(swimmingClassTypeEntity))
                 .join(swimmingClassSubTypeEntity)
                 .on(swimmingClassEntity.subType.eq(swimmingClassSubTypeEntity))
-                .join(swimmingClassTicketEntity)
-                .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
+                .join(ticketEntity).on(ticketEntity.targetId.eq(swimmingClassEntity.id))
                 .where(
                     swimmingPoolEntity.name.isNotNull(),
                     swimmingPoolEntity.address.isNotNull(),
+                    // TODO. 폰번호 조건 추가
                     swimmingPoolEntity.latitude.isNotNull(),
                     swimmingPoolEntity.longitude.isNotNull(),
-                    swimmingClassEntity.isVisible.eq(true),
-
                     swimmingPoolNameAndAddressContains(condition.keyword()),
 
+                    swimmingClassEntity.isVisible.isTrue(),
+                    swimmingClassEntity.isCanceled.isFalse(),
                     swimmingClassEntity.year.between(condition.startDate().getYear(),
                         condition.endDate().getYear()),
                     swimmingClassEntity.month.between(condition.startDate().getMonthValue(),
                         condition.endDate().getMonthValue()),
                     classTimeBetweenStartTimes(condition.startTimes()),
                     swimmingClassDaysOfWeek,
-                    classTypeAndSubTypeIn(condition.classTypes(), condition.classSubTypes())
+                    classTypeAndSubTypeIn(condition.classTypes(), condition.classSubTypes()),
+
+                    ticketEntity.targetType.eq(SWIMMING_CLASS),
+                    ticketEntity.isDeleted.isFalse()
                 )
                 .fetchOne())
         .orElse(0L);
@@ -202,7 +207,7 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
     if (sort == Sort.DISTANCE_ASC) {
       return distanceExpression.asc();
     }
-    return swimmingClassTicketEntity.price.asc();
+    return ticketEntity.price.asc();
   }
 
   Predicate classTypeAndSubTypeIn(

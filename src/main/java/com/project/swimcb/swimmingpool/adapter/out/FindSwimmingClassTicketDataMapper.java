@@ -2,8 +2,9 @@ package com.project.swimcb.swimmingpool.adapter.out;
 
 import static com.project.swimcb.db.entity.QSwimmingClassEntity.swimmingClassEntity;
 import static com.project.swimcb.db.entity.QSwimmingClassSubTypeEntity.swimmingClassSubTypeEntity;
-import static com.project.swimcb.db.entity.QSwimmingClassTicketEntity.swimmingClassTicketEntity;
 import static com.project.swimcb.db.entity.QSwimmingClassTypeEntity.swimmingClassTypeEntity;
+import static com.project.swimcb.db.entity.QTicketEntity.ticketEntity;
+import static com.project.swimcb.db.entity.TicketTargetType.SWIMMING_CLASS;
 import static com.querydsl.core.types.Projections.constructor;
 import static java.time.DayOfWeek.FRIDAY;
 import static java.time.DayOfWeek.MONDAY;
@@ -49,17 +50,18 @@ class FindSwimmingClassTicketDataMapper implements FindSwimmingClassTicketGatewa
             swimmingClassEntity.daysOfWeek,
             swimmingClassEntity.startTime,
             swimmingClassEntity.endTime,
-            swimmingClassTicketEntity.name,
-            swimmingClassTicketEntity.price
+            ticketEntity.name,
+            ticketEntity.price
         ))
         .from(swimmingClassEntity)
         .join(swimmingClassTypeEntity).on(swimmingClassEntity.type.eq(swimmingClassTypeEntity))
         .join(swimmingClassSubTypeEntity)
         .on(swimmingClassEntity.subType.eq(swimmingClassSubTypeEntity))
-        .join(swimmingClassTicketEntity)
-        .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
+        .join(ticketEntity)
+        .on(ticketEntity.targetId.eq(swimmingClassEntity.id))
         .where(
-            swimmingClassTicketEntity.id.eq(ticketId)
+            ticketEntity.targetType.eq(SWIMMING_CLASS),
+            ticketEntity.id.eq(ticketId)
         )
         .fetchFirst();
 

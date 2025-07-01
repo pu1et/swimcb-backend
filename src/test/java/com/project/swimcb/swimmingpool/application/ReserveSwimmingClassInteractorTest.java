@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 
 import com.project.swimcb.db.entity.SwimmingClassEntity;
 import com.project.swimcb.db.repository.SwimmingClassRepository;
-import com.project.swimcb.db.entity.SwimmingClassTicketEntity;
+import com.project.swimcb.db.entity.TicketEntity;
 import com.project.swimcb.db.repository.SwimmingClassTicketRepository;
 import com.project.swimcb.db.repository.MemberRepository;
 import com.project.swimcb.db.entity.MemberEntity;
@@ -67,7 +67,7 @@ class ReserveSwimmingClassInteractorTest {
     private SwimmingClassEntity swimmingClass;
     private MemberEntity member;
     private ReservationEntity createdReservation;
-    private SwimmingClassTicketEntity ticket;
+    private TicketEntity ticket;
 
     @BeforeEach
     void setUp() {
@@ -81,7 +81,7 @@ class ReserveSwimmingClassInteractorTest {
       swimmingClass = mock(SwimmingClassEntity.class);
       member = mock(MemberEntity.class);
       createdReservation = mock(ReservationEntity.class);
-      ticket = mock(SwimmingClassTicketEntity.class);
+      ticket = mock(TicketEntity.class);
     }
 
     @Test

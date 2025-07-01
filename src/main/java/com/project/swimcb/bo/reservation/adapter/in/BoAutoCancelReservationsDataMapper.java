@@ -2,8 +2,9 @@ package com.project.swimcb.bo.reservation.adapter.in;
 
 import static com.project.swimcb.db.entity.QReservationEntity.reservationEntity;
 import static com.project.swimcb.db.entity.QSwimmingClassEntity.swimmingClassEntity;
-import static com.project.swimcb.db.entity.QSwimmingClassTicketEntity.swimmingClassTicketEntity;
 import static com.project.swimcb.db.entity.QSwimmingPoolEntity.swimmingPoolEntity;
+import static com.project.swimcb.db.entity.QTicketEntity.ticketEntity;
+import static com.project.swimcb.db.entity.TicketTargetType.SWIMMING_CLASS;
 import static com.project.swimcb.swimmingpool.domain.enums.CancellationReason.PAYMENT_DEADLINE_EXPIRED;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.PAYMENT_PENDING;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_CANCELLED;
@@ -107,12 +108,13 @@ public class BoAutoCancelReservationsDataMapper implements BoAutoCancelReservati
 
           return queryFactory.select(reservationEntity.id)
               .from(reservationEntity)
-              .join(swimmingClassTicketEntity)
-              .on(reservationEntity.ticketId.eq(swimmingClassTicketEntity.id))
+              .join(ticketEntity)
+              .on(reservationEntity.ticketId.eq(ticketEntity.id))
               .join(swimmingClassEntity)
-              .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
+              .on(ticketEntity.targetId.eq(swimmingClassEntity.id))
               .where(
                   swimmingClassEntity.id.eq(swimmingClassId),
+                  ticketEntity.targetType.eq(SWIMMING_CLASS),
                   reservationEntity.reservationStatus.eq(RESERVATION_PENDING)
               )
               .orderBy(reservationEntity.reservedAt.asc())

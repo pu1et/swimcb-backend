@@ -3,11 +3,12 @@ package com.project.swimcb.mypage.reservation.adapter.out;
 import static com.project.swimcb.db.entity.QReservationEntity.reservationEntity;
 import static com.project.swimcb.db.entity.QSwimmingClassEntity.swimmingClassEntity;
 import static com.project.swimcb.db.entity.QSwimmingClassSubTypeEntity.swimmingClassSubTypeEntity;
-import static com.project.swimcb.db.entity.QSwimmingClassTicketEntity.swimmingClassTicketEntity;
 import static com.project.swimcb.db.entity.QSwimmingClassTypeEntity.swimmingClassTypeEntity;
 import static com.project.swimcb.db.entity.QSwimmingPoolEntity.swimmingPoolEntity;
 import static com.project.swimcb.db.entity.QSwimmingPoolImageEntity.swimmingPoolImageEntity;
 import static com.project.swimcb.db.entity.QSwimmingPoolReviewEntity.swimmingPoolReviewEntity;
+import static com.project.swimcb.db.entity.QTicketEntity.ticketEntity;
+import static com.project.swimcb.db.entity.TicketTargetType.SWIMMING_CLASS;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_PENDING;
 import static com.querydsl.core.types.Projections.constructor;
 
@@ -62,9 +63,9 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
             swimmingClassEntity.isCanceled,
             swimmingClassEntity.cancelReason,
 
-            swimmingClassTicketEntity.id,
-            swimmingClassTicketEntity.name,
-            swimmingClassTicketEntity.price,
+            ticketEntity.id,
+            ticketEntity.name,
+            ticketEntity.price,
 
             reservationEntity.reservationStatus,
             reservationEntity.reservedAt,
@@ -81,10 +82,10 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
             swimmingPoolReviewEntity.id
         ))
         .from(reservationEntity)
-        .join(swimmingClassTicketEntity)
-        .on(reservationEntity.ticketId.eq(swimmingClassTicketEntity.id))
+        .join(ticketEntity)
+        .on(reservationEntity.ticketId.eq(ticketEntity.id))
         .join(swimmingClassEntity)
-        .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
+        .on(ticketEntity.targetId.eq(swimmingClassEntity.id))
         .join(swimmingClassTypeEntity).on(swimmingClassEntity.type.eq(swimmingClassTypeEntity))
         .join(swimmingClassSubTypeEntity)
         .on(swimmingClassEntity.subType.eq(swimmingClassSubTypeEntity))
@@ -94,7 +95,8 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
         .leftJoin(swimmingPoolReviewEntity)
         .on(swimmingPoolEntity.eq(swimmingPoolReviewEntity.swimmingPool))
         .where(
-            reservationEntity.id.eq(reservationId)
+            reservationEntity.id.eq(reservationId),
+            ticketEntity.targetType.eq(SWIMMING_CLASS)
         )
         .fetchFirst();
 
@@ -118,12 +120,13 @@ public class FindReservationDetailDataMapper implements FindReservationDetailGat
   ) {
     val count = Optional.ofNullable(queryFactory.select(reservationEntity.id.count())
             .from(reservationEntity)
-            .join(swimmingClassTicketEntity)
-            .on(reservationEntity.ticketId.eq(swimmingClassTicketEntity.id))
+            .join(ticketEntity)
+            .on(reservationEntity.ticketId.eq(ticketEntity.id))
             .join(swimmingClassEntity)
-            .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
+            .on(ticketEntity.targetId.eq(swimmingClassEntity.id))
             .where(
                 swimmingClassEntity.id.eq(swimmingClassId),
+                ticketEntity.targetType.eq(SWIMMING_CLASS),
                 reservationEntity.reservationStatus.eq(RESERVATION_PENDING),
                 reservationEntity.reservedAt.before(reservedAt) // 현재 예약보다 이전에 예약된 대기 예약들만 카운트
             )

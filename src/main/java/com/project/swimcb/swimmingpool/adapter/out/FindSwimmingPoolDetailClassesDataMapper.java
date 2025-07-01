@@ -3,9 +3,9 @@ package com.project.swimcb.swimmingpool.adapter.out;
 import static com.project.swimcb.db.entity.QFavoriteEntity.favoriteEntity;
 import static com.project.swimcb.db.entity.QSwimmingClassEntity.swimmingClassEntity;
 import static com.project.swimcb.db.entity.QSwimmingClassSubTypeEntity.swimmingClassSubTypeEntity;
-import static com.project.swimcb.db.entity.QSwimmingClassTicketEntity.swimmingClassTicketEntity;
 import static com.project.swimcb.db.entity.QSwimmingClassTypeEntity.swimmingClassTypeEntity;
-import static com.project.swimcb.favorite.domain.enums.FavoriteTargetType.SWIMMING_CLASS;
+import static com.project.swimcb.db.entity.QTicketEntity.ticketEntity;
+import static com.project.swimcb.db.entity.TicketTargetType.SWIMMING_CLASS;
 import static com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName.GROUP;
 import static com.querydsl.core.types.Projections.constructor;
 import static java.time.DayOfWeek.FRIDAY;
@@ -17,6 +17,7 @@ import static java.time.DayOfWeek.TUESDAY;
 import static java.time.DayOfWeek.WEDNESDAY;
 import static java.util.stream.Collectors.groupingBy;
 
+import com.project.swimcb.favorite.domain.enums.FavoriteTargetType;
 import com.project.swimcb.swimmingpool.adapter.in.FindSwimmingPoolDetailClassesCondition;
 import com.project.swimcb.swimmingpool.adapter.in.FindSwimmingPoolDetailClassesResponse;
 import com.project.swimcb.swimmingpool.adapter.in.FindSwimmingPoolDetailClassesResponse.SwimmingClass;
@@ -64,23 +65,23 @@ class FindSwimmingPoolDetailClassesDataMapper implements
             swimmingClassEntity.daysOfWeek,
             swimmingClassEntity.startTime,
             swimmingClassEntity.endTime,
-            swimmingClassTicketEntity.price.min(),
+            ticketEntity.price.min(),
 
             favoriteEntity.id.count().gt(0),
 
             swimmingClassEntity.reservationLimitCount,
             swimmingClassEntity.reservedCount,
 
-            swimmingClassTicketEntity.id,
-            swimmingClassTicketEntity.name,
-            swimmingClassTicketEntity.price
+            ticketEntity.id,
+            ticketEntity.name,
+            ticketEntity.price
         ))
         .from(swimmingClassEntity)
         .join(swimmingClassTypeEntity).on(swimmingClassEntity.type.eq(swimmingClassTypeEntity))
         .join(swimmingClassSubTypeEntity)
         .on(swimmingClassEntity.subType.eq(swimmingClassSubTypeEntity))
-        .join(swimmingClassTicketEntity)
-        .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
+        .join(ticketEntity)
+        .on(ticketEntity.targetId.eq(swimmingClassEntity.id))
         .leftJoin(favoriteEntity).on(favoriteJoinIfMemberIdExist(condition.memberId()))
         .where(
             swimmingClassEntity.swimmingPool.id.eq(condition.swimmingPoolId()),
@@ -94,7 +95,8 @@ class FindSwimmingPoolDetailClassesDataMapper implements
             swimmingClassDaysOfWeek,
             classTypeAndSubTypeIn(condition.classTypes(), condition.classSubTypes()),
 
-            swimmingClassTicketEntity.isDeleted.isFalse()
+            ticketEntity.targetType.eq(SWIMMING_CLASS),
+            ticketEntity.isDeleted.isFalse()
         )
         .groupBy(
             swimmingClassEntity.id,
@@ -105,9 +107,9 @@ class FindSwimmingPoolDetailClassesDataMapper implements
             swimmingClassEntity.endTime,
             swimmingClassEntity.reservationLimitCount,
             swimmingClassEntity.reservedCount,
-            swimmingClassTicketEntity.id,
-            swimmingClassTicketEntity.name,
-            swimmingClassTicketEntity.price
+            ticketEntity.id,
+            ticketEntity.name,
+            ticketEntity.price
         )
         .offset(condition.pageable().getOffset())
         .limit(condition.pageable().getPageSize())
@@ -144,18 +146,22 @@ class FindSwimmingPoolDetailClassesDataMapper implements
                 .join(swimmingClassTypeEntity).on(swimmingClassEntity.type.eq(swimmingClassTypeEntity))
                 .join(swimmingClassSubTypeEntity)
                 .on(swimmingClassEntity.subType.eq(swimmingClassSubTypeEntity))
-                .join(swimmingClassTicketEntity)
-                .on(swimmingClassTicketEntity.swimmingClass.eq(swimmingClassEntity))
+                .join(ticketEntity)
+                .on(ticketEntity.targetId.eq(swimmingClassEntity.id))
                 .where(
                     swimmingClassEntity.swimmingPool.id.eq(condition.swimmingPoolId()),
-
+                    swimmingClassEntity.isVisible.isTrue(),
+                    swimmingClassEntity.isCanceled.isFalse(),
                     swimmingClassEntity.year.between(condition.startDate().getYear(),
                         condition.endDate().getYear()),
                     swimmingClassEntity.month.between(condition.startDate().getMonthValue(),
                         condition.endDate().getMonthValue()),
                     classTimeBetweenStartTimes(condition.startTimes()),
                     swimmingClassDaysOfWeek,
-                    classTypeAndSubTypeIn(condition.classTypes(), condition.classSubTypes())
+                    classTypeAndSubTypeIn(condition.classTypes(), condition.classSubTypes()),
+
+                    ticketEntity.targetType.eq(SWIMMING_CLASS),
+                    ticketEntity.isDeleted.isFalse()
                 )
                 .fetchOne())
         .orElse(0L);
@@ -170,7 +176,7 @@ class FindSwimmingPoolDetailClassesDataMapper implements
     }
     return favoriteEntity.member.id.eq(memberId)
         .and(favoriteEntity.targetId.eq(swimmingClassEntity.id))
-        .and(favoriteEntity.targetType.eq(SWIMMING_CLASS));
+        .and(favoriteEntity.targetType.eq(FavoriteTargetType.SWIMMING_CLASS));
   }
 
   BooleanBuilder classTimeBetweenStartTimes(@NonNull List<LocalTime> startTimes) {

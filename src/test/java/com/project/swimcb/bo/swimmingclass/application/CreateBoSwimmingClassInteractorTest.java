@@ -17,7 +17,7 @@ import com.project.swimcb.bo.swimmingclass.domain.CreateBoSwimmingClassCommand;
 import com.project.swimcb.bo.swimmingclass.domain.CreateBoSwimmingClassCommand.Ticket;
 import com.project.swimcb.db.entity.SwimmingClassEntity;
 import com.project.swimcb.db.entity.SwimmingClassSubTypeEntity;
-import com.project.swimcb.db.entity.SwimmingClassTicketEntity;
+import com.project.swimcb.db.entity.TicketEntity;
 import com.project.swimcb.db.entity.SwimmingClassTypeEntity;
 import com.project.swimcb.db.entity.SwimmingInstructorEntity;
 import com.project.swimcb.db.entity.SwimmingPoolEntity;
@@ -131,9 +131,9 @@ class CreateBoSwimmingClassInteractorTest {
 
     verify(swimmingClassTicketRepository, only()).saveAll(assertArg(i -> {
       assertThat(i).hasSize(2);
-      assertThat(i).extracting(SwimmingClassTicketEntity::getSwimmingClass)
-          .containsOnly(savedSwimmingClass);
-      assertThat(i).extracting(SwimmingClassTicketEntity::getName).containsExactlyElementsOf(
+      assertThat(i).extracting(TicketEntity::getTargetId)
+          .containsOnly(savedSwimmingClass.getId());
+      assertThat(i).extracting(TicketEntity::getName).containsExactlyElementsOf(
           command.tickets().stream().map(Ticket::name).toList());
     }));
   }

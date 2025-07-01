@@ -6,7 +6,7 @@ import static com.project.swimcb.swimmingpool.domain.SwimmingClassAvailabilitySt
 import com.project.swimcb.db.entity.ReservationEntity;
 import com.project.swimcb.db.entity.SwimmingClassEntity;
 import com.project.swimcb.db.repository.SwimmingClassRepository;
-import com.project.swimcb.db.entity.SwimmingClassTicketEntity;
+import com.project.swimcb.db.entity.TicketEntity;
 import com.project.swimcb.db.repository.SwimmingClassTicketRepository;
 import com.project.swimcb.db.repository.MemberRepository;
 import com.project.swimcb.db.entity.MemberEntity;
@@ -55,7 +55,7 @@ class ReserveSwimmingClassInteractor implements ReserveSwimmingClassUseCase {
   }
 
   private ReservationEntity createClassReservation(@NonNull ReserveSwimmingClassCommand command,
-      @NonNull SwimmingClassEntity swimmingClass, @NonNull SwimmingClassTicketEntity ticket,
+      @NonNull SwimmingClassEntity swimmingClass, @NonNull TicketEntity ticket,
       @NonNull MemberEntity member) {
 
     val reservationStatus = swimmingClass.getReservationStatus();
