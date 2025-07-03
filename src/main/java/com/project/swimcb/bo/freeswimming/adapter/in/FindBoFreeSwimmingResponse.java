@@ -1,6 +1,6 @@
 package com.project.swimcb.bo.freeswimming.adapter.in;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
 import lombok.Builder;
@@ -13,27 +13,14 @@ public record FindBoFreeSwimmingResponse(
 
   @Builder
   record FreeSwimming(
-      long freeSwimmingId,
+      @NonNull Long freeSwimmingId,
+      @NonNull List<DayOfWeek> days,
       @NonNull Time time,
-      @NonNull Days days,
-      @NonNull String instructorName,
+      Lifeguard lifeguard,
       @NonNull TicketPriceRange ticketPriceRange,
       @NonNull List<Ticket> tickets,
-      @NonNull RegistrationCapacity registrationCapacity,
-      boolean isExposed
-  ) {
-
-  }
-
-  @Builder
-  record Days(
-      boolean isMonday,
-      boolean isTuesday,
-      boolean isWednesday,
-      boolean isThursday,
-      boolean isFriday,
-      boolean isSaturday,
-      boolean isSunday
+      @NonNull Integer capacity,
+      @NonNull Boolean isExposed
   ) {
 
   }
@@ -47,28 +34,28 @@ public record FindBoFreeSwimmingResponse(
   }
 
   @Builder
+  public record Lifeguard(
+      @NonNull Long id,
+      @NonNull String name
+  ) {
+
+  }
+
+  @Builder
   record TicketPriceRange(
-      int minimumPrice,
-      int maximumPrice
+      @NonNull Integer minimumPrice,
+      @NonNull Integer maximumPrice
   ) {
 
   }
 
   @Builder
   record Ticket(
+      @NonNull Long id,
       @NonNull String name,
-      int price
+      @NonNull Integer price
   ) {
 
   }
 
-  @Builder
-  record RegistrationCapacity(
-      int totalCapacity,
-      int reservationLimitCount,
-      int completedReservationCount,
-      int remainingReservationCount
-  ) {
-
-  }
 }
