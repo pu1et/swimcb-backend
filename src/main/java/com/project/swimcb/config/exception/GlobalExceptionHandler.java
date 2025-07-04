@@ -13,6 +13,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -30,6 +31,16 @@ public class GlobalExceptionHandler {
 
     val errorResponse = new ErrorResponse(BAD_REQUEST.value(),
         Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage());
+    return ResponseEntity.status(BAD_REQUEST).body(errorResponse);
+  }
+
+  // 파라미터의 타입이 잘못 인입되었을 때 발생
+  @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+  public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(
+      MethodArgumentTypeMismatchException e) {
+
+    val errorResponse = new ErrorResponse(BAD_REQUEST.value(),
+        String.format("'%s' 파라미터의 타입이 '%s'가 아닙니다.", e.getName(), e.getRequiredType()));
     return ResponseEntity.status(BAD_REQUEST).body(errorResponse);
   }
 
@@ -65,4 +76,5 @@ public class GlobalExceptionHandler {
     val errorResponse = new ErrorResponse(INTERNAL_SERVER_ERROR.value(), e.getMessage());
     return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(errorResponse);
   }
+
 }
