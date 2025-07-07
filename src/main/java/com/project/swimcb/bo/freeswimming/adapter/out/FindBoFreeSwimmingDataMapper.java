@@ -58,7 +58,8 @@ class FindBoFreeSwimmingDataMapper implements FindBoFreeSwimmingDsGateway {
         .where(
             freeSwimmingEntity.swimmingPool.id.eq(swimmingPoolId),
             freeSwimmingEntity.yearMonth.eq(yearMonth),
-            ticketEntity.targetType.eq(FREE_SWIMMING)
+            ticketEntity.targetType.eq(FREE_SWIMMING),
+            ticketEntity.isDeleted.isFalse()
         )
         .fetch();
 
