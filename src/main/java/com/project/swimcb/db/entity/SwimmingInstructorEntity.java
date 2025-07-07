@@ -34,6 +34,10 @@ public class SwimmingInstructorEntity extends BaseEntity {
   @Column(name = "name", length = 50)
   private String name;
 
+  public SwimmingInstructorEntity(long id) {
+    this.id = id;
+  }
+
   public static SwimmingInstructorEntity create(@NonNull SwimmingPoolEntity swimmingPool, @NonNull String name) {
     val swimmingInstructor = new SwimmingInstructorEntity();
     swimmingInstructor.swimmingPool = swimmingPool;

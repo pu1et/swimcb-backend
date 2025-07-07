@@ -1,15 +1,24 @@
 package com.project.swimcb.bo.freeswimming.adapter.in;
 
+import static com.project.swimcb.bo.freeswimming.adapter.in.CreateBoFreeSwimmingControllerTest.SWIMMING_POOL_ID;
+import static java.time.DayOfWeek.MONDAY;
+import static java.time.DayOfWeek.WEDNESDAY;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.assertArg;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.swimcb.bo.freeswimming.application.port.in.UpdateBoFreeSwimmingUseCase;
 import com.project.swimcb.common.WebMvcTestWithoutSecurity;
-import java.time.DayOfWeek;
+import com.project.swimcb.common.WithMockTokenInfo;
 import java.time.LocalTime;
-import java.time.YearMonth;
 import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
@@ -17,9 +26,11 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTestWithoutSecurity(controllers = UpdateBoFreeSwimmingController.class)
+@WithMockTokenInfo(swimmingPoolId = SWIMMING_POOL_ID)
 class UpdateBoFreeSwimmingControllerTest {
 
   @Autowired
@@ -28,7 +39,46 @@ class UpdateBoFreeSwimmingControllerTest {
   @Autowired
   private ObjectMapper objectMapper;
 
+  @MockitoBean
+  private UpdateBoFreeSwimmingUseCase useCase;
+
+  final static Long SWIMMING_POOL_ID = 1L;
+
   private final String PATH = "/api/bo/free-swimming/1";
+
+  @Nested
+  @DisplayName("자유수영 업데이트 시")
+  class DescribeUpdateFreeSwimming {
+
+    @Test
+    @DisplayName("유효한 요청이면 UseCase를 호출하고 성공 응답을 반환한다")
+    void shouldCallUseCaseAndReturnSuccessWhenValidRequest() throws Exception {
+      // given
+      val request = UpdateBoFreeSwimmingRequestFactory.createValid().build();
+      willDoNothing().given(useCase).updateFreeSwimmingImage(any());
+
+      // when
+      // then
+      mockMvc.perform(put(PATH)
+              .contentType(APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(request)))
+          .andExpect(status().isOk());
+
+      then(useCase).should().updateFreeSwimmingImage(assertArg(i -> {
+        assertThat(i.swimmingPoolId()).isEqualTo(SWIMMING_POOL_ID);
+        assertThat(i.daysOfWeek().value()).containsExactlyInAnyOrder(MONDAY, WEDNESDAY);
+        assertThat(i.time().startTime()).isEqualTo(LocalTime.of(9, 0));
+        assertThat(i.time().endTime()).isEqualTo(LocalTime.of(10, 0));
+        assertThat(i.lifeguardId()).isEqualTo(1L);
+        assertThat(i.tickets()).hasSize(1);
+        assertThat(i.tickets().getFirst().name()).isEqualTo("성인일반");
+        assertThat(i.tickets().getFirst().price()).isEqualTo(10000);
+        assertThat(i.capacity()).isEqualTo(20);
+        assertThat(i.isExposed()).isTrue();
+      }));
+    }
+
+  }
 
   @Nested
   @DisplayName("요청 검증")
@@ -39,20 +89,6 @@ class UpdateBoFreeSwimmingControllerTest {
     class ContextWithMissingRequiredFields {
 
       @Test
-      @DisplayName("yearMonth가 null이면 400 에러를 반환한다")
-      void shouldReturn400WhenYearMonthIsNull() throws Exception {
-        // given
-        val request = UpdateBoFreeSwimmingRequestFactory.createWithNullYearMonth();
-
-        // when & then
-        mockMvc.perform(put(PATH)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isBadRequest())
-            .andExpect(content().string(containsString("년/월은 null이 될 수 없습니다")));
-      }
-
-      @Test
       @DisplayName("days가 null이면 400 에러를 반환한다")
       void shouldReturn400WhenDaysIsNull() throws Exception {
         // given
@@ -60,7 +96,7 @@ class UpdateBoFreeSwimmingControllerTest {
 
         // when & then
         mockMvc.perform(put(PATH)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
             .andExpect(content().string(containsString("자유수영 요일은 필수입니다")));
@@ -74,7 +110,7 @@ class UpdateBoFreeSwimmingControllerTest {
 
         // when & then
         mockMvc.perform(put(PATH)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
             .andExpect(content().string(containsString("자유수영 시작/종료 시간은 null이 될 수 없습니다")));
@@ -88,7 +124,7 @@ class UpdateBoFreeSwimmingControllerTest {
 
         // when & then
         mockMvc.perform(put(PATH)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
             .andExpect(content().string(containsString("자유수영 시작 시간은 null이 될 수 없습니다")));
@@ -102,7 +138,7 @@ class UpdateBoFreeSwimmingControllerTest {
 
         // when & then
         mockMvc.perform(put(PATH)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
             .andExpect(content().string(containsString("자유수영 종료 시간은 null이 될 수 없습니다")));
@@ -116,7 +152,7 @@ class UpdateBoFreeSwimmingControllerTest {
 
         // when & then
         mockMvc.perform(put(PATH)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
             .andExpect(content().string(containsString("자유수영 티켓 리스트는 필수입니다")));
@@ -129,7 +165,7 @@ class UpdateBoFreeSwimmingControllerTest {
 
         // when & then
         mockMvc.perform(put(PATH)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
             .andExpect(content().string(containsString("티켓 이름은 필수입니다")));
@@ -143,7 +179,7 @@ class UpdateBoFreeSwimmingControllerTest {
 
         // when & then
         mockMvc.perform(put(PATH)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
             .andExpect(content().string(containsString("티켓 가격은 null이 될 수 없습니다")));
@@ -157,7 +193,7 @@ class UpdateBoFreeSwimmingControllerTest {
 
         // when & then
         mockMvc.perform(put(PATH)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
             .andExpect(content().string(containsString("정원 정보는 null이 될 수 없습니다")));
@@ -171,7 +207,7 @@ class UpdateBoFreeSwimmingControllerTest {
 
         // when & then
         mockMvc.perform(put(PATH)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
             .andExpect(content().string(containsString("사용자 노출 여부는 null이 될 수 없습니다")));
@@ -191,7 +227,7 @@ class UpdateBoFreeSwimmingControllerTest {
 
         // when & then
         mockMvc.perform(put(PATH)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
             .andExpect(content().string(containsString("자유수영 요일은 필수입니다")));
@@ -205,7 +241,7 @@ class UpdateBoFreeSwimmingControllerTest {
 
         // when & then
         mockMvc.perform(put(PATH)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
             .andExpect(content().string(containsString("자유수영 티켓 리스트는 필수입니다")));
@@ -219,7 +255,7 @@ class UpdateBoFreeSwimmingControllerTest {
 
         // when & then
         mockMvc.perform(put(PATH)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
             .andExpect(content().string(containsString("정원 정보는 0 이상이어야 합니다")));
@@ -239,7 +275,7 @@ class UpdateBoFreeSwimmingControllerTest {
 
         // when & then
         mockMvc.perform(put(PATH)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
             .andExpect(content().string(containsString("티켓 이름은 필수입니다")));
@@ -253,7 +289,7 @@ class UpdateBoFreeSwimmingControllerTest {
 
         // when & then
         mockMvc.perform(put(PATH)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
             .andExpect(content().string(containsString("티켓 가격은 0 이상이어야 합니다")));
@@ -264,12 +300,6 @@ class UpdateBoFreeSwimmingControllerTest {
   }
 
   private static class UpdateBoFreeSwimmingRequestFactory {
-
-    public static UpdateBoFreeSwimmingRequest createWithNullYearMonth() {
-      return createValid()
-          .yearMonth(null)
-          .build();
-    }
 
     private static UpdateBoFreeSwimmingRequest createWithNullDays() {
       return createValid()
@@ -375,8 +405,7 @@ class UpdateBoFreeSwimmingControllerTest {
 
     private static UpdateBoFreeSwimmingRequest.UpdateBoFreeSwimmingRequestBuilder createValid() {
       return UpdateBoFreeSwimmingRequest.builder()
-          .yearMonth(YearMonth.of(2025, 10))
-          .days(List.of(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY))
+          .days(List.of(MONDAY, WEDNESDAY))
           .time(UpdateBoFreeSwimmingRequest.Time.builder()
               .startTime(LocalTime.of(9, 0))
               .endTime(LocalTime.of(10, 0))

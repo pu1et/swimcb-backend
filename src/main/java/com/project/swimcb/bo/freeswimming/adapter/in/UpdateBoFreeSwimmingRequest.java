@@ -1,5 +1,6 @@
 package com.project.swimcb.bo.freeswimming.adapter.in;
 
+import com.project.swimcb.bo.freeswimming.domain.DaysOfWeek;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -10,13 +11,10 @@ import java.time.LocalTime;
 import java.time.YearMonth;
 import java.util.List;
 import lombok.Builder;
+import lombok.NonNull;
 
 @Builder
 public record UpdateBoFreeSwimmingRequest(
-
-    @NotNull(message = "년/월은 null이 될 수 없습니다.")
-    @Schema(description = "자유수영 년/월", example = "2025-10")
-    YearMonth yearMonth,
 
     @NotEmpty(message = "자유수영 요일은 필수입니다.")
     @Schema(description = "자유수영 요일")
@@ -74,6 +72,34 @@ public record UpdateBoFreeSwimmingRequest(
       Integer price
   ) {
 
+  }
+
+  public UpdateBoFreeSwimmingCommand toCommand(
+      @NonNull Long swimmingPoolId,
+      @NonNull Long freeSwimmingId
+  ) {
+
+    return UpdateBoFreeSwimmingCommand.builder()
+        .swimmingPoolId(swimmingPoolId)
+        .freeSwimmingId(freeSwimmingId)
+        .daysOfWeek(new DaysOfWeek(this.days()))
+        .time(
+            UpdateBoFreeSwimmingCommand.Time.builder()
+                .startTime(this.time.startTime)
+                .endTime(this.time.endTime)
+                .build()
+        )
+        .lifeguardId(this.lifeguardId)
+        .tickets(this.tickets.stream()
+            .map(ticket ->
+                UpdateBoFreeSwimmingCommand.Ticket.builder()
+                    .name(ticket.name())
+                    .price(ticket.price())
+                    .build())
+            .toList())
+        .capacity(this.capacity)
+        .isExposed(this.isExposed)
+        .build();
   }
 
 }
