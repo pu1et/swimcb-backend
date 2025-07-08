@@ -1,5 +1,6 @@
 package com.project.swimcb.bo.freeswimming.adapter.in;
 
+import com.project.swimcb.bo.freeswimming.application.port.in.SetFreeSwimmingClosedUseCase;
 import com.project.swimcb.token.domain.TokenInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -19,12 +20,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class SetFreeSwimmingHolidayController {
 
+  private final SetFreeSwimmingClosedUseCase useCase;
+
   @Operation(summary = "자유수영 데이터 관리 - 휴무일 설정")
   @PostMapping
   public void setFreeSwimmingFullyBooked(
       @Valid @RequestBody SetFreeSwimmingHolidayRequest request,
       @AuthenticationPrincipal TokenInfo tokenInfo
   ) {
+
+    useCase.setFreeSwimmingClosed(request.toCommand(tokenInfo.swimmingPoolId()));
   }
 
 }

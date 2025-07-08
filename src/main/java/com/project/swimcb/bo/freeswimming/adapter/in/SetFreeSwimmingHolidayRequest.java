@@ -1,5 +1,6 @@
 package com.project.swimcb.bo.freeswimming.adapter.in;
 
+import com.project.swimcb.bo.freeswimming.domain.SetFreeSwimmingClosedCommand;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
@@ -14,5 +15,13 @@ public record SetFreeSwimmingHolidayRequest(
     @NotNull(message = "휴무일 여부는 null이 될 수 없습니다.")
     Boolean isHoliday
 ) {
+
+  public SetFreeSwimmingClosedCommand toCommand(@NotNull Long swimmingPoolId) {
+    return SetFreeSwimmingClosedCommand.builder()
+        .swimmingPoolId(swimmingPoolId)
+        .freeSwimmingDayStatusIds(freeSwimmingDayStatusIds)
+        .isClosed(isHoliday)
+        .build();
+  }
 
 }

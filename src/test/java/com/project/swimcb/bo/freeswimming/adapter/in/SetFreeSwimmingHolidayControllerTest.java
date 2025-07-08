@@ -1,13 +1,17 @@
 package com.project.swimcb.bo.freeswimming.adapter.in;
 
 import static com.project.swimcb.bo.freeswimming.adapter.in.SetFreeSwimmingHolidayControllerTest.SWIMMING_POOL_ID;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.assertArg;
+import static org.mockito.BDDMockito.then;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.swimcb.bo.freeswimming.application.port.in.SetFreeSwimmingClosedUseCase;
 import com.project.swimcb.common.WebMvcTestWithoutSecurity;
 import com.project.swimcb.common.WithMockTokenInfo;
 import java.util.List;
@@ -16,6 +20,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTestWithoutSecurity(controllers = SetFreeSwimmingHolidayController.class)
@@ -27,6 +32,9 @@ class SetFreeSwimmingHolidayControllerTest {
 
   @Autowired
   private ObjectMapper objectMapper;
+
+  @MockitoBean
+  private SetFreeSwimmingClosedUseCase useCase;
 
   static final long SWIMMING_POOL_ID = 1L;
 
@@ -44,6 +52,12 @@ class SetFreeSwimmingHolidayControllerTest {
             .contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isOk());
+
+    then(useCase).should().setFreeSwimmingClosed(assertArg(i -> {
+      assertThat(i.swimmingPoolId()).isEqualTo(SWIMMING_POOL_ID);
+      assertThat(i.freeSwimmingDayStatusIds()).isEqualTo(request.freeSwimmingDayStatusIds());
+      assertThat(i.isClosed()).isEqualTo(request.isHoliday());
+    }));
   }
 
   @Nested
