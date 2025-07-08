@@ -1,22 +1,30 @@
 package com.project.swimcb.bo.freeswimming.adapter.in;
 
+import static com.project.swimcb.bo.freeswimming.adapter.in.SetFreeSwimmingFullyBookedControllerTest.SWIMMING_POOL_ID;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.assertArg;
+import static org.mockito.BDDMockito.then;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.swimcb.bo.freeswimming.application.port.in.SetFreeSwimmingReservationBlockedUseCase;
 import com.project.swimcb.common.WebMvcTestWithoutSecurity;
+import com.project.swimcb.common.WithMockTokenInfo;
 import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTestWithoutSecurity(controllers = SetFreeSwimmingFullyBookedController.class)
+@WithMockTokenInfo(swimmingPoolId = SWIMMING_POOL_ID)
 class SetFreeSwimmingFullyBookedControllerTest {
 
   @Autowired
@@ -24,6 +32,11 @@ class SetFreeSwimmingFullyBookedControllerTest {
 
   @Autowired
   private ObjectMapper objectMapper;
+
+  @MockitoBean
+  private SetFreeSwimmingReservationBlockedUseCase useCase;
+
+  static final long SWIMMING_POOL_ID = 1L;
 
   private final String PATH = "/api/bo/free-swimming/fully-booked";
 
@@ -33,11 +46,18 @@ class SetFreeSwimmingFullyBookedControllerTest {
     // given
     val request = createValidRequest();
 
-    // when & then
+    // when
+    // then
     mockMvc.perform(post(PATH)
             .contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isOk());
+
+    then(useCase).should().setFreeSwimmingReservationBlocked(assertArg(i -> {
+      assertThat(i.swimmingPoolId()).isEqualTo(SWIMMING_POOL_ID);
+      assertThat(i.freeSwimmingDayStatusIds()).isEqualTo(request.freeSwimmingDayStatusIds());
+      assertThat(i.isReservationBlocked()).isEqualTo(request.isFullyBooked());
+    }));
   }
 
   @Nested
