@@ -1,5 +1,6 @@
 package com.project.swimcb.bo.freeswimming.adapter.in;
 
+import com.project.swimcb.bo.freeswimming.application.port.in.CancelBoFreeSwimmingUseCase;
 import com.project.swimcb.token.domain.TokenInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CancelBoFreeSwimmingController {
 
+  private final CancelBoFreeSwimmingUseCase useCase;
+
   @Operation(summary = "자유수영 데이터 관리 - 폐강 처리")
   @PatchMapping
   public void cancel(
@@ -27,6 +30,7 @@ public class CancelBoFreeSwimmingController {
       @Valid @RequestBody CancelBoFreeSwimmingRequest request,
       @AuthenticationPrincipal TokenInfo tokenInfo
   ) {
+    useCase.cancelBoFreeSwimming(request.toCommand(tokenInfo.swimmingPoolId(), freeSwimmingId));
   }
 
 }

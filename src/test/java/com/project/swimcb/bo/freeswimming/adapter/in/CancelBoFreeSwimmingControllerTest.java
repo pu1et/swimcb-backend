@@ -1,21 +1,27 @@
 package com.project.swimcb.bo.freeswimming.adapter.in;
 
+import static com.project.swimcb.bo.freeswimming.adapter.in.CancelBoFreeSwimmingControllerTest.SWIMMING_POOL_ID;
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.BDDMockito.then;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.swimcb.bo.freeswimming.application.port.in.CancelBoFreeSwimmingUseCase;
 import com.project.swimcb.common.WebMvcTestWithoutSecurity;
+import com.project.swimcb.common.WithMockTokenInfo;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTestWithoutSecurity(controllers = CancelBoFreeSwimmingController.class)
+@WithMockTokenInfo(swimmingPoolId = SWIMMING_POOL_ID)
 class CancelBoFreeSwimmingControllerTest {
 
   @Autowired
@@ -24,7 +30,13 @@ class CancelBoFreeSwimmingControllerTest {
   @Autowired
   private ObjectMapper objectMapper;
 
+  @MockitoBean
+  private CancelBoFreeSwimmingUseCase useCase;
+
+  static final long SWIMMING_POOL_ID = 1L;
+
   private final String PATH = "/api/bo/free-swimming/1/cancel";
+  private final long FREE_SWIMMING_ID = 1L;
 
   @Test
   @DisplayName("자유수영 데이터 관리 - 폐강 성공")
@@ -37,6 +49,9 @@ class CancelBoFreeSwimmingControllerTest {
             .contentType(APPLICATION_JSON_VALUE)
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isOk());
+
+    then(useCase).should()
+        .cancelBoFreeSwimming(request.toCommand(SWIMMING_POOL_ID, FREE_SWIMMING_ID));
   }
 
   @Nested
