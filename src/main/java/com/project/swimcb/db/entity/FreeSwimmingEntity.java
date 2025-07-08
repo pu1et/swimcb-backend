@@ -13,11 +13,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.ToString;
 
 @ToString
@@ -59,5 +61,20 @@ public class FreeSwimmingEntity extends BaseEntity {
 
   @Column(name = "is_visible", nullable = false)
   private boolean isVisible;
+
+  @Column(name = "is_canceled", nullable = false)
+  private boolean isCanceled;
+
+  @Column(name = "cancel_reason")
+  private String cancelReason;
+
+  @Column(name = "canceled_at")
+  private LocalDateTime canceledAt;
+
+  public void cancel(@NonNull String reason) {
+    this.isCanceled = true;
+    this.cancelReason = reason;
+    this.canceledAt = LocalDateTime.now();
+  }
 
 }
