@@ -1,6 +1,6 @@
 package com.project.swimcb.bo.freeswimming.adapter.in;
 
-import static com.project.swimcb.bo.freeswimming.adapter.in.SetFreeSwimmingFullyBookedControllerTest.SWIMMING_POOL_ID;
+import static com.project.swimcb.bo.freeswimming.adapter.in.SetFreeSwimmingReservationBlockedControllerTest.SWIMMING_POOL_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.assertArg;
@@ -23,9 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTestWithoutSecurity(controllers = SetFreeSwimmingFullyBookedController.class)
+@WebMvcTestWithoutSecurity(controllers = SetFreeSwimmingReservationBlockedController.class)
 @WithMockTokenInfo(swimmingPoolId = SWIMMING_POOL_ID)
-class SetFreeSwimmingFullyBookedControllerTest {
+class SetFreeSwimmingReservationBlockedControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
@@ -38,7 +38,7 @@ class SetFreeSwimmingFullyBookedControllerTest {
 
   static final long SWIMMING_POOL_ID = 1L;
 
-  private final String PATH = "/api/bo/free-swimming/fully-booked";
+  private final String PATH = "/api/bo/free-swimming/reservation-block";
 
   @Test
   @DisplayName("유효한 요청이면 200 OK를 반환한다")
@@ -56,7 +56,7 @@ class SetFreeSwimmingFullyBookedControllerTest {
     then(useCase).should().setFreeSwimmingReservationBlocked(assertArg(i -> {
       assertThat(i.swimmingPoolId()).isEqualTo(SWIMMING_POOL_ID);
       assertThat(i.freeSwimmingDayStatusIds()).isEqualTo(request.freeSwimmingDayStatusIds());
-      assertThat(i.isReservationBlocked()).isEqualTo(request.isFullyBooked());
+      assertThat(i.isReservationBlocked()).isEqualTo(request.isReservationBlocked());
     }));
   }
 
@@ -68,9 +68,9 @@ class SetFreeSwimmingFullyBookedControllerTest {
     @DisplayName("freeSwimmingDayStatusIds가 null이면 400 에러를 반환한다")
     void shouldReturn400WhenFreeSwimmingDayStatusIdsIsNull() throws Exception {
       // given
-      val request = SetFreeSwimmingFullyBookedRequest.builder()
+      val request = SetFreeSwimmingReservationBlockedRequest.builder()
           .freeSwimmingDayStatusIds(null)
-          .isFullyBooked(true)
+          .isReservationBlocked(true)
           .build();
 
       // when
@@ -86,9 +86,9 @@ class SetFreeSwimmingFullyBookedControllerTest {
     @DisplayName("freeSwimmingDayStatusIds가 빈 리스트이면 400 에러를 반환한다")
     void shouldReturn400WhenFreeSwimmingDayStatusIdsIsEmpty() throws Exception {
       // given
-      val request = SetFreeSwimmingFullyBookedRequest.builder()
+      val request = SetFreeSwimmingReservationBlockedRequest.builder()
           .freeSwimmingDayStatusIds(List.of())
-          .isFullyBooked(true)
+          .isReservationBlocked(true)
           .build();
 
       // when
@@ -101,12 +101,12 @@ class SetFreeSwimmingFullyBookedControllerTest {
     }
 
     @Test
-    @DisplayName("isFullyBooked가 null이면 400 에러를 반환한다")
-    void shouldReturn400WhenIsFullyBookedIsNull() throws Exception {
+    @DisplayName("isReservationBlocked가 null이면 400 에러를 반환한다")
+    void shouldReturn400WhenisReservationBlockedIsNull() throws Exception {
       // given
-      val request = SetFreeSwimmingFullyBookedRequest.builder()
+      val request = SetFreeSwimmingReservationBlockedRequest.builder()
           .freeSwimmingDayStatusIds(List.of(1L, 2L))
-          .isFullyBooked(null)
+          .isReservationBlocked(null)
           .build();
 
       // when
@@ -142,10 +142,10 @@ class SetFreeSwimmingFullyBookedControllerTest {
 
   }
 
-  private SetFreeSwimmingFullyBookedRequest createValidRequest() {
-    return SetFreeSwimmingFullyBookedRequest.builder()
+  private SetFreeSwimmingReservationBlockedRequest createValidRequest() {
+    return SetFreeSwimmingReservationBlockedRequest.builder()
         .freeSwimmingDayStatusIds(List.of(1L, 2L, 3L))
-        .isFullyBooked(true)
+        .isReservationBlocked(true)
         .build();
   }
 
