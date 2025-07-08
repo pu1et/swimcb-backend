@@ -51,11 +51,11 @@ class SetFreeSwimmingHolidayControllerTest {
   class DescribeRequestValidation {
 
     @Test
-    @DisplayName("freeSwimmingIds가 null이면 400 에러를 반환한다")
-    void shouldReturn400WhenFreeSwimmingIdsIsNull() throws Exception {
+    @DisplayName("freeSwimmingDayStatusIds가 null이면 400 에러를 반환한다")
+    void shouldReturn400WhenFreeSwimmingDayStatusIdsIsNull() throws Exception {
       // given
       val request = SetFreeSwimmingHolidayRequest.builder()
-          .freeSwimmingIds(null)
+          .freeSwimmingDayStatusIds(null)
           .isHoliday(true)
           .build();
 
@@ -65,15 +65,15 @@ class SetFreeSwimmingHolidayControllerTest {
               .contentType(APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(request)))
           .andExpect(status().isBadRequest())
-          .andExpect(content().string(containsString("자유수영 ID 리스트는 필수입니다")));
+          .andExpect(content().string(containsString("자유수영 일별 상태 ID 리스트는 필수입니다")));
     }
 
     @Test
-    @DisplayName("freeSwimmingIds가 빈 리스트이면 400 에러를 반환한다")
-    void shouldReturn400WhenFreeSwimmingIdsIsEmpty() throws Exception {
+    @DisplayName("freeSwimmingDayStatusIds가 빈 리스트이면 400 에러를 반환한다")
+    void shouldReturn400WhenFreeSwimmingDayStatusIdsIsEmpty() throws Exception {
       // given
       val request = SetFreeSwimmingHolidayRequest.builder()
-          .freeSwimmingIds(List.of())
+          .freeSwimmingDayStatusIds(List.of())
           .isHoliday(true)
           .build();
 
@@ -83,7 +83,7 @@ class SetFreeSwimmingHolidayControllerTest {
               .contentType(APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(request)))
           .andExpect(status().isBadRequest())
-          .andExpect(content().string(containsString("자유수영 ID 리스트는 필수입니다")));
+          .andExpect(content().string(containsString("자유수영 일별 상태 ID 리스트는 필수입니다")));
     }
 
     @Test
@@ -91,7 +91,7 @@ class SetFreeSwimmingHolidayControllerTest {
     void shouldReturn400WhenIsHolidayIsNull() throws Exception {
       // given
       val request = SetFreeSwimmingHolidayRequest.builder()
-          .freeSwimmingIds(List.of(1L, 2L))
+          .freeSwimmingDayStatusIds(List.of(1L, 2L))
           .isHoliday(null)
           .build();
 
@@ -130,7 +130,7 @@ class SetFreeSwimmingHolidayControllerTest {
 
   private SetFreeSwimmingHolidayRequest createValidRequest() {
     return SetFreeSwimmingHolidayRequest.builder()
-        .freeSwimmingIds(List.of(1L, 2L, 3L))
+        .freeSwimmingDayStatusIds(List.of(1L, 2L, 3L))
         .isHoliday(true)
         .build();
   }
