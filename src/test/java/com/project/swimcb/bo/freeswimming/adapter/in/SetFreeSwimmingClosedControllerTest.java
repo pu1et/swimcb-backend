@@ -1,6 +1,6 @@
 package com.project.swimcb.bo.freeswimming.adapter.in;
 
-import static com.project.swimcb.bo.freeswimming.adapter.in.SetFreeSwimmingHolidayControllerTest.SWIMMING_POOL_ID;
+import static com.project.swimcb.bo.freeswimming.adapter.in.SetFreeSwimmingClosedControllerTest.SWIMMING_POOL_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.assertArg;
@@ -23,9 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTestWithoutSecurity(controllers = SetFreeSwimmingHolidayController.class)
+@WebMvcTestWithoutSecurity(controllers = SetFreeSwimmingClosedController.class)
 @WithMockTokenInfo(swimmingPoolId = SWIMMING_POOL_ID)
-class SetFreeSwimmingHolidayControllerTest {
+class SetFreeSwimmingClosedControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
@@ -38,7 +38,7 @@ class SetFreeSwimmingHolidayControllerTest {
 
   static final long SWIMMING_POOL_ID = 1L;
 
-  private final String PATH = "/api/bo/free-swimming/holidays";
+  private final String PATH = "/api/bo/free-swimming/close";
 
   @Test
   @DisplayName("유효한 요청이면 200 OK를 반환한다")
@@ -56,7 +56,7 @@ class SetFreeSwimmingHolidayControllerTest {
     then(useCase).should().setFreeSwimmingClosed(assertArg(i -> {
       assertThat(i.swimmingPoolId()).isEqualTo(SWIMMING_POOL_ID);
       assertThat(i.freeSwimmingDayStatusIds()).isEqualTo(request.freeSwimmingDayStatusIds());
-      assertThat(i.isClosed()).isEqualTo(request.isHoliday());
+      assertThat(i.isClosed()).isEqualTo(request.isClosed());
     }));
   }
 
@@ -68,9 +68,9 @@ class SetFreeSwimmingHolidayControllerTest {
     @DisplayName("freeSwimmingDayStatusIds가 null이면 400 에러를 반환한다")
     void shouldReturn400WhenFreeSwimmingDayStatusIdsIsNull() throws Exception {
       // given
-      val request = SetFreeSwimmingHolidayRequest.builder()
+      val request = SetFreeSwimmingClosedRequest.builder()
           .freeSwimmingDayStatusIds(null)
-          .isHoliday(true)
+          .isClosed(true)
           .build();
 
       // when
@@ -86,9 +86,9 @@ class SetFreeSwimmingHolidayControllerTest {
     @DisplayName("freeSwimmingDayStatusIds가 빈 리스트이면 400 에러를 반환한다")
     void shouldReturn400WhenFreeSwimmingDayStatusIdsIsEmpty() throws Exception {
       // given
-      val request = SetFreeSwimmingHolidayRequest.builder()
+      val request = SetFreeSwimmingClosedRequest.builder()
           .freeSwimmingDayStatusIds(List.of())
-          .isHoliday(true)
+          .isClosed(true)
           .build();
 
       // when
@@ -101,12 +101,12 @@ class SetFreeSwimmingHolidayControllerTest {
     }
 
     @Test
-    @DisplayName("isHoliday가 null이면 400 에러를 반환한다")
-    void shouldReturn400WhenIsHolidayIsNull() throws Exception {
+    @DisplayName("isClosed가 null이면 400 에러를 반환한다")
+    void shouldReturn400WhenisClosedIsNull() throws Exception {
       // given
-      val request = SetFreeSwimmingHolidayRequest.builder()
+      val request = SetFreeSwimmingClosedRequest.builder()
           .freeSwimmingDayStatusIds(List.of(1L, 2L))
-          .isHoliday(null)
+          .isClosed(null)
           .build();
 
       // when
@@ -142,10 +142,10 @@ class SetFreeSwimmingHolidayControllerTest {
 
   }
 
-  private SetFreeSwimmingHolidayRequest createValidRequest() {
-    return SetFreeSwimmingHolidayRequest.builder()
+  private SetFreeSwimmingClosedRequest createValidRequest() {
+    return SetFreeSwimmingClosedRequest.builder()
         .freeSwimmingDayStatusIds(List.of(1L, 2L, 3L))
-        .isHoliday(true)
+        .isClosed(true)
         .build();
   }
 

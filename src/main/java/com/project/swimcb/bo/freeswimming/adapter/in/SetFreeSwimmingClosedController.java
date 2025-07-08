@@ -13,19 +13,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "BO")
+@Tag(name = "BO - 완료")
 @SecurityRequirement(name = "Bearer Authentication")
 @RestController
-@RequestMapping("/api/bo/free-swimming/holidays")
+@RequestMapping("/api/bo/free-swimming/close")
 @RequiredArgsConstructor
-public class SetFreeSwimmingHolidayController {
+public class SetFreeSwimmingClosedController {
 
   private final SetFreeSwimmingClosedUseCase useCase;
 
   @Operation(summary = "자유수영 데이터 관리 - 휴무일 설정")
   @PostMapping
-  public void setFreeSwimmingFullyBooked(
-      @Valid @RequestBody SetFreeSwimmingHolidayRequest request,
+  public void setFreeSwimmingClosed(
+      @Valid @RequestBody SetFreeSwimmingClosedRequest request,
       @AuthenticationPrincipal TokenInfo tokenInfo
   ) {
 
