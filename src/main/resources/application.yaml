@@ -9,6 +9,9 @@ spring:
   liquibase:
     enabled: false
 
+  servlet:
+    multipart:
+      max-file-size: 2MB
 aws:
   s3:
     host: "https://s3.ap-northeast-2.amazonaws.com"
