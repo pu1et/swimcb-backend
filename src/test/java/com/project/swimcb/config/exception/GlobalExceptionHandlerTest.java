@@ -8,6 +8,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import jakarta.validation.ConstraintViolationException;
+import java.time.format.DateTimeParseException;
 import java.util.NoSuchElementException;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
@@ -74,6 +75,30 @@ class GlobalExceptionHandlerTest {
       assertThat(response.getStatusCode()).isEqualTo(BAD_REQUEST);
       assertThat(response.getBody().status()).isEqualTo(BAD_REQUEST.value());
       assertThat(response.getBody().message()).isEqualTo(ERROR_MESSAGE);
+    }
+  }
+
+  @Nested
+  @DisplayName("DateTimeParseException 처리 시")
+  class DateTimeParseExceptionTest {
+
+    @Test
+    @DisplayName("BAD_REQUEST 상태 코드와 제약 위반 메시지를 담은 응답을 반환한다")
+    void handleDateTimeParseException() {
+      // given
+      val exception = mock(DateTimeParseException.class);
+      val parsedString = "2024-02-30";
+
+      when(exception.getMessage()).thenReturn(ERROR_MESSAGE);
+      when(exception.getParsedString()).thenReturn(parsedString);
+
+      // when
+      val response = handler.handleDateTimeParseException(exception);
+
+      // then
+      assertThat(response.getStatusCode()).isEqualTo(BAD_REQUEST);
+      assertThat(response.getBody().status()).isEqualTo(BAD_REQUEST.value());
+      assertThat(response.getBody().message()).contains(ERROR_MESSAGE, parsedString);
     }
   }
 

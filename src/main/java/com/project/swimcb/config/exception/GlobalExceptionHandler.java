@@ -5,6 +5,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import jakarta.validation.ConstraintViolationException;
+import java.time.format.DateTimeParseException;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import lombok.val;
@@ -41,6 +42,16 @@ public class GlobalExceptionHandler {
 
     val errorResponse = new ErrorResponse(BAD_REQUEST.value(),
         String.format("'%s' 파라미터의 타입이 '%s'가 아닙니다.", e.getName(), e.getRequiredType()));
+    return ResponseEntity.status(BAD_REQUEST).body(errorResponse);
+  }
+
+  // @DateTimeFormat 에 지정한 형식과 맞지 않는 문자열이 들어왔을 때 발생
+  @ExceptionHandler(DateTimeParseException.class)
+  public ResponseEntity<ErrorResponse> handleDateTimeParseException(
+      DateTimeParseException e) {
+
+    val errorResponse = new ErrorResponse(BAD_REQUEST.value(),
+        String.format("'%s' : '%s'는 지정된 형식과 맞지 않습니다.", e.getMessage(), e.getParsedString()));
     return ResponseEntity.status(BAD_REQUEST).body(errorResponse);
   }
 
