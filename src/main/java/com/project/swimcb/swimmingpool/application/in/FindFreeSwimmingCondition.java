@@ -8,7 +8,7 @@ import lombok.NonNull;
 
 @Builder
 public record FindFreeSwimmingCondition(
-    @NonNull Long memberId,
+    Long memberId,
 
     @NonNull Double memberLatitude,
     @NonNull Double memberLongitude,
