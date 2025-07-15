@@ -1,6 +1,9 @@
 package com.project.swimcb.favorite.adapter.in;
 
+import static com.project.swimcb.favorite.adapter.in.CreateFavoriteControllerTest.MEMBER_ID;
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.BDDMockito.then;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -8,14 +11,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.swimcb.common.WebMvcTestWithoutSecurity;
+import com.project.swimcb.common.WithMockTokenInfo;
+import com.project.swimcb.favorite.application.in.CreateFavoriteUseCase;
 import com.project.swimcb.favorite.domain.enums.FavoriteTargetType;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTestWithoutSecurity(controllers = CreateFavoriteController.class)
+@WithMockTokenInfo(memberId = MEMBER_ID)
 class CreateFavoriteControllerTest {
 
   @Autowired
@@ -23,6 +30,11 @@ class CreateFavoriteControllerTest {
 
   @Autowired
   private ObjectMapper objectMapper;
+
+  @MockitoBean
+  private CreateFavoriteUseCase useCase;
+
+  static final long MEMBER_ID = 1L;
 
   private static final String PATH = "/api/favorites";
 
@@ -37,6 +49,12 @@ class CreateFavoriteControllerTest {
             .contentType(APPLICATION_JSON_VALUE)
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isOk());
+
+    then(useCase).should().createFavorite(argThat(i ->
+        i.memberId() == MEMBER_ID
+            && i.targetType() == request.targetType()
+            && i.targetId().equals(request.targetId())
+    ));
   }
 
   @Test

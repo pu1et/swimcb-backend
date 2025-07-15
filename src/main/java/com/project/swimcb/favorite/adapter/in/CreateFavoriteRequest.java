@@ -3,6 +3,7 @@ package com.project.swimcb.favorite.adapter.in;
 import com.project.swimcb.favorite.domain.enums.FavoriteTargetType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import lombok.NonNull;
 
 @Schema(name = "CreateFavoriteRequest")
 public record CreateFavoriteRequest(
@@ -15,5 +16,13 @@ public record CreateFavoriteRequest(
     @Schema(description = "즐겨찾기 대상 ID", example = "1")
     Long targetId
 ) {
+
+  public @NonNull CreateFavoriteCommand toCommand(@NonNull Long memberId) {
+    return CreateFavoriteCommand.builder()
+        .memberId(memberId)
+        .targetType(targetType)
+        .targetId(targetId)
+        .build();
+  }
 
 }

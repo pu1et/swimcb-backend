@@ -14,8 +14,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
+@Getter
 @Table(name = "favorite")
 @Entity
 @NoArgsConstructor(access = PROTECTED)
@@ -36,4 +39,17 @@ public class FavoriteEntity extends BaseEntity {
   @Enumerated(STRING)
   @Column(name = "target_type", length = 20, nullable = false)
   private FavoriteTargetType targetType;
+
+  public static FavoriteEntity of(
+      @NonNull Long memberId,
+      @NonNull FavoriteTargetType targetType,
+      @NonNull Long targetId
+  ) {
+    FavoriteEntity favorite = new FavoriteEntity();
+    favorite.member = new MemberEntity(memberId);
+    favorite.targetId = targetId;
+    favorite.targetType = targetType;
+    return favorite;
+  }
+
 }
