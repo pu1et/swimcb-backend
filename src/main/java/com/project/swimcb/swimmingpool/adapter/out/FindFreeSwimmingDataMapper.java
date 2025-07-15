@@ -9,8 +9,6 @@ import static com.project.swimcb.db.entity.QSwimmingPoolRatingEntity.swimmingPoo
 import static com.project.swimcb.db.entity.QSwimmingPoolReviewEntity.swimmingPoolReviewEntity;
 import static com.project.swimcb.db.entity.QTicketEntity.ticketEntity;
 import static com.project.swimcb.db.entity.TicketTargetType.FREE_SWIMMING;
-import static com.project.swimcb.favorite.domain.enums.FavoriteTargetType.*;
-import static com.project.swimcb.favorite.domain.enums.FavoriteTargetType.SWIMMING_POOL;
 import static com.querydsl.core.types.Projections.constructor;
 
 import com.project.swimcb.favorite.domain.enums.FavoriteTargetType;
@@ -51,7 +49,9 @@ class FindFreeSwimmingDataMapper implements FindFreeSwimmingDsGateway {
             swimmingPoolEntity.name,
             swimmingPoolEntity.address,
             swimmingPoolRatingEntity.rating.avg(),
-            swimmingPoolReviewEntity.id.sum()
+            swimmingPoolReviewEntity.id.sum(),
+            swimmingPoolEntity.latitude,
+            swimmingPoolEntity.longitude
         ))
         .from(swimmingPoolEntity)
         .join(swimmingPoolImageEntity)
@@ -99,7 +99,9 @@ class FindFreeSwimmingDataMapper implements FindFreeSwimmingDsGateway {
             swimmingPoolEntity.longitude,
             swimmingPoolEntity.latitude,
             swimmingPoolEntity.name,
-            swimmingPoolEntity.address
+            swimmingPoolEntity.address,
+            swimmingPoolEntity.latitude,
+            swimmingPoolEntity.longitude
         )
         .fetch()
         .stream()
@@ -112,6 +114,8 @@ class FindFreeSwimmingDataMapper implements FindFreeSwimmingDsGateway {
             .address(i.address())
             .rating(i.rating())
             .reviewCount((int) i.reviewCount())
+            .latitude(i.latitude())
+            .longitude(i.longitude())
             .build())
         .toList();
   }
@@ -162,7 +166,9 @@ class FindFreeSwimmingDataMapper implements FindFreeSwimmingDsGateway {
       @NonNull String name,
       @NonNull String address,
       double rating,
-      long reviewCount
+      long reviewCount,
+      double latitude,
+      double longitude
   ) {
 
     @QueryProjection

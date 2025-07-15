@@ -11,7 +11,6 @@ import com.project.swimcb.swimmingpool.domain.FreeSwimming;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -92,6 +91,8 @@ class FindFreeSwimmingInteractorTest {
             .address("서울시 강남구 테스트로 1")
             .rating(4.5)
             .reviewCount(10)
+            .latitude(37.5665)
+            .longitude(126.9780)
             .build()
     );
   }

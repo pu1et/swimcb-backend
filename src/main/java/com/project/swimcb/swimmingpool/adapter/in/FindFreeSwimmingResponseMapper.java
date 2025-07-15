@@ -27,6 +27,8 @@ public class FindFreeSwimmingResponseMapper {
             .address(i.address())
             .rating(i.rating())
             .reviewCount(i.reviewCount())
+            .latitude(i.latitude())
+            .longitude(i.longitude())
             .build())
         .toList();
     return new FindFreeSwimmingResponse(result);

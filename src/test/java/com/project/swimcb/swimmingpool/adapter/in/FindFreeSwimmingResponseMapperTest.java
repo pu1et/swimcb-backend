@@ -46,6 +46,8 @@ class FindFreeSwimmingResponseMapperTest {
             .address("테스트 주소")
             .rating(4.5)
             .reviewCount(100)
+            .latitude(37.5665)
+            .longitude(126.9784)
             .build()
     );
 
@@ -68,6 +70,7 @@ class FindFreeSwimmingResponseMapperTest {
     assertThat(firstFreeSwimming.address()).isEqualTo("테스트 주소");
     assertThat(firstFreeSwimming.rating()).isEqualTo(4.5);
     assertThat(firstFreeSwimming.reviewCount()).isEqualTo(100);
+    assertThat(firstFreeSwimming.latitude()).isEqualTo(37.5665);
   }
 
 }

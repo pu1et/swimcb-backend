@@ -12,7 +12,9 @@ public record FreeSwimming(
     @NonNull String name,
     @NonNull String address,
     @NonNull Double rating,
-    @NonNull Integer reviewCount
+    @NonNull Integer reviewCount,
+    @NonNull Double latitude,
+    @NonNull Double longitude
 ) {
 
 }

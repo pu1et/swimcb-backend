@@ -44,7 +44,15 @@ public record FindFreeSwimmingResponse(
 
       @NonNull
       @Schema(description = "리뷰 수", example = "10")
-      Integer reviewCount
+      Integer reviewCount,
+
+      @NonNull
+      @Schema(description = "위도", example = "37.5665")
+      Double latitude,
+
+      @NonNull
+      @Schema(description = "경도", example = "126.9784")
+      Double longitude
   ) {
 
   }
