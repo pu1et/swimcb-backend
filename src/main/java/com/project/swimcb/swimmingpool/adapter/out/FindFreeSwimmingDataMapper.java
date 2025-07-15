@@ -12,7 +12,7 @@ import static com.project.swimcb.db.entity.TicketTargetType.FREE_SWIMMING;
 import static com.querydsl.core.types.Projections.constructor;
 
 import com.project.swimcb.favorite.domain.enums.FavoriteTargetType;
-import com.project.swimcb.swimmingpool.application.in.FindFreeSwimmingCondition;
+import com.project.swimcb.swimmingpool.domain.FindFreeSwimmingCondition;
 import com.project.swimcb.swimmingpool.application.out.FindFreeSwimmingDsGateway;
 import com.project.swimcb.swimmingpool.domain.FreeSwimming;
 import com.querydsl.core.annotations.QueryProjection;

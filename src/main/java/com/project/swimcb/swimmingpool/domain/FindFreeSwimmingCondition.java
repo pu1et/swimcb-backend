@@ -1,4 +1,4 @@
-package com.project.swimcb.swimmingpool.application.in;
+package com.project.swimcb.swimmingpool.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

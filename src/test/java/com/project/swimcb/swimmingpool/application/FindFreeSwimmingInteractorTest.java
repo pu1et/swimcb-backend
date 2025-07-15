@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
-import com.project.swimcb.swimmingpool.application.in.FindFreeSwimmingCondition;
+import com.project.swimcb.swimmingpool.domain.FindFreeSwimmingCondition;
 import com.project.swimcb.swimmingpool.application.out.FindFreeSwimmingDsGateway;
 import com.project.swimcb.swimmingpool.domain.FreeSwimming;
 import java.time.LocalDate;

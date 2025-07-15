@@ -1,5 +1,6 @@
 package com.project.swimcb.swimmingpool.application.in;
 
+import com.project.swimcb.swimmingpool.domain.FindFreeSwimmingCondition;
 import com.project.swimcb.swimmingpool.domain.FreeSwimming;
 import java.util.List;
 import lombok.NonNull;

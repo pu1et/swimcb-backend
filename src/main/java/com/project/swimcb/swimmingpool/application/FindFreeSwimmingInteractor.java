@@ -1,6 +1,6 @@
 package com.project.swimcb.swimmingpool.application;
 
-import com.project.swimcb.swimmingpool.application.in.FindFreeSwimmingCondition;
+import com.project.swimcb.swimmingpool.domain.FindFreeSwimmingCondition;
 import com.project.swimcb.swimmingpool.application.in.FindFreeSwimmingUseCase;
 import com.project.swimcb.swimmingpool.application.out.FindFreeSwimmingDsGateway;
 import com.project.swimcb.swimmingpool.domain.FreeSwimming;
