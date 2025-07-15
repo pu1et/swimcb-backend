@@ -123,7 +123,7 @@ class FindFreeSwimmingDataMapper implements FindFreeSwimmingDsGateway {
   private NumberExpression<Double> distanceBetweenMemberAndSwimmingPool(double memberLatitude,
       double memberLongitude) {
     return Expressions.numberTemplate(Double.class,
-        "(6371 * acos(cos(radians({0})) * cos(radians({1})) * " +
+        "(6371000 * acos(cos(radians({0})) * cos(radians({1})) * " +
             "cos(radians({2}) - radians({3})) + sin(radians({0})) * sin(radians({1}))))",
         memberLatitude, swimmingPoolEntity.latitude, swimmingPoolEntity.longitude, memberLongitude);
   }

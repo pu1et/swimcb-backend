@@ -181,7 +181,7 @@ class FindSwimmingClassesDataMapperTest {
       val expressionStr = expression.toString();
       assertThat(expressionStr)
           .isNotNull()
-          .contains("6371 * acos")
+          .contains("6371000 * acos")
           .contains("radians(12.345)")
           .contains("radians(23.456)");
     }
