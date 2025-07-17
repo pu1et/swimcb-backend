@@ -1,28 +1,150 @@
 package com.project.swimcb.favorite.domain;
 
+
+import com.project.swimcb.favorite.domain.FindFavoriteResponse.FindFreeSwimmingFavoriteResponse;
+import com.project.swimcb.favorite.domain.FindFavoriteResponse.FindSwimmingClassFavoriteResponse;
+import com.project.swimcb.favorite.domain.FindFavoriteResponse.FindSwimmingPoolFavoriteResponse;
+import com.project.swimcb.favorite.domain.enums.FavoriteTargetType;
+import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
-import lombok.Builder;
 import lombok.NonNull;
 
-@Builder
-public record FindFavoriteResponse(
-    @NonNull List<Favorite> favorites
-) {
+@Schema(oneOf = {
+    FindSwimmingPoolFavoriteResponse.class,
+    FindSwimmingClassFavoriteResponse.class,
+    FindFreeSwimmingFavoriteResponse.class
+})
+public sealed interface FindFavoriteResponse permits
+    FindSwimmingPoolFavoriteResponse,
+    FindSwimmingClassFavoriteResponse,
+    FindFreeSwimmingFavoriteResponse {
 
-  @Builder
-  public record Favorite(
-      long favoriteId,
-      long swimmingPoolId,
-      @NonNull String imageUrl,
-      @NonNull String distance,
-      @NonNull String flag,
-      @NonNull String registrationInfo,
-      boolean isFavorite,
-      @NonNull String name,
-      @NonNull String address,
-      @NonNull String star,
-      int reviewCount
-  ) {
+  FavoriteTargetType targetType();
+
+  Long targetId();
+
+  record FindSwimmingPoolFavoriteResponse(
+
+      @NonNull
+      @Schema(example = "1")
+      Long targetId,
+
+      @NonNull
+      @Schema(example = "SWIMMING_POOL")
+      FavoriteTargetType targetType,
+
+      @NonNull
+      @Schema(example = "https://example.com/image.jpg")
+      String imageUrl,
+
+      @NonNull
+      @Schema(example = "true")
+      Boolean isFavorite,
+
+      @NonNull
+      @Schema(example = "500")
+      Integer distance,
+
+      @NonNull
+      @Schema(example = "서울시립수영장")
+      String name,
+
+      @NonNull
+      @Schema(example = "서울특별시 중구 세종대로 110")
+      String address,
+
+      @NonNull
+      @Schema(example = "4.5")
+      Double rating,
+
+      @NonNull
+      @Schema(example = "10")
+      Integer reviewCount
+
+  ) implements FindFavoriteResponse {
 
   }
+
+  record FindSwimmingClassFavoriteResponse(
+
+      @NonNull
+      @Schema(example = "1")
+      Long targetId,
+
+      @NonNull
+      @Schema(example = "SWIMMING_CLASS")
+      FavoriteTargetType targetType,
+
+      @NonNull
+      @Schema(example = "올림픽 수영장")
+      String swimmingPoolName,
+
+      @NonNull
+      @Schema(example = "4")
+      Integer month,
+
+      @NonNull
+      @Schema(example = "단체강습")
+      String type,
+
+      @NonNull
+      @Schema(example = "기초")
+      String subType,
+
+      @NonNull
+      @Schema(example = "[월|화|수|목|금|토|일]")
+      List<String> days,
+
+      @NonNull
+      @Schema(example = "06:00:00")
+      LocalTime startTime,
+
+      @NonNull
+      @Schema(example = "07:00:00")
+      LocalTime endTime,
+
+      @NonNull
+      @Schema(example = "10000")
+      Integer minTicketPrice
+
+  ) implements FindFavoriteResponse {
+
+  }
+
+  record FindFreeSwimmingFavoriteResponse(
+
+      @NonNull
+      @Schema(example = "1")
+      Long targetId,
+
+      @NonNull
+      @Schema(example = "FREE_SWIMMING")
+      FavoriteTargetType targetType,
+
+      @NonNull
+      @Schema(example = "올림픽 수영장")
+      String swimmingPoolName,
+
+      @NonNull
+      @Schema(example = "2025-03-01")
+      LocalDate date,
+
+      @NonNull
+      @Schema(example = "06:00:00")
+      LocalTime startTime,
+
+      @NonNull
+      @Schema(example = "07:00:00")
+      LocalTime endTime,
+
+      @NonNull
+      @Schema(example = "10000")
+      Integer minTicketPrice
+
+  ) implements FindFavoriteResponse {
+
+  }
+
 }
