@@ -1,31 +1,38 @@
-package com.project.swimcb.favorite.domain;
+package com.project.swimcb.favorite.adapter.in;
 
 
-import com.project.swimcb.favorite.domain.FindFavoriteResponse.FindFreeSwimmingFavoriteResponse;
-import com.project.swimcb.favorite.domain.FindFavoriteResponse.FindSwimmingClassFavoriteResponse;
-import com.project.swimcb.favorite.domain.FindFavoriteResponse.FindSwimmingPoolFavoriteResponse;
 import com.project.swimcb.favorite.domain.enums.FavoriteTargetType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import lombok.Builder;
 import lombok.NonNull;
+import org.springframework.data.domain.Page;
 
-@Schema(oneOf = {
-    FindSwimmingPoolFavoriteResponse.class,
-    FindSwimmingClassFavoriteResponse.class,
-    FindFreeSwimmingFavoriteResponse.class
-})
-public sealed interface FindFavoriteResponse permits
-    FindSwimmingPoolFavoriteResponse,
-    FindSwimmingClassFavoriteResponse,
-    FindFreeSwimmingFavoriteResponse {
 
-  FavoriteTargetType targetType();
+public record FindFavoriteResponse(
+    @NonNull Page<Favorite> contents
+) {
 
-  Long targetId();
+  @Schema(oneOf = {
+      SwimmingPoolFavorite.class,
+      SwimmingClassFavorite.class,
+      FreeSwimmingFavorite.class
+  })
+  public sealed interface Favorite permits
+      SwimmingPoolFavorite,
+      SwimmingClassFavorite,
+      FreeSwimmingFavorite {
 
-  record FindSwimmingPoolFavoriteResponse(
+    FavoriteTargetType targetType();
+
+    Long targetId();
+
+  }
+
+  @Builder
+  record SwimmingPoolFavorite(
 
       @NonNull
       @Schema(example = "1")
@@ -38,10 +45,6 @@ public sealed interface FindFavoriteResponse permits
       @NonNull
       @Schema(example = "https://example.com/image.jpg")
       String imageUrl,
-
-      @NonNull
-      @Schema(example = "true")
-      Boolean isFavorite,
 
       @NonNull
       @Schema(example = "500")
@@ -63,11 +66,12 @@ public sealed interface FindFavoriteResponse permits
       @Schema(example = "10")
       Integer reviewCount
 
-  ) implements FindFavoriteResponse {
+  ) implements Favorite {
 
   }
 
-  record FindSwimmingClassFavoriteResponse(
+  @Builder
+  record SwimmingClassFavorite(
 
       @NonNull
       @Schema(example = "1")
@@ -77,7 +81,6 @@ public sealed interface FindFavoriteResponse permits
       @Schema(example = "SWIMMING_CLASS")
       FavoriteTargetType targetType,
 
-      @NonNull
       @Schema(example = "올림픽 수영장")
       String swimmingPoolName,
 
@@ -109,11 +112,12 @@ public sealed interface FindFavoriteResponse permits
       @Schema(example = "10000")
       Integer minTicketPrice
 
-  ) implements FindFavoriteResponse {
+  ) implements Favorite {
 
   }
 
-  record FindFreeSwimmingFavoriteResponse(
+  @Builder
+  record FreeSwimmingFavorite(
 
       @NonNull
       @Schema(example = "1")
@@ -143,7 +147,7 @@ public sealed interface FindFavoriteResponse permits
       @Schema(example = "10000")
       Integer minTicketPrice
 
-  ) implements FindFavoriteResponse {
+  ) implements Favorite {
 
   }
 
