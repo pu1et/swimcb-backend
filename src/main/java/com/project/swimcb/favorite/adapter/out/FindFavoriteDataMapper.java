@@ -26,6 +26,8 @@ import com.project.swimcb.mypage.reservation.adapter.out.ClassDayOfWeek;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.annotations.QueryProjection;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -138,7 +140,8 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
             freeSwimmingTicketEntity.isDeleted.isFalse()
         )
         .where(
-            favoriteEntity.member.id.eq(condition.memberId())
+            favoriteEntity.member.id.eq(condition.memberId()),
+            favoriteTargetTypeEq(condition.targetType())
         )
         .orderBy(favoriteEntity.createdAt.desc())
         .groupBy(
@@ -211,6 +214,13 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
         .fetchOne();
 
     return new PageImpl<>(contents, condition.pageable(), Optional.ofNullable(count).orElse(0L));
+  }
+
+  private BooleanExpression favoriteTargetTypeEq(FavoriteTargetType favoriteTargetType) {
+    if (favoriteTargetType == null) {
+      return null;
+    }
+    return favoriteEntity.targetType.eq(favoriteTargetType);
   }
 
   private BooleanBuilder swimmingPoolJoinCondition() {
