@@ -1,12 +1,12 @@
-package com.project.swimcb.swimmingpool.adapter.in;
+package com.project.swimcb.swimmingpool.domain;
 
 import java.time.LocalTime;
 import java.util.List;
 import lombok.Builder;
 import lombok.NonNull;
 
-public record FindSwimmingPoolDetailFreeSwimmingDetailResponse(
-    List<FreeSwimming> freeSwimmings
+public record SwimmingPoolDetailFreeSwimmingDetail(
+    @NonNull List<FreeSwimming> freeSwimmings
 ) {
 
   @Builder
