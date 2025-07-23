@@ -45,11 +45,15 @@ public class SecurityConfig {
     val corsConfiguration = new CorsConfiguration();
     // 사용자앱
     corsConfiguration.addAllowedOrigin("http://localhost:4000");
+    // TODO. 도메인이 변경되어 삭제예정
     corsConfiguration.addAllowedOrigin("https://cb-user.vercel.app");
+    corsConfiguration.addAllowedOrigin("https://app.pooldayswim.com");
 
     // 판매자앱
     corsConfiguration.addAllowedOrigin("http://localhost:4001");
+    // TODO. 도메인이 변경되어 삭제예정
     corsConfiguration.addAllowedOrigin("https://cb-center.vercel.app");
+    corsConfiguration.addAllowedHeader("https://center.pooldayswim.com/");
 
     corsConfiguration.addAllowedOrigin("http://localhost:4010");
 
@@ -64,4 +68,5 @@ public class SecurityConfig {
     source.registerCorsConfiguration("/**", corsConfiguration);
     return source;
   }
+
 }
