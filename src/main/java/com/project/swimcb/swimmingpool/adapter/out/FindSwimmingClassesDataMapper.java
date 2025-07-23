@@ -57,7 +57,7 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
 
     val swimmingClasses = queryFactory.select(constructor(SwimmingPoolWithClass.class,
             swimmingPoolEntity.id,
-            swimmingPoolImageEntity.path,
+            swimmingPoolImageEntity.path.min(),
             favoriteEntity.id.count().gt(0),
             distanceBetweenMemberAndSwimmingPool,
             swimmingPoolEntity.name,
@@ -101,7 +101,6 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
         )
         .groupBy(
             swimmingPoolEntity.id,
-            swimmingPoolImageEntity.path,
             swimmingPoolEntity.longitude,
             swimmingPoolEntity.latitude,
             swimmingPoolEntity.name,
