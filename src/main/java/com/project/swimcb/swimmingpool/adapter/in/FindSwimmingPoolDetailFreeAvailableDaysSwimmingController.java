@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "수영장")
 @SecurityRequirement(name = "Bearer Authentication")
 @RestController
-@RequestMapping("/api/swimming-pools/{swimmingPoolId}/free-swimming")
+@RequestMapping("/api/swimming-pools/{swimmingPoolId}/free-swimming/available-days")
 @Validated
-public class FindSwimmingPoolDetailFreeSwimmingController {
+public class FindSwimmingPoolDetailFreeAvailableDaysSwimmingController {
 
-  @Operation(summary = "수영장 상세 조회 - 자유수영 스케쥴 조회")
+  @Operation(summary = "수영장 상세 조회 - 자유수영 가능 날짜 조회")
   @GetMapping
-  public FindSwimmingPoolDetailFreeSwimmingResponse findSwimmingPoolDetailFreeSwimming(
+  public FindSwimmingPoolDetailFreeSwimmingAvailableDaysResponse findSwimmingPoolDetailFreeSwimmingAvailableDaysResponse(
       @PathVariable(value = "swimmingPoolId") @Min(1) long swimmingPoolId,
       @Parameter(description = "년/월", example = "2025-01") @RequestParam(value = "month") YearMonth month
   ) {

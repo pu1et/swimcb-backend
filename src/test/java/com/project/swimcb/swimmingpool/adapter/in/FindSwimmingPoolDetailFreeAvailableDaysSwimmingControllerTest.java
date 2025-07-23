@@ -11,18 +11,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTestWithoutSecurity(controllers = FindSwimmingPoolDetailFreeSwimmingController.class)
-class FindSwimmingPoolDetailFreeSwimmingControllerTest {
+@WebMvcTestWithoutSecurity(controllers = FindSwimmingPoolDetailFreeAvailableDaysSwimmingController.class)
+class FindSwimmingPoolDetailFreeAvailableDaysSwimmingControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
 
   private static final long SWIMMING_POOL_ID = 1L;
-  private static final String PATH = "/api/swimming-pools/{swimmingPoolId}/free-swimming";
+  private static final String PATH = "/api/swimming-pools/{swimmingPoolId}/free-swimming/available-days";
 
   @Test
-  @DisplayName("수영장 상세 조회 - 자유수영 스케쥴 조회 성공")
-  void shouldFindSwimmingPoolDetailFreeSwimmingSuccessfully() throws Exception {
+  @DisplayName("수영장 상세 조회 - 자유수영 가능 날짜 조회 성공")
+  void shouldFindSwimmingPoolDetailFreeSwimmingAvailableDaysSuccessfully() throws Exception {
     // given
     val month = YearMonth.of(2025, 1);
     

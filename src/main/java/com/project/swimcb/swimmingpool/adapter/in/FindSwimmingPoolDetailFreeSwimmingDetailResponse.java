@@ -1,12 +1,11 @@
-package com.project.swimcb.swimmingpool.domain;
+package com.project.swimcb.swimmingpool.adapter.in;
 
 import java.time.LocalTime;
 import java.util.List;
 import lombok.Builder;
 import lombok.NonNull;
 
-@Builder
-public record FindSwimmingPoolDetailFreeSwimmingResponse(
+public record FindSwimmingPoolDetailFreeSwimmingDetailResponse(
     List<FreeSwimming> freeSwimmings
 ) {
 
@@ -24,9 +23,9 @@ public record FindSwimmingPoolDetailFreeSwimmingResponse(
 
   @Builder
   public record Ticket(
-      @NonNull Long ticketId,
-      @NonNull String ticketName,
-      @NonNull Integer ticketPrice
+      @NonNull Long id,
+      @NonNull String name,
+      @NonNull Integer price
   ) {
 
   }
