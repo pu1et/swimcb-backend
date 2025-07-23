@@ -1,19 +1,19 @@
-package com.project.swimcb.swimmingpool.adapter.in;
+package com.project.swimcb.swimmingpool.domain;
 
+import com.project.swimcb.mypage.reservation.adapter.out.ClassDayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
 import lombok.Builder;
 import lombok.NonNull;
 
-@Builder
-public record FindSwimmingPoolDetailFreeSwimmingResponse(
-    List<FreeSwimming> freeSwimmings
+public record SwimmingPoolDetailFreeSwimming(
+    @NonNull List<FreeSwimming> freeSwimmings
 ) {
 
   @Builder
   public record FreeSwimming(
       @NonNull Time time,
-      @NonNull List<String> days,
+      @NonNull ClassDayOfWeek daysOfWeek,
       @NonNull Ticket ticket
   ) {
 
