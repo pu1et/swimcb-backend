@@ -26,7 +26,6 @@ import com.project.swimcb.mypage.reservation.adapter.out.ClassDayOfWeek;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.annotations.QueryProjection;
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
@@ -61,7 +60,7 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
             favoriteEntity.targetId,
             favoriteEntity.targetType,
 
-            swimmingPoolImageEntity.path,
+            swimmingPoolImageEntity.path.min(),
             distanceBetweenMemberAndSwimmingPool,
             swimmingPoolEntity.name,
             swimmingPoolEntity.address,
@@ -105,19 +104,17 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
         .leftJoin(freeSwimmingEntity)
         .on(freeSwimmingEntity.eq(freeSwimmingDayStatusEntity.freeSwimming))
 
-        .leftJoin(swimmingPoolEntity)
+        .join(swimmingPoolEntity)
         .on(
             swimmingPoolJoinCondition(),
             swimmingPoolEntity.name.isNotNull(),
             swimmingPoolEntity.address.isNotNull(),
             swimmingPoolEntity.phone.isNotNull(),
             swimmingPoolEntity.latitude.isNotNull(),
-            swimmingPoolEntity.longitude.isNotNull(),
-            swimmingPoolEntity.latitude.isNotNull(),
             swimmingPoolEntity.longitude.isNotNull()
         )
 
-        .leftJoin(swimmingPoolImageEntity)
+        .join(swimmingPoolImageEntity)
         .on(swimmingPoolImageEntity.swimmingPool.eq(swimmingPoolEntity)).limit(1)
 
         .leftJoin(swimmingPoolRatingEntity)
@@ -149,7 +146,6 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
             favoriteEntity.targetId,
             favoriteEntity.targetType,
 
-            swimmingPoolImageEntity.path,
             swimmingPoolEntity.latitude,
             swimmingPoolEntity.longitude,
             swimmingPoolEntity.name,
@@ -276,6 +272,7 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
 
   private Favorite mapToFreeSwimming(@NonNull QueryFavorite i) {
     return FreeSwimmingFavorite.builder()
+        .id(i.id())
         .targetId(i.targetId())
         .targetType(i.targetType())
         .swimmingPoolName(i.name())
