@@ -29,10 +29,16 @@ public record SwimmingClassFavorite(
     Integer month,
 
     @NonNull
-    SwimmingClassTypeName type,
+    Long typeId,
 
     @NonNull
-    String subType,
+    SwimmingClassTypeName typeName,
+
+    @NonNull
+    Long subTypeId,
+
+    @NonNull
+    String subTypeName,
 
     @NonNull
     ClassDayOfWeek daysOfWeek,

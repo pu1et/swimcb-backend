@@ -104,12 +104,20 @@ public record FindFavoriteResponse(
       Integer month,
 
       @NonNull
+      @Schema(example = "1")
+      Long typeId,
+
+      @NonNull
       @Schema(example = "단체강습")
-      String type,
+      String typeName,
+
+      @NonNull
+      @Schema(example = "1")
+      Long subTypeId,
 
       @NonNull
       @Schema(example = "기초")
-      String subType,
+      String subTypeName,
 
       @NonNull
       @Schema(example = "[월|화|수|목|금|토|일]")

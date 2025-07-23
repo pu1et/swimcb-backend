@@ -69,7 +69,9 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
             swimmingPoolReviewEntity.id.sum(),
 
             swimmingClassEntity.month,
+            swimmingClassTypeEntity.id,
             swimmingClassTypeEntity.name,
+            swimmingClassSubTypeEntity.id,
             swimmingClassSubTypeEntity.name,
             swimmingClassEntity.daysOfWeek,
             swimmingClassEntity.startTime,
@@ -154,7 +156,9 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
             swimmingPoolEntity.address,
 
             swimmingClassEntity.month,
+            swimmingClassTypeEntity.id,
             swimmingClassTypeEntity.name,
+            swimmingClassSubTypeEntity.id,
             swimmingClassSubTypeEntity.name,
             swimmingClassEntity.daysOfWeek,
             swimmingClassEntity.startTime,
@@ -264,8 +268,10 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
         .swimmingPoolId(i.swimmingPoolId())
         .swimmingPoolName(i.swimmingPoolName())
         .month(i.month())
-        .type(i.type())
-        .subType(i.subType())
+        .typeId(i.swimmingClassTypeId())
+        .typeName(i.swimmingClassTypeName())
+        .subTypeId(i.swimmingClassSubTypeId())
+        .subTypeName(i.swimmingClassSubTypeName())
         .daysOfWeek(ClassDayOfWeek.of(i.daysOfWeek()))
         .startTime(i.swimmingClassStartTime())
         .endTime(i.swimmingClassEndTime())
@@ -313,8 +319,10 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
       Long reviewCount,
 
       Integer month,
-      SwimmingClassTypeName type,
-      String subType,
+      Long swimmingClassTypeId,
+      SwimmingClassTypeName swimmingClassTypeName,
+      Long swimmingClassSubTypeId,
+      String swimmingClassSubTypeName,
       Integer daysOfWeek,
       LocalTime swimmingClassStartTime,
       LocalTime swimmingClassEndTime,
