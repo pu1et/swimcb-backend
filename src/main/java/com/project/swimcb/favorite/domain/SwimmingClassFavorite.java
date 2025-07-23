@@ -20,6 +20,9 @@ public record SwimmingClassFavorite(
     FavoriteTargetType targetType,
 
     @NonNull
+    Long swimmingPoolId,
+
+    @NonNull
     String swimmingPoolName,
 
     @NonNull

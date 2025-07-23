@@ -18,6 +18,10 @@ public record FreeSwimmingFavorite(
     @NonNull
     FavoriteTargetType targetType,
 
+    @NonNull
+    Long swimmingPoolId,
+
+    @NonNull
     String swimmingPoolName,
 
     @NonNull

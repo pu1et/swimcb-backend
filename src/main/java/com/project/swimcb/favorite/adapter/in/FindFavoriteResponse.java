@@ -91,6 +91,11 @@ public record FindFavoriteResponse(
       @Schema(example = "SWIMMING_CLASS")
       FavoriteTargetType targetType,
 
+      @NonNull
+      @Schema(example = "1")
+      Long swimmingPoolId,
+
+      @NonNull
       @Schema(example = "올림픽 수영장")
       String swimmingPoolName,
 
@@ -140,6 +145,10 @@ public record FindFavoriteResponse(
       @NonNull
       @Schema(example = "FREE_SWIMMING")
       FavoriteTargetType targetType,
+
+      @NonNull
+      @Schema(example = "1")
+      Long swimmingPoolId,
 
       @NonNull
       @Schema(example = "올림픽 수영장")

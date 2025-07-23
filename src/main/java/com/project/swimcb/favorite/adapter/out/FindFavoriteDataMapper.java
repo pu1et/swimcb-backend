@@ -62,6 +62,7 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
 
             swimmingPoolImageEntity.path.min(),
             distanceBetweenMemberAndSwimmingPool,
+            swimmingPoolEntity.id,
             swimmingPoolEntity.name,
             swimmingPoolEntity.address,
             swimmingPoolRatingEntity.rating.avg(),
@@ -148,6 +149,7 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
 
             swimmingPoolEntity.latitude,
             swimmingPoolEntity.longitude,
+            swimmingPoolEntity.id,
             swimmingPoolEntity.name,
             swimmingPoolEntity.address,
 
@@ -247,7 +249,7 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
         .targetType(i.targetType())
         .imagePath(i.imagePath())
         .distance(i.distance().intValue())
-        .name(i.name())
+        .name(i.swimmingPoolName())
         .address(i.address())
         .rating(i.rating())
         .reviewCount(i.reviewCount())
@@ -259,7 +261,8 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
         .id(i.id())
         .targetId(i.targetId())
         .targetType(i.targetType())
-        .swimmingPoolName(i.name())
+        .swimmingPoolId(i.swimmingPoolId())
+        .swimmingPoolName(i.swimmingPoolName())
         .month(i.month())
         .type(i.type())
         .subType(i.subType())
@@ -275,7 +278,8 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
         .id(i.id())
         .targetId(i.targetId())
         .targetType(i.targetType())
-        .swimmingPoolName(i.name())
+        .swimmingPoolId(i.swimmingPoolId())
+        .swimmingPoolName(i.swimmingPoolName())
         .date(LocalDate.of(i.yearMonth().getYear(), i.yearMonth().getMonth(), i.dayOfMonth()))
         .startTime(i.freeSwimmingStartTime())
         .endTime(i.freeSwimmingEndTime())
@@ -302,7 +306,8 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
 
       String imagePath,
       Double distance,
-      String name,
+      long swimmingPoolId,
+      String swimmingPoolName,
       String address,
       Double rating,
       Long reviewCount,
