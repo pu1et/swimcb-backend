@@ -7,6 +7,8 @@ public sealed interface Favorite permits
     SwimmingClassFavorite,
     FreeSwimmingFavorite {
 
+  Long id();
+
   Long targetId();
 
   FavoriteTargetType targetType();

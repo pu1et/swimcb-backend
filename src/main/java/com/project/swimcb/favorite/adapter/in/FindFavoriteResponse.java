@@ -25,6 +25,8 @@ public record FindFavoriteResponse(
       SwimmingClassFavorite,
       FreeSwimmingFavorite {
 
+    Long id();
+
     FavoriteTargetType targetType();
 
     Long targetId();
@@ -33,6 +35,10 @@ public record FindFavoriteResponse(
 
   @Builder
   record SwimmingPoolFavorite(
+
+      @NonNull
+      @Schema(example = "1")
+      Long id,
 
       @NonNull
       @Schema(example = "1")
@@ -72,6 +78,10 @@ public record FindFavoriteResponse(
 
   @Builder
   record SwimmingClassFavorite(
+
+      @NonNull
+      @Schema(example = "1")
+      Long id,
 
       @NonNull
       @Schema(example = "1")
@@ -118,6 +128,10 @@ public record FindFavoriteResponse(
 
   @Builder
   record FreeSwimmingFavorite(
+
+      @NonNull
+      @Schema(example = "1")
+      Long id,
 
       @NonNull
       @Schema(example = "1")

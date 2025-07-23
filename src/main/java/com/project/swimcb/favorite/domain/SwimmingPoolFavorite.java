@@ -8,6 +8,9 @@ import lombok.NonNull;
 public record SwimmingPoolFavorite(
 
     @NonNull
+    Long id,
+
+    @NonNull
     Long targetId,
 
     @NonNull

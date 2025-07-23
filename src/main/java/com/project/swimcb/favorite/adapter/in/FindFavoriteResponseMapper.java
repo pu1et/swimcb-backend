@@ -36,6 +36,7 @@ class FindFavoriteResponseMapper {
   private FindFavoriteResponse.Favorite mapToSwimmingPoolFavorite(
       @NonNull SwimmingPoolFavorite i) {
     return FindFavoriteResponse.SwimmingPoolFavorite.builder()
+        .id(i.id())
         .targetId(i.targetId())
         .targetType(i.targetType())
         .imageUrl(imageUrl(i.imagePath()))
@@ -50,6 +51,7 @@ class FindFavoriteResponseMapper {
   private FindFavoriteResponse.Favorite mapToSwimmingClassFavorite(
       @NonNull SwimmingClassFavorite i) {
     return FindFavoriteResponse.SwimmingClassFavorite.builder()
+        .id(i.id())
         .targetId(i.targetId())
         .targetType(i.targetType())
         .swimmingPoolName(i.swimmingPoolName())
@@ -66,6 +68,7 @@ class FindFavoriteResponseMapper {
   private FindFavoriteResponse.Favorite mapToFreeSwimmingFavorite(
       @NonNull FreeSwimmingFavorite i) {
     return FindFavoriteResponse.FreeSwimmingFavorite.builder()
+        .id(i.id())
         .targetId(i.targetId())
         .targetType(i.targetType())
         .swimmingPoolName(i.swimmingPoolName())

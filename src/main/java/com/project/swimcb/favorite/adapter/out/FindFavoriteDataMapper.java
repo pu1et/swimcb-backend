@@ -246,6 +246,7 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
 
   private Favorite mapToSwimmingPool(@NonNull QueryFavorite i) {
     return SwimmingPoolFavorite.builder()
+        .id(i.id())
         .targetId(i.targetId())
         .targetType(i.targetType())
         .imagePath(i.imagePath())
@@ -259,6 +260,7 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
 
   private Favorite mapToSwimmingClass(@NonNull QueryFavorite i) {
     return SwimmingClassFavorite.builder()
+        .id(i.id())
         .targetId(i.targetId())
         .targetType(i.targetType())
         .swimmingPoolName(i.name())

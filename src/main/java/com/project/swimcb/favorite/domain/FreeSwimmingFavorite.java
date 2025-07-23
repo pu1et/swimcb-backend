@@ -10,6 +10,9 @@ import lombok.NonNull;
 public record FreeSwimmingFavorite(
 
     @NonNull
+    Long id,
+
+    @NonNull
     Long targetId,
 
     @NonNull

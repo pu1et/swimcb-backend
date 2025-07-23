@@ -11,6 +11,9 @@ import lombok.NonNull;
 public record SwimmingClassFavorite(
 
     @NonNull
+    Long id,
+
+    @NonNull
     Long targetId,
 
     @NonNull

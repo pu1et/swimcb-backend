@@ -71,6 +71,7 @@ class FindFavoriteInteractorTest {
 
   private SwimmingPoolFavorite createFavorite() {
     return SwimmingPoolFavorite.builder()
+        .id(1L)
         .targetId(1L)
         .targetType(SWIMMING_POOL)
         .imagePath("MOCK_IMAGE_PATH")
