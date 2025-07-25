@@ -52,7 +52,7 @@ class FindSwimmingPoolDetailMainResponseFormatterTest {
               IMAGE_URL_PREFIX + "DUMMY_IMAGE_PATH2"
           );
       assertThat(response.name()).isEqualTo(pool.name());
-      assertThat(response.isFavorite()).isEqualTo(pool.isFavorite());
+      assertThat(response.favoriteId()).isEqualTo(pool.favoriteId());
       assertThat(response.rating()).isEqualTo(pool.rating());
       assertThat(response.reviewCount()).isEqualTo(pool.reviewCount());
       assertThat(response.latitude()).isEqualTo(pool.latitude());
@@ -69,7 +69,7 @@ class FindSwimmingPoolDetailMainResponseFormatterTest {
       // then
       assertThat(response.imageUrls()).isEmpty();
       assertThat(response.name()).isEqualTo(pool.name());
-      assertThat(response.isFavorite()).isEqualTo(pool.isFavorite());
+      assertThat(response.favoriteId()).isEqualTo(pool.favoriteId());
       assertThat(response.rating()).isEqualTo(pool.rating());
       assertThat(response.reviewCount()).isEqualTo(pool.reviewCount());
     }
@@ -81,7 +81,7 @@ class FindSwimmingPoolDetailMainResponseFormatterTest {
       return SwimmingPoolDetailMain.builder()
           .imagePaths(imagePaths)
           .name("DUMMY_NAME")
-          .isFavorite(true)
+          .favoriteId(1L)
           .rating(4.5)
           .reviewCount(10)
           .address("DUMMY_ADDRESS")

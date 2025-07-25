@@ -8,7 +8,7 @@ import lombok.NonNull;
 public record SwimmingPoolDetailMain(
     @NonNull List<String> imagePaths,
     @NonNull String name,
-    boolean isFavorite,
+    Long favoriteId,
     double rating,
     int reviewCount,
     @NonNull String address,

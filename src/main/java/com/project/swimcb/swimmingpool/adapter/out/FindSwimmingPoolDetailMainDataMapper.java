@@ -32,7 +32,7 @@ public class FindSwimmingPoolDetailMainDataMapper implements FindSwimmingPoolDet
     val pool = queryFactory.select(constructor(SwimmingPool.class,
             list(swimmingPoolImageEntity.path),
             swimmingPoolEntity.name,
-            favoriteEntity.id.count().gt(0),
+            favoriteEntity.id.min(),
             swimmingPoolRatingEntity.rating.avg(),
             swimmingPoolReviewEntity.id.sum(),
             swimmingPoolEntity.address,
@@ -66,7 +66,7 @@ public class FindSwimmingPoolDetailMainDataMapper implements FindSwimmingPoolDet
     return SwimmingPoolDetailMain.builder()
         .imagePaths(pool.imagePaths())
         .name(pool.name())
-        .isFavorite(pool.isFavorite())
+        .favoriteId(pool.favoriteId())
         .rating(pool.rating())
         .reviewCount((int) pool.reviewCount())
         .address(pool.address())
@@ -88,7 +88,7 @@ public class FindSwimmingPoolDetailMainDataMapper implements FindSwimmingPoolDet
   public record SwimmingPool(
       @NonNull List<String> imagePaths,
       @NonNull String name,
-      boolean isFavorite,
+      Long favoriteId,
       double rating,
       long reviewCount,
       @NonNull String address,

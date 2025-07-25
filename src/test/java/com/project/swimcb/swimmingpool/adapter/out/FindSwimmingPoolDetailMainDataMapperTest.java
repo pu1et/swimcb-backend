@@ -75,7 +75,7 @@ class FindSwimmingPoolDetailMainDataMapperTest {
         // then
         assertThat(poolMainInfo.imagePaths()).hasSize(result.imagePaths().size());
         assertThat(poolMainInfo.name()).isEqualTo(result.name());
-        assertThat(poolMainInfo.isFavorite()).isEqualTo(result.isFavorite());
+        assertThat(poolMainInfo.favoriteId()).isEqualTo(result.favoriteId());
         assertThat(poolMainInfo.rating()).isEqualTo(result.rating());
         assertThat(poolMainInfo.reviewCount()).isEqualTo(result.reviewCount());
         assertThat(poolMainInfo.address()).isEqualTo(result.address());
@@ -151,7 +151,7 @@ class FindSwimmingPoolDetailMainDataMapperTest {
       return new SwimmingPool(
           List.of("DUMMY_PATH1", "DUMMY_PATH2"),
           "DUMMY_NAME",
-          true,
+          1L,
           4.5,
           31,
           "DUMMY_ADDRESS",

@@ -22,7 +22,7 @@ public class FindSwimmingPoolDetailMainResponseFormatter implements
     return FindSwimmingPoolDetailMainResponse.builder()
         .imageUrls(imageUrls)
         .name(pool.name())
-        .isFavorite(pool.isFavorite())
+        .favoriteId(pool.favoriteId())
         .rating(pool.rating())
         .reviewCount(pool.reviewCount())
         .address(pool.address())
