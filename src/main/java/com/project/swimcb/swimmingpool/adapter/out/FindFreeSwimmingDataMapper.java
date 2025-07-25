@@ -12,8 +12,8 @@ import static com.project.swimcb.db.entity.TicketTargetType.FREE_SWIMMING;
 import static com.querydsl.core.types.Projections.constructor;
 
 import com.project.swimcb.favorite.domain.enums.FavoriteTargetType;
-import com.project.swimcb.swimmingpool.domain.FindFreeSwimmingCondition;
 import com.project.swimcb.swimmingpool.application.out.FindFreeSwimmingDsGateway;
+import com.project.swimcb.swimmingpool.domain.FindFreeSwimmingCondition;
 import com.project.swimcb.swimmingpool.domain.FreeSwimming;
 import com.querydsl.core.annotations.QueryProjection;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -44,7 +44,7 @@ class FindFreeSwimmingDataMapper implements FindFreeSwimmingDsGateway {
     return queryFactory.select(constructor(SwimmingPoolWithFreeSwimming.class,
             swimmingPoolEntity.id,
             swimmingPoolImageEntity.path,
-            favoriteEntity.id.count().gt(0),
+            favoriteEntity.id.min(),
             distanceBetweenMemberAndSwimmingPool,
             swimmingPoolEntity.name,
             swimmingPoolEntity.address,
@@ -108,7 +108,7 @@ class FindFreeSwimmingDataMapper implements FindFreeSwimmingDsGateway {
         .map(i -> FreeSwimming.builder()
             .swimmingPoolId(i.swimmingPoolId())
             .imagePath(i.imageUrl())
-            .isFavorite(i.isFavorite())
+            .favoriteId(i.favoriteId())
             .distance((int) i.distance())
             .name(i.name())
             .address(i.address())
@@ -161,7 +161,7 @@ class FindFreeSwimmingDataMapper implements FindFreeSwimmingDsGateway {
   protected record SwimmingPoolWithFreeSwimming(
       long swimmingPoolId,
       @NonNull String imageUrl,
-      boolean isFavorite,
+      Long favoriteId,
       double distance,
       @NonNull String name,
       @NonNull String address,

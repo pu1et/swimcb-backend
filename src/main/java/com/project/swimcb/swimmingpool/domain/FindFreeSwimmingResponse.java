@@ -22,9 +22,8 @@ public record FindFreeSwimmingResponse(
       @Schema(description = "수영장 이미지 URL", example = "https://example.com/image.jpg")
       String imageUrl,
 
-      @NonNull
-      @Schema(description = "즐겨찾기 여부", example = "true")
-      Boolean isFavorite,
+      @Schema(description = "즐겨찾기 ID", example = "1L")
+      Long favoriteId,
 
       @NonNull
       @Schema(description = "거리", example = "500")

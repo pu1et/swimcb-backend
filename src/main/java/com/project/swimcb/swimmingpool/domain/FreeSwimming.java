@@ -7,7 +7,7 @@ import lombok.NonNull;
 public record FreeSwimming(
     @NonNull Long swimmingPoolId,
     @NonNull String imagePath,
-    @NonNull Boolean isFavorite,
+    Long favoriteId,
     @NonNull Integer distance,
     @NonNull String name,
     @NonNull String address,

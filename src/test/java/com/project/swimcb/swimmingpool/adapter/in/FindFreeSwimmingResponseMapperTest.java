@@ -40,7 +40,7 @@ class FindFreeSwimmingResponseMapperTest {
         FreeSwimming.builder()
             .swimmingPoolId(1L)
             .imagePath("test-image.jpg")
-            .isFavorite(true)
+            .favoriteId(1L)
             .distance(10)
             .name("테스트 수영장")
             .address("테스트 주소")
@@ -64,7 +64,7 @@ class FindFreeSwimmingResponseMapperTest {
     val firstFreeSwimming = response.freeSwimmings().getFirst();
     assertThat(firstFreeSwimming.swimmingPoolId()).isEqualTo(1L);
     assertThat(firstFreeSwimming.imageUrl()).isEqualTo(imageUrl);
-    assertThat(firstFreeSwimming.isFavorite()).isTrue();
+    assertThat(firstFreeSwimming.favoriteId()).isEqualTo(1L);
     assertThat(firstFreeSwimming.distance()).isEqualTo(10);
     assertThat(firstFreeSwimming.name()).isEqualTo("테스트 수영장");
     assertThat(firstFreeSwimming.address()).isEqualTo("테스트 주소");

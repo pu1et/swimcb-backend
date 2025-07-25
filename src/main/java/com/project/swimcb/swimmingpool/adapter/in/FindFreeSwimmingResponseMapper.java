@@ -21,7 +21,7 @@ public class FindFreeSwimmingResponseMapper {
         .map(i -> FindFreeSwimmingResponse.FreeSwimming.builder()
             .swimmingPoolId(i.swimmingPoolId())
             .imageUrl(getImageUrl(i.imagePath()))
-            .isFavorite(i.isFavorite())
+            .favoriteId(i.favoriteId())
             .distance(i.distance())
             .name(i.name())
             .address(i.address())

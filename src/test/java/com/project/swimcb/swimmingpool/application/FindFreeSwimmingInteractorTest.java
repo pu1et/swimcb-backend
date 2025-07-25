@@ -85,7 +85,7 @@ class FindFreeSwimmingInteractorTest {
         FreeSwimming.builder()
             .swimmingPoolId(1L)
             .imagePath("/images/pool1.jpg")
-            .isFavorite(false)
+            .favoriteId(1L)
             .distance(200)
             .name("테스트 수영장")
             .address("서울시 강남구 테스트로 1")
