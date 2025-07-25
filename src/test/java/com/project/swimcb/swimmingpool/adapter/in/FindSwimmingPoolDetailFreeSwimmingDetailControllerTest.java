@@ -82,12 +82,12 @@ class FindSwimmingPoolDetailFreeSwimmingDetailControllerTest {
   }
 
   @Test
-  @DisplayName("date 파라미터가 누락된 경우 400 반환")
+  @DisplayName("date 파라미터가 잘못된 경우 400 반환")
   void shouldReturn400WhenDateParameterIsMissing() throws Exception {
     // given
     // when
     // then
-    mockMvc.perform(get(PATH, SWIMMING_POOL_ID, DATE))
+    mockMvc.perform(get(PATH, SWIMMING_POOL_ID, "2025-01"))
         .andExpect(status().isBadRequest());
   }
 
