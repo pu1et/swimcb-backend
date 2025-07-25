@@ -53,7 +53,7 @@ public class SecurityConfig {
     corsConfiguration.addAllowedOrigin("http://localhost:4001");
     // TODO. 도메인이 변경되어 삭제예정
     corsConfiguration.addAllowedOrigin("https://cb-center.vercel.app");
-    corsConfiguration.addAllowedHeader("https://center.pooldayswim.com/");
+    corsConfiguration.addAllowedHeader("https://center.pooldayswim.com");
 
     corsConfiguration.addAllowedOrigin("http://localhost:4010");
 
