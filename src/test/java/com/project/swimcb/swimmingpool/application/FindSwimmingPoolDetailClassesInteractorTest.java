@@ -68,7 +68,7 @@ class FindSwimmingPoolDetailClassesInteractorTest {
           .startTime(LocalTime.of(6, 0))
           .endTime(LocalTime.of(7, 0))
           .minimumPrice(10000)
-          .isFavorite(true)
+          .favoriteId(1L)
           .isReservable(true)
           .tickets(List.of(
               SwimmingClassTicket.builder()

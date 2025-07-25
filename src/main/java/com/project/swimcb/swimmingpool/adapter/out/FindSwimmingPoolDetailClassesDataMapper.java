@@ -67,7 +67,7 @@ class FindSwimmingPoolDetailClassesDataMapper implements
             swimmingClassEntity.endTime,
             ticketEntity.price.min(),
 
-            favoriteEntity.id.count().gt(0),
+            favoriteEntity.id.min(),
 
             swimmingClassEntity.reservationLimitCount,
             swimmingClassEntity.reservedCount,
@@ -130,7 +130,7 @@ class FindSwimmingPoolDetailClassesDataMapper implements
               .startTime(value.getFirst().startTime())
               .endTime(value.getFirst().endTime())
               .minimumPrice(value.getFirst().minimumPrice())
-              .isFavorite(value.getFirst().isFavorite())
+              .favoriteId(value.getFirst().favoriteId())
               .isReservable(isReservable(value.getFirst().reservationLimitCount(),
                   value.getFirst().reservedCount()))
               .tickets(value.stream()
@@ -266,7 +266,7 @@ class FindSwimmingPoolDetailClassesDataMapper implements
       @NonNull LocalTime startTime,
       @NonNull LocalTime endTime,
       int minimumPrice,
-      boolean isFavorite,
+      Long favoriteId,
       int reservationLimitCount,
       int reservedCount,
       long ticketId,

@@ -93,22 +93,22 @@ class FindSwimmingPoolDetailClassesDataMapperTest {
       // KIDS_SWIMMING - DUMMY_SUB_TYPE4 - 티켓 1개
       val result = List.of(
           new QuerySwimmingPoolDetailClass(1L, GROUP, "DUMMY_SUB_TYPE1", 112, LocalTime.of(6, 0),
-              LocalTime.of(7, 0), 9000, true, 10, 5, 1L, "DUMMY_TICKET1", 9000),
+              LocalTime.of(7, 0), 9000, 1L, 10, 5, 1L, "DUMMY_TICKET1", 9000),
           new QuerySwimmingPoolDetailClass(1L, GROUP, "DUMMY_SUB_TYPE1", 112, LocalTime.of(6, 0),
-              LocalTime.of(7, 0), 9000, true, 10, 5, 2L, "DUMMY_TICKET2", 10000),
+              LocalTime.of(7, 0), 9000, 1L, 10, 5, 2L, "DUMMY_TICKET2", 10000),
 
           new QuerySwimmingPoolDetailClass(2L, GROUP, "DUMMY_SUB_TYPE2", 3, LocalTime.of(7, 0),
-              LocalTime.of(8, 0), 20000, false, 20, 19, 3L, "DUMMY_TICKET3", 20000),
+              LocalTime.of(8, 0), 20000, null, 20, 19, 3L, "DUMMY_TICKET3", 20000),
 
           new QuerySwimmingPoolDetailClass(3L, KIDS_SWIMMING, "DUMMY_SUB_TYPE3", 84,
-              LocalTime.of(17, 0), LocalTime.of(18, 0), 30000, false, 25, 20, 4L, "DUMMY_TICKET4",
+              LocalTime.of(17, 0), LocalTime.of(18, 0), 30000, null, 25, 20, 4L, "DUMMY_TICKET4",
               30000),
           new QuerySwimmingPoolDetailClass(3L, KIDS_SWIMMING, "DUMMY_SUB_TYPE3", 84,
-              LocalTime.of(17, 0), LocalTime.of(18, 0), 30000, false, 25, 20, 5L, "DUMMY_TICKET5",
+              LocalTime.of(17, 0), LocalTime.of(18, 0), 30000, null, 25, 20, 5L, "DUMMY_TICKET5",
               30000),
 
           new QuerySwimmingPoolDetailClass(4L, KIDS_SWIMMING, "DUMMY_SUB_TYPE4", 5,
-              LocalTime.of(18, 0), LocalTime.of(19, 0), 40000, true, 44, 40, 6L, "DUMMY_TICKET6",
+              LocalTime.of(18, 0), LocalTime.of(19, 0), 40000, 1L, 44, 40, 6L, "DUMMY_TICKET6",
               40000)
       );
 

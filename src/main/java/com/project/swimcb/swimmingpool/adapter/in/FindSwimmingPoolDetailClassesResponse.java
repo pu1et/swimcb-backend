@@ -19,7 +19,7 @@ public record FindSwimmingPoolDetailClassesResponse(
       @NonNull LocalTime startTime,
       @NonNull LocalTime endTime,
       int minimumPrice,
-      boolean isFavorite,
+      Long favoriteId,
       boolean isReservable,
       @NonNull List<SwimmingClassTicket> tickets
   ) {
