@@ -46,13 +46,20 @@ class FindSwimmingPoolDetailFreeSwimmingDataMapper implements
         .from(freeSwimmingEntity)
         .join(freeSwimmingDayStatusEntity)
         .on(freeSwimmingDayStatusEntity.freeSwimming.eq(freeSwimmingEntity))
-        .join(ticketEntity).on(ticketEntity.targetId.eq(freeSwimmingEntity.id))
+        .join(ticketEntity).on(
+            ticketEntity.targetId.eq(freeSwimmingEntity.id),
+            ticketEntity.targetType.eq(FREE_SWIMMING)
+        )
         .where(
             freeSwimmingEntity.swimmingPool.id.eq(condition.swimmingPoolId()),
             freeSwimmingEntity.yearMonth.eq(condition.month().atDay(1)),
             freeSwimmingEntity.isCanceled.isFalse(),
 
-            ticketEntity.targetType.eq(FREE_SWIMMING),
+            freeSwimmingEntity.isCanceled.isFalse(),
+            freeSwimmingEntity.isVisible.isTrue(),
+            freeSwimmingDayStatusEntity.isClosed.isFalse(),
+            freeSwimmingDayStatusEntity.isReservationBlocked.isFalse(),
+
             ticketEntity.isDeleted.isFalse()
         )
         .fetch();

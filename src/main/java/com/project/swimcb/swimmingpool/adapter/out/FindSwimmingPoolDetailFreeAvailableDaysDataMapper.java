@@ -3,7 +3,10 @@ package com.project.swimcb.swimmingpool.adapter.out;
 import static com.project.swimcb.db.entity.QFreeSwimmingDayStatusEntity.freeSwimmingDayStatusEntity;
 import static com.project.swimcb.db.entity.QFreeSwimmingEntity.freeSwimmingEntity;
 import static com.project.swimcb.db.entity.QSwimmingPoolEntity.swimmingPoolEntity;
+import static com.project.swimcb.db.entity.QTicketEntity.*;
+import static com.project.swimcb.db.entity.TicketTargetType.FREE_SWIMMING;
 
+import com.project.swimcb.db.entity.QTicketEntity;
 import com.project.swimcb.swimmingpool.application.out.FindSwimmingPoolDetailFreeAvailableDaysDsGateway;
 import com.project.swimcb.swimmingpool.domain.FindSwimmingPoolDetailFreeSwimmingAvailableDaysCondition;
 import com.project.swimcb.swimmingpool.domain.SwimmingPoolDetailFreeAvailableDays;
@@ -30,9 +33,20 @@ class FindSwimmingPoolDetailFreeAvailableDaysDataMapper implements
         .from(freeSwimmingDayStatusEntity)
         .join(freeSwimmingDayStatusEntity.freeSwimming, freeSwimmingEntity)
         .join(freeSwimmingEntity.swimmingPool, swimmingPoolEntity)
+        .join(ticketEntity).on(
+            ticketEntity.targetId.eq(freeSwimmingEntity.id),
+            ticketEntity.targetType.eq(FREE_SWIMMING)
+        )
         .where(
             freeSwimmingEntity.yearMonth.eq(condition.month().atDay(1)),
-            swimmingPoolEntity.id.eq(condition.swimmingPoolId())
+            swimmingPoolEntity.id.eq(condition.swimmingPoolId()),
+
+            freeSwimmingEntity.isCanceled.isFalse(),
+            freeSwimmingEntity.isVisible.isTrue(),
+            freeSwimmingDayStatusEntity.isClosed.isFalse(),
+            freeSwimmingDayStatusEntity.isReservationBlocked.isFalse(),
+
+            ticketEntity.isDeleted.isFalse()
         )
         .fetch();
     return new SwimmingPoolDetailFreeAvailableDays(result);

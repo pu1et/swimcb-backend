@@ -62,7 +62,14 @@ class FindSwimmingPoolDetailFreeSwimmingDetailDataMapper implements
         .where(
             swimmingPoolEntity.id.eq(condition.swimmingPoolId()),
             freeSwimmingEntity.yearMonth.eq(firstDayOfMonth),
-            freeSwimmingDayStatusEntity.dayOfMonth.eq(condition.date().getDayOfMonth())
+            freeSwimmingDayStatusEntity.dayOfMonth.eq(condition.date().getDayOfMonth()),
+
+            freeSwimmingEntity.isCanceled.isFalse(),
+            freeSwimmingEntity.isVisible.isTrue(),
+            freeSwimmingDayStatusEntity.isClosed.isFalse(),
+            freeSwimmingDayStatusEntity.isReservationBlocked.isFalse(),
+
+            ticketEntity.isDeleted.isFalse()
         )
         .fetch()
         .stream()
