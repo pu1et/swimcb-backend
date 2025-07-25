@@ -58,7 +58,7 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
     val swimmingClasses = queryFactory.select(constructor(SwimmingPoolWithClass.class,
             swimmingPoolEntity.id,
             swimmingPoolImageEntity.path.min(),
-            favoriteEntity.id.count().gt(0),
+            favoriteEntity.id.min(),
             distanceBetweenMemberAndSwimmingPool,
             swimmingPoolEntity.name,
             swimmingPoolEntity.address,
@@ -114,7 +114,7 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
         .map(i -> SwimmingClass.builder()
             .swimmingPoolId(i.swimmingPoolId())
             .imageUrl(i.imageUrl())
-            .isFavorite(i.isFavorite())
+            .favoriteId(i.favoriteId())
             .distance((int) i.distance())
             .name(i.name())
             .address(i.address())
@@ -253,7 +253,7 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
   public record SwimmingPoolWithClass(
       long swimmingPoolId,
       @NonNull String imageUrl,
-      boolean isFavorite,
+      Long favoriteId,
       double distance,
       @NonNull String name,
       @NonNull String address,

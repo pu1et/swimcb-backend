@@ -99,8 +99,8 @@ class FindSwimmingClassesDataMapperTest {
       val condition = TestFindSwimmingClassesConditionFactory.create();
 
       val result = Arrays.asList(
-          new SwimmingPoolWithClass(1L, "/path1", true, 2.5, "수영장1", "주소1", 4.5, 10L),
-          new SwimmingPoolWithClass(2L, "/path2", false, 3.5, "수영장2", "주소2", 3.0, 1L)
+          new SwimmingPoolWithClass(1L, "/path1", 1L, 2.5, "수영장1", "주소1", 4.5, 10L),
+          new SwimmingPoolWithClass(2L, "/path2", null, 3.5, "수영장2", "주소2", 3.0, 1L)
       );
 
       when(resultQuery.fetch()).thenReturn(result);
@@ -113,14 +113,14 @@ class FindSwimmingClassesDataMapperTest {
       assertThat(response.classes().getTotalElements()).isEqualTo(2);
       assertThat(response.classes().getContent().getFirst().swimmingPoolId()).isEqualTo(1L);
       assertThat(response.classes().getContent().getFirst().imageUrl()).isEqualTo("/path1");
-      assertThat(response.classes().getContent().getFirst().isFavorite()).isTrue();
+      assertThat(response.classes().getContent().getFirst().favoriteId()).isEqualTo(1L);
       assertThat(response.classes().getContent().getFirst().distance()).isEqualTo(2);
       assertThat(response.classes().getContent().getFirst().rating()).isEqualTo(4.5);
       assertThat(response.classes().getContent().getFirst().reviewCount()).isEqualTo(10);
 
       assertThat(response.classes().getContent().get(1).swimmingPoolId()).isEqualTo(2L);
       assertThat(response.classes().getContent().get(1).imageUrl()).isEqualTo("/path2");
-      assertThat(response.classes().getContent().get(1).isFavorite()).isFalse();
+      assertThat(response.classes().getContent().get(1).favoriteId()).isNull();
       assertThat(response.classes().getContent().get(1).distance()).isEqualTo(3);
       assertThat(response.classes().getContent().get(1).rating()).isEqualTo(3.0);
       assertThat(response.classes().getContent().get(1).reviewCount()).isEqualTo(1);

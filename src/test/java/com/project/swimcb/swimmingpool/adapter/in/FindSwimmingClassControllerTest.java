@@ -112,7 +112,7 @@ class FindSwimmingClassControllerTest {
       val classes = List.of(SwimmingClass.builder()
           .swimmingPoolId(1L)
           .imageUrl("MOCK_IMAGE_URL")
-          .isFavorite(true)
+          .favoriteId(1L)
           .distance(100)
           .name("MOCK_NAME")
           .address("MOCK_ADDRESS")

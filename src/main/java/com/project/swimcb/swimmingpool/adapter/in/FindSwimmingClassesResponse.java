@@ -12,7 +12,7 @@ public record FindSwimmingClassesResponse(
   public record SwimmingClass(
       long swimmingPoolId,
       @NonNull String imageUrl,
-      boolean isFavorite,
+      Long favoriteId,
       int distance,
       @NonNull String name,
       @NonNull String address,
