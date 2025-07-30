@@ -6,7 +6,7 @@ spring:
           kakao:
             client-id: ${OAUTH_KAKAO_CLIENT_ID}
             client-secret: ${OAUTH_KAKAO_CLIENT_SECRET}
-            redirect-uri: http://ec2-3-37-127-69.ap-northeast-2.compute.amazonaws.com:8080/login/oauth2/kakao
+            redirect-uri: https://poolday-swim.com/login/oauth2/kakao
             authorization-grant-type: authorization_code
             scope: >
               account_email,
