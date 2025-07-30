@@ -209,7 +209,8 @@ class FindSwimmingPoolDetailClassesDataMapper implements
     val booleanBuilder = new BooleanBuilder();
 
     if (!groupFixedClassSubTypeNames.isEmpty() && swimmingClassTypeNames.contains(GROUP)) {
-      val subTypeNames = groupFixedClassSubTypeNames.stream().map(Enum::name).toList();
+      val subTypeNames = groupFixedClassSubTypeNames.stream().map(
+          GroupFixedClassSubTypeName::getDescription).toList();
       booleanBuilder.or(
           swimmingClassTypeEntity.name.eq(GROUP)
               .and(swimmingClassSubTypeEntity.name.in(subTypeNames)));

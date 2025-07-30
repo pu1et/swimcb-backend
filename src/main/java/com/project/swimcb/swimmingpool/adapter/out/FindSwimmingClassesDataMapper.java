@@ -9,12 +9,11 @@ import static com.project.swimcb.db.entity.QSwimmingPoolImageEntity.swimmingPool
 import static com.project.swimcb.db.entity.QSwimmingPoolRatingEntity.swimmingPoolRatingEntity;
 import static com.project.swimcb.db.entity.QSwimmingPoolReviewEntity.swimmingPoolReviewEntity;
 import static com.project.swimcb.db.entity.QTicketEntity.ticketEntity;
-import static com.project.swimcb.db.entity.TicketTargetType.*;
+import static com.project.swimcb.db.entity.TicketTargetType.SWIMMING_CLASS;
 import static com.project.swimcb.favorite.domain.enums.FavoriteTargetType.SWIMMING_POOL;
 import static com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName.GROUP;
 import static com.querydsl.core.types.Projections.constructor;
 
-import com.project.swimcb.db.entity.TicketTargetType;
 import com.project.swimcb.swimmingpool.adapter.in.FindSwimmingClassesResponse;
 import com.project.swimcb.swimmingpool.adapter.in.FindSwimmingClassesResponse.SwimmingClass;
 import com.project.swimcb.swimmingpool.application.out.FindSwimmingClassesDsGateway;
@@ -224,7 +223,8 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
     val booleanBuilder = new BooleanBuilder();
 
     if (!groupFixedClassSubTypeNames.isEmpty() && swimmingClassTypeNames.contains(GROUP)) {
-      val subTypeNames = groupFixedClassSubTypeNames.stream().map(Enum::name).toList();
+      val subTypeNames = groupFixedClassSubTypeNames.stream()
+          .map(GroupFixedClassSubTypeName::getDescription).toList();
       booleanBuilder.or(
           swimmingClassTypeEntity.name.eq(GROUP)
               .and(swimmingClassSubTypeEntity.name.in(subTypeNames)));
