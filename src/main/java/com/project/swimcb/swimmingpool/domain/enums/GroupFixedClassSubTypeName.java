@@ -13,7 +13,8 @@ public enum GroupFixedClassSubTypeName {
   INTERMEDIATE_ADVANCED("중상급"),
   ADVANCED("상급"),
   TRAINING("연수"),
-  MASTERS("마스터스");
+  MASTERS("마스터스"),
+  COMPREHENSIVE("종합");
 
   private final String description;
 }
