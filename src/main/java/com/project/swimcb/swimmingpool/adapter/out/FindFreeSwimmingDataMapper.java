@@ -16,6 +16,7 @@ import com.project.swimcb.swimmingpool.application.out.FindFreeSwimmingDsGateway
 import com.project.swimcb.swimmingpool.domain.FindFreeSwimmingCondition;
 import com.project.swimcb.swimmingpool.domain.FreeSwimming;
 import com.querydsl.core.annotations.QueryProjection;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
@@ -79,6 +80,7 @@ class FindFreeSwimmingDataMapper implements FindFreeSwimmingDsGateway {
             swimmingPoolEntity.name.isNotNull(),
             swimmingPoolEntity.address.isNotNull(),
             swimmingPoolEntity.phone.isNotNull(),
+            swimmingPoolNameAndAddressContains(condition.keyword()),
 
             swimmingPoolEntity.latitude.between(condition.minLatitude(), condition.maxLatitude()),
             swimmingPoolEntity.longitude.between(condition.minLongitude(),
@@ -118,6 +120,14 @@ class FindFreeSwimmingDataMapper implements FindFreeSwimmingDsGateway {
             .longitude(i.longitude())
             .build())
         .toList();
+  }
+
+  private BooleanExpression swimmingPoolNameAndAddressContains(String keyword) {
+    if (keyword == null) {
+      return null;
+    }
+    return swimmingPoolEntity.name.containsIgnoreCase(keyword)
+        .or(swimmingPoolEntity.address.containsIgnoreCase(keyword));
   }
 
   private NumberExpression<Double> distanceBetweenMemberAndSwimmingPool(double memberLatitude,

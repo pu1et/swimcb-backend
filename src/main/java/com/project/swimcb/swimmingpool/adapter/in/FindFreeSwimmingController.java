@@ -33,6 +33,8 @@ public class FindFreeSwimmingController {
   @Operation(summary = "자유수영 조회")
   @GetMapping
   public FindFreeSwimmingResponse findFreeSwimming(
+      @Parameter(description = "검색어", example = "냠뇸냠") @RequestParam(value = "keyword", required = false) String keyword,
+
       @Parameter(description = "회원 위도", example = "37.5665") @RequestParam(value = "memberLatitude") double memberLatitude,
       @Parameter(description = "회원 경도", example = "126.9780") @RequestParam(value = "memberLongitude") double memberLongitude,
       @Parameter(description = "좌측 상단 위도", example = "37.5665") @RequestParam(value = "minLatitude") double minLatitude,
@@ -58,6 +60,7 @@ public class FindFreeSwimmingController {
             .isTodayAvailable(isTodayAvailable)
             .date(date)
             .startTimes(startTimes.stream().map(LocalTime::parse).toList())
+            .keyword(keyword)
             .build()
     );
     return responseMapper.toResponse(result);

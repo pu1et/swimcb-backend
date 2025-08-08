@@ -19,7 +19,8 @@ public record FindFreeSwimmingCondition(
 
     @NonNull Boolean isTodayAvailable,
     LocalDate date,
-    @NonNull List<LocalTime> startTimes
+    @NonNull List<LocalTime> startTimes,
+    String keyword
 ) {
 
 }
