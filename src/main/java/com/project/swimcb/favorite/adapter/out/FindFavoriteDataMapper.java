@@ -129,15 +129,13 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
         .leftJoin(swimmingClassTicketEntity)
         .on(
             swimmingClassTicketEntity.targetType.eq(SWIMMING_CLASS),
-            swimmingClassTicketEntity.targetId.eq(swimmingClassEntity.id),
-            swimmingClassTicketEntity.isDeleted.isFalse()
+            swimmingClassTicketEntity.targetId.eq(swimmingClassEntity.id)
         )
 
         .leftJoin(freeSwimmingTicketEntity)
         .on(
             freeSwimmingTicketEntity.targetType.eq(FREE_SWIMMING),
-            freeSwimmingTicketEntity.targetId.eq(freeSwimmingEntity.id),
-            freeSwimmingTicketEntity.isDeleted.isFalse()
+            freeSwimmingTicketEntity.targetId.eq(freeSwimmingEntity.id)
         )
         .where(
             favoriteEntity.member.id.eq(condition.memberId()),
