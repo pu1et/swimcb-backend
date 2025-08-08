@@ -7,14 +7,12 @@ import static com.project.swimcb.db.entity.QSwimmingPoolRatingEntity.swimmingPoo
 import static com.project.swimcb.db.entity.QSwimmingPoolReviewEntity.swimmingPoolReviewEntity;
 import static com.project.swimcb.favorite.domain.enums.FavoriteTargetType.SWIMMING_POOL;
 import static com.querydsl.core.types.Projections.constructor;
-import static com.querydsl.core.types.Projections.list;
 
 import com.project.swimcb.swimmingpool.application.out.FindSwimmingPoolDetailMainGateway;
 import com.project.swimcb.swimmingpool.domain.SwimmingPoolDetailMain;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +28,6 @@ public class FindSwimmingPoolDetailMainDataMapper implements FindSwimmingPoolDet
   @Override
   public SwimmingPoolDetailMain findSwimmingPoolDetailMain(long swimmingPoolId, Long memberId) {
     val pool = queryFactory.select(constructor(SwimmingPool.class,
-            list(swimmingPoolImageEntity.path),
             swimmingPoolEntity.name,
             favoriteEntity.id.min(),
             swimmingPoolRatingEntity.rating.avg(),
@@ -38,7 +35,8 @@ public class FindSwimmingPoolDetailMainDataMapper implements FindSwimmingPoolDet
             swimmingPoolEntity.address,
             swimmingPoolEntity.phone,
             swimmingPoolEntity.latitude,
-            swimmingPoolEntity.longitude
+            swimmingPoolEntity.longitude,
+            swimmingPoolImageEntity.path
         ))
         .from(swimmingPoolEntity)
         .join(swimmingPoolImageEntity)
@@ -49,30 +47,34 @@ public class FindSwimmingPoolDetailMainDataMapper implements FindSwimmingPoolDet
         .leftJoin(swimmingPoolReviewEntity)
         .on(swimmingPoolReviewEntity.swimmingPool.eq(swimmingPoolEntity))
         .where(swimmingPoolEntity.id.eq(swimmingPoolId))
+        .orderBy(swimmingPoolImageEntity.createdAt.asc())
         .groupBy(
             swimmingPoolEntity.name,
             swimmingPoolEntity.address,
             swimmingPoolEntity.phone,
-            swimmingPoolImageEntity.path,
             swimmingPoolEntity.latitude,
-            swimmingPoolEntity.longitude
+            swimmingPoolEntity.longitude,
+            swimmingPoolImageEntity.path,
+            swimmingPoolImageEntity.createdAt
         )
-        .fetchFirst();
+        .fetch();
 
-    if (pool == null) {
+    if (pool.isEmpty()) {
       throw new NoSuchElementException("수영장이 존재하지 않습니다 : " + swimmingPoolId);
     }
 
+    val first = pool.getFirst();
+
     return SwimmingPoolDetailMain.builder()
-        .imagePaths(pool.imagePaths())
-        .name(pool.name())
-        .favoriteId(pool.favoriteId())
-        .rating(pool.rating())
-        .reviewCount((int) pool.reviewCount())
-        .address(pool.address())
-        .phone(pool.phone())
-        .latitude(pool.latitude())
-        .longitude(pool.longitude())
+        .imagePaths(pool.stream().map(SwimmingPool::imagePath).toList())
+        .name(first.name())
+        .favoriteId(first.favoriteId())
+        .rating(first.rating())
+        .reviewCount((int) first.reviewCount())
+        .address(first.address())
+        .phone(first.phone())
+        .latitude(first.latitude())
+        .longitude(first.longitude())
         .build();
   }
 
@@ -86,7 +88,6 @@ public class FindSwimmingPoolDetailMainDataMapper implements FindSwimmingPoolDet
   }
 
   public record SwimmingPool(
-      @NonNull List<String> imagePaths,
       @NonNull String name,
       Long favoriteId,
       double rating,
@@ -94,7 +95,8 @@ public class FindSwimmingPoolDetailMainDataMapper implements FindSwimmingPoolDet
       @NonNull String address,
       @NonNull String phone,
       Double latitude,
-      Double longitude
+      Double longitude,
+      @NonNull String imagePath
   ) {
 
   }

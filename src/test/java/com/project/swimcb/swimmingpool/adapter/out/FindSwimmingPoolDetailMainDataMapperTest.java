@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import com.project.swimcb.swimmingpool.adapter.out.FindSwimmingPoolDetailMainDataMapper.SwimmingPool;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -49,7 +50,9 @@ class FindSwimmingPoolDetailMainDataMapperTest {
     lenient().when(resultQuery.on(any(Predicate[].class))).thenReturn(resultQuery);
     lenient().when(resultQuery.leftJoin(any(EntityPath.class))).thenReturn(resultQuery);
     lenient().when(resultQuery.where(any(Predicate.class))).thenReturn(resultQuery);
+    lenient().when(resultQuery.groupBy(any(Expression.class))).thenReturn(resultQuery);
     lenient().when(resultQuery.groupBy(any(Expression[].class))).thenReturn(resultQuery);
+    lenient().when(resultQuery.orderBy(any(OrderSpecifier.class))).thenReturn(resultQuery);
   }
 
   @Nested
@@ -67,19 +70,24 @@ class FindSwimmingPoolDetailMainDataMapperTest {
       void shouldReturnSwimmingPoolDetailMain() {
         // given
         val memberId = 2L;
-        val result = TestSwimmingPoolFactory.create();
+        val result = List.of(
+            TestSwimmingPoolFactory.create(),
+            TestSwimmingPoolFactory.create()
+        );
 
-        when(resultQuery.fetchFirst()).thenReturn(result);
+        when(resultQuery.fetch()).thenReturn(result);
         // when
         val poolMainInfo = mapper.findSwimmingPoolDetailMain(swimmingPoolId, memberId);
         // then
-        assertThat(poolMainInfo.imagePaths()).hasSize(result.imagePaths().size());
-        assertThat(poolMainInfo.name()).isEqualTo(result.name());
-        assertThat(poolMainInfo.favoriteId()).isEqualTo(result.favoriteId());
-        assertThat(poolMainInfo.rating()).isEqualTo(result.rating());
-        assertThat(poolMainInfo.reviewCount()).isEqualTo(result.reviewCount());
-        assertThat(poolMainInfo.address()).isEqualTo(result.address());
-        assertThat(poolMainInfo.phone()).isEqualTo(result.phone());
+        val firstSwimmingPool = result.getFirst();
+
+        assertThat(poolMainInfo.imagePaths()).hasSize(result.size());
+        assertThat(poolMainInfo.name()).isEqualTo(firstSwimmingPool.name());
+        assertThat(poolMainInfo.favoriteId()).isEqualTo(firstSwimmingPool.favoriteId());
+        assertThat(poolMainInfo.rating()).isEqualTo(firstSwimmingPool.rating());
+        assertThat(poolMainInfo.reviewCount()).isEqualTo(firstSwimmingPool.reviewCount());
+        assertThat(poolMainInfo.address()).isEqualTo(firstSwimmingPool.address());
+        assertThat(poolMainInfo.phone()).isEqualTo(firstSwimmingPool.phone());
       }
 
     }
@@ -92,7 +100,7 @@ class FindSwimmingPoolDetailMainDataMapperTest {
       @DisplayName("NoSuchElementException 예외를 발생시킨다.")
       void shouldThrowNoSuchElementException() {
         // given
-        when(resultQuery.fetchFirst()).thenReturn(null);
+        when(resultQuery.fetch()).thenReturn(List.of());
         // when
         // then
         assertThatThrownBy(() -> mapper.findSwimmingPoolDetailMain(swimmingPoolId, null))
@@ -149,7 +157,6 @@ class FindSwimmingPoolDetailMainDataMapperTest {
 
     private static SwimmingPool create() {
       return new SwimmingPool(
-          List.of("DUMMY_PATH1", "DUMMY_PATH2"),
           "DUMMY_NAME",
           1L,
           4.5,
@@ -157,7 +164,8 @@ class FindSwimmingPoolDetailMainDataMapperTest {
           "DUMMY_ADDRESS",
           "DUMMY_PHONE",
           37.5665,
-          126.9780
+          126.9780,
+          "DUMMY_IMAGE_PATH"
       );
     }
 
