@@ -44,7 +44,7 @@ class FindFreeSwimmingDataMapper implements FindFreeSwimmingDsGateway {
 
     return queryFactory.select(constructor(SwimmingPoolWithFreeSwimming.class,
             swimmingPoolEntity.id,
-            swimmingPoolImageEntity.path,
+            swimmingPoolImageEntity.path.min(),
             favoriteEntity.id.min(),
             distanceBetweenMemberAndSwimmingPool,
             swimmingPoolEntity.name,
@@ -97,9 +97,6 @@ class FindFreeSwimmingDataMapper implements FindFreeSwimmingDsGateway {
         )
         .groupBy(
             swimmingPoolEntity.id,
-            swimmingPoolImageEntity.path,
-            swimmingPoolEntity.longitude,
-            swimmingPoolEntity.latitude,
             swimmingPoolEntity.name,
             swimmingPoolEntity.address,
             swimmingPoolEntity.latitude,
