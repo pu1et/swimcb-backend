@@ -205,7 +205,7 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
     if (sort == Sort.DISTANCE_ASC) {
       return distanceExpression.asc();
     }
-    return ticketEntity.price.asc();
+    return ticketEntity.price.min().asc();
   }
 
   Predicate classTypeAndSubTypeIn(

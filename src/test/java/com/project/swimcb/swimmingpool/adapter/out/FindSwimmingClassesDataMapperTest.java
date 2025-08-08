@@ -317,7 +317,7 @@ class FindSwimmingClassesDataMapperTest {
       // then
       val resultString = result.toString();
 
-      assertThat(resultString).contains("price ASC");
+      assertThat(resultString).contains("min(ticketEntity.price) ASC");
     }
   }
 
