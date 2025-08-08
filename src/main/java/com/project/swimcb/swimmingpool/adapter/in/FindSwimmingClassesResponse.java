@@ -10,15 +10,17 @@ public record FindSwimmingClassesResponse(
 
   @Builder
   public record SwimmingClass(
-      long swimmingPoolId,
+      @NonNull Long swimmingPoolId,
       @NonNull String imageUrl,
       Long favoriteId,
-      int distance,
+      @NonNull Integer distance,
       @NonNull String name,
       @NonNull String address,
-      double rating,
-      int reviewCount
+      @NonNull Double rating,
+      @NonNull Integer reviewCount,
+      @NonNull Integer minTicketPrice
   ) {
 
   }
+
 }

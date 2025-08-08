@@ -68,6 +68,7 @@ class FindSwimmingClassesInteractorTest {
           .address("MOCK_ADDRESS")
           .rating(4.5)
           .reviewCount(100)
+          .minTicketPrice(10000)
           .build());
       return new FindSwimmingClassesResponse(new PageImpl<>(classes));
     }

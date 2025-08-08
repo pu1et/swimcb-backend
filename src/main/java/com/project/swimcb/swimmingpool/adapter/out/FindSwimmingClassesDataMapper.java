@@ -62,7 +62,8 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
             swimmingPoolEntity.name,
             swimmingPoolEntity.address,
             swimmingPoolRatingEntity.rating.avg(),
-            swimmingPoolReviewEntity.id.sum()
+            swimmingPoolReviewEntity.id.sum(),
+            ticketEntity.price.min()
         ))
         .from(swimmingPoolEntity)
         .join(swimmingPoolImageEntity)
@@ -119,6 +120,7 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
             .address(i.address())
             .rating(i.rating())
             .reviewCount((int) i.reviewCount())
+            .minTicketPrice(i.minTicketPrice())
             .build()
         )
         .toList();
@@ -258,7 +260,8 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
       @NonNull String name,
       @NonNull String address,
       double rating,
-      long reviewCount
+      long reviewCount,
+      int minTicketPrice
   ) {
 
     @QueryProjection

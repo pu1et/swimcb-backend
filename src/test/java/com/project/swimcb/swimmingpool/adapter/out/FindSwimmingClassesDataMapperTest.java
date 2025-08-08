@@ -99,8 +99,8 @@ class FindSwimmingClassesDataMapperTest {
       val condition = TestFindSwimmingClassesConditionFactory.create();
 
       val result = Arrays.asList(
-          new SwimmingPoolWithClass(1L, "/path1", 1L, 2.5, "수영장1", "주소1", 4.5, 10L),
-          new SwimmingPoolWithClass(2L, "/path2", null, 3.5, "수영장2", "주소2", 3.0, 1L)
+          new SwimmingPoolWithClass(1L, "/path1", 1L, 2.5, "수영장1", "주소1", 4.5, 10L, 1000),
+          new SwimmingPoolWithClass(2L, "/path2", null, 3.5, "수영장2", "주소2", 3.0, 1L, 1000)
       );
 
       when(resultQuery.fetch()).thenReturn(result);
@@ -163,6 +163,7 @@ class FindSwimmingClassesDataMapperTest {
       verify(resultQuery, times(1)).fetch();
       verify(countQuery, times(1)).fetchOne();
     }
+
   }
 
   @Nested
@@ -185,6 +186,7 @@ class FindSwimmingClassesDataMapperTest {
           .contains("radians(12.345)")
           .contains("radians(23.456)");
     }
+
   }
 
   @Nested
@@ -215,6 +217,7 @@ class FindSwimmingClassesDataMapperTest {
           .contains("favoriteEntity.targetId = swimmingPoolEntity.id")
           .contains("favoriteEntity.targetType = SWIMMING_POOL");
     }
+
   }
 
   @Nested
@@ -245,6 +248,7 @@ class FindSwimmingClassesDataMapperTest {
           .contains("||")
           .contains("swimmingPoolEntity.address", "MOCK_KEYWORD");
     }
+
   }
 
   @Nested
@@ -286,6 +290,7 @@ class FindSwimmingClassesDataMapperTest {
           .contains("||")
           .contains("startTime >= 17:00", "&&", "startTime < 18:00");
     }
+
   }
 
   @Nested
@@ -319,6 +324,7 @@ class FindSwimmingClassesDataMapperTest {
 
       assertThat(resultString).contains("min(ticketEntity.price) ASC");
     }
+
   }
 
   @Nested
@@ -382,6 +388,7 @@ class FindSwimmingClassesDataMapperTest {
           .contains("in [KIDS_SWIMMING, AQUA_AEROBICS]")
           .doesNotContain("and");
     }
+
   }
 
   @Nested
@@ -410,6 +417,7 @@ class FindSwimmingClassesDataMapperTest {
       assertThat(expression.toString())
           .contains("bitand(swimmingClassEntity.daysOfWeek, 84) > 0");
     }
+
   }
 
 
@@ -438,6 +446,7 @@ class FindSwimmingClassesDataMapperTest {
       // 월(64), 수(16), 금(4)의 합인 84가 나와야 한다.
       assertThat(bitVector).isEqualTo(84);
     }
+
   }
 
   private static class TestFindSwimmingClassesConditionFactory {
@@ -457,5 +466,7 @@ class FindSwimmingClassesDataMapperTest {
           .sort(DISTANCE_ASC)
           .build();
     }
+
   }
+
 }
