@@ -77,12 +77,14 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
             swimmingClassEntity.startTime,
             swimmingClassEntity.endTime,
             swimmingClassTicketEntity.price.min(),
+            swimmingClassEntity.isCanceled,
 
             freeSwimmingEntity.yearMonth,
             freeSwimmingDayStatusEntity.dayOfMonth,
             freeSwimmingEntity.startTime,
             freeSwimmingEntity.endTime,
-            freeSwimmingTicketEntity.price.min()
+            freeSwimmingTicketEntity.price.min(),
+            freeSwimmingEntity.isCanceled
         ))
         .from(favoriteEntity)
 
@@ -161,11 +163,13 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
             swimmingClassEntity.daysOfWeek,
             swimmingClassEntity.startTime,
             swimmingClassEntity.endTime,
+            swimmingClassEntity.isCanceled,
 
             freeSwimmingEntity.yearMonth,
             freeSwimmingDayStatusEntity.dayOfMonth,
             freeSwimmingEntity.startTime,
-            freeSwimmingEntity.endTime
+            freeSwimmingEntity.endTime,
+            freeSwimmingEntity.isCanceled
         )
         .offset(condition.pageable().getOffset())
         .limit(condition.pageable().getPageSize())
@@ -274,6 +278,7 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
         .startTime(i.swimmingClassStartTime())
         .endTime(i.swimmingClassEndTime())
         .minTicketPrice(i.swimmingClassMinTicketPrice())
+        .isClosed(i.isSwimmingClassCanceled())
         .build();
   }
 
@@ -288,6 +293,7 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
         .startTime(i.freeSwimmingStartTime())
         .endTime(i.freeSwimmingEndTime())
         .minTicketPrice(i.freeSwimmingMinTicketPrice())
+        .isClosed(i.isFreeSwimmingCanceled())
         .build();
   }
 
@@ -325,12 +331,14 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
       LocalTime swimmingClassStartTime,
       LocalTime swimmingClassEndTime,
       Integer swimmingClassMinTicketPrice,
+      boolean isSwimmingClassCanceled,
 
       LocalDate yearMonth,
       Integer dayOfMonth,
       LocalTime freeSwimmingStartTime,
       LocalTime freeSwimmingEndTime,
-      Integer freeSwimmingMinTicketPrice
+      Integer freeSwimmingMinTicketPrice,
+      boolean isFreeSwimmingCanceled
   ) {
 
     @QueryProjection

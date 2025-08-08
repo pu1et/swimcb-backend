@@ -65,6 +65,7 @@ class FindFavoriteResponseMapper {
         .startTime(i.startTime())
         .endTime(i.endTime())
         .minTicketPrice(i.minTicketPrice())
+        .isClosed(i.isClosed())
         .build();
   }
 
@@ -80,6 +81,7 @@ class FindFavoriteResponseMapper {
         .startTime(i.startTime())
         .endTime(i.endTime())
         .minTicketPrice(i.minTicketPrice())
+        .isClosed(i.isClosed())
         .build();
   }
 

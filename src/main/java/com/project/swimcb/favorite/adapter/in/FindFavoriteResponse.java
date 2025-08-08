@@ -133,7 +133,11 @@ public record FindFavoriteResponse(
 
       @NonNull
       @Schema(example = "10000")
-      Integer minTicketPrice
+      Integer minTicketPrice,
+
+      @NonNull
+      @Schema(example = "true")
+      Boolean isClosed
 
   ) implements Favorite {
 
@@ -176,7 +180,11 @@ public record FindFavoriteResponse(
 
       @NonNull
       @Schema(example = "10000")
-      Integer minTicketPrice
+      Integer minTicketPrice,
+
+      @NonNull
+      @Schema(example = "true")
+      Boolean isClosed
 
   ) implements Favorite {
 

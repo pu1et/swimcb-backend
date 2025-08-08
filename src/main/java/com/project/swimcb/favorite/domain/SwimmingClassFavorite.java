@@ -50,7 +50,10 @@ public record SwimmingClassFavorite(
     LocalTime endTime,
 
     @NonNull
-    Integer minTicketPrice
+    Integer minTicketPrice,
+
+    @NonNull
+    Boolean isClosed
 
 ) implements Favorite {
 
