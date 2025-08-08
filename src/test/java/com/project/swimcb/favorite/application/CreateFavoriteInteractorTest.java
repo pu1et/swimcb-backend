@@ -9,6 +9,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 
+import com.project.swimcb.db.entity.FavoriteEntity;
 import com.project.swimcb.db.entity.FreeSwimmingDayStatusEntity;
 import com.project.swimcb.db.entity.SwimmingClassEntity;
 import com.project.swimcb.db.entity.SwimmingPoolEntity;
@@ -179,6 +180,31 @@ class CreateFavoriteInteractorTest {
     assertThatThrownBy(() -> createFavoriteInteractor.createFavorite(command))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("해당 자유수영 정보가 존재하지 않습니다.");
+  }
+
+  @Test
+  @DisplayName("이미 즐겨찾기에 등록된 대상이면 예외가 발생해야 한다")
+  void shouldThrowExceptionWhenAlreadyExistsInFavorites() {
+    // given
+    val command = CreateFavoriteCommand.builder()
+        .memberId(1L)
+        .targetType(SWIMMING_POOL)
+        .targetId(100L)
+        .build();
+
+    val findSwimmingPoolEntity = Optional.of(mock(SwimmingPoolEntity.class));
+    given(swimmingPoolRepository.findById(command.targetId())).willReturn(findSwimmingPoolEntity);
+
+    val existingFavorite = mock(FavoriteEntity.class);
+    given(favoriteRepository.findByMember_IdAndTargetTypeAndTargetId(
+        command.memberId(), command.targetType(), command.targetId()))
+        .willReturn(Optional.of(existingFavorite));
+
+    // when
+    // then
+    assertThatThrownBy(() -> createFavoriteInteractor.createFavorite(command))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("이미 즐겨찾기에 등록된 대상입니다");
   }
 
 }

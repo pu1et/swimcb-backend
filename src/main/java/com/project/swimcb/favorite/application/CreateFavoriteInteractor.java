@@ -29,9 +29,19 @@ class CreateFavoriteInteractor implements CreateFavoriteUseCase {
 
     throwIfDoesNotExist(command.targetType(), command.targetId());
 
+    throwIfDuplicated(command);
+
     val favorite = FavoriteEntity.of(command.memberId(), command.targetType(),
         command.targetId());
     favoriteRepository.save(favorite);
+  }
+
+  private void throwIfDuplicated(@NonNull CreateFavoriteCommand command) {
+    favoriteRepository.findByMember_IdAndTargetTypeAndTargetId(
+        command.memberId(), command.targetType(), command.targetId()
+    ).ifPresent(favorite -> {
+      throw new IllegalArgumentException("이미 즐겨찾기에 등록된 대상입니다");
+    });
   }
 
   private void throwIfDoesNotExist(
