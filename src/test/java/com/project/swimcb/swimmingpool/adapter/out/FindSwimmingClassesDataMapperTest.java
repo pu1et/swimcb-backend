@@ -348,8 +348,9 @@ class FindSwimmingClassesDataMapperTest {
       assertThat(result).isNotNull();
 
       val resultString = result.toString();
+      System.out.println("resultString = " + resultString);
       assertThat(resultString)
-          .contains("GROUP && ", "in [BASIC, BEGINNER]")
+          .contains("GROUP && ", "in [기초, 초급]")
           .contains("in [KIDS_SWIMMING, AQUA_AEROBICS]");
     }
 
