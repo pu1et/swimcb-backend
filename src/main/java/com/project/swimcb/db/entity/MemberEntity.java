@@ -64,4 +64,13 @@ public class MemberEntity extends BaseEntity {
     this.id = id;
   }
 
+  public void withdraw() {
+    this.name = null;
+    this.birthDate = null;
+    this.phone = null;
+    this.gender = null;
+    this.email = null;
+    this.nickname = null;
+  }
+
 }
