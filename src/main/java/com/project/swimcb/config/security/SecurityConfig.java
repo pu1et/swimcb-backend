@@ -60,6 +60,9 @@ public class SecurityConfig {
     // FE 개발자 로컬 폰 (사용자 앱 테스트할 때 사용)
     corsConfiguration.addAllowedOrigin("http://192.168.0.37:4000");
 
+    // BE
+    corsConfiguration.addAllowedOrigin("https://poolday-swim.com");
+
     corsConfiguration.addAllowedMethod("*");
     corsConfiguration.addAllowedHeader("*");
     corsConfiguration.setAllowCredentials(true);
