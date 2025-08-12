@@ -1,6 +1,6 @@
 package com.project.swimcb.swimmingpool.adapter.in;
 
-import com.project.swimcb.swimmingpool.domain.SwimmingPoolDetailFacility;
+import com.project.swimcb.swimmingpool.domain.FindSwimmingPoolDetailFacilityResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,13 +17,17 @@ public class FindSwimmingPoolDetailFacilityController {
 
   @Operation(summary = "수영장 상세 조회 - 시설정보")
   @GetMapping
-  public SwimmingPoolDetailFacility findSwimmingPoolDetailFacility(
+  public FindSwimmingPoolDetailFacilityResponse findSwimmingPoolDetailFacility(
       @PathVariable(value = "swimmingPoolId") long swimmingPoolId
   ) {
-    return SwimmingPoolDetailFacility.builder()
-        .openingHours("연중무휴 06:00 - 23:30")
-        .size("성인 수영장(25m * 13m, 6레인)")
-        .depth("성인 수영장 120 - 140cm")
+    return FindSwimmingPoolDetailFacilityResponse.builder()
+        .operatingDays("")
+        .closedDays("")
+        .newRegistrationPeriodStartDay(0)
+        .newRegistrationPeriodEndDay(0)
+        .reRegistrationPeriodStartDay(0)
+        .reRegistrationPeriodEndDay(0)
         .build();
   }
+
 }
