@@ -1,7 +1,6 @@
 package com.project.swimcb.bo.freeswimming.application;
 
 import com.project.swimcb.bo.freeswimming.application.port.in.CreateBoFreeSwimmingUseCase;
-import com.project.swimcb.bo.freeswimming.application.port.out.DateProvider;
 import com.project.swimcb.bo.freeswimming.domain.CreateBoFreeSwimmingCommand;
 import com.project.swimcb.db.entity.FreeSwimmingDayStatusEntity;
 import com.project.swimcb.db.entity.FreeSwimmingEntity;
@@ -13,9 +12,7 @@ import com.project.swimcb.db.repository.SwimmingClassTicketRepository;
 import com.project.swimcb.db.repository.SwimmingInstructorRepository;
 import com.project.swimcb.db.repository.SwimmingPoolRepository;
 import jakarta.transaction.Transactional;
-import java.text.spi.DateFormatProvider;
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Stream;
@@ -34,7 +31,6 @@ class CreateBoFreeSwimmingInteractor implements CreateBoFreeSwimmingUseCase {
   private final FreeSwimmingRepository freeSwimmingRepository;
   private final FreeSwimmingDayStatusRepository freeSwimmingDayStatusRepository;
   private final SwimmingClassTicketRepository ticketRepository;
-  private final DateProvider dateProvider;
 
   @Override
   public void createBoFreeSwimming(@NonNull CreateBoFreeSwimmingCommand command) {
@@ -68,10 +64,11 @@ class CreateBoFreeSwimmingInteractor implements CreateBoFreeSwimmingUseCase {
       @NonNull FreeSwimmingEntity freeSwimming,
       @NonNull List<DayOfWeek> days
   ) {
-    val today = dateProvider.now();
-    val endOfMonth = YearMonth.from(today).atEndOfMonth();
+    val startDayOfMonth = YearMonth.from(freeSwimming.getYearMonth()).atDay(1);
+    val endDayOfMonth = YearMonth.from(freeSwimming.getYearMonth()).atEndOfMonth();
 
-    return Stream.iterate(today, date -> !date.isAfter(endOfMonth), date -> date.plusDays(1))
+    return Stream.iterate(startDayOfMonth, date -> !date.isAfter(endDayOfMonth),
+            date -> date.plusDays(1))
         .filter(date -> days.contains(date.getDayOfWeek()))
         .map(i -> FreeSwimmingDayStatusEntity.builder()
             .freeSwimming(freeSwimming)

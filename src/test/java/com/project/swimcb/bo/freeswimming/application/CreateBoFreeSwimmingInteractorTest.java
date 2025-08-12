@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.assertArg;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -11,8 +12,8 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.project.swimcb.bo.freeswimming.application.port.out.DateProvider;
 import com.project.swimcb.bo.freeswimming.domain.CreateBoFreeSwimmingCommand;
+import com.project.swimcb.db.entity.FreeSwimmingDayStatusEntity;
 import com.project.swimcb.db.entity.FreeSwimmingEntity;
 import com.project.swimcb.db.entity.SwimmingInstructorEntity;
 import com.project.swimcb.db.entity.SwimmingPoolEntity;
@@ -58,9 +59,6 @@ class CreateBoFreeSwimmingInteractorTest {
   @Mock
   private SwimmingClassTicketRepository ticketRepository;
 
-  @Mock
-  private DateProvider dateProvider;
-
   @Nested
   @DisplayName("자유수영 등록 시")
   class CreateFreeSwimming {
@@ -72,7 +70,6 @@ class CreateBoFreeSwimmingInteractorTest {
       val poolId = 1L;
       val lifeguardId = Long.valueOf(2L);
       val yearMonth = YearMonth.of(2025, 6);
-      val now = LocalDate.of(2025, 6, 1);
       val days = List.of(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, DayOfWeek.FRIDAY);
       val startTime = LocalTime.of(9, 0);
       val endTime = LocalTime.of(10, 0);
@@ -82,6 +79,7 @@ class CreateBoFreeSwimmingInteractorTest {
       val pool = mock(SwimmingPoolEntity.class);
       val lifeguard = mock(SwimmingInstructorEntity.class);
       val savedFreeSwimming = mock(FreeSwimmingEntity.class);
+      when(savedFreeSwimming.getYearMonth()).thenReturn(yearMonth.atDay(1));
 
       val timeInfo = new CreateBoFreeSwimmingCommand.Time(startTime, endTime);
       val ticketInfo = new CreateBoFreeSwimmingCommand.Ticket("일반 티켓", 10000);
@@ -97,7 +95,6 @@ class CreateBoFreeSwimmingInteractorTest {
           .tickets(List.of(ticketInfo))
           .build();
 
-      when(dateProvider.now()).thenReturn(now);
       when(swimmingPoolRepository.findById(poolId)).thenReturn(Optional.of(pool));
       when(instructorRepository.findById(lifeguardId)).thenReturn(Optional.of(lifeguard));
       when(freeSwimmingRepository.save(any(FreeSwimmingEntity.class))).thenReturn(
@@ -195,7 +192,6 @@ class CreateBoFreeSwimmingInteractorTest {
       // given
       val poolId = 1L;
       val yearMonth = YearMonth.of(2025, 6);
-      val now = LocalDate.of(2025, 6, 1);
       val days = List.of(DayOfWeek.MONDAY);
       val time = new CreateBoFreeSwimmingCommand.Time(LocalTime.of(9, 0), LocalTime.of(10, 0));
 
@@ -212,8 +208,8 @@ class CreateBoFreeSwimmingInteractorTest {
 
       val pool = mock(SwimmingPoolEntity.class);
       val savedFreeSwimming = mock(FreeSwimmingEntity.class);
+      when(savedFreeSwimming.getYearMonth()).thenReturn(yearMonth.atDay(1));
 
-      when(dateProvider.now()).thenReturn(now);
       when(swimmingPoolRepository.findById(poolId)).thenReturn(Optional.of(pool));
       when(freeSwimmingRepository.save(any())).thenReturn(savedFreeSwimming);
 
@@ -231,7 +227,6 @@ class CreateBoFreeSwimmingInteractorTest {
       // given
       val poolId = 1L;
       val yearMonth = YearMonth.of(2025, 6);
-      val now = LocalDate.of(2025, 6, 15);
       val days = List.of(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY);
       val timeInfo = new CreateBoFreeSwimmingCommand.Time(LocalTime.of(9, 0),
           LocalTime.of(10, 0));
@@ -249,8 +244,8 @@ class CreateBoFreeSwimmingInteractorTest {
 
       val pool = mock(SwimmingPoolEntity.class);
       val savedFreeSwimming = mock(FreeSwimmingEntity.class);
+      when(savedFreeSwimming.getYearMonth()).thenReturn(yearMonth.atDay(1));
 
-      when(dateProvider.now()).thenReturn(now);
       when(swimmingPoolRepository.findById(poolId)).thenReturn(Optional.of(pool));
       when(freeSwimmingRepository.save(any())).thenReturn(savedFreeSwimming);
 
@@ -258,9 +253,11 @@ class CreateBoFreeSwimmingInteractorTest {
       interactor.createBoFreeSwimming(command);
 
       // then
-      verify(freeSwimmingDayStatusRepository).saveAll(assertArg(i ->
-          assertThat(i).extracting(j -> LocalDate.of(2025, 6, j.getDayOfMonth()).getDayOfWeek())
-              .allSatisfy(days::contains)));
+      verify(freeSwimmingDayStatusRepository).saveAll(assertArg(i -> {
+        assertThat(i).hasSize(9);
+        assertThat(i).extracting(FreeSwimmingDayStatusEntity::getDayOfMonth)
+            .containsExactly(2, 4, 9, 11, 16, 18, 23, 25, 30);
+      }));
 
     }
 
