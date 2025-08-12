@@ -1,6 +1,8 @@
 package com.project.swimcb.favorite.adapter.in;
 
+import com.project.swimcb.favorite.application.in.DeleteFavoriteCommand;
 import com.project.swimcb.favorite.application.in.DeleteFavoriteUseCase;
+import com.project.swimcb.favorite.domain.enums.FavoriteTargetType;
 import com.project.swimcb.token.domain.TokenInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -15,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "즐겨찾기")
 @SecurityRequirement(name = "Bearer Authentication")
 @RestController
-@RequestMapping("/api/favorites/{favoriteId}")
+@RequestMapping("/api/favorites/{targetType}/{targetId}")
 @RequiredArgsConstructor
 public class DeleteFavoriteController {
 
@@ -24,10 +26,18 @@ public class DeleteFavoriteController {
   @Operation(summary = "즐겨찾기 삭제")
   @DeleteMapping
   public void deleteFavorite(
-      @PathVariable(value = "favoriteId") long favoriteId,
+      @PathVariable(value = "targetType") FavoriteTargetType targetType,
+      @PathVariable(value = "targetId") long targetId,
+
       @AuthenticationPrincipal TokenInfo tokenInfo
   ) {
-    useCase.deleteFavorite(tokenInfo.memberId(), favoriteId);
+    useCase.deleteFavorite(
+        DeleteFavoriteCommand.builder()
+            .memberId(tokenInfo.memberId())
+            .targetType(targetType)
+            .targetId(targetId)
+            .build()
+    );
   }
 
 }

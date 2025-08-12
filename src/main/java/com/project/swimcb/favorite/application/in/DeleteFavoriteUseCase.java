@@ -4,6 +4,6 @@ import lombok.NonNull;
 
 public interface DeleteFavoriteUseCase {
 
-  void deleteFavorite(@NonNull Long memberId, @NonNull Long favoriteId);
+  void deleteFavorite(@NonNull DeleteFavoriteCommand command);
 
 }

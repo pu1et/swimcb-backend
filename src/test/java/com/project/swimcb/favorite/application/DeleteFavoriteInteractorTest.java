@@ -1,5 +1,6 @@
 package com.project.swimcb.favorite.application;
 
+import static com.project.swimcb.favorite.domain.enums.FavoriteTargetType.SWIMMING_POOL;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
@@ -9,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import com.project.swimcb.db.entity.FavoriteEntity;
 import com.project.swimcb.db.repository.FavoriteRepository;
+import com.project.swimcb.favorite.application.in.DeleteFavoriteCommand;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.val;
@@ -33,17 +35,26 @@ class DeleteFavoriteInteractorTest {
   void givenValidMemberIdAndFavoriteId_whenDeleteFavorite_thenFavoriteShouldBeDeleted() {
     // given
     val memberId = 1L;
+    val targetType = SWIMMING_POOL;
+    val targetId = 2L;
     val favoriteId = 100L;
+    val command = DeleteFavoriteCommand.builder()
+        .memberId(memberId)
+        .targetType(SWIMMING_POOL)
+        .targetId(targetId)
+        .build();
+
     val favoriteEntity = mock(FavoriteEntity.class);
     when(favoriteEntity.getId()).thenReturn(favoriteId);
-    when(repository.findByMember_IdAndId(memberId, favoriteId))
+    when(repository.findByMember_IdAndTargetTypeAndTargetId(memberId, targetType, targetId))
         .thenReturn(Optional.of(favoriteEntity));
 
     // when
-    interactor.deleteFavorite(memberId, favoriteId);
+    interactor.deleteFavorite(command);
 
     // then
-    then(repository).should().findByMember_IdAndId(memberId, favoriteId);
+    then(repository).should()
+        .findByMember_IdAndTargetTypeAndTargetId(memberId, targetType, targetId);
     then(repository).should().deleteById(favoriteId);
   }
 
@@ -52,17 +63,26 @@ class DeleteFavoriteInteractorTest {
   void givenNonExistentFavoriteId_whenDeleteFavorite_thenShouldThrowNoSuchElementException() {
     // given
     val memberId = 1L;
+    val targetType = SWIMMING_POOL;
+    val targetId = 2L;
     val favoriteId = 999L;
-    when(repository.findByMember_IdAndId(memberId, favoriteId))
+    val command = DeleteFavoriteCommand.builder()
+        .memberId(memberId)
+        .targetType(targetType)
+        .targetId(targetId)
+        .build();
+
+    when(repository.findByMember_IdAndTargetTypeAndTargetId(memberId, targetType, targetId))
         .thenReturn(Optional.empty());
 
     // when
     // then
-    assertThatThrownBy(() -> interactor.deleteFavorite(memberId, favoriteId))
+    assertThatThrownBy(() -> interactor.deleteFavorite(command))
         .isInstanceOf(NoSuchElementException.class)
         .hasMessageContaining("즐겨찾기를 찾을 수 없습니다");
 
-    then(repository).should().findByMember_IdAndId(memberId, favoriteId);
+    then(repository).should()
+        .findByMember_IdAndTargetTypeAndTargetId(memberId, targetType, targetId);
     then(repository).should(never()).deleteById(any());
   }
 
