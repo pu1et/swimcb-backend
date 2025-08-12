@@ -16,8 +16,12 @@ import com.project.swimcb.swimmingpool.domain.SwimmingPoolDetailFreeSwimmingDeta
 import com.project.swimcb.swimmingpool.domain.SwimmingPoolDetailFreeSwimmingDetail.Ticket;
 import com.project.swimcb.swimmingpool.domain.SwimmingPoolDetailFreeSwimmingDetail.Time;
 import com.querydsl.core.annotations.QueryProjection;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -55,9 +59,7 @@ class FindSwimmingPoolDetailFreeSwimmingDetailDataMapper implements
             ticketEntity.targetType.eq(FREE_SWIMMING)
         )
         .leftJoin(favoriteEntity).on(
-            favoriteEntity.member.id.eq(condition.memberId()),
-            favoriteEntity.targetType.eq(FavoriteTargetType.FREE_SWIMMING),
-            favoriteEntity.targetId.eq(freeSwimmingDayStatusEntity.id)
+            favoriteConditionIfMemberIdExists(condition.memberId())
         )
         .where(
             swimmingPoolEntity.id.eq(condition.swimmingPoolId()),
@@ -105,6 +107,15 @@ class FindSwimmingPoolDetailFreeSwimmingDetailDataMapper implements
         })
         .toList();
     return new SwimmingPoolDetailFreeSwimmingDetail(contents);
+  }
+
+  private Predicate favoriteConditionIfMemberIdExists(Long memberId) {
+    if (memberId == null) {
+      return Expressions.FALSE;
+    }
+    return favoriteEntity.member.id.eq(memberId)
+        .and(favoriteEntity.targetType.eq(FavoriteTargetType.FREE_SWIMMING))
+        .and(favoriteEntity.targetId.eq(freeSwimmingDayStatusEntity.id));
   }
 
   public record SwimmingPoolDetailFreeSwimmingDetailQuery(
