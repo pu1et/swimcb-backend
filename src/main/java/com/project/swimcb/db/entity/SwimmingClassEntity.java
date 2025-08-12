@@ -100,10 +100,4 @@ public class SwimmingClassEntity extends BaseEntity {
     return this.reservedCount - this.reservationLimitCount + 1;
   }
 
-  public void cancel(@NonNull String cancelReason) {
-    this.isCanceled = true;
-    this.cancelReason = cancelReason;
-    this.canceledAt = LocalDateTime.now();
-  }
-
 }

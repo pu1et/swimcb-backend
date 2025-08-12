@@ -91,7 +91,8 @@ class CancelBoSwimmingClassInteractorTest {
               command.swimmingClassId(),
               List.of(RESERVATION_PENDING, PAYMENT_PENDING),
               CancellationReason.SWIMMING_CLASS_CANCELLED);
-      verify(swimmingClass).cancel(command.cancelReason());
+      verify(cancelBoSwimmingClassDsGateway, times(1)).cancelSwimmingClassById(
+          command.swimmingClassId(), command.cancelReason());
     }
 
     @Test
@@ -119,7 +120,6 @@ class CancelBoSwimmingClassInteractorTest {
           command.swimmingClassId());
       verify(cancelBoSwimmingClassDsGateway, never())
           .cancelAllReservationsBySwimmingClassIdAndReservationStatusIn(any(), any(), any());
-      verify(swimmingClass, never()).cancel(any());
     }
 
     @Test

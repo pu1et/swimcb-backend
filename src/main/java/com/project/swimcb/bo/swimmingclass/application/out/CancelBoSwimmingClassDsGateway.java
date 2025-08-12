@@ -18,4 +18,9 @@ public interface CancelBoSwimmingClassDsGateway {
       @NonNull List<ReservationStatus> reservationStatuses
   );
 
+  void cancelSwimmingClassById(
+      @NonNull Long swimmingClassId,
+      @NonNull String cancelReason
+  );
+
 }

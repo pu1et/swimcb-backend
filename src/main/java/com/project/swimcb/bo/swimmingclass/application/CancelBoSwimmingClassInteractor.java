@@ -11,13 +11,13 @@ import com.project.swimcb.bo.swimmingclass.application.out.UpdateBoSwimmingClass
 import com.project.swimcb.bo.swimmingclass.domain.CancelBoSwimmingClassCommand;
 import com.project.swimcb.db.repository.SwimmingClassRepository;
 import com.project.swimcb.swimmingpool.domain.enums.CancellationReason;
-import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
@@ -47,7 +47,8 @@ public class CancelBoSwimmingClassInteractor implements CancelBoSwimmingClassUse
     // 예약대기, 결제대기 일괄 관리자 취소 처리
     cancelReservations(request.swimmingClassId());
 
-    swimmingClass.cancel(request.cancelReason());
+    cancelBoSwimmingClassDsGateway.cancelSwimmingClassById(request.swimmingClassId(),
+        request.cancelReason());
   }
 
   private void cancelReservations(@NonNull Long swimmingClassId) {

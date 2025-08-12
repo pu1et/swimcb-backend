@@ -1,14 +1,12 @@
 package com.project.swimcb.bo.swimmingclass.adapter.out;
 
 import static com.project.swimcb.db.entity.QReservationEntity.reservationEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassEntity.swimmingClassEntity;
 import static com.project.swimcb.db.entity.QTicketEntity.ticketEntity;
 import static com.project.swimcb.db.entity.TicketTargetType.SWIMMING_CLASS;
 import static com.project.swimcb.swimmingpool.domain.enums.ReservationStatus.RESERVATION_CANCELLED;
 
 import com.project.swimcb.bo.swimmingclass.application.out.CancelBoSwimmingClassDsGateway;
-import com.project.swimcb.db.repository.SwimmingClassSubTypeRepository;
-import com.project.swimcb.db.repository.SwimmingClassTypeRepository;
-import com.project.swimcb.db.repository.SwimmingInstructorRepository;
 import com.project.swimcb.swimmingpool.domain.enums.CancellationReason;
 import com.project.swimcb.swimmingpool.domain.enums.ReservationStatus;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -25,9 +23,6 @@ import org.springframework.stereotype.Service;
 class CancelBoSwimmingClassDataMapper implements CancelBoSwimmingClassDsGateway {
 
   private final JPAQueryFactory queryFactory;
-  private final SwimmingClassTypeRepository swimmingClassTypeRepository;
-  private final SwimmingClassSubTypeRepository swimmingClassSubTypeRepository;
-  private final SwimmingInstructorRepository swimmingInstructorRepository;
   private final EntityManager entityManager;
 
   @Override
@@ -72,6 +67,24 @@ class CancelBoSwimmingClassDataMapper implements CancelBoSwimmingClassDsGateway 
         )
         .fetchOne();
     return count != null && count > 0;
+  }
+
+  @Override
+  public void cancelSwimmingClassById(@NonNull Long swimmingClassId, @NonNull String cancelReason) {
+    val now = LocalDateTime.now();
+
+    queryFactory.update(swimmingClassEntity)
+        .set(swimmingClassEntity.isCanceled, true)
+        .set(swimmingClassEntity.cancelReason, cancelReason)
+        .set(swimmingClassEntity.canceledAt, now)
+        .set(swimmingClassEntity.updatedAt, now)
+        .where(
+            swimmingClassEntity.id.eq(swimmingClassId)
+        )
+        .execute();
+
+    entityManager.flush();
+    entityManager.clear();
   }
 
 }
