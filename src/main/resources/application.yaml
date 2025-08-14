@@ -33,6 +33,9 @@ url:
     local: http://localhost:4000/auth
     dev: https://cb-user.vercel.app/auth
 
+server:
+  forward-headers-strategy: native
+
 ---
 
 spring:
