@@ -9,4 +9,6 @@ public interface CopyFreeSwimmingDsGateway {
 
   List<FreeSwimmingCopyCandidate> findAllFreeSwimmingsByMonth(@NonNull YearMonth month);
 
+  void deleteFreeSwimmingByMonth(@NonNull YearMonth month);
+
 }

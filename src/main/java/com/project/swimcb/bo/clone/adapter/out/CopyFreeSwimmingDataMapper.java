@@ -1,5 +1,6 @@
 package com.project.swimcb.bo.clone.adapter.out;
 
+import static com.project.swimcb.db.entity.QFreeSwimmingDayStatusEntity.freeSwimmingDayStatusEntity;
 import static com.project.swimcb.db.entity.QFreeSwimmingEntity.freeSwimmingEntity;
 import static com.project.swimcb.db.entity.QSwimmingInstructorEntity.swimmingInstructorEntity;
 import static com.project.swimcb.db.entity.QSwimmingPoolEntity.swimmingPoolEntity;
@@ -11,6 +12,7 @@ import com.project.swimcb.bo.clone.application.port.out.CopyFreeSwimmingDsGatewa
 import com.project.swimcb.bo.freeswimming.domain.DaysOfWeek;
 import com.querydsl.core.annotations.QueryProjection;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
 import java.time.LocalTime;
 import java.time.YearMonth;
 import java.util.List;
@@ -27,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 class CopyFreeSwimmingDataMapper implements CopyFreeSwimmingDsGateway {
 
   private final JPAQueryFactory queryFactory;
+  private final EntityManager entityManager;
 
   @Override
   public List<FreeSwimmingCopyCandidate> findAllFreeSwimmingsByMonth(@NonNull YearMonth month) {
@@ -88,6 +91,36 @@ class CopyFreeSwimmingDataMapper implements CopyFreeSwimmingDsGateway {
               .build();
         })
         .toList();
+  }
+
+  @Override
+  public void deleteFreeSwimmingByMonth(@NonNull YearMonth month) {
+    val freeSwimmingIds = queryFactory.select(freeSwimmingEntity.id)
+        .from(freeSwimmingEntity)
+        .where(
+            freeSwimmingEntity.yearMonth.eq(month.atDay(1))
+        )
+        .fetch();
+
+    if (freeSwimmingIds.isEmpty()) {
+      return;
+    }
+
+    queryFactory.delete(ticketEntity)
+        .where(ticketEntity.targetType.eq(FREE_SWIMMING),
+            ticketEntity.targetId.in(freeSwimmingIds))
+        .execute();
+
+    queryFactory.delete(freeSwimmingDayStatusEntity)
+        .where(freeSwimmingDayStatusEntity.freeSwimming.id.in(freeSwimmingIds))
+        .execute();
+
+    queryFactory.delete(freeSwimmingEntity)
+        .where(freeSwimmingEntity.id.in(freeSwimmingIds))
+        .execute();
+
+    entityManager.flush();
+    entityManager.clear();
   }
 
   protected record QueryFreeSwimmingCopyCandidate(

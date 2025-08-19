@@ -27,6 +27,8 @@ class CopyFreeSwimmingInteractor implements CopyFreeSwimmingUseCase {
       return;
     }
 
+    gateway.deleteFreeSwimmingByMonth(command.toMonth());
+
     candidateFreeSwimmings.stream()
         .map(i -> CreateBoFreeSwimmingCommand.builder()
             .swimmingPoolId(i.swimmingPoolId())
