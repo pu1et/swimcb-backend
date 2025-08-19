@@ -115,7 +115,7 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
         .stream()
         .map(i -> SwimmingClass.builder()
             .swimmingPoolId(i.swimmingPoolId())
-            .imageUrl(imageUrlPort.getImageUrl(i.imageUrl()))
+            .imageUrl(imageUrlPort.getImageUrl(i.imagePath()))
             .favoriteId(i.favoriteId())
             .distance((int) i.distance())
             .name(i.name())
@@ -256,7 +256,7 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
   @Builder
   public record SwimmingPoolWithClass(
       long swimmingPoolId,
-      @NonNull String imageUrl,
+      @NonNull String imagePath,
       Long favoriteId,
       double distance,
       @NonNull String name,
