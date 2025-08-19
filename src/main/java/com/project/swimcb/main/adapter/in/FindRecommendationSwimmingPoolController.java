@@ -1,6 +1,6 @@
-package com.project.swimcb.swimmingpool.adapter.in;
+package com.project.swimcb.main.adapter.in;
 
-import com.project.swimcb.swimmingpool.domain.FindRecommendationSwimmingPoolResponse;
+import com.project.swimcb.main.application.port.in.FindRecommendationSwimmingPoolUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/main/recommendation")
 public class FindRecommendationSwimmingPoolController {
+
+  private final FindRecommendationSwimmingPoolUseCase useCase;
 
   @Operation(summary = "추천 수영장 조회")
   @GetMapping
