@@ -20,7 +20,7 @@ public class FindRecommendationSwimmingPoolResponseMapper {
             result.stream()
                 .map(i -> FindRecommendationSwimmingPoolResponse.SwimmingPool.builder()
                     .swimmingPoolId(i.swimmingPoolId())
-                    .imageUrl(imageUrlPort.getImageUrl(i.imageUrl()))
+                    .imageUrl(imageUrlPort.getImageUrl(i.imagePath()))
                     .favoriteId(i.favoriteId())
                     .distance(i.distance())
                     .name(i.name())

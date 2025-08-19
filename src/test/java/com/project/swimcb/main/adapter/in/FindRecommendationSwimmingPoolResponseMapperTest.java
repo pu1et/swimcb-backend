@@ -43,9 +43,9 @@ class FindRecommendationSwimmingPoolResponseMapperTest {
       val expectedImageUrl1 = "https://cdn.example.com/image1.jpg";
       val expectedImageUrl2 = "https://cdn.example.com/image2.jpg";
 
-      given(imageUrlPort.getImageUrl("https://example.com/image1.jpg"))
+      given(imageUrlPort.getImageUrl("/image1.jpg"))
           .willReturn(expectedImageUrl1);
-      given(imageUrlPort.getImageUrl("https://example.com/image2.jpg"))
+      given(imageUrlPort.getImageUrl("/image2.jpg"))
           .willReturn(expectedImageUrl2);
 
       // when
@@ -75,8 +75,8 @@ class FindRecommendationSwimmingPoolResponseMapperTest {
       assertThat(secondPool.rating()).isEqualTo(4.2);
       assertThat(secondPool.reviewCount()).isEqualTo(89);
 
-      then(imageUrlPort).should().getImageUrl("https://example.com/image1.jpg");
-      then(imageUrlPort).should().getImageUrl("https://example.com/image2.jpg");
+      then(imageUrlPort).should().getImageUrl("/image1.jpg");
+      then(imageUrlPort).should().getImageUrl("/image2.jpg");
     }
 
     @Test
@@ -103,7 +103,7 @@ class FindRecommendationSwimmingPoolResponseMapperTest {
 
       val expectedImageUrl = "https://cdn.example.com/image3.jpg";
 
-      given(imageUrlPort.getImageUrl("https://example.com/image3.jpg"))
+      given(imageUrlPort.getImageUrl("/image3.jpg"))
           .willReturn(expectedImageUrl);
 
       // when
@@ -123,7 +123,7 @@ class FindRecommendationSwimmingPoolResponseMapperTest {
       assertThat(pool.rating()).isEqualTo(3.8);
       assertThat(pool.reviewCount()).isEqualTo(45);
 
-      then(imageUrlPort).should().getImageUrl("https://example.com/image3.jpg");
+      then(imageUrlPort).should().getImageUrl("/image3.jpg");
     }
 
     @Test
@@ -137,6 +137,7 @@ class FindRecommendationSwimmingPoolResponseMapperTest {
       assertThatThrownBy(() -> responseMapper.toResponse(nullResult))
           .isInstanceOf(NullPointerException.class);
     }
+
   }
 
   // Test Factory Classes
@@ -145,7 +146,7 @@ class FindRecommendationSwimmingPoolResponseMapperTest {
     private static RecommendationSwimmingPool create() {
       return RecommendationSwimmingPool.builder()
           .swimmingPoolId(1L)
-          .imageUrl("https://example.com/image1.jpg")
+          .imagePath("/image1.jpg")
           .favoriteId(100L)
           .distance(500)
           .name("강남 수영장")
@@ -158,7 +159,7 @@ class FindRecommendationSwimmingPoolResponseMapperTest {
     private static RecommendationSwimmingPool createWithDifferentId(Long swimmingPoolId) {
       return RecommendationSwimmingPool.builder()
           .swimmingPoolId(swimmingPoolId)
-          .imageUrl("https://example.com/image2.jpg")
+          .imagePath("/image2.jpg")
           .favoriteId(200L)
           .distance(800)
           .name("서초 수영장")
@@ -171,7 +172,7 @@ class FindRecommendationSwimmingPoolResponseMapperTest {
     private static RecommendationSwimmingPool createWithoutFavorite() {
       return RecommendationSwimmingPool.builder()
           .swimmingPoolId(3L)
-          .imageUrl("https://example.com/image3.jpg")
+          .imagePath("/image3.jpg")
           .favoriteId(null)
           .distance(1200)
           .name("송파 수영장")
@@ -180,5 +181,7 @@ class FindRecommendationSwimmingPoolResponseMapperTest {
           .reviewCount(45)
           .build();
     }
+
   }
+
 }

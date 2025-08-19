@@ -79,7 +79,7 @@ class FindRecommendationSwimmingPoolDataMapper implements FindRecommendationSwim
         .stream()
         .map(i -> RecommendationSwimmingPool.builder()
             .swimmingPoolId(i.swimmingPoolId())
-            .imageUrl(i.imageUrl())
+            .imagePath(i.imagePath())
             .favoriteId(i.favoriteId())
             .distance((int) i.distance())
             .name(i.name())
@@ -111,7 +111,7 @@ class FindRecommendationSwimmingPoolDataMapper implements FindRecommendationSwim
 
   protected record QueryRecommendationSwimmingPool(
       long swimmingPoolId,
-      @NonNull String imageUrl,
+      @NonNull String imagePath,
       Long favoriteId,
       double distance,
       @NonNull String name,
