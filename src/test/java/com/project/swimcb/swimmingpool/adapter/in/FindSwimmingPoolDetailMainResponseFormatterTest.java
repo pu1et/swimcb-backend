@@ -1,14 +1,12 @@
 package com.project.swimcb.swimmingpool.adapter.in;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
-import com.project.swimcb.bo.notice.application.out.ImageUrlPrefixProvider;
+import com.project.swimcb.bo.swimmingpool.application.out.ImageUrlPort;
 import com.project.swimcb.swimmingpool.domain.SwimmingPoolDetailMain;
 import java.util.List;
 import lombok.val;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -24,14 +22,7 @@ class FindSwimmingPoolDetailMainResponseFormatterTest {
   private FindSwimmingPoolDetailMainResponseFormatter formatter;
 
   @Mock
-  private ImageUrlPrefixProvider imageUrlPrefixProvider;
-
-  private final String IMAGE_URL_PREFIX = "DUMMY_IMAGE_URL_PREFIX";
-
-  @BeforeEach
-  void setUp() {
-    lenient().when(imageUrlPrefixProvider.provide()).thenReturn(IMAGE_URL_PREFIX);
-  }
+  private ImageUrlPort imageUrlPort;
 
   @Nested
   @DisplayName("수영장 상세 정보를 응답으로 변환할 때")
@@ -43,14 +34,18 @@ class FindSwimmingPoolDetailMainResponseFormatterTest {
       // given
       val pool = TestSwimmingPoolDetailMainFactory.create(
           List.of("DUMMY_IMAGE_PATH1", "DUMMY_IMAGE_PATH2"));
+
+      val expectedImageUrl1 = "NEW_DUMMY_IMAGE_PATH1";
+      val expectedImageUrl2 = "NEW_DUMMY_IMAGE_PATH2";
+
+      given(imageUrlPort.getImageUrl("DUMMY_IMAGE_PATH1")).willReturn(expectedImageUrl1);
+      given(imageUrlPort.getImageUrl("DUMMY_IMAGE_PATH2")).willReturn(expectedImageUrl2);
+
       // when
       val response = formatter.create(pool);
+
       // then
-      assertThat(response.imageUrls())
-          .containsExactly(
-              IMAGE_URL_PREFIX + "DUMMY_IMAGE_PATH1",
-              IMAGE_URL_PREFIX + "DUMMY_IMAGE_PATH2"
-          );
+      assertThat(response.imageUrls()).containsExactly(expectedImageUrl1, expectedImageUrl2);
       assertThat(response.name()).isEqualTo(pool.name());
       assertThat(response.favoriteId()).isEqualTo(pool.favoriteId());
       assertThat(response.rating()).isEqualTo(pool.rating());
@@ -73,6 +68,7 @@ class FindSwimmingPoolDetailMainResponseFormatterTest {
       assertThat(response.rating()).isEqualTo(pool.rating());
       assertThat(response.reviewCount()).isEqualTo(pool.reviewCount());
     }
+
   }
 
   private static class TestSwimmingPoolDetailMainFactory {
@@ -90,5 +86,7 @@ class FindSwimmingPoolDetailMainResponseFormatterTest {
           .longitude(126.978)
           .build();
     }
+
   }
+
 }

@@ -1,6 +1,6 @@
 package com.project.swimcb.swimmingpool.adapter.in;
 
-import com.project.swimcb.bo.notice.application.out.ImageUrlPrefixProvider;
+import com.project.swimcb.bo.swimmingpool.application.out.ImageUrlPort;
 import com.project.swimcb.swimmingpool.domain.SwimmingPoolDetailMain;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -12,12 +12,11 @@ import org.springframework.stereotype.Service;
 public class FindSwimmingPoolDetailMainResponseFormatter implements
     FindSwimmingPoolDetailMainResponseFactory {
 
-  private final ImageUrlPrefixProvider imageUrlPrefixProvider;
+  private final ImageUrlPort imageUrlPort;
 
   @Override
   public FindSwimmingPoolDetailMainResponse create(@NonNull SwimmingPoolDetailMain pool) {
-    val imageUrls = pool.imagePaths().stream().map(i -> imageUrlPrefixProvider.provide() + i)
-        .toList();
+    val imageUrls = pool.imagePaths().stream().map(imageUrlPort::getImageUrl).toList();
 
     return FindSwimmingPoolDetailMainResponse.builder()
         .imageUrls(imageUrls)
@@ -31,4 +30,5 @@ public class FindSwimmingPoolDetailMainResponseFormatter implements
         .longitude(pool.longitude())
         .build();
   }
+
 }
