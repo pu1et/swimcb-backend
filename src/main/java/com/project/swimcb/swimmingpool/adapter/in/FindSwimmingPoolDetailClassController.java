@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "사용자 - 완료")
+@Tag(name = "사용자")
 @SecurityRequirement(name = "Bearer Authentication")
 @RestController
 @RequestMapping("/api/swimming-pools/{swimmingPoolId}/classes")

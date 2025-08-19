@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "BO - 완료")
+@Tag(name = "BO")
 @SecurityRequirement(name = "Bearer Authentication")
 @RestController
 @RequestMapping("/api/bo/swimming-classes/class-types/{classTypeId}/class-sub-types/{classSubTypeId}")

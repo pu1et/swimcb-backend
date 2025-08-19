@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "BO - 완료")
+@Tag(name = "BO")
 @SecurityRequirement(name = "Bearer Authentication")
 @RestController
 @RequestMapping("/api/bo/swimming-pools/reservations/auto-cancel")

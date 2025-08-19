@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Validated
-@Tag(name = "BO - 완료")
+@Tag(name = "BO")
 @SecurityRequirement(name = "Bearer Authentication")
 @RestController
 @RequestMapping("/api/bo/reservations")
