@@ -1,7 +1,9 @@
 package com.project.swimcb.main.domain;
 
+import lombok.Builder;
 import lombok.NonNull;
 
+@Builder
 public record RecommendationSwimmingPool(
     @NonNull Long swimmingPoolId,
     @NonNull String imageUrl,
