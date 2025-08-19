@@ -21,6 +21,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.project.swimcb.bo.swimmingpool.application.out.ImageUrlPort;
 import com.project.swimcb.swimmingpool.adapter.out.FindSwimmingClassesDataMapper.SwimmingPoolWithClass;
 import com.project.swimcb.swimmingpool.domain.FindSwimmingClassesCondition;
 import com.querydsl.core.BooleanBuilder;
@@ -56,6 +57,9 @@ class FindSwimmingClassesDataMapperTest {
 
   @Mock
   private JPAQueryFactory queryFactory;
+
+  @Mock
+  private ImageUrlPort imageUrlPort;
 
   private JPAQuery<SwimmingPoolWithClass> resultQuery;
   private JPAQuery<Long> countQuery;
@@ -105,6 +109,8 @@ class FindSwimmingClassesDataMapperTest {
 
       when(resultQuery.fetch()).thenReturn(result);
       when(countQuery.fetchOne()).thenReturn(2L);
+      when(imageUrlPort.getImageUrl("/path1")).thenReturn("http://image.com/path1");
+      when(imageUrlPort.getImageUrl("/path2")).thenReturn("http://image.com/path2");
       // when
       val response = mapper.findSwimmingClasses(condition);
       // then
@@ -112,14 +118,16 @@ class FindSwimmingClassesDataMapperTest {
       assertThat(response.classes()).hasSize(2);
       assertThat(response.classes().getTotalElements()).isEqualTo(2);
       assertThat(response.classes().getContent().getFirst().swimmingPoolId()).isEqualTo(1L);
-      assertThat(response.classes().getContent().getFirst().imageUrl()).isEqualTo("/path1");
+      assertThat(response.classes().getContent().getFirst().imageUrl()).isEqualTo(
+          "http://image.com/path1");
       assertThat(response.classes().getContent().getFirst().favoriteId()).isEqualTo(1L);
       assertThat(response.classes().getContent().getFirst().distance()).isEqualTo(2);
       assertThat(response.classes().getContent().getFirst().rating()).isEqualTo(4.5);
       assertThat(response.classes().getContent().getFirst().reviewCount()).isEqualTo(10);
 
       assertThat(response.classes().getContent().get(1).swimmingPoolId()).isEqualTo(2L);
-      assertThat(response.classes().getContent().get(1).imageUrl()).isEqualTo("/path2");
+      assertThat(response.classes().getContent().get(1).imageUrl()).isEqualTo(
+          "http://image.com/path2");
       assertThat(response.classes().getContent().get(1).favoriteId()).isNull();
       assertThat(response.classes().getContent().get(1).distance()).isEqualTo(3);
       assertThat(response.classes().getContent().get(1).rating()).isEqualTo(3.0);

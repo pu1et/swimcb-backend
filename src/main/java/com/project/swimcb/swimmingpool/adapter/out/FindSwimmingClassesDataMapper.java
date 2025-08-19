@@ -14,6 +14,7 @@ import static com.project.swimcb.favorite.domain.enums.FavoriteTargetType.SWIMMI
 import static com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName.GROUP;
 import static com.querydsl.core.types.Projections.constructor;
 
+import com.project.swimcb.bo.swimmingpool.application.out.ImageUrlPort;
 import com.project.swimcb.swimmingpool.adapter.in.FindSwimmingClassesResponse;
 import com.project.swimcb.swimmingpool.adapter.in.FindSwimmingClassesResponse.SwimmingClass;
 import com.project.swimcb.swimmingpool.application.out.FindSwimmingClassesDsGateway;
@@ -45,6 +46,7 @@ import org.springframework.stereotype.Service;
 public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGateway {
 
   private final JPAQueryFactory queryFactory;
+  private final ImageUrlPort imageUrlPort;
 
   @Override
   public FindSwimmingClassesResponse findSwimmingClasses(
@@ -113,7 +115,7 @@ public class FindSwimmingClassesDataMapper implements FindSwimmingClassesDsGatew
         .stream()
         .map(i -> SwimmingClass.builder()
             .swimmingPoolId(i.swimmingPoolId())
-            .imageUrl(i.imageUrl())
+            .imageUrl(imageUrlPort.getImageUrl(i.imageUrl()))
             .favoriteId(i.favoriteId())
             .distance((int) i.distance())
             .name(i.name())
