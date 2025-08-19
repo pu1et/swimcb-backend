@@ -9,4 +9,6 @@ public interface CopySwimmingClassDsGateway {
 
   List<SwimmingClassCopyCandidate> findAllSwimmingClassesByMonth(@NonNull YearMonth month);
 
+  void deleteSwimmingClassByMonth(@NonNull YearMonth month);
+
 }

@@ -36,6 +36,8 @@ class CopySwimmingClassInteractor implements CopySwimmingClassUseCase {
       return;
     }
 
+    gateway.deleteSwimmingClassByMonth(command.toMonth());
+
     buildCreateBoSwimmingClassCommands(command, candidateSwimmingClasses)
         .forEach(createBoFreeSwimmingUseCase::createBoSwimmingClass);
   }

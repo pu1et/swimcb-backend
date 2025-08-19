@@ -57,7 +57,8 @@ class CopySwimmingClassInteractorTest {
       interactor.copySwimmingClass(command);
 
       // then
-      then(gateway).should(only()).findAllSwimmingClassesByMonth(command.fromMonth());
+      then(gateway).should(times(1)).deleteSwimmingClassByMonth(command.toMonth());
+      then(gateway).should(times(1)).findAllSwimmingClassesByMonth(command.fromMonth());
       then(createBoFreeSwimmingUseCase)
           .should(times(2))
           .createBoSwimmingClass(assertArg(i -> {

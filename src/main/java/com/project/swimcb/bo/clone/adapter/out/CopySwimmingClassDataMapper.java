@@ -15,6 +15,7 @@ import com.project.swimcb.bo.clone.domain.SwimmingClassCopyCandidate.Ticket;
 import com.project.swimcb.mypage.reservation.adapter.out.ClassDayOfWeek;
 import com.querydsl.core.annotations.QueryProjection;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
 import java.time.LocalTime;
 import java.time.YearMonth;
 import java.util.List;
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Service;
 class CopySwimmingClassDataMapper implements CopySwimmingClassDsGateway {
 
   private final JPAQueryFactory queryFactory;
+  private final EntityManager entityManager;
 
   @Override
   public List<SwimmingClassCopyCandidate> findAllSwimmingClassesByMonth(@NonNull YearMonth month) {
@@ -109,6 +111,35 @@ class CopySwimmingClassDataMapper implements CopySwimmingClassDsGateway {
               .build();
         })
         .toList();
+  }
+
+  @Override
+  public void deleteSwimmingClassByMonth(@NonNull YearMonth month) {
+    val swimmingClassIds = queryFactory.select(swimmingClassEntity.id)
+        .from(swimmingClassEntity)
+        .where(
+            swimmingClassEntity.year.eq(month.getYear()),
+            swimmingClassEntity.month.eq(month.getMonthValue())
+        )
+        .fetch();
+
+    if (swimmingClassIds.isEmpty()) {
+      return;
+    }
+
+    queryFactory.delete(ticketEntity)
+        .where(
+            ticketEntity.targetType.eq(SWIMMING_CLASS),
+            ticketEntity.targetId.in(swimmingClassIds)
+        )
+        .execute();
+
+    queryFactory.delete(swimmingClassEntity)
+        .where(swimmingClassEntity.id.in(swimmingClassIds))
+        .execute();
+
+    entityManager.flush();
+    entityManager.clear();
   }
 
   protected record QuerySwimmingClassCopyCandidate(
