@@ -16,7 +16,6 @@ import com.project.swimcb.swimmingpool.application.out.FindFreeSwimmingDsGateway
 import com.project.swimcb.swimmingpool.domain.FindFreeSwimmingCondition;
 import com.project.swimcb.swimmingpool.domain.FreeSwimming;
 import com.querydsl.core.annotations.QueryProjection;
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
@@ -106,7 +105,7 @@ class FindFreeSwimmingDataMapper implements FindFreeSwimmingDsGateway {
         .stream()
         .map(i -> FreeSwimming.builder()
             .swimmingPoolId(i.swimmingPoolId())
-            .imagePath(i.imageUrl())
+            .imagePath(i.imagePath())
             .favoriteId(i.favoriteId())
             .distance((int) i.distance())
             .name(i.name())
@@ -167,7 +166,7 @@ class FindFreeSwimmingDataMapper implements FindFreeSwimmingDsGateway {
   @Builder
   protected record SwimmingPoolWithFreeSwimming(
       long swimmingPoolId,
-      @NonNull String imageUrl,
+      @NonNull String imagePath,
       Long favoriteId,
       double distance,
       @NonNull String name,
