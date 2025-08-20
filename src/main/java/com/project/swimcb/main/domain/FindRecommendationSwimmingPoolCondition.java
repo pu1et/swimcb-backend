@@ -5,7 +5,7 @@ import lombok.NonNull;
 
 @Builder
 public record FindRecommendationSwimmingPoolCondition(
-    @NonNull Long memberId,
+    Long memberId,
     @NonNull Double memberLatitude,
     @NonNull Double memberLongitude
 ) {
