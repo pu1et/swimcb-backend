@@ -42,7 +42,7 @@ public class SurveyResponseEntity {
   private SurveyResponseType type;
 
   @Column(name = "overall_rating")
-  private Double overallRating;
+  private Integer overallRating;
 
   @Column(name = "find_pool_rating")
   private Integer findPoolRating;
@@ -76,7 +76,7 @@ public class SurveyResponseEntity {
   ) {
     this.member = member;
     this.type = SATISFACTION;
-    this.overallRating = overallRating.doubleValue();
+    this.overallRating = overallRating;
     this.findPoolRating = findPoolRating;
     this.reservationRating = reservationRating;
     this.usabilityRating = usabilityRating;
