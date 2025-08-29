@@ -1,5 +1,6 @@
 package com.project.swimcb.db.entity;
 
+import static com.project.swimcb.db.entity.enums.SurveyResponseType.DISSATISFACTION;
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -15,8 +16,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Getter
 @Table(name = "survey_response")
@@ -60,5 +63,17 @@ public class SurveyResponseEntity {
 
   @Column(name = "created_by", nullable = false)
   private String createdBy;
+
+  @Builder(builderMethodName = "createDissatisfaction")
+  public SurveyResponseEntity(
+      MemberEntity member,
+      @NonNull String dissatisfactionFeedback
+  ) {
+    this.member = member;
+    this.type = DISSATISFACTION;
+    this.dissatisfactionFeedback = dissatisfactionFeedback;
+    this.createdAt = LocalDateTime.now();
+    this.createdBy = "SYSTEM";
+  }
 
 }

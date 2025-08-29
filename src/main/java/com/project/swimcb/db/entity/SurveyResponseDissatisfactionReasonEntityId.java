@@ -7,11 +7,13 @@ import com.project.swimcb.db.entity.enums.SurveyResponseDissatisfactionReasonCod
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Enumerated;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Embeddable
 @NoArgsConstructor(access = PROTECTED)
+@AllArgsConstructor(access = PROTECTED)
 @EqualsAndHashCode
 public class SurveyResponseDissatisfactionReasonEntityId {
 
@@ -19,7 +21,7 @@ public class SurveyResponseDissatisfactionReasonEntityId {
   private Long responseId;
 
   @Enumerated(STRING)
-  @Column(name = "reason_id", nullable = false)
+  @Column(name = "reason_code", nullable = false)
   private SurveyResponseDissatisfactionReasonCode reasonCode;
 
 }
