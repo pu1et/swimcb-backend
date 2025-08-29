@@ -1,6 +1,7 @@
 package com.project.swimcb.db.entity;
 
 import static com.project.swimcb.db.entity.enums.SurveyResponseType.DISSATISFACTION;
+import static com.project.swimcb.db.entity.enums.SurveyResponseType.SATISFACTION;
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -64,7 +65,27 @@ public class SurveyResponseEntity {
   @Column(name = "created_by", nullable = false)
   private String createdBy;
 
-  @Builder(builderMethodName = "createDissatisfaction")
+  @Builder(builderClassName = "SatisfactionBuilder", builderMethodName = "createSatisfaction")
+  public SurveyResponseEntity(
+      MemberEntity member,
+      @NonNull Integer overallRating,
+      @NonNull Integer findPoolRating,
+      @NonNull Integer reservationRating,
+      @NonNull Integer usabilityRating,
+      @NonNull String satisfactionFeedback
+  ) {
+    this.member = member;
+    this.type = SATISFACTION;
+    this.overallRating = overallRating.doubleValue();
+    this.findPoolRating = findPoolRating;
+    this.reservationRating = reservationRating;
+    this.usabilityRating = usabilityRating;
+    this.satisfactionFeedback = satisfactionFeedback;
+    this.createdAt = LocalDateTime.now();
+    this.createdBy = "SYSTEM";
+  }
+
+  @Builder(builderClassName = "DissatisfactionBuilder", builderMethodName = "createDissatisfaction")
   public SurveyResponseEntity(
       MemberEntity member,
       @NonNull String dissatisfactionFeedback
