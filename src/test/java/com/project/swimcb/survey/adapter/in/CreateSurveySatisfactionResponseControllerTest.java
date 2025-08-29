@@ -1,6 +1,10 @@
 package com.project.swimcb.survey.adapter.in;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.assertArg;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.only;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -9,11 +13,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.swimcb.common.WebMvcTestWithoutSecurity;
 import com.project.swimcb.common.WithMockTokenInfo;
+import com.project.swimcb.survey.application.port.in.CreateSurveySatisfactionResponseUseCase;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTestWithoutSecurity(controllers = CreateSurveySatisfactionResponseController.class)
@@ -25,6 +31,9 @@ class CreateSurveySatisfactionResponseControllerTest {
 
   @Autowired
   private ObjectMapper objectMapper;
+
+  @MockitoBean
+  private CreateSurveySatisfactionResponseUseCase useCase;
 
   static final long MEMBER_ID = 1L;
 
@@ -46,6 +55,15 @@ class CreateSurveySatisfactionResponseControllerTest {
               .contentType(APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(request)))
           .andExpect(status().isOk());
+
+      then(useCase).should(only()).createSurveySatisfactionResponse(assertArg(i -> {
+        assertThat(i.memberId()).isEqualTo(MEMBER_ID);
+        assertThat(i.overallRating()).isEqualTo(request.overallRating());
+        assertThat(i.findPoolRating()).isEqualTo(request.findPoolRating());
+        assertThat(i.reservationRating()).isEqualTo(request.reservationRating());
+        assertThat(i.usabilityRating()).isEqualTo(request.usabilityRating());
+        assertThat(i.feedback()).isEqualTo(request.feedback());
+      }));
     }
 
     @Test
@@ -64,7 +82,7 @@ class CreateSurveySatisfactionResponseControllerTest {
     }
 
     @Test
-    @DisplayName("전체적인 만족도가 1.0 미만인 경우 400 에러를 반환한다")
+    @DisplayName("전체적인 만족도가 1 미만인 경우 400 에러를 반환한다")
     void shouldReturn400WhenOverallRatingIsLessThanOne() throws Exception {
       // given
       val request = TestCreateSurveySatisfactionResponseRequestFactory.createWithInvalidOverallRatingMin();
@@ -75,11 +93,11 @@ class CreateSurveySatisfactionResponseControllerTest {
               .contentType(APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(request)))
           .andExpect(status().isBadRequest())
-          .andExpect(content().string(containsString("전체적인 만족도는 1.0 이상이어야 합니다")));
+          .andExpect(content().string(containsString("전체적인 만족도는 1 이상이어야 합니다")));
     }
 
     @Test
-    @DisplayName("전체적인 만족도가 5.0 초과인 경우 400 에러를 반환한다")
+    @DisplayName("전체적인 만족도가 5 초과인 경우 400 에러를 반환한다")
     void shouldReturn400WhenOverallRatingIsGreaterThanFive() throws Exception {
       // given
       val request = TestCreateSurveySatisfactionResponseRequestFactory.createWithInvalidOverallRatingMax();
@@ -90,7 +108,7 @@ class CreateSurveySatisfactionResponseControllerTest {
               .contentType(APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(request)))
           .andExpect(status().isBadRequest())
-          .andExpect(content().string(containsString("전체적인 만족도는 5.0 이하여야 합니다")));
+          .andExpect(content().string(containsString("전체적인 만족도는 5 이하여야 합니다")));
     }
 
     @Test
@@ -245,7 +263,7 @@ class CreateSurveySatisfactionResponseControllerTest {
 
     private static CreateSurveySatisfactionResponseRequest create() {
       return new CreateSurveySatisfactionResponseRequest(
-          4.5,
+          4,
           2,
           3,
           1,
@@ -265,7 +283,7 @@ class CreateSurveySatisfactionResponseControllerTest {
 
     private static CreateSurveySatisfactionResponseRequest createWithInvalidOverallRatingMin() {
       return new CreateSurveySatisfactionResponseRequest(
-          0.5,
+          0,
           2,
           3,
           1,
@@ -275,7 +293,7 @@ class CreateSurveySatisfactionResponseControllerTest {
 
     private static CreateSurveySatisfactionResponseRequest createWithInvalidOverallRatingMax() {
       return new CreateSurveySatisfactionResponseRequest(
-          5.5,
+          6,
           2,
           3,
           1,
@@ -285,7 +303,7 @@ class CreateSurveySatisfactionResponseControllerTest {
 
     private static CreateSurveySatisfactionResponseRequest createWithNullFindPoolRating() {
       return new CreateSurveySatisfactionResponseRequest(
-          4.5,
+          4,
           null,
           3,
           1,
@@ -295,7 +313,7 @@ class CreateSurveySatisfactionResponseControllerTest {
 
     private static CreateSurveySatisfactionResponseRequest createWithInvalidFindPoolRatingMin() {
       return new CreateSurveySatisfactionResponseRequest(
-          4.5,
+          4,
           0,
           3,
           1,
@@ -305,7 +323,7 @@ class CreateSurveySatisfactionResponseControllerTest {
 
     private static CreateSurveySatisfactionResponseRequest createWithInvalidFindPoolRatingMax() {
       return new CreateSurveySatisfactionResponseRequest(
-          4.5,
+          4,
           4,
           3,
           1,
@@ -315,7 +333,7 @@ class CreateSurveySatisfactionResponseControllerTest {
 
     private static CreateSurveySatisfactionResponseRequest createWithNullReservationRating() {
       return new CreateSurveySatisfactionResponseRequest(
-          4.5,
+          4,
           2,
           null,
           1,
@@ -325,7 +343,7 @@ class CreateSurveySatisfactionResponseControllerTest {
 
     private static CreateSurveySatisfactionResponseRequest createWithNullUsabilityRating() {
       return new CreateSurveySatisfactionResponseRequest(
-          4.5,
+          4,
           2,
           3,
           null,
@@ -335,7 +353,7 @@ class CreateSurveySatisfactionResponseControllerTest {
 
     private static CreateSurveySatisfactionResponseRequest createWithNullFeedback() {
       return new CreateSurveySatisfactionResponseRequest(
-          4.5,
+          4,
           2,
           3,
           1,
@@ -345,7 +363,7 @@ class CreateSurveySatisfactionResponseControllerTest {
 
     private static CreateSurveySatisfactionResponseRequest createWithTooShortFeedback() {
       return new CreateSurveySatisfactionResponseRequest(
-          4.5,
+          4,
           2,
           3,
           1,
@@ -357,7 +375,7 @@ class CreateSurveySatisfactionResponseControllerTest {
       // 501자 문자열 생성
       String longFeedback = "a".repeat(501);
       return new CreateSurveySatisfactionResponseRequest(
-          4.5,
+          4,
           2,
           3,
           1,
