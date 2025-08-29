@@ -1,0 +1,14 @@
+package com.project.swimcb.db.entity.enums;
+
+public enum SurveyResponseDissatisfactionReasonCode {
+  SWIMMING_POOL_INACCURATE,
+  SWIMMING_POOL_HARD_TO_SEE,
+
+  PROGRAM_INFO_INACCURATE,
+  PROGRAM_INFO_HARD_TO_SEE,
+
+  FONT_SIZE_INAPPROPRIATE,
+  TOUCH_HARD,
+  OPERATION_COMPLEX,
+  SIGNUP_COMPLEX
+}
