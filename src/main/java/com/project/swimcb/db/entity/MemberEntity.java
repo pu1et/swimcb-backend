@@ -28,20 +28,20 @@ public class MemberEntity extends BaseEntity {
   @Column(name = "id", nullable = false)
   private long id;
 
-  @Column(name = "name", length = 100, nullable = false)
+  @Column(name = "name", length = 100)
   private String name;
 
   @Column(name = "birth_date")
   private LocalDate birthDate;
 
-  @Column(name = "phone", length = 20, nullable = false)
+  @Column(name = "phone", length = 20)
   private String phone;
 
   @Enumerated(STRING)
   @Column(name = "gender", length = 10)
   private Gender gender;
 
-  @Column(name = "email", length = 255, nullable = false, unique = true)
+  @Column(name = "email", length = 255, unique = true)
   private String email;
 
   @Column(name = "nickname", length = 100)
