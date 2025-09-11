@@ -24,7 +24,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Slf4j
 class OAuth2MemberResolver implements OAuth2MemberGateway {
 
-  private final OAuth2ClientInfoProvider oAuth2ClientInfoProvider;
+  private final OAuth2ClientInfoProvider kakaoOAuth2ClientInfoProvider;
 
   @Override
   public OAuth2Member resolve(@NonNull String code) {
@@ -33,7 +33,7 @@ class OAuth2MemberResolver implements OAuth2MemberGateway {
   }
 
   private OAuth2Member getOAuth2MemberUsingToken(@NonNull String accessToken) {
-    val clientInfo = oAuth2ClientInfoProvider.getOAuth2ClientInfo();
+    val clientInfo = kakaoOAuth2ClientInfoProvider.getOAuth2ClientInfo();
 
     val response = WebClient.builder()
         .baseUrl(clientInfo.provider().memberInfoUri())
@@ -74,7 +74,7 @@ class OAuth2MemberResolver implements OAuth2MemberGateway {
   }
 
   private String getAccessToken(@NonNull String code) {
-    val clientInfo = oAuth2ClientInfoProvider.getOAuth2ClientInfo();
+    val clientInfo = kakaoOAuth2ClientInfoProvider.getOAuth2ClientInfo();
 
     val formData = MultiValueMap.fromSingleValue(Map.of(
         "grant_type", "authorization_code",
