@@ -4,7 +4,7 @@ import java.util.Arrays;
 import lombok.NonNull;
 
 public enum OAuth2ProviderType {
-  KAKAO;
+  KAKAO, APPLE;
 
   public static OAuth2ProviderType from(@NonNull String providerType) {
     return Arrays.stream(values())

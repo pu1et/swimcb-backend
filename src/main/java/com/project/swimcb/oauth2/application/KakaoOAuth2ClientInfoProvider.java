@@ -3,10 +3,11 @@ package com.project.swimcb.oauth2.application;
 import com.project.swimcb.oauth2.domain.OAuth2ClientInfo;
 import com.project.swimcb.oauth2.application.port.in.OAuth2ClientInfoProvider;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-@Service
+@Service("kakaoOAuth2ClientInfoProvider")
 class KakaoOAuth2ClientInfoProvider implements OAuth2ClientInfoProvider {
 
   @Value("${spring.security.oauth2.client.registration.kakao.client-id}")

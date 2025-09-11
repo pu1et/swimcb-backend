@@ -13,9 +13,9 @@ public record OAuth2ClientInfo(
   @Builder
   public record Registration(
       @NonNull String clientId,
-      @NonNull String clientSecret,
+      String clientSecret,
       @NonNull String redirectUri,
-      @NonNull String authorizationGrantType,
+      String authorizationGrantType,
       @NonNull List<String> scope
   ) {
   }
