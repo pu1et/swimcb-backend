@@ -31,7 +31,7 @@ public class SecurityConfig {
                 "/api/token/**",
 
                 // OAuth2 로그인
-                "/api/oauth2/authorization/kakao",
+                "/api/oauth2/authorization/**",
                 "/login/oauth2/kakao"
             ).permitAll()
             .anyRequest().authenticated())
