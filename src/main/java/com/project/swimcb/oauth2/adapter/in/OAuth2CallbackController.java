@@ -44,10 +44,18 @@ public class OAuth2CallbackController {
   @Operation(summary = "애플 콜백 처리")
   @PostMapping("/apple")
   public RedirectView appleSuccess(
-      @RequestBody AppleAuthorizationResponse response
+      @RequestParam(value = "code") String code,
+      @RequestParam(value = "id_token") String idToken,
+      @RequestParam(value = "state", required = false) String state,
+      @RequestParam(value = "user", required = false) String user
   ) {
 
-    log.info(response.toString());
+    log.info("Apple callback received");
+    log.info("code={}", code);
+    log.info("id_token={}", idToken);
+    log.info("state={}", state);
+    log.info("user={}", user);
+
     return null;
   }
 
@@ -56,35 +64,6 @@ public class OAuth2CallbackController {
       return null;
     }
     return Environment.valueOf(state.toUpperCase());
-  }
-
-  private record AppleAuthorizationResponse(
-      @NonNull Authorization authorization,
-      @NonNull User user
-  ) {
-
-    private record Authorization(
-        @NonNull String code,
-        @NonNull String idToken,
-        @NonNull String state
-    ) {
-
-    }
-
-    private record User(
-        @NonNull Name name,
-        @NonNull String email
-    ) {
-
-    }
-
-    private record Name(
-        @NonNull String firstName,
-        @NonNull String lastName
-    ) {
-
-    }
-
   }
 
 }
