@@ -22,9 +22,6 @@ class AppleOAuth2ClientInfoProvider implements OAuth2ClientInfoProvider {
   @Value("${spring.security.oauth2.client.provider.apple.authorization-uri}")
   private String authorizationUri;
 
-  @Value("${spring.security.oauth2.client.provider.apple.token-uri}")
-  private String tokenUri;
-
   @Override
   public OAuth2ClientInfo getOAuth2ClientInfo() {
     return OAuth2ClientInfo.builder()
@@ -38,8 +35,6 @@ class AppleOAuth2ClientInfoProvider implements OAuth2ClientInfoProvider {
         .provider(
             OAuth2ClientInfo.Provider.builder()
                 .authorizationUri(authorizationUri)
-                .tokenUri(tokenUri)
-                .memberInfoUri("")
                 .build()
         )
         .build();
