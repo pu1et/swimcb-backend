@@ -32,7 +32,7 @@ public class SecurityConfig {
 
                 // OAuth2 로그인
                 "/api/oauth2/authorization/**",
-                "/login/oauth2/kakao"
+                "/login/oauth2/**"
             ).permitAll()
             .anyRequest().authenticated())
         .headers(i -> i.frameOptions(FrameOptionsConfig::disable))
