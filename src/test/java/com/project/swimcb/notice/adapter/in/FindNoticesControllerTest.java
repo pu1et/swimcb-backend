@@ -46,7 +46,7 @@ class FindNoticesControllerTest {
     void shouldFindNoticesSuccessfully() throws Exception {
       // given
       val notices = new PageImpl<Notice>(List.of());
-      val expectedResponse = new FindNoticesResponse();
+      val expectedResponse = new FindNoticesResponse(new PageImpl<>(List.of()));
 
       given(findNoticesUseCase.findNotices(any(Pageable.class))).willReturn(notices);
       given(findNoticesResponseMapper.toResponse(notices)).willReturn(expectedResponse);
@@ -70,7 +70,7 @@ class FindNoticesControllerTest {
     void shouldFindNoticesWithDefaultValues() throws Exception {
       // given
       val notices = new PageImpl<Notice>(List.of());
-      val expectedResponse = new FindNoticesResponse();
+      val expectedResponse = new FindNoticesResponse(new PageImpl<>(List.of()));
 
       given(findNoticesUseCase.findNotices(any(Pageable.class))).willReturn(notices);
       given(findNoticesResponseMapper.toResponse(notices)).willReturn(expectedResponse);
@@ -92,7 +92,7 @@ class FindNoticesControllerTest {
     void shouldFindNoticesWithCustomPageParameters() throws Exception {
       // given
       val notices = new PageImpl<Notice>(List.of());
-      val expectedResponse = new FindNoticesResponse();
+      val expectedResponse = new FindNoticesResponse(new PageImpl<>(List.of()));
 
       given(findNoticesUseCase.findNotices(any(Pageable.class))).willReturn(notices);
       given(findNoticesResponseMapper.toResponse(notices)).willReturn(expectedResponse);
