@@ -45,8 +45,13 @@ public class NoticeEntity extends BaseEntity {
   @JoinColumn(name = "swimming_pool_id", nullable = false)
   private SwimmingPoolEntity swimmingPool;
 
-  public static NoticeEntity create(String title, String content, boolean isVisible) {
-    return new NoticeEntity(title, content, isVisible);
+  public static NoticeEntity create(
+      @NonNull String title,
+      @NonNull String content,
+      boolean isVisible,
+      @NonNull SwimmingPoolEntity swimmingPool
+  ) {
+    return new NoticeEntity(title, content, isVisible, swimmingPool);
   }
 
   public void update(@NonNull String title, @NonNull String content, boolean visible) {
@@ -69,9 +74,15 @@ public class NoticeEntity extends BaseEntity {
     this.isVisible = isVisible;
   }
 
-  private NoticeEntity(String title, String content, boolean isVisible) {
+  private NoticeEntity(
+      @NonNull String title,
+      @NonNull String content,
+      boolean isVisible,
+      @NonNull SwimmingPoolEntity swimmingPool
+  ) {
     this.title = title;
     this.content = content;
     this.isVisible = isVisible;
+    this.swimmingPool = swimmingPool;
   }
 }

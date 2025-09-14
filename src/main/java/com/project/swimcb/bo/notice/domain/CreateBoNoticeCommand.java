@@ -7,6 +7,7 @@ import lombok.NonNull;
 
 @Builder
 public record CreateBoNoticeCommand(
+    @NonNull Long swimmingPoolId,
     @NonNull String createdBy,
     @NonNull String title,
     @NonNull String content,
@@ -14,8 +15,12 @@ public record CreateBoNoticeCommand(
     boolean isVisible
 ) {
 
-  public static CreateBoNoticeCommand from(@NonNull CreateBoNoticeRequest request) {
+  public static CreateBoNoticeCommand from(
+      @NonNull CreateBoNoticeRequest request,
+      @NonNull Long swimmingPoolId
+  ) {
     return CreateBoNoticeCommand.builder()
+        .swimmingPoolId(swimmingPoolId)
         .createdBy(request.createdBy())
         .title(request.title())
         .content(request.content())

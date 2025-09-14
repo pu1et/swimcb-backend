@@ -1,5 +1,6 @@
 package com.project.swimcb.bo.notice.adapter.in;
 
+import static com.project.swimcb.bo.notice.adapter.in.CreateBoNoticeControllerTest.SWIMMING_POOL_ID;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
@@ -14,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.swimcb.bo.notice.application.in.CreateBoNoticeUseCase;
 import com.project.swimcb.bo.notice.domain.CreateBoNoticeCommand;
 import com.project.swimcb.common.WebMvcTestWithoutSecurity;
+import com.project.swimcb.common.WithMockTokenInfo;
 import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
@@ -23,6 +25,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTestWithoutSecurity(controllers = CreateBoNoticeController.class)
+@WithMockTokenInfo(swimmingPoolId = SWIMMING_POOL_ID)
 class CreateBoNoticeControllerTest {
 
   @Autowired
@@ -33,6 +36,8 @@ class CreateBoNoticeControllerTest {
 
   @Autowired
   private ObjectMapper objectMapper;
+
+  static final long SWIMMING_POOL_ID = 1L;
 
   private static final String PATH = "/api/bo/notices";
 
@@ -48,7 +53,7 @@ class CreateBoNoticeControllerTest {
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isOk());
 
-    verify(useCase, only()).createNotice(CreateBoNoticeCommand.from(request));
+    verify(useCase, only()).createNotice(CreateBoNoticeCommand.from(request, SWIMMING_POOL_ID));
   }
 
   @Test
