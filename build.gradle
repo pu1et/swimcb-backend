@@ -35,6 +35,9 @@ dependencies {
 
 	implementation 'com.auth0:java-jwt:4.5.0'
 
+  // 애플 로그인
+  implementation "com.nimbusds:nimbus-jose-jwt:10.5"
+
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'com.querydsl:querydsl-jpa:5.1.0:jakarta'
 	annotationProcessor 'com.querydsl:querydsl-apt:5.1.0:jakarta'
