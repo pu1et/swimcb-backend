@@ -4,6 +4,7 @@ import com.project.swimcb.bo.notice.application.in.DeleteBoNoticesUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +22,7 @@ public class DeleteBoNoticesController {
 
   @Operation(summary = "공지사항 리스트 삭제")
   @DeleteMapping
-  public void deleteNotices(@RequestBody DeleteBoNoticeRequest request) {
+  public void deleteNotices(@RequestBody @Valid DeleteBoNoticeRequest request) {
+    useCase.deleteAll(request.noticeIds());
   }
 }
