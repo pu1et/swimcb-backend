@@ -6,8 +6,8 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.project.swimcb.bo.notice.adapter.in.FindNoticesResponse;
-import com.project.swimcb.bo.notice.application.FindNoticesInteractor;
+import com.project.swimcb.bo.notice.adapter.in.FindBoNoticesResponse;
+import com.project.swimcb.bo.notice.application.FindBoNoticesInteractor;
 import com.project.swimcb.db.entity.NoticeEntity;
 import com.project.swimcb.db.repository.NoticeRepository;
 import com.project.swimcb.db.entity.TestNoticeFactory;
@@ -31,7 +31,7 @@ import org.springframework.data.domain.Pageable;
 class FindNoticesInteractorTest {
 
   @InjectMocks
-  private FindNoticesInteractor interactor;
+  private FindBoNoticesInteractor interactor;
 
   @Mock
   private NoticeRepository noticeRepository;
@@ -54,24 +54,24 @@ class FindNoticesInteractorTest {
     AssertionsForClassTypes.assertThat(result.getTotalElements()).isEqualTo(2);
 
     assertThat(result.getContent())
-        .extracting(FindNoticesResponse::noticeId)
+        .extracting(FindBoNoticesResponse::noticeId)
         .containsExactly(1L, 2L);
 
     assertThat(result.getContent())
-        .extracting(FindNoticesResponse::title)
+        .extracting(FindBoNoticesResponse::title)
         .containsExactly("title1", "title2");
 
     assertThat(result.getContent())
-        .extracting(FindNoticesResponse::createdBy)
+        .extracting(FindBoNoticesResponse::createdBy)
         .containsExactly("createdBy1", "createdBy2");
 
     assertThat(result.getContent())
-        .extracting(FindNoticesResponse::createdAt)
+        .extracting(FindBoNoticesResponse::createdAt)
         .containsExactly(LocalDate.of(2025, 1, 1),
             LocalDate.of(2025, 1, 3));
 
     assertThat(result.getContent())
-        .extracting(FindNoticesResponse::isVisible)
+        .extracting(FindBoNoticesResponse::isVisible)
         .containsExactly(true, false);
 
     verify(noticeRepository, only()).findAll(pageable);
