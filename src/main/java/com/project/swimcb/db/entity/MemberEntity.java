@@ -4,6 +4,7 @@ import static jakarta.persistence.EnumType.STRING;
 import static lombok.AccessLevel.PROTECTED;
 
 import com.project.swimcb.db.entity.enums.Gender;
+import com.project.swimcb.oauth2.domain.enums.OAuth2ProviderType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
@@ -56,12 +57,14 @@ public class MemberEntity extends BaseEntity {
       String name,
       String phone,
       @NonNull String email,
-      @NonNull String nickname
+      @NonNull String nickname,
+      @NonNull OAuth2Provider provider
   ) {
     this.name = name;
     this.phone = phone;
     this.email = email;
     this.nickname = nickname;
+    this.provider = provider;
   }
 
   public MemberEntity(long id) {

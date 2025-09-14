@@ -1,5 +1,7 @@
 package com.project.swimcb.oauth2.application;
 
+import static com.project.swimcb.oauth2.domain.enums.OAuth2ProviderType.*;
+
 import com.project.swimcb.oauth2.adapter.in.OAuth2Response;
 import com.project.swimcb.oauth2.application.port.in.OAuth2Adapter;
 import com.project.swimcb.oauth2.application.port.out.FindMemberPort;
@@ -7,6 +9,7 @@ import com.project.swimcb.oauth2.application.port.out.OAuth2Presenter;
 import com.project.swimcb.oauth2.application.port.out.SignupPort;
 import com.project.swimcb.oauth2.domain.AppleOAuth2Request;
 import com.project.swimcb.oauth2.domain.SignupRequest;
+import com.project.swimcb.oauth2.domain.enums.OAuth2ProviderType;
 import com.project.swimcb.token.application.in.GenerateCustomerTokenUseCase;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +41,7 @@ class AppleOAuth2Interactor implements OAuth2Adapter<AppleOAuth2Request> {
     val memberId = signupPort.signup(
         SignupRequest.builder()
             .email(email)
+            .providerType(APPLE)
             .build()
     );
     val token = generateCustomerTokenUseCase.generateCustomerToken(memberId);

@@ -1,12 +1,15 @@
 package com.project.swimcb.oauth2.application;
 
+import static com.project.swimcb.oauth2.domain.enums.OAuth2ProviderType.KAKAO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -133,8 +136,17 @@ class KakaoOAuth2InteractorTest {
         // then
         assertThat(response).isEqualTo(expectedResponse);
 
-        verify(oAuth2Presenter).signup(accessToken, request.env());
-        verify(oAuth2Presenter, never()).login(anyString(), any());
+        then(oAuth2MemberGateway).should().resolve(request.code());
+        then(findMemberPort).should(only()).findByEmail(oAuth2Member.email());
+        then(signupPort).should().signup(SignupRequest.builder()
+            .email(oAuth2Member.email())
+            .name(oAuth2Member.name())
+            .phoneNumber(oAuth2Member.phoneNumber())
+            .providerType(KAKAO)
+            .build());
+
+        then(oAuth2Presenter).should().signup(accessToken, request.env());
+        then(oAuth2Presenter).should(never()).login(anyString(), any());
       }
 
       @Test

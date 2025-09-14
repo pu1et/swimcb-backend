@@ -1,5 +1,6 @@
 package com.project.swimcb.oauth2.adapter.out;
 
+import static com.project.swimcb.oauth2.domain.enums.OAuth2ProviderType.KAKAO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -10,6 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.project.swimcb.db.entity.MemberEntity;
+import com.project.swimcb.db.entity.OAuth2Provider;
 import com.project.swimcb.db.repository.MemberRepository;
 import com.project.swimcb.oauth2.domain.SignupRequest;
 import lombok.val;
@@ -42,6 +44,7 @@ class SignupInteractorTest {
           .name("테스트 사용자")
           .email("test@example.com")
           .phoneNumber("010-1234-5678")
+          .providerType(KAKAO)
           .build();
 
       val savedMember = mock(MemberEntity.class);
@@ -58,6 +61,7 @@ class SignupInteractorTest {
         assertThat(i.getName()).isEqualTo(request.name());
         assertThat(i.getEmail()).isEqualTo(request.email());
         assertThat(i.getPhone()).isEqualTo(request.phoneNumber());
+        assertThat(i.getProvider()).isEqualTo(OAuth2Provider.KAKAO);
         assertThat(i.getNickname()).isEqualTo("닉네임");
       }));
     }

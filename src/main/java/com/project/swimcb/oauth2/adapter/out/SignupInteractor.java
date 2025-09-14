@@ -1,6 +1,7 @@
 package com.project.swimcb.oauth2.adapter.out;
 
 import com.project.swimcb.db.entity.MemberEntity;
+import com.project.swimcb.db.entity.OAuth2Provider;
 import com.project.swimcb.db.repository.MemberRepository;
 import com.project.swimcb.oauth2.application.port.out.SignupPort;
 import com.project.swimcb.oauth2.domain.SignupRequest;
@@ -24,6 +25,7 @@ class SignupInteractor implements SignupPort {
         .name(signupRequest.name())
         .phone(signupRequest.phoneNumber())
         .nickname("닉네임")
+        .provider(OAuth2Provider.of(signupRequest.providerType()))
         .build();
     val savedMember = memberRepository.save(member);
     return savedMember.getId();

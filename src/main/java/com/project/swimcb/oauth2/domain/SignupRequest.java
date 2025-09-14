@@ -1,5 +1,6 @@
 package com.project.swimcb.oauth2.domain;
 
+import com.project.swimcb.oauth2.domain.enums.OAuth2ProviderType;
 import lombok.Builder;
 import lombok.NonNull;
 
@@ -7,7 +8,8 @@ import lombok.NonNull;
 public record SignupRequest(
     String name,
     @NonNull String email,
-    String phoneNumber
+    String phoneNumber,
+    @NonNull OAuth2ProviderType providerType
 ) {
 
 }

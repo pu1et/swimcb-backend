@@ -1,7 +1,9 @@
 package com.project.swimcb.oauth2.application;
 
+import static com.project.swimcb.oauth2.domain.enums.OAuth2ProviderType.APPLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
@@ -60,7 +62,7 @@ class AppleOAuth2InteractorTest {
       val expectedResponse = new OAuth2Response(redirectView);
 
       given(findMemberPort.findByEmail(email)).willReturn(Optional.empty());
-      given(signupPort.signup(SignupRequest.builder().email(email).build())).willReturn(memberId);
+      given(signupPort.signup(any(SignupRequest.class))).willReturn(memberId);
       given(generateCustomerTokenUseCase.generateCustomerToken(memberId)).willReturn(token);
       given(oAuth2Presenter.signup(token, null)).willReturn(expectedResponse);
 
@@ -71,7 +73,10 @@ class AppleOAuth2InteractorTest {
       assertThat(result).isEqualTo(expectedResponse);
 
       then(findMemberPort).should(only()).findByEmail(email);
-      then(signupPort).should().signup(SignupRequest.builder().email(email).build());
+      then(signupPort).should().signup(SignupRequest.builder()
+          .email(email)
+          .providerType(APPLE)
+          .build());
       then(generateCustomerTokenUseCase).should().generateCustomerToken(memberId);
       then(oAuth2Presenter).should().signup(token, null);
     }
