@@ -49,8 +49,8 @@ public class MemberEntity extends BaseEntity {
 
   @Builder(toBuilder = true)
   public MemberEntity(
-      @NonNull String name,
-      @NonNull String phone,
+      String name,
+      String phone,
       @NonNull String email,
       @NonNull String nickname
   ) {

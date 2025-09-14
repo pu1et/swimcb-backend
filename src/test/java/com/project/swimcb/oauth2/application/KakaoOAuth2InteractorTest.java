@@ -33,10 +33,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class OAuth2InteractorTest {
+class KakaoOAuth2InteractorTest {
 
   @InjectMocks
-  private OAuth2Interactor oAuth2Interactor;
+  private KakaoOAuth2Interactor oAuth2Interactor;
 
   @Mock
   private OAuth2MemberGateway oAuth2MemberGateway;

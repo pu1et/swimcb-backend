@@ -3,14 +3,10 @@ package com.project.swimcb.oauth2.application;
 import com.project.swimcb.oauth2.adapter.in.OAuth2Response;
 import com.project.swimcb.oauth2.application.port.in.OAuth2Adapter;
 import com.project.swimcb.oauth2.application.port.out.FindMemberPort;
-import com.project.swimcb.oauth2.application.port.out.OAuth2MemberGateway;
 import com.project.swimcb.oauth2.application.port.out.OAuth2Presenter;
 import com.project.swimcb.oauth2.application.port.out.SignupPort;
-import com.project.swimcb.oauth2.domain.KakaoOAuth2Request;
-import com.project.swimcb.oauth2.domain.OAuth2Member;
-import com.project.swimcb.oauth2.domain.OAuth2Request;
+import com.project.swimcb.oauth2.domain.AppleOAuth2Request;
 import com.project.swimcb.oauth2.domain.SignupRequest;
-import com.project.swimcb.oauth2.domain.enums.Environment;
 import com.project.swimcb.token.application.in.GenerateCustomerTokenUseCase;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -21,40 +17,36 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-class OAuth2Interactor implements OAuth2Adapter<KakaoOAuth2Request> {
+class AppleOAuth2Interactor implements OAuth2Adapter<AppleOAuth2Request> {
 
-  private final OAuth2MemberGateway oAuth2MemberGateway;
   private final FindMemberPort findMemberPort;
   private final SignupPort signupPort;
   private final OAuth2Presenter oAuth2Presenter;
   private final GenerateCustomerTokenUseCase generateCustomerTokenUseCase;
 
   @Override
-  public OAuth2Response success(@NonNull KakaoOAuth2Request request) {
-    val oAuth2Member = oAuth2MemberGateway.resolve(request.code());
-    val member = findMemberPort.findByEmail(oAuth2Member.email());
+  public OAuth2Response success(@NonNull AppleOAuth2Request request) {
+    val member = findMemberPort.findByEmail(request.email());
 
     if (member.isEmpty()) {
-      return signup(oAuth2Member, request.env());
+      return signup(request.email());
     }
-    return login(member.get().id(), request.env());
+    return login(member.get().id());
   }
 
-  private OAuth2Response signup(@NonNull OAuth2Member oAuth2Member, Environment env) {
+  private OAuth2Response signup(@NonNull String email) {
     val memberId = signupPort.signup(
         SignupRequest.builder()
-            .email(oAuth2Member.email())
-            .name(oAuth2Member.name())
-            .phoneNumber(oAuth2Member.phoneNumber())
+            .email(email)
             .build()
     );
     val token = generateCustomerTokenUseCase.generateCustomerToken(memberId);
-    return oAuth2Presenter.signup(token, env);
+    return oAuth2Presenter.signup(token, null);
   }
 
-  private OAuth2Response login(@NonNull Long memberId, Environment env) {
+  private OAuth2Response login(@NonNull Long memberId) {
     val token = generateCustomerTokenUseCase.generateCustomerToken(memberId);
-    return oAuth2Presenter.login(token, env);
+    return oAuth2Presenter.login(token, null);
   }
 
 }
