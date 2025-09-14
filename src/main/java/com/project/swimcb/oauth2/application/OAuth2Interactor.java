@@ -1,15 +1,16 @@
 package com.project.swimcb.oauth2.application;
 
-import com.project.swimcb.oauth2.domain.enums.Environment;
-import com.project.swimcb.oauth2.adapter.in.OAuth2Request;
 import com.project.swimcb.oauth2.adapter.in.OAuth2Response;
 import com.project.swimcb.oauth2.application.port.in.OAuth2Adapter;
 import com.project.swimcb.oauth2.application.port.out.FindMemberPort;
 import com.project.swimcb.oauth2.application.port.out.OAuth2MemberGateway;
 import com.project.swimcb.oauth2.application.port.out.OAuth2Presenter;
 import com.project.swimcb.oauth2.application.port.out.SignupPort;
+import com.project.swimcb.oauth2.domain.KakaoOAuth2Request;
 import com.project.swimcb.oauth2.domain.OAuth2Member;
+import com.project.swimcb.oauth2.domain.OAuth2Request;
 import com.project.swimcb.oauth2.domain.SignupRequest;
+import com.project.swimcb.oauth2.domain.enums.Environment;
 import com.project.swimcb.token.application.in.GenerateCustomerTokenUseCase;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-class OAuth2Interactor implements OAuth2Adapter {
+class OAuth2Interactor implements OAuth2Adapter<KakaoOAuth2Request> {
 
   private final OAuth2MemberGateway oAuth2MemberGateway;
   private final FindMemberPort findMemberPort;
@@ -29,7 +30,7 @@ class OAuth2Interactor implements OAuth2Adapter {
   private final GenerateCustomerTokenUseCase generateCustomerTokenUseCase;
 
   @Override
-  public OAuth2Response success(@NonNull OAuth2Request request) {
+  public OAuth2Response success(@NonNull KakaoOAuth2Request request) {
     val oAuth2Member = oAuth2MemberGateway.resolve(request.code());
     val member = findMemberPort.findByEmail(oAuth2Member.email());
 

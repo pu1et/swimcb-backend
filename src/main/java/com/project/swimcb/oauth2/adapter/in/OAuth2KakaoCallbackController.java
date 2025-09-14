@@ -1,6 +1,8 @@
 package com.project.swimcb.oauth2.adapter.in;
 
 import com.project.swimcb.oauth2.application.port.in.OAuth2Adapter;
+import com.project.swimcb.oauth2.domain.KakaoOAuth2Request;
+import com.project.swimcb.oauth2.domain.OAuth2Request;
 import com.project.swimcb.oauth2.domain.enums.Environment;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -31,7 +33,7 @@ public class OAuth2KakaoCallbackController {
   ) {
 
     return oAuth2Adapter.success(
-        OAuth2Request.builder()
+        KakaoOAuth2Request.builder()
             .code(code)
             .env(env(state))
             .build()

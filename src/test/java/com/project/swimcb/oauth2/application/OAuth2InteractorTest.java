@@ -10,16 +10,16 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.project.swimcb.oauth2.domain.enums.Environment;
-import com.project.swimcb.oauth2.adapter.in.OAuth2Request;
 import com.project.swimcb.oauth2.adapter.in.OAuth2Response;
 import com.project.swimcb.oauth2.application.port.out.FindMemberPort;
 import com.project.swimcb.oauth2.application.port.out.OAuth2MemberGateway;
 import com.project.swimcb.oauth2.application.port.out.OAuth2Presenter;
 import com.project.swimcb.oauth2.application.port.out.SignupPort;
+import com.project.swimcb.oauth2.domain.KakaoOAuth2Request;
 import com.project.swimcb.oauth2.domain.Member;
 import com.project.swimcb.oauth2.domain.OAuth2Member;
 import com.project.swimcb.oauth2.domain.SignupRequest;
+import com.project.swimcb.oauth2.domain.enums.Environment;
 import com.project.swimcb.token.application.in.GenerateCustomerTokenUseCase;
 import java.util.Optional;
 import lombok.val;
@@ -59,7 +59,7 @@ class OAuth2InteractorTest {
 
     private final String code = "valid_code";
     private final Environment env = Environment.LOCAL; // 예시로 LOCAL 환경을 사용
-    private final OAuth2Request request = new OAuth2Request(code, env);
+    private final KakaoOAuth2Request request = new KakaoOAuth2Request(code, env);
     private final OAuth2Member oAuth2Member = OAuth2Member.builder()
         .name("테스트 사용자")
         .email("test@example.com")
@@ -121,7 +121,8 @@ class OAuth2InteractorTest {
         when(findMemberPort.findByEmail(oAuth2Member.email())).thenReturn(
             Optional.empty()); // 회원이 존재하지 않음
         when(signupPort.signup(any(SignupRequest.class))).thenReturn(savedMemberId); // 회원가입 성공
-        when(generateCustomerTokenUseCase.generateCustomerToken(savedMemberId)).thenReturn(accessToken);
+        when(generateCustomerTokenUseCase.generateCustomerToken(savedMemberId)).thenReturn(
+            accessToken);
 
         val expectedResponse = mock(OAuth2Response.class);
         when(oAuth2Presenter.signup(accessToken, env)).thenReturn(expectedResponse);
@@ -145,7 +146,8 @@ class OAuth2InteractorTest {
         when(oAuth2MemberGateway.resolve(request.code())).thenReturn(oAuth2Member);
         when(findMemberPort.findByEmail(oAuth2Member.email())).thenReturn(Optional.empty());
         when(signupPort.signup(any(SignupRequest.class))).thenReturn(1L);
-        when(generateCustomerTokenUseCase.generateCustomerToken(savedMemberId)).thenReturn(accessToken);
+        when(generateCustomerTokenUseCase.generateCustomerToken(savedMemberId)).thenReturn(
+            accessToken);
         when(oAuth2Presenter.signup(accessToken, request.env())).thenReturn(
             mock(OAuth2Response.class));
 
@@ -170,7 +172,7 @@ class OAuth2InteractorTest {
 
     private final String invalidCode = "invalid_code";
     private final Environment environment = Environment.LOCAL; // 예시로 LOCAL 환경을 사용
-    private final OAuth2Request request = new OAuth2Request(invalidCode, environment);
+    private final KakaoOAuth2Request request = new KakaoOAuth2Request(invalidCode, environment);
 
     @Test
     @DisplayName("OAuth2 게이트웨이에서 예외가 발생하면 그대로 전파되어야 한다")
