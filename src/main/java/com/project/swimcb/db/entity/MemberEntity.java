@@ -47,6 +47,10 @@ public class MemberEntity extends BaseEntity {
   @Column(name = "nickname", length = 100)
   private String nickname;
 
+  @Enumerated(STRING)
+  @Column(name = "provider", length = 10)
+  private OAuth2Provider provider;
+
   @Builder(toBuilder = true)
   public MemberEntity(
       String name,
