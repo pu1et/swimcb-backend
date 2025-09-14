@@ -31,7 +31,7 @@ jwt:
 url:
   front:
     local: http://localhost:4000/auth
-    dev: https://cb-user.vercel.app/auth
+    dev: https://app.pooldayswim.com/auth/oauth/callback
 
 server:
   forward-headers-strategy: native
