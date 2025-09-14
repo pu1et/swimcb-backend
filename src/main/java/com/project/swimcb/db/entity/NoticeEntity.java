@@ -1,13 +1,17 @@
 package com.project.swimcb.db.entity;
 
+import static jakarta.persistence.FetchType.*;
 import static lombok.AccessLevel.PACKAGE;
 import static lombok.AccessLevel.PROTECTED;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.Builder;
@@ -36,6 +40,10 @@ public class NoticeEntity extends BaseEntity {
 
   @Column(name = "is_visible", nullable = false)
   private boolean isVisible;
+
+  @ManyToOne(fetch = LAZY)
+  @JoinColumn(name = "swimming_pool_id", nullable = false)
+  private SwimmingPoolEntity swimmingPool;
 
   public static NoticeEntity create(String title, String content, boolean isVisible) {
     return new NoticeEntity(title, content, isVisible);
