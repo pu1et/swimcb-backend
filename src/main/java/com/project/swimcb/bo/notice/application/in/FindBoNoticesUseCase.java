@@ -7,5 +7,9 @@ import org.springframework.data.domain.Pageable;
 
 public interface FindBoNoticesUseCase {
 
-  Page<FindBoNoticesResponse> findNotices(@NonNull Pageable pageable);
+  Page<FindBoNoticesResponse> findNotices(
+      @NonNull Long swimmingPoolId,
+      @NonNull Pageable pageable
+  );
+
 }

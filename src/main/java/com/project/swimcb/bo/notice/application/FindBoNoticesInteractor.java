@@ -18,8 +18,11 @@ public class FindBoNoticesInteractor implements FindBoNoticesUseCase {
   private final NoticeRepository noticeRepository;
 
   @Override
-  public Page<FindBoNoticesResponse> findNotices(@NonNull Pageable pageable) {
-    return noticeRepository.findAll(pageable)
+  public Page<FindBoNoticesResponse> findNotices(
+      @NonNull Long swimmingPoolId,
+      @NonNull Pageable pageable
+  ) {
+    return noticeRepository.findAllBySwimmingPool_Id(swimmingPoolId, pageable)
         .map(i -> FindBoNoticesResponse.builder()
             .noticeId(i.getId())
             .title(i.getTitle())
@@ -28,4 +31,5 @@ public class FindBoNoticesInteractor implements FindBoNoticesUseCase {
             .isVisible(i.isVisible())
             .build());
   }
+
 }

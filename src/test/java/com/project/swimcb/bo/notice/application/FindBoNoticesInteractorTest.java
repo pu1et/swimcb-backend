@@ -1,16 +1,16 @@
-package com.project.swimcb.bo.notice.application.out;
+package com.project.swimcb.bo.notice.application;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.project.swimcb.bo.notice.adapter.in.FindBoNoticesResponse;
-import com.project.swimcb.bo.notice.application.FindBoNoticesInteractor;
 import com.project.swimcb.db.entity.NoticeEntity;
-import com.project.swimcb.db.repository.NoticeRepository;
 import com.project.swimcb.db.entity.TestNoticeFactory;
+import com.project.swimcb.db.repository.NoticeRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,7 +28,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
-class FindNoticesInteractorTest {
+class FindBoNoticesInteractorTest {
 
   @InjectMocks
   private FindBoNoticesInteractor interactor;
@@ -40,14 +40,16 @@ class FindNoticesInteractorTest {
   @DisplayName("공지사항 리스트 조회 성공")
   void shouldReturnPagedNoticeResponses() {
     // given
+    val swimmingPoolId = 1L;
     val notices = NoticeFactory.create();
     val pageable = PageRequest.of(0, 10);
     val noticePage = new PageImpl<>(notices, pageable, notices.size());
 
-    when(noticeRepository.findAll(any(Pageable.class))).thenReturn(noticePage);
+    when(noticeRepository.findAllBySwimmingPool_Id(anyLong(), any(Pageable.class)))
+        .thenReturn(noticePage);
 
     // when
-    val result = interactor.findNotices(pageable);
+    val result = interactor.findNotices(swimmingPoolId, pageable);
 
     // then
     assertThat(result).isNotNull();
@@ -74,27 +76,29 @@ class FindNoticesInteractorTest {
         .extracting(FindBoNoticesResponse::isVisible)
         .containsExactly(true, false);
 
-    verify(noticeRepository, only()).findAll(pageable);
+    verify(noticeRepository, only()).findAllBySwimmingPool_Id(swimmingPoolId, pageable);
   }
 
   @DisplayName("공지사항 리스트가 비어있을 경우, 빈 페이지 반환")
   @Test
   void shouldReturnEmptyPageWhenNoData() {
     // given
+    val swimmingPoolId = 1L;
     val pageable = PageRequest.of(0, 10);
     final Page<NoticeEntity> emptyPage = Page.empty();
 
-    when(noticeRepository.findAll(any(Pageable.class))).thenReturn(emptyPage);
+    when(noticeRepository.findAllBySwimmingPool_Id(anyLong(), any(Pageable.class)))
+        .thenReturn(emptyPage);
 
     // when
-    val result = interactor.findNotices(pageable);
+    val result = interactor.findNotices(swimmingPoolId, pageable);
 
     // then
     assertThat(result).isNotNull();
     assertThat(result.getTotalElements()).isZero();
     assertThat(result.getContent()).isEmpty();
 
-    verify(noticeRepository, only()).findAll(pageable);
+    verify(noticeRepository, only()).findAllBySwimmingPool_Id(swimmingPoolId, pageable);
   }
 
   private static class NoticeFactory {
@@ -108,5 +112,7 @@ class FindNoticesInteractorTest {
               LocalDateTime.of(2025, 1, 3, 1, 1, 1), "createdBy2",
               LocalDateTime.of(2025, 1, 4, 1, 1, 1), "updatedBy2"));
     }
+
   }
+
 }
