@@ -23,7 +23,7 @@ import org.springframework.web.servlet.view.RedirectView;
 @RequiredArgsConstructor
 public class OAuth2KakaoCallbackController {
 
-  private final OAuth2Adapter oAuth2Adapter;
+  private final OAuth2Adapter<KakaoOAuth2Request> oAuth2Adapter;
 
   @Operation(summary = "카카오 콜백 처리")
   @GetMapping
