@@ -5,8 +5,8 @@ import lombok.NonNull;
 
 @Builder
 public record FindMemberInfoResponse(
-    @NonNull String name,
-    @NonNull String phone,
+    String name,
+    String phone,
     @NonNull String email
 ) {
 

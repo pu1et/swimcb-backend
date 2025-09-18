@@ -6,9 +6,9 @@ import lombok.NonNull;
 @Builder
 public record Member(
     @NonNull Long id,
-    @NonNull String name,
+    String name,
     @NonNull String email,
-    @NonNull String phoneNumber
+    String phoneNumber
 ) {
 
 }
