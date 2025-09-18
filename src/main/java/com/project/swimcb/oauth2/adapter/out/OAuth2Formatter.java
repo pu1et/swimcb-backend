@@ -1,9 +1,9 @@
 package com.project.swimcb.oauth2.adapter.out;
 
-import com.project.swimcb.oauth2.domain.enums.Environment;
 import com.project.swimcb.oauth2.adapter.in.OAuth2Response;
 import com.project.swimcb.oauth2.application.port.out.FrontUrlGateway;
 import com.project.swimcb.oauth2.application.port.out.OAuth2Presenter;
+import com.project.swimcb.oauth2.domain.enums.Environment;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -16,11 +16,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 class OAuth2Formatter implements OAuth2Presenter {
 
   private final FrontUrlGateway frontUrlGateway;
+  private final String authLoginPath = "/auth/oauth/callback";
 
   @Override
   public OAuth2Response signup(@NonNull String accessToken, Environment env) {
-    val frontUrl = frontUrlGateway.getUrl(env);
-    val uri = UriComponentsBuilder.fromUriString(frontUrl)
+    val redirectUrl = frontUrlGateway.getUrl(env) + authLoginPath;
+
+    val uri = UriComponentsBuilder.fromUriString(redirectUrl)
         .queryParam("accessToken", accessToken)
         .build()
         .toUriString();
@@ -29,8 +31,9 @@ class OAuth2Formatter implements OAuth2Presenter {
 
   @Override
   public OAuth2Response login(@NonNull String accessToken, Environment env) {
-    val frontUrl = frontUrlGateway.getUrl(env);
-    val uri = UriComponentsBuilder.fromUriString(frontUrl)
+    val redirectUrl = frontUrlGateway.getUrl(env) + authLoginPath;
+
+    val uri = UriComponentsBuilder.fromUriString(redirectUrl)
         .queryParam("accessToken", accessToken)
         .build()
         .toUriString();

@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import com.project.swimcb.oauth2.domain.enums.Environment;
 import com.project.swimcb.oauth2.adapter.in.OAuth2Response;
 import com.project.swimcb.oauth2.application.port.out.FrontUrlGateway;
+import lombok.val;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,7 @@ class OAuth2FormatterTest {
   private final String frontUrl = "https://example.com";
   private final String accessToken = "valid-access-token";
   private final Environment env = Environment.LOCAL;
+  private final String authLoginPath = "/auth/oauth/callback";
 
   @Nested
   @DisplayName("회원가입 응답 생성 시")
@@ -37,6 +39,8 @@ class OAuth2FormatterTest {
     @DisplayName("accessToken을 포함한 리다이렉트 응답을 반환해야 한다")
     void shouldReturnRedirectResponseWithAccessToken() {
       // given
+      val redirectUrl = frontUrl + authLoginPath;
+
       when(frontUrlGateway.getUrl(env)).thenReturn(frontUrl);
 
       // when
@@ -45,7 +49,7 @@ class OAuth2FormatterTest {
       // then
       assertThat(response.redirectView()).isInstanceOf(RedirectView.class);
       assertThat(response.redirectView().getUrl())
-          .isEqualTo(frontUrl + "?accessToken=" + accessToken);
+          .isEqualTo(redirectUrl + "?accessToken=" + accessToken);
     }
 
     @Test
@@ -66,6 +70,8 @@ class OAuth2FormatterTest {
     @DisplayName("accessToken을 포함한 리다이렉트 응답을 반환해야 한다")
     void shouldReturnRedirectResponseWithAccessToken() {
       // given
+      val redirectUrl = frontUrl + authLoginPath;
+
       when(frontUrlGateway.getUrl(env)).thenReturn(frontUrl);
 
       // when
@@ -74,7 +80,7 @@ class OAuth2FormatterTest {
       // then
       assertThat(response.redirectView()).isInstanceOf(RedirectView.class);
       assertThat(response.redirectView().getUrl())
-          .isEqualTo(frontUrl + "?accessToken=" + accessToken);
+          .isEqualTo(redirectUrl + "?accessToken=" + accessToken);
     }
 
     @Test
