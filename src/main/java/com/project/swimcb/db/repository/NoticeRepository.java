@@ -10,4 +10,9 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long> {
 
   Page<NoticeEntity> findAllBySwimmingPool_Id(long swimmingPoolId, @NonNull Pageable pageable);
 
+  Page<NoticeEntity> findAllBySwimmingPool_IdAndIsVisibleIsTrue(
+      long swimmingPoolId,
+      @NonNull Pageable pageable
+  );
+
 }

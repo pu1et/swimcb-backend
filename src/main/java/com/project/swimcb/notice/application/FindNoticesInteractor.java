@@ -19,7 +19,7 @@ class FindNoticesInteractor implements FindNoticesUseCase {
 
   @Override
   public Page<Notice> findNotices(@NonNull Pageable pageable) {
-    return noticeRepository.findAllBySwimmingPool_Id(1L, pageable)
+    return noticeRepository.findAllBySwimmingPool_IdAndIsVisibleIsTrue(1L, pageable)
         .map(i -> Notice.builder()
             .noticeId(i.getId())
             .title(i.getTitle())
