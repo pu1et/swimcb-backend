@@ -6,11 +6,13 @@ import com.project.swimcb.oauth2.application.port.out.OAuth2Presenter;
 import com.project.swimcb.oauth2.domain.enums.Environment;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UriComponentsBuilder;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 class OAuth2Formatter implements OAuth2Presenter {
@@ -26,6 +28,9 @@ class OAuth2Formatter implements OAuth2Presenter {
         .queryParam("accessToken", accessToken)
         .build()
         .toUriString();
+
+    log.info("redirect url : {}", redirectUrl);
+
     return new OAuth2Response(new RedirectView(uri));
   }
 
@@ -37,6 +42,9 @@ class OAuth2Formatter implements OAuth2Presenter {
         .queryParam("accessToken", accessToken)
         .build()
         .toUriString();
+
+    log.info("redirect url : {}", redirectUrl);
+
     return new OAuth2Response(new RedirectView(uri));
   }
 
