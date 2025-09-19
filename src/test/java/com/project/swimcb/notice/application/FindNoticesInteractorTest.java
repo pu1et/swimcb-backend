@@ -47,14 +47,15 @@ class FindNoticesInteractorTest {
       val noticeEntityPage = new PageImpl<>(noticeEntities, pageable,
           noticeEntities.size());
 
-      given(noticeRepository.findAllBySwimmingPool_IdAndIsVisibleIsTrue(1L, pageable))
-          .willReturn(noticeEntityPage);
+      given(noticeRepository.findAllBySwimmingPool_IdAndIsVisibleIsTrueOrderByCreatedAtDesc(1L,
+          pageable)).willReturn(noticeEntityPage);
 
       // when
       val result = findNoticesInteractor.findNotices(pageable);
 
       // then
-      then(noticeRepository).should().findAllBySwimmingPool_IdAndIsVisibleIsTrue(1L, pageable);
+      then(noticeRepository).should()
+          .findAllBySwimmingPool_IdAndIsVisibleIsTrueOrderByCreatedAtDesc(1L, pageable);
 
       assertThat(result).isNotNull();
       assertThat(result.getContent()).hasSize(2);
@@ -80,14 +81,16 @@ class FindNoticesInteractorTest {
       val pageable = PageRequest.of(0, 10);
       val emptyPage = new PageImpl<NoticeEntity>(List.of(), pageable, 0);
 
-      given(noticeRepository.findAllBySwimmingPool_IdAndIsVisibleIsTrue(1L, pageable))
+      given(noticeRepository.findAllBySwimmingPool_IdAndIsVisibleIsTrueOrderByCreatedAtDesc(1L,
+          pageable))
           .willReturn(emptyPage);
 
       // when
       val result = findNoticesInteractor.findNotices(pageable);
 
       // then
-      then(noticeRepository).should().findAllBySwimmingPool_IdAndIsVisibleIsTrue(1L, pageable);
+      then(noticeRepository).should()
+          .findAllBySwimmingPool_IdAndIsVisibleIsTrueOrderByCreatedAtDesc(1L, pageable);
 
       assertThat(result).isNotNull();
       assertThat(result.getContent()).isEmpty();
