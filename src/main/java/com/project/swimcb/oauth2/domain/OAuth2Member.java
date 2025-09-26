@@ -5,9 +5,9 @@ import lombok.NonNull;
 
 @Builder
 public record OAuth2Member(
-    @NonNull String name,
+    String name,
     @NonNull String email,
-    @NonNull String phoneNumber
+    String phoneNumber
 ) {
 
 }

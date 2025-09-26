@@ -9,9 +9,7 @@ spring:
             redirect-uri: https://poolday-swim.com/login/oauth2/kakao
             authorization-grant-type: authorization_code
             scope: >
-              account_email,
-              name,
-              phone_number
+              account_email
 
           apple:
             client-id: ${OAUTH_APPLE_CLIENT_ID}
