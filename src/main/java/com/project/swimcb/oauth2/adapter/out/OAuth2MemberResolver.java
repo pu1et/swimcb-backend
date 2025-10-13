@@ -62,6 +62,10 @@ class OAuth2MemberResolver implements OAuth2MemberGateway {
       throw new OAuth2TokenRequestException("OAuth2 member info response is null or invalid");
     }
 
+    if (response.kakaoAccount().phoneNumber() == null) {
+      throw new OAuth2TokenRequestException("카카오 회원의 전화번호가 존재하지 않습니다. 카카오톡을 연결해주세요.");
+    }
+
     return OAuth2Member.builder()
         .name(response.kakaoAccount().name())
         .email(response.kakaoAccount().email())
