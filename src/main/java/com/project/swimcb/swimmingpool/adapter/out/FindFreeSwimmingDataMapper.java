@@ -148,11 +148,11 @@ class FindFreeSwimmingDataMapper implements FindFreeSwimmingDsGateway {
       LocalDate date
   ) {
 
-    val now = LocalDate.now();
+    val today = LocalDate.now();
     if (isTodayAvailable) {
-      val firstDayOfMonth = now.withDayOfMonth(1);
+      val firstDayOfMonth = today.withDayOfMonth(1);
       freeSwimmingEntity.yearMonth.eq(firstDayOfMonth)
-          .and(freeSwimmingDayStatusEntity.dayOfMonth.eq(now.getDayOfMonth()));
+          .and(freeSwimmingDayStatusEntity.dayOfMonth.eq(today.getDayOfMonth()));
     }
 
     if (date != null) {
@@ -160,7 +160,11 @@ class FindFreeSwimmingDataMapper implements FindFreeSwimmingDsGateway {
       return freeSwimmingEntity.yearMonth.eq(firstDayOfMonth)
           .and(freeSwimmingDayStatusEntity.dayOfMonth.eq(date.getDayOfMonth()));
     }
-    return null;
+
+    // 현재와 그다음달까지 조회
+    val firstDayOfThisMonth = today.withDayOfMonth(1);
+    val firstDayOfNextMonth = today.plusMonths(1).withDayOfMonth(1);
+    return freeSwimmingEntity.yearMonth.in(firstDayOfThisMonth, firstDayOfNextMonth);
   }
 
   @Builder
