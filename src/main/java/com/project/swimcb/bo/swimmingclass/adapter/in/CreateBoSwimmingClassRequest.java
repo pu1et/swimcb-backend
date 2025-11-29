@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import java.util.List;
 import lombok.Builder;
 
@@ -15,9 +16,9 @@ import lombok.Builder;
 @Schema(description = "BO 클래스 데이터 관리 - 클래스 추가 response")
 public record CreateBoSwimmingClassRequest(
 
-    @Min(value = 1, message = "강습 월은 1 이상이어야 합니다.")
-    @Max(value = 12, message = "강습 월은 12 이하여야 합니다.")
-    int month,
+    @NotNull(message = "강습 연월은 null이 될 수 없습니다.")
+    @Schema(description = "강습 연월", example = "2025-06")
+    YearMonth yearMonth,
 
     @NotNull(message = "강습 요일은 null이 될 수 없습니다.")
     @Schema(description = "강습 요일")
@@ -100,7 +101,7 @@ public record CreateBoSwimmingClassRequest(
   public CreateBoSwimmingClassCommand toCommand(long swimmingPoolId) {
     return CreateBoSwimmingClassCommand.builder()
         .swimmingPoolId(swimmingPoolId)
-        .month(this.month)
+        .yearMonth(this.yearMonth)
         .days(this.days)
         .time(
             CreateBoSwimmingClassCommand.Time.builder()

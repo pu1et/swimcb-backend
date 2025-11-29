@@ -58,8 +58,8 @@ class CopySwimmingClassControllerTest {
           .andExpect(status().isOk());
 
       then(useCase).should(only()).copySwimmingClass(assertArg(command -> {
-        assertThat(command.fromMonth()).isEqualTo(request.fromMonth());
-        assertThat(command.toMonth()).isEqualTo(request.toMonth());
+        assertThat(command.fromYearMonth()).isEqualTo(request.fromYearMonth());
+        assertThat(command.toYearMonth()).isEqualTo(request.toYearMonth());
       }));
     }
 
@@ -75,7 +75,7 @@ class CopySwimmingClassControllerTest {
               .contentType(APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(request)))
           .andExpect(status().isBadRequest())
-          .andExpect(content().string(containsString("fromMonth")));
+          .andExpect(content().string(containsString("fromYearMonth")));
     }
 
     @Test
@@ -90,7 +90,7 @@ class CopySwimmingClassControllerTest {
               .contentType(APPLICATION_JSON)
               .content(objectMapper.writeValueAsString(request)))
           .andExpect(status().isBadRequest())
-          .andExpect(content().string(containsString("toMonth")));
+          .andExpect(content().string(containsString("toYearMonth")));
     }
 
   }

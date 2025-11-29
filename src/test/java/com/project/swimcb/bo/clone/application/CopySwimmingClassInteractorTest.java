@@ -50,20 +50,20 @@ class CopySwimmingClassInteractorTest {
       val command = TestCopySwimmingClassCommandFactory.create();
       val candidates = TestSwimmingClassCopyCandidateFactory.createList();
 
-      given(gateway.findAllSwimmingClassesByMonth(command.fromMonth()))
+      given(gateway.findAllSwimmingClassesByMonth(command.fromYearMonth()))
           .willReturn(candidates);
 
       // when
       interactor.copySwimmingClass(command);
 
       // then
-      then(gateway).should(times(1)).deleteSwimmingClassByMonth(command.toMonth());
-      then(gateway).should(times(1)).findAllSwimmingClassesByMonth(command.fromMonth());
+      then(gateway).should(times(1)).deleteSwimmingClassByMonth(command.toYearMonth());
+      then(gateway).should(times(1)).findAllSwimmingClassesByMonth(command.fromYearMonth());
       then(createBoFreeSwimmingUseCase)
           .should(times(2))
           .createBoSwimmingClass(assertArg(i -> {
             assertThat(i.swimmingPoolId()).isIn(1L, 2L);
-            assertThat(i.month()).isEqualTo(command.toMonth().getMonthValue());
+            assertThat(i.yearMonth()).isEqualTo(command.toYearMonth());
             assertThat(i.days()).isEqualTo(List.of(MONDAY, SUNDAY));
             assertThat(i.time().startTime()).isEqualTo(LocalTime.of(9, 0));
             assertThat(i.type().classTypeId()).isEqualTo(2L);
@@ -82,14 +82,14 @@ class CopySwimmingClassInteractorTest {
       val command = TestCopySwimmingClassCommandFactory.create();
       val emptyCandidates = List.<SwimmingClassCopyCandidate>of();
 
-      given(gateway.findAllSwimmingClassesByMonth(command.fromMonth()))
+      given(gateway.findAllSwimmingClassesByMonth(command.fromYearMonth()))
           .willReturn(emptyCandidates);
 
       // when
       interactor.copySwimmingClass(command);
 
       // then
-      then(gateway).should(only()).findAllSwimmingClassesByMonth(command.fromMonth());
+      then(gateway).should(only()).findAllSwimmingClassesByMonth(command.fromYearMonth());
       then(createBoFreeSwimmingUseCase).shouldHaveNoInteractions();
     }
 
@@ -119,15 +119,17 @@ class CopySwimmingClassInteractorTest {
 
     private static List<SwimmingClassCopyCandidate> createList() {
       return List.of(
-          createCandidate(1L, 1),
-          createCandidate(2L, 1)
+          createCandidate(1L, YearMonth.of(2026, 1)),
+          createCandidate(2L, YearMonth.of(2026, 1))
       );
     }
 
-    private static SwimmingClassCopyCandidate createCandidate(long swimmingPoolId, int month) {
+    private static SwimmingClassCopyCandidate createCandidate(
+        long swimmingPoolId,
+        YearMonth yearMonth
+    ) {
       return SwimmingClassCopyCandidate.builder()
           .swimmingPoolId(swimmingPoolId)
-          .month(month)
           .dayOfWeek(ClassDayOfWeek.of(0b1000001))
           .time(SwimmingClassCopyCandidate.Time.builder()
               .startTime(LocalTime.of(9, 0))

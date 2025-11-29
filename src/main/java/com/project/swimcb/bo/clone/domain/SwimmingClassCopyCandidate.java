@@ -2,6 +2,7 @@ package com.project.swimcb.bo.clone.domain;
 
 import com.project.swimcb.mypage.reservation.adapter.out.ClassDayOfWeek;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import java.util.List;
 import lombok.Builder;
 import lombok.NonNull;
@@ -9,7 +10,6 @@ import lombok.NonNull;
 @Builder
 public record SwimmingClassCopyCandidate(
     long swimmingPoolId,
-    int month,
     @NonNull ClassDayOfWeek dayOfWeek,
     @NonNull Time time,
     @NonNull Type type,

@@ -7,17 +7,17 @@ import java.time.YearMonth;
 
 @Schema(description = "수영장 클래스 복사 요청")
 public record CopySwimmingClassRequest(
-    @Schema(description = "원본 월", example = "2025-07")
-    @NotNull(message = "fromMonth는 null일 수 없습니다.")
-    YearMonth fromMonth,
+    @Schema(description = "원본 연월", example = "2025-07")
+    @NotNull(message = "fromYearMonth는 null일 수 없습니다.")
+    YearMonth fromYearMonth,
 
-    @Schema(description = "복사 월", example = "2025-12")
-    @NotNull(message = "toMonth는 null일 수 없습니다.")
-    YearMonth toMonth
+    @Schema(description = "복사 연월", example = "2025-12")
+    @NotNull(message = "toYearMonth는 null일 수 없습니다.")
+    YearMonth toYearMonth
 ) {
 
   public CopySwimmingClassCommand toCommand() {
-    return new CopySwimmingClassCommand(fromMonth, toMonth);
+    return new CopySwimmingClassCommand(fromYearMonth, toYearMonth);
   }
 
 }

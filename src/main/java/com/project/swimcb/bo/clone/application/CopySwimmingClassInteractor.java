@@ -30,13 +30,13 @@ class CopySwimmingClassInteractor implements CopySwimmingClassUseCase {
   @Override
   public void copySwimmingClass(@NonNull CopySwimmingClassCommand command) {
     val candidateSwimmingClasses = gateway.findAllSwimmingClassesByMonth(
-        command.fromMonth());
+        command.fromYearMonth());
 
     if (candidateSwimmingClasses.isEmpty()) {
       return;
     }
 
-    gateway.deleteSwimmingClassByMonth(command.toMonth());
+    gateway.deleteSwimmingClassByMonth(command.toYearMonth());
 
     buildCreateBoSwimmingClassCommands(command, candidateSwimmingClasses)
         .forEach(createBoFreeSwimmingUseCase::createBoSwimmingClass);
@@ -50,7 +50,7 @@ class CopySwimmingClassInteractor implements CopySwimmingClassUseCase {
         .stream()
         .map(i -> CreateBoSwimmingClassCommand.builder()
             .swimmingPoolId(i.swimmingPoolId())
-            .month(command.toMonth().getMonthValue())
+            .yearMonth(command.toYearMonth())
             .days(i.dayOfWeek().value())
             .time(
                 Time.builder()

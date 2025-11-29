@@ -2,6 +2,7 @@ package com.project.swimcb.bo.swimmingclass.domain;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import java.util.List;
 import lombok.Builder;
 import lombok.NonNull;
@@ -9,7 +10,7 @@ import lombok.NonNull;
 @Builder
 public record CreateBoSwimmingClassCommand(
     long swimmingPoolId,
-    int month,
+    @NonNull YearMonth yearMonth,
     @NonNull List<DayOfWeek> days,
     @NonNull Time time,
     @NonNull Type type,

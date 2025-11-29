@@ -29,6 +29,7 @@ import com.project.swimcb.db.repository.SwimmingInstructorRepository;
 import com.project.swimcb.db.repository.SwimmingPoolRepository;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 import lombok.val;
@@ -118,7 +119,7 @@ class CreateBoSwimmingClassInteractorTest {
     // then
     verify(swimmingClassRepository, only()).save(assertArg(i -> {
       assertThat(i.getSwimmingPool()).isEqualTo(swimmingPool);
-      assertThat(i.getYear()).isEqualTo(LocalDate.now().getYear());
+      assertThat(i.getYear()).isEqualTo(2026);
       assertThat(i.getMonth()).isEqualTo(1);
       assertThat(i.getType()).isEqualTo(swimmingClassType);
       assertThat(i.getSubType()).isEqualTo(swimmingClassSubType);
@@ -214,7 +215,7 @@ class CreateBoSwimmingClassInteractorTest {
     private static CreateBoSwimmingClassCommand.CreateBoSwimmingClassCommandBuilder common() {
       return CreateBoSwimmingClassCommand.builder()
           .swimmingPoolId(1L)
-          .month(1)
+          .yearMonth(YearMonth.of(2026,1))
           .days(List.of(MONDAY, WEDNESDAY, FRIDAY))
           .time(CreateBoSwimmingClassCommand.Time.builder()
               .startTime(LocalTime.of(9, 0))

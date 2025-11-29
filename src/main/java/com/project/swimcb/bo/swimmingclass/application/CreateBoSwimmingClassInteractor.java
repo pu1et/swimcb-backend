@@ -47,8 +47,8 @@ public class CreateBoSwimmingClassInteractor implements CreateBoSwimmingClassUse
 
     val swimmingClass = SwimmingClassEntity.builder()
         .swimmingPool(pool)
-        .year(LocalDate.now().getYear())
-        .month(command.month())
+        .year(command.yearMonth().getYear())
+        .month(command.yearMonth().getMonthValue())
         .type(classType)
         .subType(classSubType)
         .daysOfWeek(daysOfWeek(command.days()))

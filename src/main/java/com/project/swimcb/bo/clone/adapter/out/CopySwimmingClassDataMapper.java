@@ -33,7 +33,9 @@ class CopySwimmingClassDataMapper implements CopySwimmingClassDsGateway {
   private final EntityManager entityManager;
 
   @Override
-  public List<SwimmingClassCopyCandidate> findAllSwimmingClassesByMonth(@NonNull YearMonth month) {
+  public List<SwimmingClassCopyCandidate> findAllSwimmingClassesByMonth(
+      @NonNull YearMonth yearMonth
+  ) {
     return queryFactory.select(constructor(QuerySwimmingClassCopyCandidate.class,
             swimmingPoolEntity.id,
             swimmingClassEntity.id,
@@ -63,8 +65,8 @@ class CopySwimmingClassDataMapper implements CopySwimmingClassDsGateway {
             swimmingPoolEntity.latitude.isNotNull(),
             swimmingPoolEntity.longitude.isNotNull(),
 
-            swimmingClassEntity.year.eq(month.getYear()),
-            swimmingClassEntity.month.eq(month.getMonthValue()),
+            swimmingClassEntity.year.eq(yearMonth.getYear()),
+            swimmingClassEntity.month.eq(yearMonth.getMonthValue()),
             swimmingClassEntity.isVisible.isTrue(),
             swimmingClassEntity.isCanceled.isFalse(),
 
@@ -114,12 +116,12 @@ class CopySwimmingClassDataMapper implements CopySwimmingClassDsGateway {
   }
 
   @Override
-  public void deleteSwimmingClassByMonth(@NonNull YearMonth month) {
+  public void deleteSwimmingClassByMonth(@NonNull YearMonth yearMonth) {
     val swimmingClassIds = queryFactory.select(swimmingClassEntity.id)
         .from(swimmingClassEntity)
         .where(
-            swimmingClassEntity.year.eq(month.getYear()),
-            swimmingClassEntity.month.eq(month.getMonthValue())
+            swimmingClassEntity.year.eq(yearMonth.getYear()),
+            swimmingClassEntity.month.eq(yearMonth.getMonthValue())
         )
         .fetch();
 
