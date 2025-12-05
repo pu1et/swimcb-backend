@@ -3,6 +3,7 @@ package com.project.swimcb.swimmingpool.adapter.out;
 import static com.project.swimcb.db.entity.QFavoriteEntity.favoriteEntity;
 import static com.project.swimcb.db.entity.QFreeSwimmingDayStatusEntity.freeSwimmingDayStatusEntity;
 import static com.project.swimcb.db.entity.QFreeSwimmingEntity.freeSwimmingEntity;
+import static com.project.swimcb.db.entity.QSwimmingClassEntity.swimmingClassEntity;
 import static com.project.swimcb.db.entity.QSwimmingPoolEntity.swimmingPoolEntity;
 import static com.project.swimcb.db.entity.QSwimmingPoolImageEntity.swimmingPoolImageEntity;
 import static com.project.swimcb.db.entity.QSwimmingPoolRatingEntity.swimmingPoolRatingEntity;
@@ -15,12 +16,14 @@ import com.project.swimcb.favorite.domain.enums.FavoriteTargetType;
 import com.project.swimcb.swimmingpool.application.out.FindFreeSwimmingDsGateway;
 import com.project.swimcb.swimmingpool.domain.FindFreeSwimmingCondition;
 import com.project.swimcb.swimmingpool.domain.FreeSwimming;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.annotations.QueryProjection;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import lombok.Builder;
 import lombok.NonNull;
@@ -88,6 +91,7 @@ class FindFreeSwimmingDataMapper implements FindFreeSwimmingDsGateway {
             freeSwimmingEntity.isVisible.isTrue(),
             freeSwimmingEntity.isCanceled.isFalse(),
 
+            freeSwimmingBetweenStartTimes(condition.startTimes()),
             filterDateAndTimes(condition.isTodayAvailable(), condition.date()),
 
             ticketEntity.targetType.eq(FREE_SWIMMING),
@@ -141,6 +145,21 @@ class FindFreeSwimmingDataMapper implements FindFreeSwimmingDsGateway {
     return favoriteEntity.member.id.eq(memberId)
         .and(favoriteEntity.targetId.eq(swimmingPoolEntity.id))
         .and(favoriteEntity.targetType.eq(FavoriteTargetType.FREE_SWIMMING));
+  }
+
+  private BooleanBuilder freeSwimmingBetweenStartTimes(@NonNull List<LocalTime> startTimes) {
+    if (startTimes.isEmpty()) {
+      return null;
+    }
+    val builder = new BooleanBuilder();
+
+    startTimes.forEach(i -> {
+      val endTime = i.plusHours(1);
+      builder.or(
+          freeSwimmingEntity.startTime.goe(i).and(freeSwimmingEntity.startTime.lt(endTime)));
+    });
+
+    return builder;
   }
 
   private BooleanExpression filterDateAndTimes(
