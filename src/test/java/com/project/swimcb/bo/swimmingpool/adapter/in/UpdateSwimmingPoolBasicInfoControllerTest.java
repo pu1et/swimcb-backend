@@ -122,6 +122,8 @@ class UpdateSwimmingPoolBasicInfoControllerTest {
           .imagePaths(List.of("image"))
           .usageAgreementPath("usageAgreementPath")
           .accountNo("accountNo")
+          .websiteUrl("websiteUrl")
+          .programInfoUrl("programInfoUrl")
           .build();
     }
 
@@ -132,6 +134,8 @@ class UpdateSwimmingPoolBasicInfoControllerTest {
           .address("address")
           .usageAgreementPath("usageAgreementPath")
           .accountNo("accountNo")
+          .websiteUrl("websiteUrl")
+          .programInfoUrl("programInfoUrl")
           .build();
     }
 
@@ -143,6 +147,8 @@ class UpdateSwimmingPoolBasicInfoControllerTest {
           .imagePaths(IntStream.range(0, 7).mapToObj(i -> "image").toList())
           .usageAgreementPath("usageAgreementPath")
           .accountNo("accountNo")
+          .websiteUrl("websiteUrl")
+          .programInfoUrl("programInfoUrl")
           .build();
     }
   }

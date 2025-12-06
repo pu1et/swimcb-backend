@@ -16,7 +16,6 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.springframework.stereotype.Component;
 
 @Getter
 @Table(name = "swimming_pool")
@@ -97,5 +96,7 @@ public class SwimmingPoolEntity extends BaseEntity {
     this.usageAgreementPath = request.usageAgreementPath();
     this.latitude = request.latitude();
     this.longitude = request.longitude();
+    this.websiteUrl = request.websiteUrl();
+    this.programInfoUrl = request.programInfoUrl();
   }
 }

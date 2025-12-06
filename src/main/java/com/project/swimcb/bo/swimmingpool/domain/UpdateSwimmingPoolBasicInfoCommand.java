@@ -21,7 +21,9 @@ public record UpdateSwimmingPoolBasicInfoCommand(
     String usageAgreementPath,
     @NonNull AccountNo accountNo,
     Double latitude,
-    Double longitude
+    Double longitude,
+    String websiteUrl,
+    String programInfoUrl
 ) {
 
 }
