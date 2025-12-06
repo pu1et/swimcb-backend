@@ -4,7 +4,6 @@ import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.project.swimcb.token.application.in.JwtPort;
 import com.project.swimcb.token.domain.TokenInfo;
-import com.project.swimcb.token.domain.enums.MemberRole;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,7 +11,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,7 +18,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -49,9 +46,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       SecurityContextHolder.getContext().setAuthentication(authentication);
       filterChain.doFilter(request, response);
     } catch (SignatureVerificationException e) {
-      log.error("잘못된 JWT 서명입니다.", e);
+      request.setAttribute("errorMessage", "잘못된 JWT 서명입니다.");
+      filterChain.doFilter(request, response);
     } catch (TokenExpiredException e) {
-      log.error("만료된 JWT 서명입니다.", e);
+      request.setAttribute("errorMessage", "만료된 JWT 서명입니다.");
+      filterChain.doFilter(request, response);
     }
   }
+
 }

@@ -1,9 +1,14 @@
 package com.project.swimcb.config.security;
 
+import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
+import static org.springframework.http.MediaType.*;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
@@ -18,6 +23,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
+  private final ObjectMapper objectMapper;
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -36,6 +42,11 @@ public class SecurityConfig {
             ).permitAll()
             .anyRequest().authenticated())
         .headers(i -> i.frameOptions(FrameOptionsConfig::disable))
+        .exceptionHandling(i -> i.authenticationEntryPoint((req, res, authException) -> {
+          res.setStatus(SC_UNAUTHORIZED);
+          res.setContentType(APPLICATION_JSON_UTF8_VALUE);
+          res.getWriter().write(objectMapper.writeValueAsString(req.getAttribute("errorMessage")));
+        }))
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         .build();
   }

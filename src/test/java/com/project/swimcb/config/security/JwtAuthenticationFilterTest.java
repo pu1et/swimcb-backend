@@ -1,12 +1,13 @@
 package com.project.swimcb.config.security;
 
 import static com.project.swimcb.token.domain.enums.MemberRole.ADMIN;
+import static com.project.swimcb.token.domain.enums.MemberRole.CUSTOMER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
@@ -23,6 +24,7 @@ import lombok.val;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -45,15 +47,14 @@ class JwtAuthenticationFilterTest {
 
   private MockHttpServletRequest request;
   private MockHttpServletResponse response;
+  
+  @Mock
   private FilterChain chain;
 
   @BeforeEach
   void setUp() {
     request = new MockHttpServletRequest();
     response = new MockHttpServletResponse();
-    chain = (req, res) -> {
-
-    };
   }
 
   @AfterEach
@@ -61,110 +62,176 @@ class JwtAuthenticationFilterTest {
     SecurityContextHolder.clearContext();
   }
 
-  @Test
-  @DisplayName("유효한 토큰의 경우 SecurityContextHolder에 인증정보가 설정되어야 한다.")
-  void shouldSetSecurityContextHolderWhenValidTokenProvided() throws ServletException, IOException {
-    // given
-    val memberId = 1L;
-    val role = ADMIN;
-    val swimmingPoolId = 1L;
-    val token = "valid_token";
+  @Nested
+  @DisplayName("유효한 JWT 토큰으로 요청시")
+  class ValidJwtToken {
 
-    request.addHeader("Authorization", TOKEN_PREFIX + token);
+    @Test
+    @DisplayName("ADMIN 역할의 토큰인 경우 SecurityContext에 인증 정보를 설정한다")
+    void setAuthenticationForAdminToken() throws ServletException, IOException {
+      // given
+      val memberId = 1L;
+      val role = ADMIN;
+      val swimmingPoolId = 1L;
+      val token = "valid_admin_token";
 
-    val decodedJWT = mock(DecodedJWT.class);
-    when(decodedJWT.getSubject()).thenReturn(String.valueOf(memberId));
+      request.addHeader("Authorization", TOKEN_PREFIX + token);
 
-    val roleClaim = mock(Claim.class);
-    when(roleClaim.asString()).thenReturn(role.name());
-    when(decodedJWT.getClaim("role")).thenReturn(roleClaim);
+      val decodedJWT = mock(DecodedJWT.class);
+      given(decodedJWT.getSubject()).willReturn(String.valueOf(memberId));
 
-    val swimmingPoolIdClaim = mock(Claim.class);
-    when(swimmingPoolIdClaim.asLong()).thenReturn(swimmingPoolId);
-    when(decodedJWT.getClaim("swimmingPoolId")).thenReturn(swimmingPoolIdClaim);
+      val roleClaim = mock(Claim.class);
+      given(roleClaim.asString()).willReturn(role.name());
+      given(decodedJWT.getClaim("role")).willReturn(roleClaim);
 
-    when(jwtPort.parseToken(token)).thenReturn(decodedJWT);
+      val swimmingPoolIdClaim = mock(Claim.class);
+      given(swimmingPoolIdClaim.asLong()).willReturn(swimmingPoolId);
+      given(decodedJWT.getClaim("swimmingPoolId")).willReturn(swimmingPoolIdClaim);
 
-    // when
-    filter.doFilterInternal(request, response, chain);
+      given(jwtPort.parseToken(token)).willReturn(decodedJWT);
 
-    // then
-    val authentication = SecurityContextHolder.getContext().getAuthentication();
-    assertThat(authentication).isNotNull();
-    assertThat(authentication.isAuthenticated()).isTrue();
+      // when
+      filter.doFilterInternal(request, response, chain);
 
-    assertThat(authentication.getPrincipal()).isInstanceOf(TokenInfo.class);
-    val tokenInfo = (TokenInfo) authentication.getPrincipal();
-    assertThat(tokenInfo.memberId()).isEqualTo(memberId);
-    assertThat(tokenInfo.role()).isEqualTo(role);
-    assertThat(tokenInfo.swimmingPoolId()).isEqualTo(swimmingPoolId);
+      // then
+      val authentication = SecurityContextHolder.getContext().getAuthentication();
+      assertThat(authentication).isNotNull();
+      assertThat(authentication.isAuthenticated()).isTrue();
+
+      assertThat(authentication.getPrincipal()).isInstanceOf(TokenInfo.class);
+      val tokenInfo = (TokenInfo) authentication.getPrincipal();
+      assertThat(tokenInfo.memberId()).isEqualTo(memberId);
+      assertThat(tokenInfo.role()).isEqualTo(role);
+      assertThat(tokenInfo.swimmingPoolId()).isEqualTo(swimmingPoolId);
+
+      then(jwtPort).should().parseToken(token);
+      then(chain).should().doFilter(request, response);
+    }
+
+    @Test
+    @DisplayName("CUSTOMER 역할의 토큰인 경우 SecurityContext에 인증 정보를 설정한다")
+    void setAuthenticationForCustomerToken() throws ServletException, IOException {
+      // given
+      val memberId = 2L;
+      val role = CUSTOMER;
+      val token = "valid_customer_token";
+
+      request.addHeader("Authorization", TOKEN_PREFIX + token);
+
+      val decodedJWT = mock(DecodedJWT.class);
+      given(decodedJWT.getSubject()).willReturn(String.valueOf(memberId));
+
+      val roleClaim = mock(Claim.class);
+      given(roleClaim.asString()).willReturn(role.name());
+      given(decodedJWT.getClaim("role")).willReturn(roleClaim);
+
+      given(decodedJWT.getClaim("swimmingPoolId")).willReturn(null);
+
+      given(jwtPort.parseToken(token)).willReturn(decodedJWT);
+
+      // when
+      filter.doFilterInternal(request, response, chain);
+
+      // then
+      val authentication = SecurityContextHolder.getContext().getAuthentication();
+      assertThat(authentication).isNotNull();
+      assertThat(authentication.isAuthenticated()).isTrue();
+
+      assertThat(authentication.getPrincipal()).isInstanceOf(TokenInfo.class);
+      val tokenInfo = (TokenInfo) authentication.getPrincipal();
+      assertThat(tokenInfo.memberId()).isEqualTo(memberId);
+      assertThat(tokenInfo.role()).isEqualTo(role);
+      assertThat(tokenInfo.swimmingPoolId()).isNull();
+
+      then(jwtPort).should().parseToken(token);
+      then(chain).should().doFilter(request, response);
+    }
   }
 
-  @Test
-  @DisplayName("Authorization 헤더가 null인 경우 SecurityContextHolder에 인증정보를 설정하지 않는다.")
-  void shouldNotCallJwtPortAndProceedWhenAuthorizationHeaderIsNull()
-      throws ServletException, IOException {
+  @Nested
+  @DisplayName("Authorization 헤더가 없거나 유효하지 않은 경우")
+  class InvalidAuthorizationHeader {
 
-    // given
-    // when
-    filter.doFilterInternal(request, response, chain);
-    // then
-    verify(jwtPort, never()).parseToken(anyString());
-    assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
+    @Test
+    @DisplayName("Authorization 헤더가 null인 경우 필터를 통과시키고 인증 정보를 설정하지 않는다")
+    void proceedWithoutAuthenticationWhenHeaderIsNull()
+        throws ServletException, IOException {
+      // given
+      // Authorization 헤더 설정 안함
+
+      // when
+      filter.doFilterInternal(request, response, chain);
+
+      // then
+      then(jwtPort).should(never()).parseToken(anyString());
+      assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
+      then(chain).should().doFilter(request, response);
+    }
+
+    @Test
+    @DisplayName("Authorization 헤더가 Bearer로 시작하지 않는 경우 필터를 통과시키고 인증 정보를 설정하지 않는다")
+    void proceedWithoutAuthenticationWhenHeaderDoesNotStartWithBearer()
+        throws ServletException, IOException {
+      // given
+      val invalidHeader = "Basic some_credential";
+      request.addHeader("Authorization", invalidHeader);
+
+      // when
+      filter.doFilterInternal(request, response, chain);
+
+      // then
+      then(jwtPort).should(never()).parseToken(anyString());
+      assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
+      then(chain).should().doFilter(request, response);
+    }
   }
 
-  @Test
-  @DisplayName("Authorization 헤더가 Bearer로 시작하지 않는 경우 SecurityContextHolder에 인증정보가 설정하지 않는다.")
-  void shouldNotCallJwtPortAndProceedWhenAuthorizationHeaderDoesNotContainTokenPrefix()
-      throws ServletException, IOException {
+  @Nested
+  @DisplayName("JWT 토큰 검증 실패시")
+  class JwtTokenValidationFailure {
 
-    // given
-    val invalidHeader = "invalid_header";
-    request.addHeader("Authorization", invalidHeader);
-    // when
-    filter.doFilterInternal(request, response, chain);
-    // then
-    verify(jwtPort, never()).parseToken(anyString());
-    assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
-  }
+    @Test
+    @DisplayName("잘못된 서명의 토큰인 경우 request attribute에 에러 메시지를 설정하고 필터 체인을 계속 진행한다")
+    void setErrorMessageAndProceedWhenSignatureVerificationFails()
+        throws ServletException, IOException {
+      // given
+      val token = "invalid_signature_token";
+      request.addHeader("Authorization", TOKEN_PREFIX + token);
 
-  @Test
-  @DisplayName("잘못 서명된 토큰의 경우 SecurityContextHolder에 인증정보가 설정되지 않아야 한다.")
-  void shouldNotSetAuthenticationWhenSignatureVerificationExceptionOccurs()
-      throws ServletException, IOException {
+      given(jwtPort.parseToken(token)).willThrow(
+          new SignatureVerificationException(Algorithm.HMAC256("secret")));
 
-    // given
-    val token = "invalid_token";
+      // when
+      filter.doFilterInternal(request, response, chain);
 
-    request.addHeader("Authorization", TOKEN_PREFIX + token);
+      // then
+      assertThat(request.getAttribute("errorMessage")).isEqualTo("잘못된 JWT 서명입니다.");
+      assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
 
-    when(jwtPort.parseToken(token)).thenThrow(
-        new SignatureVerificationException(Algorithm.HMAC256("secret")));
+      then(jwtPort).should().parseToken(token);
+      then(chain).should().doFilter(request, response);
+    }
 
-    // when
-    filter.doFilterInternal(request, response, chain);
-    // then
-    val authentication = SecurityContextHolder.getContext().getAuthentication();
-    assertThat(authentication).isNull();
-  }
+    @Test
+    @DisplayName("만료된 토큰인 경우 request attribute에 에러 메시지를 설정하고 필터 체인을 계속 진행한다")
+    void setErrorMessageAndProceedWhenTokenIsExpired()
+        throws ServletException, IOException {
+      // given
+      val token = "expired_token";
+      request.addHeader("Authorization", TOKEN_PREFIX + token);
 
-  @Test
-  @DisplayName("만료된 토큰의 경우 SecurityContextHolder에 인증정보가 설정되지 않아야 한다.")
-  void shouldNotSetAuthenticationWhenTokenExpiredExceptionOccurs()
-      throws ServletException, IOException {
+      given(jwtPort.parseToken(token)).willThrow(
+          new TokenExpiredException("Token expired", Instant.MIN));
 
-    // given
-    val token = "expired_token";
+      // when
+      filter.doFilterInternal(request, response, chain);
 
-    request.addHeader("Authorization", TOKEN_PREFIX + token);
+      // then
+      assertThat(request.getAttribute("errorMessage")).isEqualTo("만료된 JWT 서명입니다.");
+      assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
 
-    when(jwtPort.parseToken(token)).thenThrow(
-        new TokenExpiredException("Token expired", Instant.MIN));
-
-    // when
-    filter.doFilterInternal(request, response, chain);
-    // then
-    val authentication = SecurityContextHolder.getContext().getAuthentication();
-    assertThat(authentication).isNull();
+      then(jwtPort).should().parseToken(token);
+      then(chain).should().doFilter(request, response);
+    }
   }
 }
