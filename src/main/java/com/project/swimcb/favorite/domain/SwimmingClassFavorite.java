@@ -4,6 +4,7 @@ import com.project.swimcb.favorite.domain.enums.FavoriteTargetType;
 import com.project.swimcb.mypage.reservation.adapter.out.ClassDayOfWeek;
 import com.project.swimcb.swimmingpool.domain.enums.SwimmingClassTypeName;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import lombok.Builder;
 import lombok.NonNull;
 
@@ -26,7 +27,7 @@ public record SwimmingClassFavorite(
     String swimmingPoolName,
 
     @NonNull
-    Integer month,
+    YearMonth yearMonth,
 
     @NonNull
     Long typeId,

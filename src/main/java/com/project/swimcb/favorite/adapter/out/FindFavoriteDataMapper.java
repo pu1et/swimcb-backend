@@ -32,6 +32,7 @@ import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import java.util.Optional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -68,6 +69,7 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
             swimmingPoolRatingEntity.rating.avg(),
             swimmingPoolReviewEntity.id.sum(),
 
+            swimmingClassEntity.year,
             swimmingClassEntity.month,
             swimmingClassTypeEntity.id,
             swimmingClassTypeEntity.name,
@@ -155,6 +157,7 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
             swimmingPoolEntity.name,
             swimmingPoolEntity.address,
 
+            swimmingClassEntity.year,
             swimmingClassEntity.month,
             swimmingClassTypeEntity.id,
             swimmingClassTypeEntity.name,
@@ -269,7 +272,7 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
         .targetType(i.targetType())
         .swimmingPoolId(i.swimmingPoolId())
         .swimmingPoolName(i.swimmingPoolName())
-        .month(i.month())
+        .yearMonth(YearMonth.of(i.year(), i.month()))
         .typeId(i.swimmingClassTypeId())
         .typeName(i.swimmingClassTypeName())
         .subTypeId(i.swimmingClassSubTypeId())
@@ -322,6 +325,7 @@ class FindFavoriteDataMapper implements FindFavoriteDsGateway {
       Double rating,
       Long reviewCount,
 
+      Integer year,
       Integer month,
       Long swimmingClassTypeId,
       SwimmingClassTypeName swimmingClassTypeName,

@@ -5,6 +5,7 @@ import com.project.swimcb.favorite.domain.enums.FavoriteTargetType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import java.util.List;
 import lombok.Builder;
 import lombok.NonNull;
@@ -99,9 +100,15 @@ public record FindFavoriteResponse(
       @Schema(example = "올림픽 수영장")
       String swimmingPoolName,
 
+      // TODO yearMonth 적용하면 삭제
+      @Deprecated(since = "yearMonth로 대체되었습니다.")
       @NonNull
       @Schema(example = "4")
       Integer month,
+
+      @NonNull
+      @Schema(example = "2026-01")
+      YearMonth yearMonth,
 
       @NonNull
       @Schema(example = "1")
