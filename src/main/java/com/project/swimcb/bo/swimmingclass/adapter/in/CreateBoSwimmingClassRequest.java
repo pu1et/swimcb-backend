@@ -13,7 +13,7 @@ import java.util.List;
 import lombok.Builder;
 
 @Builder
-@Schema(description = "BO 클래스 데이터 관리 - 클래스 추가 response")
+@Schema(description = "BO 클래스 데이터 관리 - 클래스 추가 request")
 public record CreateBoSwimmingClassRequest(
 
     @NotNull(message = "강습 연월은 null이 될 수 없습니다.")
