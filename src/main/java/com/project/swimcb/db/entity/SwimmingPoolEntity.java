@@ -16,6 +16,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.springframework.stereotype.Component;
 
 @Getter
 @Table(name = "swimming_pool")
@@ -74,6 +75,12 @@ public class SwimmingPoolEntity extends BaseEntity {
   @Column(name = "account_no")
   @Convert(converter = AccountNoConverter.class)
   private AccountNo accountNo;
+
+  @Column(name = "website_url")
+  private String websiteUrl;
+
+  @Column(name = "program_info_url")
+  private String programInfoUrl;
 
   public void updateBasicInfo(@NonNull UpdateSwimmingPoolBasicInfoCommand request) {
     this.name = request.name();
