@@ -43,6 +43,8 @@ public class FindSwimmingPoolBasicInfoInteractor implements FindSwimmingPoolBasi
         .accountNo(swimmingPool.getAccountNo() == null ? null : swimmingPool.getAccountNo().value())
         .latitude(swimmingPool.getLatitude())
         .longitude(swimmingPool.getLongitude())
+        .websiteUrl(swimmingPool.getWebsiteUrl())
+        .programInfoUrl(swimmingPool.getProgramInfoUrl())
         .build();
   }
 

@@ -52,7 +52,13 @@ public record FindSwimmingPoolBasicInfoResponse(
     Double latitude,
 
     @Schema(description = "경도", example = "126.9789")
-    Double longitude
+    Double longitude,
+
+    @Schema(description = "웹사이트 링크", example = "http://www.site.com")
+    String websiteUrl,
+
+    @Schema(description = "프로그램 연결 링크", example = "http://www.site.com")
+    String programInfoUrl
 ) {
 
 }
