@@ -30,6 +30,8 @@ class FindSwimmingPoolDetailFacilityInteractor implements
         .newRegistrationPeriodEndDay(swimmingPool.getNewRegistrationPeriodEndDay())
         .reRegistrationPeriodStartDay(swimmingPool.getReRegistrationPeriodStartDay())
         .reRegistrationPeriodEndDay(swimmingPool.getReRegistrationPeriodEndDay())
+        .websiteUrl(swimmingPool.getWebsiteUrl())
+        .programInfoUrl(swimmingPool.getProgramInfoUrl())
         .build();
   }
 

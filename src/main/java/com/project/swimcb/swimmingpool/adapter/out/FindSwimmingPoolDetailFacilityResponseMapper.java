@@ -18,6 +18,8 @@ public class FindSwimmingPoolDetailFacilityResponseMapper {
         .newRegistrationPeriodEndDay(facility.newRegistrationPeriodEndDay())
         .reRegistrationPeriodStartDay(facility.reRegistrationPeriodStartDay())
         .reRegistrationPeriodEndDay(facility.reRegistrationPeriodEndDay())
+        .websiteUrl(facility.websiteUrl())
+        .programInfoUrl(facility.programInfoUrl())
         .build();
   }
 }

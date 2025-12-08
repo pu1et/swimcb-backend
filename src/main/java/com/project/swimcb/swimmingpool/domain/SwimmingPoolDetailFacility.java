@@ -9,7 +9,9 @@ public record SwimmingPoolDetailFacility(
     Integer newRegistrationPeriodStartDay,
     Integer newRegistrationPeriodEndDay,
     Integer reRegistrationPeriodStartDay,
-    Integer reRegistrationPeriodEndDay
+    Integer reRegistrationPeriodEndDay,
+    String websiteUrl,
+    String programInfoUrl
 ) {
 
 }

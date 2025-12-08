@@ -38,6 +38,8 @@ class FindSwimmingPoolDetailFacilityResponseMapperTest {
             .newRegistrationPeriodEndDay(7)
             .reRegistrationPeriodStartDay(1)
             .reRegistrationPeriodEndDay(7)
+            .websiteUrl("https://example1.com")
+            .programInfoUrl("https://example2.com")
             .build();
 
         // when
@@ -51,6 +53,8 @@ class FindSwimmingPoolDetailFacilityResponseMapperTest {
         assertThat(result.newRegistrationPeriodEndDay()).isEqualTo(7);
         assertThat(result.reRegistrationPeriodStartDay()).isEqualTo(1);
         assertThat(result.reRegistrationPeriodEndDay()).isEqualTo(7);
+        assertThat(result.websiteUrl()).isEqualTo("https://example1.com");
+        assertThat(result.programInfoUrl()).isEqualTo("https://example2.com");
       }
 
     }
